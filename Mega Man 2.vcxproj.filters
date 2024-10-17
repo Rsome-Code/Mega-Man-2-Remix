@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Engine Files">
+      <UniqueIdentifier>{bc3a934e-192c-4783-8523-526cfac77ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sound">
+      <UniqueIdentifier>{7b11881b-cc86-475c-a360-f473a3b09d27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files">
+      <UniqueIdentifier>{2c66bd1a-0956-4eb2-b9e5-bd3dc7eff33b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Stages">
+      <UniqueIdentifier>{b05be1ba-1077-4948-af4d-8577c8e0a4c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies">
+      <UniqueIdentifier>{a0c2cfde-56fa-4a4a-9054-6f14c8695323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Player">
+      <UniqueIdentifier>{eb7e1ae7-803e-4360-b1b1-f85c0d912733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Tiles">
+      <UniqueIdentifier>{417b3dad-9f29-4254-8e30-002d43b3b896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Tiles\Wood Man">
+      <UniqueIdentifier>{90c26888-c1ae-4a57-86c1-368d06a1e9ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Debug">
+      <UniqueIdentifier>{03593cd6-7281-4a0f-879e-037715b79024}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\grids.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\NES - Mega Man 2 - Mega Man.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Test Tile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\tiles.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\weapons.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\wood.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Woodman.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\enemy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\misc.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Health.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Delete.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Z.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Sound\wily_defeat.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\yoku.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\acid.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\air_shooter.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\atomic_fire.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\atomic_fire_charge.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\atomic_fire_charge_mid.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\atomic_fire_full.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\boss_door.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\buster.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\crash_bomber.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\cursor_move.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\death.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\dink.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\enemy_hit.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\enemy_shoot.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\fly_boy.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\force_beam.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\hit.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\land.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\leaf_shield.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\mecha_dragon.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\metal_blade.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\pause.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\refill.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\teleport_in.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\teleport_out.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\time_stopper.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\ufo.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\unused.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\unused_2.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+    <Media Include="Assets\Sound\water_splash.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Animation Timer.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animate.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Sprite.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics Object.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Movable Object.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Movable UI.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Hitbox.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI Sprite.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XControl.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Render Logic.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI Hitbox.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleport.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mega Buster.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="grid.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Abstract Stage.cpp">
+      <Filter>Source Files\Game Files\Stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Wood Man Stage.cpp">
+      <Filter>Source Files\Game Files\Stages</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Hitbox detector.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Energy Bar.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Damage Effect.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen Transition.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player Animations.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player Controls.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Ladder Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Solid Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Left Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Right Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Ceiling Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Level Editor.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu Selection.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Select.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Ladder Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu Tab.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

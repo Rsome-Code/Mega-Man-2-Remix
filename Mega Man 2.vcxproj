@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{4faa3abc-bd84-4892-9330-7c7781fea394}</ProjectGuid>
+    <RootNamespace>MegaMan2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-window.lib;sfml-audio.lib;sfml-network.lib;sfml-system.lib;sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Image Include="Assets\Delete.png" />
+    <Image Include="Assets\enemy.png" />
+    <Image Include="Assets\grids.png" />
+    <Image Include="Assets\Health.png" />
+    <Image Include="Assets\misc.png" />
+    <Image Include="Assets\NES - Mega Man 2 - Mega Man.png" />
+    <Image Include="Assets\Test Tile.png" />
+    <Image Include="Assets\test.png" />
+    <Image Include="Assets\tiles.png" />
+    <Image Include="Assets\weapons.png" />
+    <Image Include="Assets\wood.png" />
+    <Image Include="Assets\Woodman.png" />
+    <Image Include="Assets\Z.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Sound\acid.wav" />
+    <Media Include="Assets\Sound\air_shooter.wav" />
+    <Media Include="Assets\Sound\atomic_fire.wav" />
+    <Media Include="Assets\Sound\atomic_fire_charge.wav" />
+    <Media Include="Assets\Sound\atomic_fire_charge_mid.wav" />
+    <Media Include="Assets\Sound\atomic_fire_full.wav" />
+    <Media Include="Assets\Sound\boss_door.wav" />
+    <Media Include="Assets\Sound\buster.wav" />
+    <Media Include="Assets\Sound\crash_bomber.wav" />
+    <Media Include="Assets\Sound\cursor_move.wav" />
+    <Media Include="Assets\Sound\death.wav" />
+    <Media Include="Assets\Sound\dink.wav" />
+    <Media Include="Assets\Sound\enemy_hit.wav" />
+    <Media Include="Assets\Sound\enemy_shoot.wav" />
+    <Media Include="Assets\Sound\fly_boy.wav" />
+    <Media Include="Assets\Sound\force_beam.wav" />
+    <Media Include="Assets\Sound\hit.wav" />
+    <Media Include="Assets\Sound\land.wav" />
+    <Media Include="Assets\Sound\leaf_shield.wav" />
+    <Media Include="Assets\Sound\mecha_dragon.wav" />
+    <Media Include="Assets\Sound\metal_blade.wav" />
+    <Media Include="Assets\Sound\pause.wav" />
+    <Media Include="Assets\Sound\refill.wav" />
+    <Media Include="Assets\Sound\teleport_in.wav" />
+    <Media Include="Assets\Sound\teleport_out.wav" />
+    <Media Include="Assets\Sound\time_stopper.wav" />
+    <Media Include="Assets\Sound\ufo.wav" />
+    <Media Include="Assets\Sound\unused.wav" />
+    <Media Include="Assets\Sound\unused_2.wav" />
+    <Media Include="Assets\Sound\water_splash.wav" />
+    <Media Include="Assets\Sound\wily_defeat.wav" />
+    <Media Include="Assets\Sound\yoku.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Abstract Stage.cpp" />
+    <ClCompile Include="Animate.cpp" />
+    <ClCompile Include="Animation Timer.cpp" />
+    <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Ceiling Tile.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Damage Effect.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Energy Bar.cpp" />
+    <ClCompile Include="grid.cpp" />
+    <ClCompile Include="Hitbox detector.cpp" />
+    <ClCompile Include="Ladder Tile.cpp" />
+    <ClCompile Include="Left Tile.cpp" />
+    <ClCompile Include="Level Editor.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mega Buster.cpp" />
+    <ClCompile Include="Menu Selection.cpp" />
+    <ClCompile Include="Menu Tab.cpp" />
+    <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Movable Object.cpp" />
+    <ClCompile Include="Movable UI.cpp" />
+    <ClCompile Include="Object Hitbox.cpp" />
+    <ClCompile Include="Object Select.cpp" />
+    <ClCompile Include="Object Sprite.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Physics Object.cpp" />
+    <ClCompile Include="Player Animations.cpp" />
+    <ClCompile Include="Player Controls.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Render Logic.cpp" />
+    <ClCompile Include="Right Tile.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Screen Transition.cpp" />
+    <ClCompile Include="Solid Tile.cpp" />
+    <ClCompile Include="Teleport.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Top Ladder Tile.cpp" />
+    <ClCompile Include="Top Tile.cpp" />
+    <ClCompile Include="UI Hitbox.cpp" />
+    <ClCompile Include="UI Sprite.cpp" />
+    <ClCompile Include="Wood Man Stage.cpp" />
+    <ClCompile Include="XControl.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
