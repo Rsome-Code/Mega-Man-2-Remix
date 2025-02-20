@@ -50,17 +50,7 @@ public:
 
 
 	void objectDisplay(objectSprite* object, camera* cam) {
-		Vector2f cPosition = cam->getPosition();
-		float zoom = cam->getZoom();
-		Vector2f sPosition = object->getPosition();
-		Vector2f newP = sPosition - cPosition;
-		Vector2f plusZ = Vector2f((newP.x * pow(object->getZ(), -1)), (newP.y * pow(object->getZ(), -1)));
-
-		Vector2f newPos = plusZ+ object->getVisualOffset();
-
-		object->setCameraScale(Vector2f(object->getScale().x * zoom, object->getScale().y * zoom));
-
-		object->setCameraPosition(Vector2f((newPos.x * zoom), (newPos.y * zoom)));
+		objectSetup(object, cam);
 
 		Sprite* s = object->getSprite();
 
@@ -83,9 +73,10 @@ public:
 
 	void bObjectDisplay(objectSprite* object, camera* cam) {
 		float mult = object->getZ() - 1;
-		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult);
-		Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y);
+		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult));
+		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y);
 		float zoom = cam->getZoom();
+		Vector2f cPosition = Vector2f(cam->getPosition().x - ((960 * mult) * (pow(zoom, -1))), cam->getPosition().y - ((540 * mult)) * pow(zoom, -1));
 		Vector2f sPosition = object->getPosition();
 		Vector2f newP = sPosition - cPosition;
 		Vector2f plusZ = Vector2f((newP.x * pow(object->getZ(), -1)), (newP.y * pow(object->getZ(), -1)));

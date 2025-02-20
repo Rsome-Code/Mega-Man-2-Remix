@@ -33,6 +33,30 @@ public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize
 	setScale(scale);
 	setCameraPosition(position);
 }
+public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position) {
+	this->texture = texture;
+	this->type = type;
+	loadTexture();
+	setRect(rect, rectSize);
+	setCameraPosition(position);
+	setScale(Vector2f(1, 1));
+}
+public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position) {
+	this->texture = texture;
+	this->type = type;
+	loadTexture();
+	setRect(rect.getPosition(), rect.getSize());
+	setCameraPosition(position);
+	setScale(Vector2f(1, 1));
+}
+public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+	this->texture = texture;
+	this->type = type;
+	loadTexture();
+	setRect(rect.getPosition(), rect.getSize());
+	setCameraPosition(position);
+	setScale(scale);
+}
 public: UISprite() {
 	//cout << "huh?";
 }
@@ -49,6 +73,9 @@ public: Texture* getTexture() {
 	  void setScale(Vector2f scale) {
 		  this->scale = scale;
 		  thisOne.setScale(scale);
+	  }
+	  Vector2f getSize() {
+		  return Vector2f (rectSize.x * scale.x, rectSize.y * scale.y);
 	  }
 	  void setCameraPosition(Vector2f c) {
 		  this->cameraPosition = c;

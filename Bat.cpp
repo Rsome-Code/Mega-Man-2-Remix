@@ -43,6 +43,9 @@ public:
 
 	}
 
+	void setCode() {
+		code = "e1";
+	}
 
 
 	void alive(objectSprite* player, float* deltaT) {

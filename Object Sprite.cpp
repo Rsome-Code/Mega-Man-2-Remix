@@ -43,6 +43,19 @@ protected:
 		zAxis = cameraSpeed;
 	}
 
+	objectSprite(objectSprite* s) {
+		this->type = s->getType();
+		this->texture = s->getTexture();
+
+		loadTexture();
+		setRect(s->getRect().getPosition(), s->getRect().getSize());
+		setPosition(s->getPosition());
+		setScale(s->getScale());
+		cameraPosition = Vector2f(0, 0);
+		zAxis = s->getZ();;
+		  
+	}
+
 public: objectSprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
 	this->type = type;
 	this->texture = texture;

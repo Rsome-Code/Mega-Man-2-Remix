@@ -319,5 +319,20 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
+    <ClCompile Include="Text Box.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main Menu.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Load.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Placement.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Tab.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

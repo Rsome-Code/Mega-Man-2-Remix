@@ -18,12 +18,17 @@ public:
 		setInitialPlayer(Vector2f((15 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12*4*16, (2 * 4) * 16));
 
+		enemyTexture = new Texture();
+		enemyTexture->loadFromFile("Assets\\enemy.png");
+
 
 
 		addTransition(new transition(Vector2f(-10, 10), 0));
 
 
 		addTransition(new transition(Vector2f(60, 10), 0));
+
+		this->levelName = "myfile-objects.txt";
 
 		load();
 	}

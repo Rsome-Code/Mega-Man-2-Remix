@@ -23,7 +23,7 @@ public:
 	}
 
 
-	virtual objectHitbox* getHitbox() = 0;
+	virtual objectHitbox* getHitbox() { return NULL; };
 	virtual void onHit() {};
-	virtual int checkDamage(enemy* en) = 0;
+	virtual int checkDamage(object* en) { return NULL; };
 };

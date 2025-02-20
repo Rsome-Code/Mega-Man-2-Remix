@@ -21,6 +21,7 @@ protected:
 
 public:
 	enemy(Texture* t, Vector2f i) {
+
 		sprite = new movable("enemy", t, Vector2i(3, 117), Vector2i(16, 23), Vector2f(1200, 1200), Vector2f(4, 4), 1);
 		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
 		
@@ -32,9 +33,13 @@ public:
 		act = false;
 		display = false;
 
+		
+
 	}
 
 public:
+
+
 
 	void offSetList() {
 		Vector2f center = sprite->getRelativeCenter();
@@ -92,6 +97,7 @@ public:
 	}
 
 	virtual void alive(objectSprite* player, float* deltaT) = 0;
+
 
 	void death(float* deltaT) {
 		hit->setPosition(Vector2f(0, 0));

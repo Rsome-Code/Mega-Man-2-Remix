@@ -12,7 +12,7 @@
 #include "Wood Man Stage.cpp"
 #include "Energy Bar.cpp"
 #include "Level Editor.cpp"
-#include <iostream>
+#include "Object Placement.cpp"
 #include <vector>
 #include <string>
 #include <sstream>
@@ -44,7 +44,7 @@ int main() {
 
 
 	//Set the framerate here
-	double targetFPS = 120;
+	double targetFPS = 60;
 
 	pController* p1 = new pController();
 
@@ -68,11 +68,13 @@ int main() {
 
 
 	Texture* wT = new Texture();
-	wT->loadFromFile("assets\\woodman.png");
-	levelEditor* l = new levelEditor(wT);
+	wT->loadFromFile("assets\\Woodman.png");
+	levelEditor* l = new levelEditor(wT, "myfile");
+
+	ObjectPlacer* o = new ObjectPlacer(wT, "myfile");
 
 	//l->loop(instance, targetFPS);
-
+	//o->loop(instance, targetFPS);
 
 	area->loop(instance, targetFPS);
 

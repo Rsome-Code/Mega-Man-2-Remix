@@ -12,13 +12,19 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include "load.cpp"
 #pragma once
 
 class abstractStage {
 protected:
 	list<tile*> tileList;
-	list<tile*> bTList;
-	list<enemy*> enemyList;
+	list<tile*> z2List;
+	list<tile*> z3List;
+	list<tile*> z4List;
+
+	string levelName;
+
+	list<object*> objects;
 	list<transition*> tList;
 	Texture* tileTexture;
 	Texture* enemyTexture;
@@ -44,7 +50,7 @@ protected:
 	}*/
 
 	void addEnemy(enemy* e) {
-		enemyList.push_back(e);
+		objects.push_back(e);
 	}
 
 	void addTransition(transition* t) {
@@ -69,8 +75,8 @@ public:
 	list<tile*> getTiles() {
 		return tileList;
 	}
-	list<enemy*> getEnemies() {
-		return enemyList;
+	list<object*> getObjects() {
+		return objects;
 	}
 	list<transition*> getTList() {
 		return tList;
@@ -111,15 +117,26 @@ public:
 			valI = next(valI);
 			int tex = *valI;
 			valI = next(valI);
-			z = *valI;
+			if (valI != val.end()) {
+				z = *valI;
+			}
+			else {
+				z = 1;
+			}
 
 
 
 			if (z == 1) {
 				tileList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
 			}
-			else {
-				bTList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+			else if (z == 2) {
+				z2List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+			}
+			else if (z == 3) {
+				z3List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+			}
+			else if (z == 4) {
+				z4List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
 			}
 
 		}
@@ -128,17 +145,34 @@ public:
 		inputFile.close();
 		zCorrection();
 
+		Load* load = new Load();
+		load->loadObjects(levelName, &objects, enemyTexture);
+
 	}
 
 	void zCorrection() {
-		for (tile* t : bTList) {
+		for (tile* t : z2List) {
 			t->getSprite()->setZ(1.25);
 		}
+		for (tile* t : z3List) {
+			t->getSprite()->setZ(1.5);
+		}
+		for (tile* t : z4List) {
+			t->getSprite()->setZ(1.75);
+		}
+
 	}
 
-	list<tile*> getBList() {
-		return bTList;
+	list<tile*> getZ2List() {
+		return z2List;
 	}
+	list<tile*> getZ3List() {
+		return z3List;
+	}
+	list<tile*> getZ4List() {
+		return z4List;
+	}
+
 
 	/*void load() {
 		// Open the input file named "input.txt"

@@ -25,8 +25,10 @@ class scene {
 	
 	abstractStage* stage;
 	list<tile*> tileList;
-	list<tile*> bTList;
-	list<enemy*> enemyList;
+	list<tile*> z2List;
+	list<tile*> z3List;
+	list<tile*> z4List;
+	list<object*> objects;
 	list<transition*> tList;
 	list<transition*>::iterator tIterator;
 
@@ -46,8 +48,11 @@ public:
 		background = new grid();
 		stage = stg;
 		tileList = stage->getTiles();
-		bTList = stage->getBList();
-		enemyList = stage->getEnemies();
+		z2List = stage->getZ2List();
+		z3List = stage->getZ3List();
+		z4List = stage->getZ4List();
+
+		objects = stage->getObjects();
 		tList = stage->getTList();
 		tIterator = tList.begin();
 		p->start(stg->getInitialPlayer());
@@ -136,13 +141,14 @@ public:
 				
 
 				
-				enemyDistanceCheck(instance, enemyList);
-				enemyCheck(enemyList);
+				enemyDistanceCheck(instance, objects);
+				enemyCheck(objects);
 
 
 
 
-				for (enemy* t : enemyList) {
+				for (object* t : objects) {
+
 					if (t->getAct()) {
 						t->eachFrame(&deltaT, p->getSprite());
 						t->checkHit(p->getHitbox());
@@ -155,10 +161,7 @@ public:
 							}
 						}
 
-						if (t->getDisplay()) {
-							instance->objectAccess(t, cam);
-
-						}
+						
 					}
 				}
 
@@ -190,10 +193,17 @@ public:
 				}
 			}
 
-
-			for (tile* t : bTList) {
+			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
+			for (tile* t : z3List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			
+			
 
 			tileDistanceCheck(instance, tileList);
 			for (tile* t : tileList) {
@@ -204,6 +214,12 @@ public:
 						instance->objectHitboxSetup(list<objectHitbox*> {t->getGround()}, cam);
 						instance->hitboxDisplay(list<UIHitbox*> {t->getGround()});
 					}
+				}
+			}
+
+			for (object* t : objects) {
+				if (t->getDisplay()) {
+					instance->objectAccess(t, cam);
 				}
 			}
 			
@@ -245,11 +261,13 @@ public:
 
 	}
 
-	void enemyCheck(list<enemy*> eList) {
-		for (enemy* e : eList) {
-			if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
-				if (!p->getDamage()) {
-					p->takeDamage(e->getDamage());
+	void enemyCheck(list<object*> eList) {
+		for (object* e : eList) {
+			if (e->getAct()) {
+				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
+					if (!p->getDamage()) {
+						p->takeDamage(e->getDamage());
+					}
 				}
 			}
 		}
@@ -280,13 +298,13 @@ public:
 	}
 
 
-	void enemyDistanceCheck(renderer* instance, list<enemy*> enemyList) {
+	void enemyDistanceCheck(renderer* instance, list<object*> objects) {
 
 		Vector2f camPos = Vector2f(cam->getPosition().x, cam->getPosition().y);
 		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x), instance->getWindow()->getSize().y + camPos.y);
 		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
 
-		for (enemy* t : enemyList) {
+		for (object* t : objects) {
 			bool display = false;
 
 			Vector2f tilePos = t->getSprite()->getPosition();

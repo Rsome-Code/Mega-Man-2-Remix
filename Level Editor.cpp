@@ -19,6 +19,7 @@
 #include <sstream>
 #include <fstream>
 #include "Mouse.cpp"
+#include "Load.cpp"
 #pragma once
 
 class levelEditor {
@@ -26,7 +27,10 @@ class levelEditor {
 	UISprite* tab;
 	UISprite* typeTab;
 	list<tile*> tileList;
-	list<tile*> bTList;
+	list<tile*> z2List;
+	list<tile*> z3List;
+	list<tile*> z4List;
+
 	list<objectSelect*> tileDisplay;
 	list<menuSelect*> tileSelect;
 	list<menuSelect*> typeSelect;
@@ -34,6 +38,7 @@ class levelEditor {
 	timer* time;
 	camera* cam;
 
+	string levelName;
 	
 
 	bool mouse1Pressed = false;
@@ -48,6 +53,8 @@ class levelEditor {
 	bool typeSelection = false;
 	bool onZ = false;
 	float z = 1;
+
+	bool created = false;
 
 	int selectedTexture;
 	tile* selectedTile;
@@ -72,7 +79,8 @@ class levelEditor {
 	Vector2f wSize = Vector2f(1920, 1080);
 
 public:
-	levelEditor(Texture* T) {
+	levelEditor(Texture* T, string levelN) {
+		this->levelName = levelN + ".txt";
 		Texture* tabT = new Texture;
 		tex = T;
 
@@ -97,7 +105,7 @@ public:
 
 		cam = new camera();
 
-
+		
 
 
 		//worldHighlight.setPosition(selectedTile->getSprite()->getPosition());
@@ -123,8 +131,9 @@ public:
 		auto* startP = &start;
 		float deltaT = 0;
 
-		load();
-
+		Load* l = new Load();
+		l->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
+		changeZ();
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
@@ -147,17 +156,66 @@ public:
 				if (z == 1) {
 					mouseCheck(&tileList, instance, mousePos);
 				}
-				else {
-					mouseCheck(&bTList, instance, mousePos);
+				else if (z == 2) {
+					mouseCheck(&z2List, instance, mousePos);
+				}
+				else if (z == 3) {
+					mouseCheck(&z3List, instance, mousePos);
+				}
+				else if (z == 4) {
+					mouseCheck(&z4List, instance, mousePos);
 				}
 			}
 
 			for (tile* t : tileList) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
-			for (tile* t : bTList) {
-				instance->objectAccess(t, cam);
+			for (tile* t : z2List) {
+				instance->objectSetup(t->getSprite(), cam);
 			}
+			for (tile* t : z3List) {
+				instance->objectSetup(t->getSprite(), cam);
+			}
+			if (z != 4) {
+				for (tile* t : z4List) {
+					instance->bObjectDisplay(t->getSprite(), cam);
+				}
+			}
+			else {
+				for (tile* t : z4List) {
+					instance->objectAccess(t, cam);
+				}
+			}
+
+			if (z <= 3) {
+				if (z != 3) {
+					for (tile* t : z3List) {
+						instance->bObjectDisplay(t->getSprite(), cam);
+					}
+				}
+				else {
+					for (tile* t : z3List) {
+						instance->objectAccess(t, cam);
+					}
+				}
+				
+
+			}
+
+			if (z <= 2) {
+				if (z != 2) {
+					for (tile* t : z2List) {
+						instance->bObjectDisplay(t->getSprite(), cam);
+					}
+				}
+				else {
+					for (tile* t : z2List) {
+						instance->objectAccess(t, cam);
+					}
+				}
+
+			}
+
 			if (z == 1) {
 				for (tile* t : tileList) {
 					instance->objectAccess(t, cam);
@@ -189,7 +247,18 @@ public:
 				}
 
 
-				worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+				if (created) {
+					worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition() * z);
+				}
+				else {
+					worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+				}
+
+				if (created) {
+					selectedTile = NULL;
+					tileList.remove(*prev(tileList.end()));
+					created = false;
+				}
 				
 			}
 
@@ -420,26 +489,8 @@ public:
 	void mouse1Click(list<tile*> *tileList, Vector2i mousePos) {
 		highlightStart = Vector2i(mousePos.x - (mousePos.x % (16 * 2)), mousePos.y - (mousePos.y % (16 * 2)));
 		mouse1Pressed = true;
-		if (tileSelection) {
-			if (selectedTile == NULL) {
-				if (menuI != tileSelect.end()) {
-					menuSelect* temp = *menuI;
-					selectedTexture = (temp->getSprite()->getRect().getPosition().x / 16) + (temp->getSprite()->getRect().getPosition().y / 16) * 4;
-					textureHighlight.setPosition(Vector2f((((selectedTexture % 4) * 20) * 4) + 20, (((selectedTexture / 4) * 20) * 4) + 20));
-				}
-			}
-
-			else {
-				if (menuI != tileSelect.end()) {
-					menuSelect* temp = *menuI;
-					selectedTile->setTileNum((temp->getSprite()->getRect().getPosition().x / 16) + (temp->getSprite()->getRect().getPosition().y / 16) * 4);
-					
-				}
-
-			}
-
-		}
-		else if (typeSelection) {
+		
+		 if (typeSelection) {
 
 
 			if (menuI != typeSelect.end()) {
@@ -456,16 +507,73 @@ public:
 				}
 			}
 		}
+		else if (tileSelection) {
+			if (selectedTile == NULL) {
+				if (menuI != tileSelect.end()) {
+					menuSelect* temp = *menuI;
+					selectedTexture = (temp->getSprite()->getRect().getPosition().x / 16) + (temp->getSprite()->getRect().getPosition().y / 16) * 4;
+					textureHighlight.setPosition(Vector2f((((selectedTexture % 4) * 20) * 4) + 20, (((selectedTexture / 4) * 20) * 4) + 20));
+				}
+			}
+
+			else {
+				if (menuI != tileSelect.end()) {
+					menuSelect* temp = *menuI;
+					selectedTile->setTileNum((temp->getSprite()->getRect().getPosition().x / 16) + (temp->getSprite()->getRect().getPosition().y / 16) * 4);
+
+				}
+
+			}
+
+		}
 		else if (onZ) {
-			if (z == 2) {
+			z++;
+			if (z >= 5) {
 				z = 1;
 			}
-			else {
-				z = 2;
-			}
+
+			changeZ();
+
 		}
 		else {
 			worldInteraction(mousePos);
+		}
+	}
+
+	void changeZ() {
+		
+		for (tile* t : z2List) {
+			if (z == 1) {
+				t->getSprite()->setZ(1.25);
+			}
+			else {
+				t->getSprite()->setZ(1);
+			}
+		}
+		for (tile* t : z3List) {
+			if (z == 1) {
+				t->getSprite()->setZ(1.5);
+			}
+			else if (z == 2){
+				t->getSprite()->setZ(1.25);
+			}
+			else {
+				t->getSprite()->setZ(1);
+			}
+		}
+		for (tile* t : z4List) {
+			if (z == 1) {
+				t->getSprite()->setZ(1.75);
+			}
+			else if (z == 2) {
+				t->getSprite()->setZ(1.5);
+			}
+			else if (z == 3) {
+				t->getSprite()->setZ(1.75);
+			}
+			else {
+				t->getSprite()->setZ(1);
+			}
 		}
 	}
 
@@ -478,7 +586,6 @@ public:
 
 	void miniSave(list<tile*> tList, ofstream* myfile) {
 		for (tile* t : tList) {
-
 
 			if (t->getLadder() != NULL) {
 				if (t->getGround() != NULL) {
@@ -528,17 +635,19 @@ public:
 	void save() {
 		ofstream* myfile;
 		myfile = new ofstream();
-		myfile->open("myfile.txt");
+		myfile->open(levelName);
 		miniSave(tileList, myfile);
-		miniSave(bTList, myfile);
+		miniSave(z2List, myfile);
+		miniSave(z3List, myfile);
+		miniSave(z4List, myfile);
 
 		myfile->close();
 	}
 
 
-	void load() {
+	/*void load() {
 		// Open the input file named "input.txt"
-		ifstream inputFile("myfile.txt");
+		ifstream inputFile(levelName);
 
 		// Check if the file is successfully opened
 
@@ -580,8 +689,14 @@ public:
 			if (z == 1) {
 				tileList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
 			}
-			else {
-				bTList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+			else if (z == 2) {
+				z2List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+			}
+			else if (z == 3) {
+				z3List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+			}
+			else if (z == 4) {
+				z4List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
 			}
 		}
 		z = 1;
@@ -604,7 +719,7 @@ public:
 		}
 
 		return tokens;
-	}
+	}*/
 
 
 
@@ -643,9 +758,11 @@ public:
 
 		Vector2f screenPos = Vector2f(worldPos.x / (4 * 8), worldPos.y / (4 * 8));
 		if (!worldCheck(worldPos, screenPos)) {
-			selectedTile = NULL;
-			selectedTile = tileCreation(worldPos, selectedType, selectedTexture);
-			//selectedTile->getSprite()->setZ(z);
+			//selectedTile = NULL;
+			selectedTile = tileCreation(worldPos, selectedType, 999);
+			created = true;
+			
+			selectedTile->getSprite()->setZ(z);
 			tileList.push_back(selectedTile);
 			
 		}
@@ -655,13 +772,15 @@ public:
 			if (del) {
 				
 				selectedTile = *worldI;
-				worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
 				tileList.erase(worldI);
+				
 			}
 			else {
 				selectedTile = *worldI;
+				
 
-				worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
 			}
 		}
 	}

@@ -21,7 +21,7 @@ public:
 		hitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(8, 6)), true, sprite);
 	}
 
-	int checkDamage(enemy* en) {
+	int checkDamage(object* en) {
 		return en->busterDam();
 	}
 
