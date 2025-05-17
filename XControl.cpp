@@ -208,6 +208,9 @@ public:bool checkSTART() {
     {
         return true;
     }
+    else if (Keyboard::isKeyPressed(Keyboard::Scan::Enter)) {
+        return true;
+    }
     return false;
 }
 };

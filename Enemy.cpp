@@ -101,6 +101,7 @@ public:
 
 	void death(float* deltaT) {
 		hit->setPosition(Vector2f(0, 0));
+		hurt->setPosition(Vector2f(0, 0));
 		deathAnim->thisFrame();
 		if (!deathTimer->isFinished()) {
 			deathTimer->run(deltaT);

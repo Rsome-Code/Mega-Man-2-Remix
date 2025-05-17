@@ -55,6 +55,20 @@ public:
 		Sprite* s = object->getSprite();
 
 		w->draw(*s);
+
+		lightingDisplay(object, cam);
+	}
+
+	void lightingDisplay(objectSprite* object, camera* cam) {
+		list<RectangleShape*> pix = object->getPixels();
+
+		for (RectangleShape* rect : pix) {
+			RectangleShape* temp = new RectangleShape();
+			temp->setPosition(rect->getPosition() + object->getCameraPosition());
+			temp->setSize(rect->getSize());
+			temp->setFillColor(rect->getFillColor());
+			w->draw(*temp);
+		}
 	}
 
 	void objectSetup(objectSprite* object, camera* cam) {
@@ -92,6 +106,11 @@ public:
 		Sprite* s = object->getSprite();
 
 		w->draw(*s);
+	}
+	void bObjectDisplay(list<objectSprite*> objects, camera* cam) {
+		for (objectSprite* ob : objects) {
+			bObjectDisplay(ob, cam);
+		}
 	}
 
 

@@ -13,6 +13,8 @@
 #include "Energy Bar.cpp"
 #include "Level Editor.cpp"
 #include "Object Placement.cpp"
+#include "Stage Intro.cpp"
+#include "Level Select.cpp"
 #include <vector>
 #include <string>
 #include <sstream>
@@ -41,8 +43,6 @@ vector<int> split(const string& str, char sep)
 	return tokens;
 }
 int main() {
-
-
 	//Set the framerate here
 	double targetFPS = 60;
 
@@ -68,7 +68,26 @@ int main() {
 
 
 	Texture* wT = new Texture();
-	wT->loadFromFile("assets\\Woodman.png");
+
+
+
+	Texture* bg;
+	bg = new Texture();
+	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
+	LevelSelect* levelMenu = new LevelSelect(bg);
+
+	//string word = levelMenu->loop(instance, targetFPS, bg);
+	string word = "wood man";
+	bool hold = levelMenu->checkA();
+
+	Texture* bossT;
+	bossT = new Texture ();
+	bossT->loadFromFile("assets\\" + word + ".png");
+
+	StageIntro* intro = new StageIntro(word, hold, bg, bossT);
+	//intro->loop(instance, targetFPS);
+
+	wT->loadFromFile("assets\\" + word + "-stage.png");
 	levelEditor* l = new levelEditor(wT, "myfile");
 
 	ObjectPlacer* o = new ObjectPlacer(wT, "myfile");
@@ -80,7 +99,7 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 
 }

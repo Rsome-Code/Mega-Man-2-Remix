@@ -14,7 +14,7 @@ public:
 	woodManStage() {
 
 		tileTexture = new Texture();
-		tileTexture->loadFromFile("Assets//Woodman.png");
+		tileTexture->loadFromFile("Assets//Wood man-stage.png");
 		setInitialPlayer(Vector2f((15 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12*4*16, (2 * 4) * 16));
 

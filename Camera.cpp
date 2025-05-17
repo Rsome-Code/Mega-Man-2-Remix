@@ -33,7 +33,7 @@ public:
 		this->position = Vector2f(0, 0);
 		this->following = following;
 		this->offset = offset;
-		fAmount = getFAmount();
+		//fAmount = getFAmount();
 	}
 public:
 
@@ -49,7 +49,7 @@ public:
 		this->position = Vector2f(0, 0);
 		this->following = following;
 		this->offset = Vector2f(-960, -800);
-		fAmount = getFAmount();
+		//fAmount = getFAmount();
 	}
 
 	void setPosition(Vector2f pos) {
@@ -206,6 +206,7 @@ public:
 
 //The following relates to when the object the camera is following is flipped horizontally.
 
+/*
 public:bool checkFlip(){
 	return following->getFlipped();
 }
@@ -228,4 +229,5 @@ public:void flipCamera() {
 	}
 
 }
+*/
 };

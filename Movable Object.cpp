@@ -19,6 +19,18 @@ public:
 		this->speed = 500;
 		zAxis = cameraSpeed;
 	}
+	movable(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale, int cameraSpeed) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect.getPosition(), rect.getSize());
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		this->speed = 500;
+		zAxis = cameraSpeed;
+	}
 public: movable() {
 }
 	Vector2f calcXY(float angle, float dist) {

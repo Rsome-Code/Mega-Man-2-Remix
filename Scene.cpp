@@ -77,8 +77,8 @@ public:
 
 
 
-		Texture* te = new Texture();
-		te->loadFromFile("Assets\\Woodman.png");
+		//Texture* te = new Texture();
+		//te->loadFromFile("Assets\\Woodman.png");
 
 		transition* currentT = *tIterator;
 		transition* nextT = *next(tIterator);
@@ -225,7 +225,7 @@ public:
 			
 			instance->objectDisplay(p->getBullets(), cam);
 			instance->objectAccess(p->getDamEffect(), cam);
-			instance->objectDisplay(list<objectSprite*>{p->getSprite()}, cam);
+			instance->objectDisplay(p->getSprite(), cam);
 			instance->UIDisplay(p->getUI());
 			transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> {cur->getHitbox(), p->getFoot()}, cam);

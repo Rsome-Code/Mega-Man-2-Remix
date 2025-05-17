@@ -19,6 +19,8 @@ class animation {
 	list<Vector2f> offsetList;
 	list<Vector2f>::iterator offsetI;
 	int currentIndex = 0;
+	int assoSprites = 1;
+
 
 public: 
 	animation(list<IntRect> indexes, UISprite* sprite) {
@@ -55,6 +57,10 @@ public:
 		sprite->applyRect(rect);
 		sprite->setVisualOffset(off);
 	}
+	void setFrame() {
+		sprite->applyRect(*current);
+		sprite->setVisualOffset(*offsetI);
+	}
 
 	void thisFrame() {
 		if (display) {
@@ -85,6 +91,7 @@ public:
 		}
 	}
 
+	//Returns true when animation finishes/loops
 	bool nextFrame(bool loop) {
 		if (current == frameIndexes.end()) {
 			if (loop) {
@@ -92,9 +99,12 @@ public:
 				if (display) {
 					this->setFrame(*current, *offsetI);
 				}
+
 				this->current++;
 				offsetI++;
 				currentIndex++;
+
+			
 			}
 			return true;
 		}
@@ -102,9 +112,12 @@ public:
 			if (display) {
 				this->setFrame(*current, *offsetI);
 			}
+
 			this->current++;
 			offsetI++;
 			currentIndex++;
+
+			
 
 			return false;
 		}
@@ -153,4 +166,12 @@ public:void reset() {
 	  int getFrameSize() {
 		  return frameIndexes.size();
 	  }
+
+	  list<IntRect>::iterator getCurrent() {
+		  return current;
+	  }
+	  list<Vector2f>::iterator getOffsetI(){
+		  return offsetI;
+	  }
+
 };

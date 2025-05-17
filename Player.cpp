@@ -42,8 +42,12 @@ public:
 		if (!texture->loadFromFile("Assets\\NES - Mega Man 2 - Mega Man.png")) {
 			cout << "error";
 		}
-		sprite = new physicsObject("player", texture, Vector2i(2, 21), Vector2i(22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1);
 
+		Image im = texture->copyToImage();
+		Image* image = &im;
+		sprite = new physicsObject("player", texture, im, Vector2i(2, 21), Vector2i(22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1);
+
+		sprite->setFullColour(&Color::Red);
 
 		pAnim = new playerAnimation(sprite);
 		controls = new pControls(p1, sprite, pAnim);
@@ -137,6 +141,8 @@ public:
 		}
 
 		updateHitbox();
+		sprite->pixelSetup();
+		sprite->setFullColour(new Color(0,0,0,190));
 	}
 
 	bool getDamage() {

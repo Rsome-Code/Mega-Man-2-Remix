@@ -87,6 +87,11 @@ public: void setRect(Vector2i r, Vector2i s) {
 	this->rectSize = s;
 	applyRect(IntRect(r, s));
 }
+public: void setRect(IntRect r) {
+	this->tRect = r.getPosition();
+	this->rectSize = r.getSize();
+	applyRect(r);
+}
 public: void applyRect(IntRect rectangle) {
 	tRect = rectangle.getPosition();
 	rectSize = rectangle.getSize();

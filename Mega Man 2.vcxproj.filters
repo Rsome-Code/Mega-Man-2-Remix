@@ -40,6 +40,15 @@
     <Filter Include="Source Files\Game Files\Debug">
       <UniqueIdentifier>{03593cd6-7281-4a0f-879e-037715b79024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Menus">
+      <UniqueIdentifier>{15631779-6107-4d82-8f28-314f92f386b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine Files\Sprites">
+      <UniqueIdentifier>{de1f4b93-4c60-49d1-adf8-74b2b2d4d151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses">
+      <UniqueIdentifier>{92a5ed46-e9c5-47f8-8921-6160e60127f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -193,25 +202,10 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Object Sprite.cpp">
-      <Filter>Source Files\Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Physics Object.cpp">
-      <Filter>Source Files\Engine Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Movable Object.cpp">
-      <Filter>Source Files\Engine Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Movable UI.cpp">
-      <Filter>Source Files\Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="Object Hitbox.cpp">
-      <Filter>Source Files\Engine Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UI Sprite.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="XControl.cpp">
@@ -322,9 +316,6 @@
     <ClCompile Include="Text Box.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Main Menu.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="Load.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
@@ -333,6 +324,36 @@
     </ClCompile>
     <ClCompile Include="Object Tab.cpp">
       <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main Menu.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Level Select.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Level Option.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="UI Sprite.cpp">
+      <Filter>Source Files\Engine Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Sprite.cpp">
+      <Filter>Source Files\Engine Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics Object.cpp">
+      <Filter>Source Files\Engine Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage Intro.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Movable UI.cpp">
+      <Filter>Source Files\Engine Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Movable Object.cpp">
+      <Filter>Source Files\Engine Files\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Light Source.cpp">
+      <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ class pControls {
 	pController* p1;
 	physicsObject* sprite;
 	playerAnimation* pAnim;
-	float maxSpeed = 700;
+	float maxSpeed = 450;
 	float groundAccel = 10000;
 	float jumpForce = 1000;
 

@@ -24,6 +24,7 @@ public:animTimer(animation* anim, float fps, bool loop) {
 
 
 public: 
+	//Returns true when animation has finished/looped
 	bool run(float* delta) {
 		bool nextFrame = false;
 		if (*delta >= countDown) {
@@ -66,5 +67,9 @@ public:
 	void setDisplay(bool b) {
 		display = b;
 		anim->setDisplay(b);
+	}
+
+	void setAnim(animation* a) {
+		anim = a;
 	}
 };

@@ -22,16 +22,16 @@ class objectSprite:public UISprite{
 protected:
 	Vector2f position;
 	float zAxis;
-	list<objectSprite*>::iterator objectI;
-
-
+	Image image;
 	bool flipped = false;
 	bool flipPos = false;
-
 	Vector2f visualOffset = Vector2f(0, 0);
 
-	
-	public: objectSprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float cameraSpeed) {
+
+	list<RectangleShape*> pixels;
+
+public: 
+	objectSprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float z) {
 		this->type = type;
 		this->texture = texture;
 
@@ -40,7 +40,48 @@ protected:
 		setPosition(position);
 		setScale(scale);
 		cameraPosition = Vector2f(0, 0);
-		zAxis = cameraSpeed;
+		zAxis = z;
+	}
+ 
+	objectSprite(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale, float z) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect);
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		zAxis = z;
+	}
+
+	//Must also load an image of the texture for lighting to work
+	objectSprite(string type, Texture* texture, Image im, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float z) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect, rectSize);
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		zAxis = z;
+		image = im;
+		pixelSetup();
+	}
+
+	objectSprite(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, float z) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect);
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		zAxis = z;
+		image = im;
+		pixelSetup();
 	}
 
 	objectSprite(objectSprite* s) {
@@ -84,6 +125,53 @@ public:
 
 	}
 
+	void pixelSetup() {
+
+		pixels.clear();
+
+		int startX = tRect.x;
+		int startY = tRect.y;
+		int endX = tRect.x + rectSize.x;
+		int endY = tRect.y + rectSize.y;
+
+		cout << image.getSize().x;
+		cout << ", ";
+		cout << image.getSize().y;
+		cout << ", ";
+		image.getPixel(900, 300);
+
+		for (int y = startY; y < endY; y++) {
+			for (int x = startX; x < endX; x++) {
+				Color col = image.getPixel(x, y);
+				auto alpha = col.a;
+				if (alpha == 255) {
+					RectangleShape* r = new RectangleShape();
+					r->setPosition(Vector2f((x - tRect.x) * 4, (y - tRect.y) * 4));
+					r->setSize(Vector2f(4, 4));
+					pixels.push_back(r);
+				}
+
+				
+			}
+		}
+	}
+
+	list<RectangleShape*> getPixels() {
+		return pixels;
+	}
+
+	/*void updatepixels() {
+		for (RectangleShape* r : pixels) {
+			r->setPosition(Vector2f(r->getPosition().x + cameraPosition.x, r->getPosition().y + cameraPosition.y));
+		}
+	}*/
+
+	void setFullColour(const Color* c) {
+		for (RectangleShape* r : pixels) {
+			r->setFillColor(*c);
+		}
+	}
+
 public: void setPosition(Vector2f position) {
 		this->position = position;
 	}
@@ -121,8 +209,16 @@ public: Vector2f getPosition() {
 
 
 
-	  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+
+
+
+	  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
 public:void flip() {
 	if (!flipped) {
 		setScale(Vector2f(-this->scale.x, this->scale.y));
@@ -151,7 +247,7 @@ public:void setFlipped(bool flip) {
 }
 public:int getRectX() {
 	return rectSize.x;
-}
+}*/
 
 	Vector2f getRelativeCenter() {
 		float x = ((rectSize.x * scale.x)/2);

@@ -49,8 +49,7 @@ public:
 
 
 	void alive(objectSprite* player, float* deltaT) {
-		cout<<act;
-		cout << ", ";
+
 		if (!awake) {
 			if (flyFromRight) {
 				if (player->getPosition().x > sprite->getPosition().x - 500 && player->getPosition().x < sprite->getPosition().x) {
