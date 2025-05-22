@@ -11,7 +11,7 @@ class woodManStage :public abstractStage{
 
 
 public:
-	woodManStage() {
+	/*woodManStage() {
 
 		tileTexture = new Texture();
 		tileTexture->loadFromFile("Assets//Wood man-stage.png");
@@ -23,15 +23,12 @@ public:
 
 
 
-		addTransition(new transition(Vector2f(-10, 10), 0));
 
 
-		addTransition(new transition(Vector2f(60, 10), 0));
+		this->levelName = "wood man-objects.txt";
 
-		this->levelName = "myfile-objects.txt";
-
-		load();
-	}
+		load("wood man");
+	}*/
 	/*woodManStage(Texture* enemyT, Texture* miscT) {
 		enemyTexture = enemyT;
 

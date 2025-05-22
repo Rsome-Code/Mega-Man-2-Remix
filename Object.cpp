@@ -1,5 +1,6 @@
 #include "object Sprite.cpp"
 #include "object hitbox.cpp"
+#include "light source.cpp"
 #pragma once
 
 
@@ -58,4 +59,5 @@ public:
 	virtual bool checkHit(objectHitbox* pHit) { return false; };
 	virtual objectHitbox* getHitbox() { return NULL; };
 	virtual int getDamage() { return NULL; };
+	virtual LightSource* getLightSource() { return NULL; };
 };

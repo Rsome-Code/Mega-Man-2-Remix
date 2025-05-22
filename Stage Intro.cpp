@@ -33,7 +33,7 @@ public:
 		background = new UISprite("bg", bg, IntRect(0, 359, 700, 293), Vector2f(0, 0), Vector2f(4, 4));
 		birds = aHold;
 		if (!aHold) {
-			dotSetup(bg, IntRect(272, 265, 4, 4));
+			dotSetup(bg, IntRect(272, 283, 4, 4));
 		}
 		else {
 			dotSetup(bg, IntRect(289, 281, 8, 8));
@@ -43,10 +43,10 @@ public:
 		pIt = particles.begin();
 		UISprite* start = *pIt;
 		if (!birds) {
-			fadeIn = new animation(list<IntRect> {IntRect(272, 265, 4, 4), IntRect(272, 274, 4, 4), IntRect(272, 283, 4, 4)}, start);
+			fadeIn = new animation(list<IntRect> {IntRect(272, 283, 4, 4), IntRect(272, 292, 4, 4), IntRect(272, 301, 4, 4)}, start);
 		}
 		else{
-			fadeIn = new animation(list<IntRect> {IntRect(280, 263, 8, 8), IntRect(280, 272, 8, 8), IntRect(280, 281, 8, 8)}, start);
+			fadeIn = new animation(list<IntRect> {IntRect(280, 281, 8, 8), IntRect(280, 290, 8, 8), IntRect(280, 299, 8, 8)}, start);
 		}
 		aTimer = new animTimer(fadeIn, 10, false);
 
@@ -91,7 +91,7 @@ public:
 			float tempY = (rand() % (312 + mapLoc(tempZ, (112 * 4))));
 
 			tempY = tempY - (mapLoc(tempZ, (112 * 4) * 2));
-			tempY = tempY + ((144 * 4) * (tempZ * 1.3));
+			tempY = tempY + ((148 * 4) * (tempZ * 1.3));
 
 			movable* temp = new movable("dot", bg, startFrame.getPosition(), startFrame.getSize(), Vector2f(tempX, tempY), Vector2f(4, 4), tempZ);
 			particles.push_back(temp);
@@ -110,7 +110,7 @@ public:
 			if (ob->getCameraPosition().x > 1920) {
 				ob->setPosition(Vector2f(0, ob->getPosition().y));
 				while (ob->getCameraPosition().x > 0) {
-					instance->bObjectDisplay(ob, cam);
+					instance->bObjectCalc(ob, cam);
 					ob->move(180, 50);
 				}
 			}

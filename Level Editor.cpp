@@ -80,7 +80,7 @@ class levelEditor {
 
 public:
 	levelEditor(Texture* T, string levelN) {
-		this->levelName = levelN + ".txt";
+		this->levelName = levelN;
 		Texture* tabT = new Texture;
 		tex = T;
 
@@ -635,7 +635,7 @@ public:
 	void save() {
 		ofstream* myfile;
 		myfile = new ofstream();
-		myfile->open(levelName);
+		myfile->open(levelName + ".txt");
 		miniSave(tileList, myfile);
 		miniSave(z2List, myfile);
 		miniSave(z3List, myfile);

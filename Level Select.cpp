@@ -30,9 +30,9 @@ public:
 
 	LevelSelect(Texture* bg) {
 		//metalMan = new UISprite("Option", );
-		background = new UISprite("bg", bg, IntRect(0, 0, 771, 255), Vector2f(-150 * 4, 0), Vector2f(4, 4));
+		background = new UISprite("bg", bg, IntRect(0, 0, 771, 273), Vector2f(-150 * 4, 0), Vector2f(4, 4));
 		backPos = background->getCameraPosition();
-		cursor = new UISprite("pointer", bg, IntRect(204, 266, 42, 42), Vector2f(backPos.x + 300 *4, backPos.y + 27 *4), Vector2f(4, 4));
+		cursor = new UISprite("pointer", bg, IntRect(204, 284, 42, 42), Vector2f(backPos.x + 300 *4, backPos.y + 32 *4), Vector2f(4, 4));
 		control = new pController();
 	}
 
@@ -98,7 +98,7 @@ public:
 		x = 64 * (selection % 3);
 		float y = 0;
 		y = (64 * int(selection / 3));
-		cursor->setCameraPosition(Vector2f(backPos.x + (300 + x)*4, backPos.y + (27 + y)*4));
+		cursor->setCameraPosition(Vector2f(backPos.x + (300 + x)*4, backPos.y + (34 + y)*4));
 	}
 
 	void moveUp() {

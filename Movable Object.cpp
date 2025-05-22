@@ -19,7 +19,7 @@ public:
 		this->speed = 500;
 		zAxis = cameraSpeed;
 	}
-	movable(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale, int cameraSpeed) {
+	movable(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, int cameraSpeed, float defaultTransparency) {
 		this->type = type;
 		this->texture = texture;
 
@@ -30,6 +30,8 @@ public:
 		cameraPosition = Vector2f(0, 0);
 		this->speed = 500;
 		zAxis = cameraSpeed;
+		this->defaultTransparency = defaultTransparency;
+		image = im;
 	}
 public: movable() {
 }

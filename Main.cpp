@@ -57,19 +57,16 @@ int main() {
 	player* col = new player(p1);
 
 	//woodManStage* wood = new woodManStage(enemyT, miscT);
-	woodManStage* wood = new woodManStage();
 
-	scene* area = new scene(col, wood, enemyT);
+
+	
 	
 	RenderWindow window(VideoMode(1920, 1080), "Executable");
 
 	RenderWindow* w = &window;
 	renderer* instance = new renderer(w);
 
-
 	Texture* wT = new Texture();
-
-
 
 	Texture* bg;
 	bg = new Texture();
@@ -79,6 +76,9 @@ int main() {
 	//string word = levelMenu->loop(instance, targetFPS, bg);
 	string word = "wood man";
 	bool hold = levelMenu->checkA();
+	abstractStage* wood = new abstractStage(word);
+
+	scene* area = new scene(col, wood, enemyT);
 
 	Texture* bossT;
 	bossT = new Texture ();
@@ -88,9 +88,10 @@ int main() {
 	//intro->loop(instance, targetFPS);
 
 	wT->loadFromFile("assets\\" + word + "-stage.png");
-	levelEditor* l = new levelEditor(wT, "myfile");
+	levelEditor* l = new levelEditor(wT, word);
 
-	ObjectPlacer* o = new ObjectPlacer(wT, "myfile");
+	list<object*> obList = { new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100)};
+	ObjectPlacer* o = new ObjectPlacer(wT, word, obList);
 
 	//l->loop(instance, targetFPS);
 	//o->loop(instance, targetFPS);

@@ -45,7 +45,7 @@ public:
 
 		Image im = texture->copyToImage();
 		Image* image = &im;
-		sprite = new physicsObject("player", texture, im, Vector2i(2, 21), Vector2i(22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1);
+		sprite = new physicsObject("player", texture, im, IntRect(2, 21, 22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1, 200);
 
 		sprite->setFullColour(&Color::Red);
 
@@ -141,8 +141,21 @@ public:
 		}
 
 		updateHitbox();
-		sprite->pixelSetup();
-		sprite->setFullColour(new Color(0,0,0,190));
+
+	}
+
+	void updateLighting() {
+		sprite->updateLighting();
+	}
+
+	list<RectangleShape*> getLightPixels() {
+		return sprite->getPixels();
+	}
+
+	void lightingCheck(LightSource* light) {
+
+		sprite->lightingCheck(light);
+
 	}
 
 	bool getDamage() {

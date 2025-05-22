@@ -34,9 +34,6 @@
     <Filter Include="Source Files\Game Files\Tiles">
       <UniqueIdentifier>{417b3dad-9f29-4254-8e30-002d43b3b896}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game Files\Tiles\Wood Man">
-      <UniqueIdentifier>{90c26888-c1ae-4a57-86c1-368d06a1e9ec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Game Files\Debug">
       <UniqueIdentifier>{03593cd6-7281-4a0f-879e-037715b79024}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="Source Files\Game Files\Enemies\Bosses">
       <UniqueIdentifier>{92a5ed46-e9c5-47f8-8921-6160e60127f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Objects">
+      <UniqueIdentifier>{e9b1eb26-e21b-4d45-8b68-738f3137f213}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,19 +319,10 @@
     <ClCompile Include="Load.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="Object Placement.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Object Tab.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main Menu.cpp">
       <Filter>Source Files\Game Files\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Level Select.cpp">
-      <Filter>Source Files\Game Files\Menus</Filter>
-    </ClCompile>
-    <ClCompile Include="Level Option.cpp">
       <Filter>Source Files\Game Files\Menus</Filter>
     </ClCompile>
     <ClCompile Include="UI Sprite.cpp">
@@ -353,6 +344,18 @@
       <Filter>Source Files\Engine Files\Sprites</Filter>
     </ClCompile>
     <ClCompile Include="Light Source.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Tab.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Object Placement.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Torch.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Maths.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
   </ItemGroup>

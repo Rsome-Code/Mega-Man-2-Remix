@@ -80,12 +80,9 @@ public:
 		//Texture* te = new Texture();
 		//te->loadFromFile("Assets\\Woodman.png");
 
-		transition* currentT = *tIterator;
-		transition* nextT = *next(tIterator);
-		transitionType = nextT->getType();
 
 
-		cam->setXLimit(Vector2f(currentT->getSprite()->getPosition().x, nextT->getHitbox()->getPosition().x + nextT->getHitbox()->getSize().x - 1920));
+		//cam->setXLimit(Vector2f(currentT->getSprite()->getPosition().x, nextT->getHitbox()->getPosition().x + nextT->getHitbox()->getSize().x - 1920));
 
 
 		while (instance->getWindow()->isOpen() && run) {
@@ -100,76 +97,75 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			if (!interpolating) {
-				p->eachFrame(&deltaT);
+			
+			p->eachFrame(&deltaT);
 
 
 
-				if (!p->isTeleporting()) {
-					ground = false;
-					onLadder = false;
+			if (!p->isTeleporting()) {
+				ground = false;
+				onLadder = false;
 
-					if (!p->getControls()->getOnLadder()) {
+				if (!p->getControls()->getOnLadder()) {
 
 
-						tileCheck(tileList);
+					tileCheck(tileList);
 
-						p->setGrounded(ground);
-						p->getControls()->setInfrontOfLadder(onLadder);
-
-					}
-
-					else {
-						onLadder = ladderTileCheck(tileList);
-						p->getControls()->setLadder(onLadder);
-						p->getControls()->setInfrontOfLadder(onLadder);
-
-						if (!headLadderTileCheck(tileList)) {
-							p->getAnimation()->ladderGetUp();
-						}
-
-					}
-
-					p->getControls()->setLadderBelow(ladderBelowTileCheck(tileList));
-					p->getControls()->setLadderAbove(ladderAboveTileCheck(tileList));
+					p->setGrounded(ground);
+					p->getControls()->setInfrontOfLadder(onLadder);
 
 				}
 
-				cam->followX();
+				else {
+					onLadder = ladderTileCheck(tileList);
+					p->getControls()->setLadder(onLadder);
+					p->getControls()->setInfrontOfLadder(onLadder);
 
-
-				
-
-				
-				enemyDistanceCheck(instance, objects);
-				enemyCheck(objects);
-
-
-
-
-				for (object* t : objects) {
-
-					if (t->getAct()) {
-						t->eachFrame(&deltaT, p->getSprite());
-						t->checkHit(p->getHitbox());
-
-						for (bullet* h : p->getControls()->getBulletObjects()) {
-							if (t->checkHurt(h->getHitbox())) {
-
-								t->lowerHP(h->checkDamage(t));
-								h->onHit();
-							}
-						}
-
-						
+					if (!headLadderTileCheck(tileList)) {
+						p->getAnimation()->ladderGetUp();
 					}
+
 				}
 
+				p->getControls()->setLadderBelow(ladderBelowTileCheck(tileList));
+				p->getControls()->setLadderAbove(ladderAboveTileCheck(tileList));
 
-				transitionCheck();
 			}
 
-			else {
+			cam->followX();
+
+
+				
+
+				
+			enemyDistanceCheck(instance, objects);
+			enemyCheck(objects);
+
+
+
+
+			for (object* t : objects) {
+
+				if (t->getAct() && t->getHitbox() != NULL) {
+					t->eachFrame(&deltaT, p->getSprite());
+					t->checkHit(p->getHitbox());
+
+
+					for (bullet* h : p->getControls()->getBulletObjects()) {
+						if (t->checkHurt(h->getHitbox())) {
+
+							t->lowerHP(h->checkDamage(t));
+							h->onHit();
+						}
+					}
+				}
+			}
+
+
+			//transitionCheck();
+			
+
+			/*else {
 				if (cam->interpTo(newCamPos, 600, &deltaT)) {
 					interpolating = false;
 				}
@@ -191,7 +187,7 @@ public:
 						p->getAnimation()->ladderAnim(&deltaT);
 					}
 				}
-			}
+			}*/
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
@@ -225,14 +221,26 @@ public:
 			
 			instance->objectDisplay(p->getBullets(), cam);
 			instance->objectAccess(p->getDamEffect(), cam);
+			p->updateLighting();
+			lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
 			instance->UIDisplay(p->getUI());
-			transition* cur = *next(tIterator);
+			//transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> {cur->getHitbox(), p->getFoot()}, cam);
 			//instance->hitboxDisplay(list<UIHitbox*> {cur->getHitbox(), p->getFoot()});
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
+		}
+	}
+
+	void lightingCheck() {
+		for (object* ob : objects) {
+			if (ob->getLightSource() != NULL) {
+				LightSource* light = ob->getLightSource();
+				light->updatePos(ob->getSprite()->getCameraPosition());
+				p->lightingCheck(light);
+			}
 		}
 	}
 
@@ -263,7 +271,7 @@ public:
 
 	void enemyCheck(list<object*> eList) {
 		for (object* e : eList) {
-			if (e->getAct()) {
+			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
 					if (!p->getDamage()) {
 						p->takeDamage(e->getDamage());

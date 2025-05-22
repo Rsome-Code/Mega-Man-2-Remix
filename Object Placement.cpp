@@ -55,10 +55,9 @@ class ObjectPlacer {
 	
 
 public:
-	ObjectPlacer(Texture* T, string levelN) {
-		this->levelName = levelN + ".txt";
-		saveFile = levelN + "-objects.txt";
-		Texture* tabT = new Texture;
+	ObjectPlacer(Texture* T, string levelN, list<object*> obList) {
+		this->levelName = levelN;
+		saveFile = levelN;
 		tex = T;
 		Load* l = new Load();
 		l->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
@@ -69,7 +68,7 @@ public:
 
 		Texture* t = new Texture();
 		t->loadFromFile("Assets\\enemy.png");
-		list<object*> obList = { new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)), new bat(t, Vector2f(600, 600)) };
+		
 		for (object* o : obList) {
 			o->setCode();
 		}

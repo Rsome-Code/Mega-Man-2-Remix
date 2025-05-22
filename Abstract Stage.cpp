@@ -30,12 +30,25 @@ protected:
 	Texture* enemyTexture;
 	Vector2f initialCamera;
 	Vector2f initalPlayer;
+	Texture* bossTexture;
 
 	float z = 1;
 	
 
 public:
+	abstractStage(string name) {
+		tileTexture = new Texture();
+		tileTexture->loadFromFile("Assets\\" + name + "-stage.png");
+		setInitialPlayer(Vector2f((15 * 4) * 16, (13 * 4) * 16));
+		setInitialCamera(Vector2f(12 * 4 * 16, (2 * 4) * 16));
+		bossTexture = new Texture();
+		bossTexture->loadFromFile("Assets\\" + name + ".png");
 
+		enemyTexture = new Texture();
+		enemyTexture->loadFromFile("Assets\\enemy.png");
+
+		load(name);
+	}
 
 protected:
 	/*void addMultiTile(multiTile* t) {
@@ -82,9 +95,9 @@ public:
 		return tList;
 	}
 
-	void load() {
+	void load(string name) {
 		// Open the input file named "input.txt"
-		ifstream inputFile("myfile.txt");
+		/*ifstream inputFile(name + ".txt");
 
 		// Check if the file is successfully opened
 
@@ -144,9 +157,12 @@ public:
 		// Close the file
 		inputFile.close();
 		zCorrection();
-
+*/
 		Load* load = new Load();
-		load->loadObjects(levelName, &objects, enemyTexture);
+		load->load(name, tileTexture, &tileList, &z2List, &z3List, &z4List);
+		zCorrection();
+		
+		load->loadObjects(name, &objects, enemyTexture);
 
 	}
 

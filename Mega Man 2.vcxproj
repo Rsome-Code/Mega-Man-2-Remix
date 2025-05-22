@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -121,14 +121,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window.lib;sfml-audio.lib;sfml-network.lib;sfml-system.lib;sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -198,12 +198,12 @@
     <ClCompile Include="Ladder Tile.cpp" />
     <ClCompile Include="Left Tile.cpp" />
     <ClCompile Include="Level Editor.cpp" />
-    <ClCompile Include="Level Option.cpp" />
     <ClCompile Include="Level Select.cpp" />
     <ClCompile Include="Light Source.cpp" />
     <ClCompile Include="Load.cpp" />
     <ClCompile Include="Main Menu.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Maths.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
     <ClCompile Include="Menu Selection.cpp" />
     <ClCompile Include="Menu Tab.cpp" />
@@ -233,6 +233,7 @@
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Top Ladder Tile.cpp" />
     <ClCompile Include="Top Tile.cpp" />
+    <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI Hitbox.cpp" />
     <ClCompile Include="UI Sprite.cpp" />
     <ClCompile Include="Wood Man Stage.cpp" />

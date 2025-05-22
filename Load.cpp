@@ -13,6 +13,7 @@
 #include "ladder tile.cpp"
 #include "top ladder tile.cpp"
 #include "Bat.cpp"
+#include "torch.cpp"
 
 #pragma once
 
@@ -26,7 +27,7 @@ class Load {
 public:
 	void load(string levelName, Texture* texture,  list<tile*>* tileList, list<tile*>* z2List, list<tile*>* z3List, list<tile*>* z4List) {
 		// Open the input file
-		ifstream inputFile(levelName);
+		ifstream inputFile(levelName + ".txt");
 
 		tex = texture;
 
@@ -97,16 +98,12 @@ public:
 
 	void loadObjects(string levelName, list<object*>* objects, Texture* t) {
 
-
-
-		ifstream inputFile(levelName);
+		ifstream inputFile(levelName + "-objects.txt");
 
 		string line;
 		string variable;
 
 		while (getline(inputFile, line)) {
-
-
 
 			char sep = ',';
 			vector<string> values = splitString(line, sep);
@@ -129,6 +126,9 @@ public:
 			object* add = NULL;
 			if (type == "e1") {
 				add = new bat(t, Vector2f(worldX, worldY));
+			}
+			else if (type == "trch-R") {
+				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 255);
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

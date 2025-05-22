@@ -86,6 +86,14 @@ public:
 	}
 
 	void bObjectDisplay(objectSprite* object, camera* cam) {
+
+		bObjectCalc(object, cam);
+		Sprite* s = object->getSprite();
+
+		w->draw(*s);
+	}
+
+	void bObjectCalc(objectSprite* object, camera* cam) {
 		float mult = object->getZ() - 1;
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult));
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y);
@@ -102,11 +110,8 @@ public:
 
 		object->setCameraPosition(Vector2f((newPos.x * zoom), (newPos.y * zoom)));
 
-
-		Sprite* s = object->getSprite();
-
-		w->draw(*s);
 	}
+
 	void bObjectDisplay(list<objectSprite*> objects, camera* cam) {
 		for (objectSprite* ob : objects) {
 			bObjectDisplay(ob, cam);
