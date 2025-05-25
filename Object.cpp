@@ -47,6 +47,10 @@ public:
 		act = b;
 	}
 
+	void deleteSprite() {
+		sprite = NULL;
+	}
+
 	virtual void eachFrame(float* deltaT, objectSprite* player) {};
 	virtual void initial() {};
 	virtual bool getOffScreen() { return false; };

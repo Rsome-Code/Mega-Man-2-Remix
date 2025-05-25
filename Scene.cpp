@@ -217,7 +217,7 @@ public:
 			tileDistanceCheck(instance, tileList);
 			for (tile* t : tileList) {
 
-				if (t->getDisplay()) {
+				if (t->getDisplay() && t->getSprite() !=NULL) {
 					instance->objectAccess(t, cam);
 					if (t->getGround() != NULL) {
 						instance->objectHitboxSetup(list<objectHitbox*> {t->getGround()}, cam);
@@ -227,7 +227,7 @@ public:
 			}
 
 			for (object* t : objects) {
-				if (t->getDisplay()) {
+				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
@@ -444,48 +444,53 @@ public:
 
 
 	void enemyDistanceCheck(renderer* instance, list<object*> objects) {
+		float camPos = cam->getPosition().x;
+		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
 		for (object* e : objects) {
-			//if (e->getHitbox() != NULL) {
-				float ePos = e->getSprite()->getPosition().x;
-				float camPos = cam->getPosition().x;
-				float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
-				float initial = e->getInitialPosition().x;
 
-				
-				if (e->getInitOffScreen()) {
-					if (initial > camPos && initial < camEdge) {
-						e->initial();
-						e->reset();
-						
+			float initial = e->getInitialPosition().x;
+			if (!e->getOffScreen()) {
+				float ePos = e->getSprite()->getPosition().x;
+
+
+				if (ePos > camPos && ePos < camEdge) {
+					if (e->getOffScreen()) {
+						e->setOffScreen(false);
 						e->setDisplay(true);
 						e->setAct(true);
 					}
-				}
-
-				if (ePos > camPos && ePos < camEdge) {
-					e->setOffScreen(false);
-					e->setDisplay(true);
-					e->setAct(true);
 
 				}
 				else if (e->getOffScreen() == false) {
 					e->setOffScreen(true);
 					e->setAct(false);
 					e->setDisplay(false);
-					//e->getSprite()->setPosition(Vector2f(0, 0));
+					//e->deleteSprite();
+
 				}
-				if (e->getOffScreen()) {
+
+			}
+			else {
+				if (e->getInitOffScreen()) {
 					if (initial > camPos && initial < camEdge) {
+						e->initial();
+						e->reset();
+
+						e->setDisplay(true);
+						e->setAct(true);
+						e->setOffScreen(false);
 						e->setInitOffScreen(false);
 					}
-					else {
-						e->setInitOffScreen(true);
-					}
 				}
-				else {
+				
+				if (initial > camPos && initial < camEdge) {
 					e->setInitOffScreen(false);
 				}
-			//}
+				else {
+					e->setInitOffScreen(true);
+				}
+
+			}
 		}
 	}
 
