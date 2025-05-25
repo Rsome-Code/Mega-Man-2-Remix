@@ -52,6 +52,13 @@ public:
 		return currentIndex;
 	}
 
+	bool checkStart() {
+		if (currentIndex == 1) {
+			return true;
+		}
+		return false;
+	}
+
 public:
 	void setFrame(IntRect rect, Vector2f off) {
 		sprite->applyRect(rect);

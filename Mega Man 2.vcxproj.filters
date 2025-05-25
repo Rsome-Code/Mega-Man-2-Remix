@@ -364,5 +364,8 @@
     <ClCompile Include="Animation Test.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
+    <ClCompile Include="transition angle.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "object Sprite.cpp"
 #include "object hitbox.cpp"
 #include "light source.cpp"
+#include "transition angle.cpp"
 #pragma once
 
 
@@ -63,5 +64,9 @@ public:
 	virtual void setInitOffScreen(bool o) {};
 	virtual bool getInitOffScreen() {
 		return NULL;
+	}
+	virtual enum transitionAngle getAngle() {
+		enum transitionAngle r = RIGHT;
+		return r;
 	}
 };

@@ -19,17 +19,18 @@ public:
 	AnimationTest(list<IntRect> animList, list<Vector2f> offsetList, Texture* t) {
 		
 		IntRect start = *animList.begin();
-		object = new objectSprite("o", t, start, Vector2f(900, 500), Vector2f(4, 4), 1);
+		object = new objectSprite("o", t, start, Vector2f(100, 100), Vector2f(4,4), 1);
 		this->anim = new animation(animList, object);
 		anim->setOffsetList(offsetList);
 		Texture* bT = new Texture();
-		bT->loadFromFile("Assets\\grids.png");
-		grid = new objectSprite("b",bT, IntRect(0,0,4905,4747), Vector2f(0,0), Vector2f(1,1), 1);
+		bT->loadFromFile("Assets\\grid.png");
+		grid = new objectSprite("b",bT, IntRect(0,0,600,600), Vector2f(0,0), Vector2f(4,4), 1);
 		time = new timer();
 	}
 
 	void run(renderer* instance, float targetRate) {
 		camera* cam = new camera();
+		cam->setZoom(2);
 		pController* p = new pController();
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -37,7 +38,7 @@ public:
 
 		rightPressed = true;
 		anim->nextFrame(false);
-		cout << "1";
+
 
 		while (true) {
 			Event event;
@@ -54,7 +55,9 @@ public:
 
 			if (p->checkLEFT() && !leftPressed) {
 				leftPressed = true;
-				anim->prevFramePerm();
+				if (!anim->checkStart()) {
+					anim->prevFramePerm();
+				}
 			}
 			else if (leftPressed && !p->checkLEFT()) {
 				leftPressed = false;

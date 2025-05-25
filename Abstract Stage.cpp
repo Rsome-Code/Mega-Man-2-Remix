@@ -33,6 +33,8 @@ protected:
 	Texture* bossTexture;
 	
 	Vector2f flagPos;
+	Vector2f lastFlagPos;
+	enum transitionAngle transAngle;
 
 	float z = 1;
 	
@@ -51,6 +53,7 @@ public:
 		enemyTexture->loadFromFile("Assets\\enemy.png");
 
 		load(name);
+		lastFlagPos = Vector2f(0,0);
 	}
 
 protected:
@@ -100,12 +103,22 @@ public:
 
 	//Only last placed flag is counted for each section
 	void addEndFlag() {
+		lastFlagPos = flagPos;
 		for (object* o : objects) {
 			if (o->getCode() == "flag") {
 				flagPos = o->getSprite()->getPosition();
+				transAngle = o->getAngle();
 			}
 			
 		}
+	}
+
+	Vector2f getLastFlagPos() {
+		return lastFlagPos;
+	}
+
+	enum transitionAngle getAngle() {
+		return transAngle;
 	}
 
 	Vector2f getInitialCamera() {

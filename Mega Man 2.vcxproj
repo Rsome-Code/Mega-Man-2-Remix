@@ -187,6 +187,7 @@
     <ClCompile Include="Animation Test.cpp" />
     <ClCompile Include="Animation Timer.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="transition angle.cpp" />
     <ClCompile Include="Ceiling Tile.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />

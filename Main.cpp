@@ -46,7 +46,7 @@ vector<int> split(const string& str, char sep)
 }
 int main() {
 	//Set the framerate here
-	double targetFPS = 60;
+	double targetFPS = 120;
 
 	pController* p1 = new pController();
 
@@ -109,6 +109,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+	//cout << "hi";
 
 }

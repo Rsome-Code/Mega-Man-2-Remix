@@ -7,6 +7,7 @@
 #include "Abstract Stage.cpp"
 #include "Hitbox Detector.cpp"
 #include "Screen Transition.cpp"
+#include "transition angle.cpp"
 #include <list>
 #pragma once
 
@@ -24,12 +25,18 @@ class scene {
 	Vector2f newCamPos;
 
 	string stageName;
-	
+
 	abstractStage* stage;
 	list<tile*> tileList;
 	list<tile*> z2List;
 	list<tile*> z3List;
 	list<tile*> z4List;
+
+	list<tile*> newTileList;
+	list<tile*> newZ2List;
+	list<tile*> newZ3List;
+	list<tile*> newZ4List;
+
 	list<object*> objects;
 	list<transition*> tList;
 	list<transition*>::iterator tIterator;
@@ -53,7 +60,7 @@ public:
 		z2List = stage->getZ2List();
 		z3List = stage->getZ3List();
 		z4List = stage->getZ4List();
-		
+
 		stageName = stage->getName();
 
 		objects = stage->getObjects();
@@ -103,7 +110,7 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			
+
 			p->eachFrame(&deltaT);
 
 
@@ -140,10 +147,10 @@ public:
 
 			cam->followX();
 
+			flagCheck(instance, targetRate);
 
-				
 
-			
+
 			enemyDistanceCheck(instance, objects);
 			enemyCheck(objects);
 
@@ -169,7 +176,7 @@ public:
 
 
 			//transitionCheck();
-			
+
 
 			/*else {
 				if (cam->interpTo(newCamPos, 600, &deltaT)) {
@@ -183,9 +190,9 @@ public:
 				}
 				else if (transitionType == 1) {
 					p->getSprite()->move(270, &deltaT, 100);
-			
+
 					p->getAnimation()->ladderAnim(&deltaT);
-					
+
 				}
 				else if (transitionType == 2) {
 					p->getSprite()->move(90, &deltaT, 100);
@@ -204,8 +211,8 @@ public:
 			for (tile* t : z2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			
-			
+
+
 
 			tileDistanceCheck(instance, tileList);
 			for (tile* t : tileList) {
@@ -224,7 +231,7 @@ public:
 					instance->objectAccess(t, cam);
 				}
 			}
-			
+
 			instance->objectDisplay(p->getBullets(), cam);
 			instance->objectAccess(p->getDamEffect(), cam);
 			p->updateLighting();
@@ -234,34 +241,133 @@ public:
 			//transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> {cur->getHitbox(), p->getFoot()}, cam);
 			//instance->hitboxDisplay(list<UIHitbox*> {cur->getHitbox(), p->getFoot()});
+			
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
 
-			flagCheck();
+			
 
 		}
 	}
 
-	void flagCheck() {
+	void flagCheck(renderer* instance, float targetRate) {
 		Vector2f flagPos = stage->getFlag();
-		if (p->getSprite()->getPosition().x >= flagPos.x) {
+		enum transitionAngle ang = stage->getAngle();
 
-			tileList.clear();
-			z2List.clear();
-			z3List.clear();
-			z4List.clear();
-			objects.clear();
+		cameraFlagCheck(flagPos, ang);
+		if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
 
-			section++;
+			loadNextSection();
+			
+			sectionTransition(instance, targetRate, ang, flagPos);
 
-			stage->reload(stageName + to_string(section));
-			tileList = stage->getTiles();
-			z2List = stage->getZ2List();
-			z3List = stage->getZ3List();
-			z4List = stage->getZ4List();
-			objects = stage->getObjects();
+			deletePrevSection();
 		}
+	}
+
+	void cameraFlagCheck(Vector2f flagPos, enum transitionAngle angle) {
+		Vector2f lastPos = stage->getLastFlagPos();
+		if (angle == RIGHT) {
+			if ((cam->getPosition().x + 1920) >= flagPos.x) {
+				cam->setPosition(Vector2f(flagPos.x - 1920, cam->getPosition().y));
+			}
+			if (lastPos != Vector2f(0, 0)) {
+				if (cam->getPosition().x <= stage->getLastFlagPos().x) {
+					cam->setPosition(Vector2f(lastPos.x, cam->getPosition().y));
+				}
+			}
+		}
+	}
+
+	void sectionTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos) {
+		auto start = time->timerStart();
+		auto* startP = &start;
+		float deltaT = 0;
+
+		bool run = true;
+
+		while (instance->getWindow()->isOpen() && run) {
+			Event event;
+			while (instance->getWindow()->pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					instance->getWindow()->close();
+			}
+			time->frameLimiter(targetRate, startP);
+			deltaT = time->checkTimer(startP);
+			start = time->timerStart();
+			startP = &start;
+
+			p->getAnimation()->toeAnim(&deltaT, true);
+
+
+			for (tile* t : z4List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : newZ4List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z3List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : newZ3List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : newZ2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : tileList) {
+				instance->objectAccess(t, cam);
+			}
+			for (tile* t : newTileList) {
+				instance->objectAccess(t, cam);
+			}
+
+			if (ang == RIGHT) {
+				cam->move(0, &deltaT, float(400));
+				if (cam->getPosition().x >= flagPos.x) {
+					run = false;
+				}
+			}
+			p->getSprite()->move(0, &deltaT, 50);
+
+			p->updateLighting();
+			lightingCheck();
+			instance->objectDisplay(p->getSprite(), cam);
+
+			instance->getWindow()->display();
+			instance->getWindow()->clear();
+
+		}
+
+
+	}
+
+	void loadNextSection() {
+		section++;
+
+		stage->reload(stageName + to_string(section));
+		newTileList = stage->getTiles();
+		newZ2List = stage->getZ2List();
+		newZ3List = stage->getZ3List();
+		newZ4List = stage->getZ4List();
+		objects = stage->getObjects();
+	}
+
+	void deletePrevSection() {
+		tileList = newTileList;
+		z2List = newZ2List;
+		z3List = newZ3List;
+		z4List = newZ4List;
+
+		newTileList.clear();
+		newZ2List.clear();
+		newZ3List.clear();
+		newZ4List.clear();
 	}
 
 	void lightingCheck() {
@@ -356,13 +462,13 @@ public:
 					}
 				}
 
-				/*if (ePos > camPos && ePos < camEdge) {
+				if (ePos > camPos && ePos < camEdge) {
 					e->setOffScreen(false);
 					e->setDisplay(true);
 					e->setAct(true);
 
-				}*/
-				if (e->getOffScreen() == false) {
+				}
+				else if (e->getOffScreen() == false) {
 					e->setOffScreen(true);
 					e->setAct(false);
 					e->setDisplay(false);
