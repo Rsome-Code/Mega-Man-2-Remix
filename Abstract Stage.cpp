@@ -31,12 +31,15 @@ protected:
 	Vector2f initialCamera;
 	Vector2f initalPlayer;
 	Texture* bossTexture;
+	
+	Vector2f flagPos;
 
 	float z = 1;
 	
 
 public:
 	abstractStage(string name) {
+		levelName = name;
 		tileTexture = new Texture();
 		tileTexture->loadFromFile("Assets\\" + name + "-stage.png");
 		setInitialPlayer(Vector2f((15 * 4) * 16, (13 * 4) * 16));
@@ -78,6 +81,33 @@ protected:
 
 public:
 
+	void reload(string name) {
+		tileList.clear();
+		z2List.clear();
+		z3List.clear();
+		z4List.clear();
+		objects.clear();
+		load(name);
+	}
+
+	string getName() {
+		return levelName;
+	}
+
+	Vector2f getFlag() {
+		return flagPos;
+	}
+
+	//Only last placed flag is counted for each section
+	void addEndFlag() {
+		for (object* o : objects) {
+			if (o->getCode() == "flag") {
+				flagPos = o->getSprite()->getPosition();
+			}
+			
+		}
+	}
+
 	Vector2f getInitialCamera() {
 		return initialCamera;
 	}
@@ -96,73 +126,12 @@ public:
 	}
 
 	void load(string name) {
-		// Open the input file named "input.txt"
-		/*ifstream inputFile(name + ".txt");
-
-		// Check if the file is successfully opened
-
-
-		string line;
-		string variable;
-		// Declare a string variable to store each
-		// line of the file
-
-		// Read each line of the file and print it to the
-		// standard output stream
-
-		while (getline(inputFile, line)) {
-
-			char sep = ',';
-			vector<int> values = split(line, sep);
-			list<int> val;
-
-
-			for (auto& i : values) {
-				val.push_back(i);
-			}
-			list<int>::iterator valI = val.begin();
-
-			int type = *valI;
-			valI = next(valI);
-			int worldX = *valI;
-			valI = next(valI);
-			int worldY = *valI;
-			valI = next(valI);
-			int tex = *valI;
-			valI = next(valI);
-			if (valI != val.end()) {
-				z = *valI;
-			}
-			else {
-				z = 1;
-			}
-
-
-
-			if (z == 1) {
-				tileList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-			else if (z == 2) {
-				z2List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-			else if (z == 3) {
-				z3List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-			else if (z == 4) {
-				z4List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-
-		}
-
-		// Close the file
-		inputFile.close();
-		zCorrection();
-*/
 		Load* load = new Load();
 		load->load(name, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();
 		
 		load->loadObjects(name, &objects, enemyTexture);
+		addEndFlag();
 
 	}
 
@@ -189,53 +158,6 @@ public:
 		return z4List;
 	}
 
-
-	/*void load() {
-		// Open the input file named "input.txt"
-		ifstream inputFile("myfile.txt");
-
-		// Check if the file is successfully opened
-
-
-		string line;
-		string variable;
-		// Declare a string variable to store each
-		// line of the file
-
-		// Read each line of the file and print it to the
-		// standard output stream
-
-		while (getline(inputFile, line)) {
-
-			char sep = ',';
-			vector<int> values = split(line, sep);
-			list<int> val;
-
-
-			for (auto& i : values) {
-				val.push_back(i);
-			}
-			list<int>::iterator valI = val.begin();
-
-			int type = *valI;
-			valI = next(valI);
-			int worldX = *valI;
-			valI = next(valI);
-			int worldY = *valI;
-			valI = next(valI);
-			int tex = *valI;
-
-
-
-
-			tileList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-
-		}
-
-		// Close the file
-		inputFile.close();
-
-	}*/
 	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 		if (selectedType == 0) {
 			return new tile(worldPos, tileTexture, selectedTexture, z);

@@ -82,6 +82,20 @@ public:
 			}
 		}
 	}
+	void prevFramePerm() {
+		if (display) {
+			if (current != frameIndexes.begin()) {
+				this->current--;
+				offsetI--;
+				currentIndex--;
+				this->setFrame(*prev(current), *prev(offsetI));
+				
+			}
+			else {
+				this->setFrame(*prev(frameIndexes.end()), *prev(offsetList.end()));
+			}
+		}
+	}
 	void displayNextFrame() {
 		if (next(current) == frameIndexes.end() || current == frameIndexes.end()) {
 			this->setFrame(*next(current), *next(offsetI));

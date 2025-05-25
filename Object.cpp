@@ -60,4 +60,8 @@ public:
 	virtual objectHitbox* getHitbox() { return NULL; };
 	virtual int getDamage() { return NULL; };
 	virtual LightSource* getLightSource() { return NULL; };
+	virtual void setInitOffScreen(bool o) {};
+	virtual bool getInitOffScreen() {
+		return NULL;
+	}
 };

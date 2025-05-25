@@ -39,13 +39,16 @@ class levelEditor {
 	camera* cam;
 
 	string levelName;
-	
+	int section = 0;
 
 	bool mouse1Pressed = false;
 	bool mouse2Pressed = false;
 	bool mouse3Pressed = false;
 	bool xButton1Pressed = false;
 	bool xButton2Pressed = false;
+
+	bool rightPressed = false;
+	bool leftPressed = false;
 
 	list<menuSelect*>::iterator menuI;
 	list<tile*>::iterator worldI;
@@ -55,6 +58,8 @@ class levelEditor {
 	float z = 1;
 
 	bool created = false;
+
+	Vector2f flagLoc;
 
 	int selectedTexture;
 	tile* selectedTile;
@@ -105,7 +110,7 @@ public:
 
 		cam = new camera();
 
-		
+		flagCheck();
 
 
 		//worldHighlight.setPosition(selectedTile->getSprite()->getPosition());
@@ -121,6 +126,22 @@ public:
 
 		m = new mouse();
 
+	}
+
+	void flagCheck() {
+		Load* load = new Load();
+		list<object*> objects;
+		if (section == 0) {
+			load->loadObjects(levelName, &objects, new Texture());
+		}
+		else {
+			load->loadObjects(levelName + to_string(section), &objects, new Texture());
+		}
+		for (object* o : objects) {
+			if (o->getCode() == "flag") {
+				flagLoc = o->getSprite()->getPosition();
+			}
+		}
 	}
 
 	void loop(renderer* instance, double targetRate) {
@@ -166,6 +187,7 @@ public:
 					mouseCheck(&z4List, instance, mousePos);
 				}
 			}
+			keyBoardCheck();
 
 			for (tile* t : tileList) {
 				instance->objectSetup(t->getSprite(), cam);
@@ -290,6 +312,43 @@ public:
 
 
 		}
+	}
+
+	void keyBoardCheck() {
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
+			section++;
+			cam->setPosition(Vector2f (flagLoc.x - 900, flagLoc.y - 900));
+			reload();
+			rightPressed = true;
+		}
+		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Right)) {
+			rightPressed = false;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Left) && !leftPressed) {
+			section--;
+			reload();
+			leftPressed = true;
+		}
+		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
+			leftPressed = false;
+		}
+	}
+
+	void reload() {
+		tileList.clear();
+		z2List.clear();
+		z3List.clear();
+		z4List.clear();
+		Load* load = new Load();
+		if (section != 0) {
+			load->load(levelName + to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
+		}
+		else {
+			load->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
+		}
+		flagCheck();
+		changeZ();
 	}
 
 	void mouseCheck(list<tile*> *tileList, renderer* instance, Vector2i mousePos) {
@@ -635,7 +694,12 @@ public:
 	void save() {
 		ofstream* myfile;
 		myfile = new ofstream();
-		myfile->open(levelName + ".txt");
+		if (section == 0) {
+			myfile->open(levelName + ".txt");
+		}
+		else {
+			myfile->open(levelName + to_string(section) + ".txt");
+		}
 		miniSave(tileList, myfile);
 		miniSave(z2List, myfile);
 		miniSave(z3List, myfile);
@@ -643,84 +707,6 @@ public:
 
 		myfile->close();
 	}
-
-
-	/*void load() {
-		// Open the input file named "input.txt"
-		ifstream inputFile(levelName);
-
-		// Check if the file is successfully opened
-
-
-		string line;
-		string variable;
-		// Declare a string variable to store each
-		// line of the file
-
-		// Read each line of the file and print it to the
-		// standard output stream
-
-		while (getline(inputFile, line)) {
-		
-			char sep = ',';
-			vector<int> values = split(line, sep);
-			list<int> val;
-			
-
-			for (auto& i : values) {
-				val.push_back(i);
-			}
-			list<int>::iterator valI = val.begin();
-
-			int type = *valI;
-			valI = next(valI);
-			int worldX = *valI;
-			valI = next(valI);
-			int worldY = *valI;
-			valI = next(valI);
-			int tex = *valI;
-			if (next(valI) != val.end()) {
-				valI = next(valI);
-				z = *valI;
-			}
-			else {
-				z = 1;
-			}
-			if (z == 1) {
-				tileList.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-			else if (z == 2) {
-				z2List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-			else if (z == 3) {
-				z3List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-			else if (z == 4) {
-				z4List.push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
-			}
-		}
-		z = 1;
-		// Close the file
-		inputFile.close();
-
-	}
-
-	vector<int> split(const string& str, char sep)
-	{
-		vector<int> tokens;
-
-		int i;
-		stringstream ss(str);
-		while (ss >> i) {
-			tokens.push_back(i);
-			if (ss.peek() == sep) {
-				ss.ignore();
-			}
-		}
-
-		return tokens;
-	}*/
-
 
 
 	tile* tileCreation(Vector2f worldPos,int selectedType, int selectedTexture) {

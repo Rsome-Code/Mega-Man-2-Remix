@@ -22,6 +22,8 @@ class scene {
 
 	bool interpolating = false;
 	Vector2f newCamPos;
+
+	string stageName;
 	
 	abstractStage* stage;
 	list<tile*> tileList;
@@ -31,7 +33,7 @@ class scene {
 	list<object*> objects;
 	list<transition*> tList;
 	list<transition*>::iterator tIterator;
-
+	int section = 0;
 	int transitionType;
 
 	Texture* enemyT;
@@ -51,6 +53,8 @@ public:
 		z2List = stage->getZ2List();
 		z3List = stage->getZ3List();
 		z4List = stage->getZ4List();
+		
+		stageName = stage->getName();
 
 		objects = stage->getObjects();
 		tList = stage->getTList();
@@ -59,6 +63,8 @@ public:
 	}
 
 public:
+
+
 	void loop(renderer* instance, double targetRate) {
 
 		auto start = time->timerStart();
@@ -137,7 +143,7 @@ public:
 
 				
 
-				
+			
 			enemyDistanceCheck(instance, objects);
 			enemyCheck(objects);
 
@@ -231,6 +237,30 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
+
+			flagCheck();
+
+		}
+	}
+
+	void flagCheck() {
+		Vector2f flagPos = stage->getFlag();
+		if (p->getSprite()->getPosition().x >= flagPos.x) {
+
+			tileList.clear();
+			z2List.clear();
+			z3List.clear();
+			z4List.clear();
+			objects.clear();
+
+			section++;
+
+			stage->reload(stageName + to_string(section));
+			tileList = stage->getTiles();
+			z2List = stage->getZ2List();
+			z3List = stage->getZ3List();
+			z4List = stage->getZ4List();
+			objects = stage->getObjects();
 		}
 	}
 
@@ -306,42 +336,51 @@ public:
 	}
 
 
+
 	void enemyDistanceCheck(renderer* instance, list<object*> objects) {
+		for (object* e : objects) {
+			//if (e->getHitbox() != NULL) {
+				float ePos = e->getSprite()->getPosition().x;
+				float camPos = cam->getPosition().x;
+				float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
+				float initial = e->getInitialPosition().x;
 
-		Vector2f camPos = Vector2f(cam->getPosition().x, cam->getPosition().y);
-		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x), instance->getWindow()->getSize().y + camPos.y);
-		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
-
-		for (object* t : objects) {
-			bool display = false;
-
-			Vector2f tilePos = t->getSprite()->getPosition();
-
-			if (tilePos.x > camPos.x - (16 * 4) && tilePos.x < dist.x && tilePos.y > camPos.y - (16 * 4) && tilePos.y < dist.y) {
-					if (t->getOffScreen() == false) {
-						t->initial();
-						t->reset();
-						display = true;
-						t->setDisplay(display);
-						t->setAct(display);
-
-					}
-					t->setOffScreen(true);
 				
-			}
-
-			else {
-
-				if (t->getOffScreen() == true) {
-					t->setDisplay(display);
-					t->setAct(display);
+				if (e->getInitOffScreen()) {
+					if (initial > camPos && initial < camEdge) {
+						e->initial();
+						e->reset();
+						
+						e->setDisplay(true);
+						e->setAct(true);
+					}
 				}
-				if (t->getInitialPosition().x > camPos.x - (16 * 4) && t->getInitialPosition().x < dist.x && t->getInitialPosition().y > camPos.y - (16 * 4) && t->getInitialPosition().y < dist.y) {
-					t->setOffScreen(false);
+
+				/*if (ePos > camPos && ePos < camEdge) {
+					e->setOffScreen(false);
+					e->setDisplay(true);
+					e->setAct(true);
+
+				}*/
+				if (e->getOffScreen() == false) {
+					e->setOffScreen(true);
+					e->setAct(false);
+					e->setDisplay(false);
+					//e->getSprite()->setPosition(Vector2f(0, 0));
 				}
-			}
+				if (e->getOffScreen()) {
+					if (initial > camPos && initial < camEdge) {
+						e->setInitOffScreen(false);
+					}
+					else {
+						e->setInitOffScreen(true);
+					}
+				}
+				else {
+					e->setInitOffScreen(false);
+				}
+			//}
 		}
-
 	}
 
 	bool ladderTileCheck(list<tile*> tileList) {

@@ -39,6 +39,8 @@ class ObjectPlacer {
 
 	int z = 1;
 
+	int section = 0;
+
 	timer* time;
 	camera* cam;
 	Vector2i mousePos;
@@ -46,13 +48,15 @@ class ObjectPlacer {
 	bool mouse1Pressed;
 	bool mouse2Pressed;
 	bool mouseX1Pressed;
+	bool leftPressed = false;
+	bool rightPressed = false;
 	Vector2f wSize = Vector2f(1920, 1080);
 	bool worldSelect = false;
 	
 	Tab* tab;
 	object* selectedObject = NULL;
 	object* selectedPlaced = NULL;
-	
+	Texture* enemyT;
 
 public:
 	ObjectPlacer(Texture* T, string levelN, list<object*> obList) {
@@ -66,15 +70,15 @@ public:
 		cam = new camera();
 		cam->setZoom(0.5);
 
-		Texture* t = new Texture();
-		t->loadFromFile("Assets\\enemy.png");
+		enemyT = new Texture();
+		enemyT->loadFromFile("Assets\\enemy.png");
 		
 		for (object* o : obList) {
 			o->setCode();
 		}
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
-		l->loadObjects(saveFile, &objects, t);
+		l->loadObjects(saveFile, &objects, enemyT);
 		
 	}
 	
@@ -161,7 +165,7 @@ public:
 				}
 			}
 
-
+			keyBoardCheck();
 
 			Vector2i mousePos = m->getPosition(instance, wSize);
 			if (checkActive(mousePos)) {
@@ -179,6 +183,51 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 		}
+	}
+
+	void keyBoardCheck() {
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
+			section++;
+			reload();
+			rightPressed = true;
+		}
+		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Right)) {
+			rightPressed = false;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Left) && !leftPressed) {
+			section--;
+			reload();
+			leftPressed = true;
+		}
+		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
+			leftPressed = false;
+		}
+	}
+
+	void reload() {
+		tileList.clear();
+		z2List.clear();
+		z3List.clear();
+		z4List.clear();
+		objects.clear();
+		Load* load = new Load();
+		if (section != 0) {
+			load->load(levelName + to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
+		}
+		else {
+			load->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
+		}
+
+		if (section != 0) {
+			load->loadObjects(levelName + to_string(section), &objects, enemyT);
+		}
+		else {
+			load->loadObjects(levelName, &objects, enemyT);
+		}
+
+		changeZ();
+
 	}
 
 	bool checkActive(Vector2i mousePos) {
@@ -302,7 +351,12 @@ public:
 	void save() {
 		ofstream* myfile;
 		myfile = new ofstream();
-		myfile->open(saveFile);
+		if (section == 0) {
+			myfile->open(saveFile + "-objects.txt");
+		}
+		else {
+			myfile->open(saveFile + to_string(section) + "-objects.txt");
+		}
 
 		for (object* o : objects) {
 			*myfile << o->getCode() + ",";

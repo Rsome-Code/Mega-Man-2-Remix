@@ -15,6 +15,8 @@
 #include "Object Placement.cpp"
 #include "Stage Intro.cpp"
 #include "Level Select.cpp"
+#include "End Flag.cpp"
+#include "Animation Test.cpp"
 #include <vector>
 #include <string>
 #include <sstream>
@@ -61,7 +63,7 @@ int main() {
 
 	
 	
-	RenderWindow window(VideoMode(1920, 1080), "Executable");
+	RenderWindow window(VideoMode(1920, 1080), "Executable", Style::Default);
 
 	RenderWindow* w = &window;
 	renderer* instance = new renderer(w);
@@ -90,8 +92,15 @@ int main() {
 	wT->loadFromFile("assets\\" + word + "-stage.png");
 	levelEditor* l = new levelEditor(wT, word);
 
-	list<object*> obList = { new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100)};
+	list<object*> obList = { new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0))};
 	ObjectPlacer* o = new ObjectPlacer(wT, word, obList);
+
+	list<IntRect> testAnim = list<IntRect>{ IntRect(134, 117, 30, 20), IntRect(170, 117, 24, 28), IntRect(206, 117, 18, 19) };
+	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 5), Vector2f((12), 2), Vector2f(24, 0)};
+	AnimationTest* test = new AnimationTest(testAnim, testOffset, enemyT);
+
+	//test->run(instance, targetFPS);
+
 
 	//l->loop(instance, targetFPS);
 	//o->loop(instance, targetFPS);
@@ -101,6 +110,5 @@ int main() {
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
 	cout << "hi";
-
 
 }

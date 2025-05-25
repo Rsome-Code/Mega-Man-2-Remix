@@ -12,6 +12,7 @@
 #include "Solid Tile.cpp"
 #include "ladder tile.cpp"
 #include "top ladder tile.cpp"
+#include "End Flag.cpp"
 #include "Bat.cpp"
 #include "torch.cpp"
 
@@ -129,6 +130,9 @@ public:
 			}
 			else if (type == "trch-R") {
 				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 255);
+			}
+			else if (type == "flag") {
+				add = new EndFlag(t, Vector2f(worldX, worldY));
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

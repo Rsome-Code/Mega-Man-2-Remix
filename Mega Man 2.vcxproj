@@ -184,6 +184,7 @@
   <ItemGroup>
     <ClCompile Include="Abstract Stage.cpp" />
     <ClCompile Include="Animate.cpp" />
+    <ClCompile Include="Animation Test.cpp" />
     <ClCompile Include="Animation Timer.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Ceiling Tile.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Damage Effect.cpp" />
+    <ClCompile Include="End Flag.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Energy Bar.cpp" />
     <ClCompile Include="grid.cpp" />

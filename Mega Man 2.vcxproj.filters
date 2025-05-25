@@ -358,5 +358,11 @@
     <ClCompile Include="Maths.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
+    <ClCompile Include="End Flag.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation Test.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -14,7 +14,8 @@ protected:
 	int damage;
 	animation* deathAnim;
 	animTimer* deathTimer;
-	bool offScreen = false;
+	bool offScreen = true;
+	bool initOffScreen = true;
 	Vector2f initialPos;
 	bool spawnDisplay = true;
 
@@ -32,14 +33,18 @@ public:
 		initialPos = i;
 		act = false;
 		display = false;
-
 		
 
 	}
 
 public:
 
-
+	bool getInitOffScreen() {
+		return initOffScreen;
+	}
+	void setInitOffScreen(bool o) {
+		initOffScreen = o;
+	}
 
 	void offSetList() {
 		Vector2f center = sprite->getRelativeCenter();
@@ -109,6 +114,7 @@ public:
 		else{
 			act = false;
 			display = false;
+			//sprite->setPosition(Vector2f(0, 0));
 		}
 	}
 
@@ -117,8 +123,12 @@ public:
 	}
 
 	virtual int busterDam() {
-		return 1;
+		return genericDam();
 	}
+
+	
+
+	virtual int genericDam() { return 1; }
 
 	void setOffScreen(bool b) {
 		offScreen = b;
