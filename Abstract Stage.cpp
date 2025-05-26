@@ -44,7 +44,7 @@ public:
 		levelName = name;
 		tileTexture = new Texture();
 		tileTexture->loadFromFile("Assets\\" + name + "-stage.png");
-		setInitialPlayer(Vector2f((15 * 4) * 16, (13 * 4) * 16));
+		setInitialPlayer(Vector2f((50 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12 * 4 * 16, (2 * 4) * 16));
 		bossTexture = new Texture();
 		bossTexture->loadFromFile("Assets\\" + name + ".png");
@@ -103,9 +103,11 @@ public:
 
 	//Only last placed flag is counted for each section
 	void addEndFlag() {
-		lastFlagPos = flagPos;
+		if (transAngle == RIGHT) {
+			lastFlagPos = flagPos;
+		}
 		for (object* o : objects) {
-			if (o->getCode() == "flag") {
+			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up") {
 				flagPos = o->getSprite()->getPosition();
 				transAngle = o->getAngle();
 			}

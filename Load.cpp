@@ -129,10 +129,16 @@ public:
 				add = new bat(t, Vector2f(worldX, worldY));
 			}
 			else if (type == "trch-R") {
-				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 255);
+				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
 			}
 			else if (type == "flag") {
 				add = new EndFlag(t, Vector2f(worldX, worldY));
+			}
+			else if (type == "flag-up") {
+				add = new EndFlag(t, Vector2f(worldX, worldY), UP);
+			}
+			else if (type == "flag-down") {
+				add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

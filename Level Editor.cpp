@@ -317,7 +317,7 @@ public:
 	void keyBoardCheck() {
 		if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
 			section++;
-			cam->setPosition(Vector2f (flagLoc.x - 900, flagLoc.y - 900));
+			//cam->setPosition(Vector2f (flagLoc.x - 900, flagLoc.y - 900));
 			reload();
 			rightPressed = true;
 		}
@@ -399,9 +399,9 @@ public:
 		else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouse1Pressed) {
 			mouse1Pressed = false;
 			
-			
-			mouse1Release(tileList, mousePos);
-			
+			if (!onZ) {
+				mouse1Release(tileList, mousePos);
+			}
 			
 			
 		}
