@@ -15,10 +15,11 @@ class ScreenLighting {
 
 public:
 	ScreenLighting() {
-		for (int y = 0; y < 1080/4; y++) {
-			for (int x = 0; x < 1920/4; x++) {
-				RectangleShape* temp = new RectangleShape(Vector2f(4,4));
-				temp->setPosition(Vector2f(x*4, y*4));
+		int rDiv = 32;
+		for (int y = 0; y < 1080/rDiv; y++) {
+			for (int x = 0; x < 1920/rDiv; x++) {
+				RectangleShape* temp = new RectangleShape(Vector2f(rDiv,rDiv));
+				temp->setPosition(Vector2f(x*rDiv, y*rDiv));
 				rectangles.push_back(temp);
 			}
 		}
