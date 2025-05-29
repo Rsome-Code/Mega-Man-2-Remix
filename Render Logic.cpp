@@ -56,10 +56,10 @@ public:
 
 		w->draw(*s);
 
-		lightingDisplay(object, cam);
+		lightingDisplay(object);
 	}
 
-	void lightingDisplay(objectSprite* object, camera* cam) {
+	void lightingDisplay(objectSprite* object) {
 		list<RectangleShape*> pix = object->getPixels();
 
 		for (RectangleShape* rect : pix) {
@@ -69,6 +69,13 @@ public:
 			temp->setFillColor(rect->getFillColor());
 			w->draw(*temp);
 		}
+	}
+
+	void screenLightingDisplay(list<RectangleShape*> rectangles) {
+		for (RectangleShape* rect : rectangles) {
+			w->draw(*rect);
+		}
+		cout << "ok!";
 	}
 
 	void objectSetup(objectSprite* object, camera* cam) {

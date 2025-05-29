@@ -8,6 +8,7 @@
 #include "Hitbox Detector.cpp"
 #include "Screen Transition.cpp"
 #include "transition angle.cpp"
+#include "screen lighting.cpp"
 #include <list>
 #pragma once
 
@@ -45,6 +46,9 @@ class scene {
 
 	Texture* enemyT;
 
+	ScreenLighting* screenLighting;
+
+
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 		enemyT = en;
@@ -67,6 +71,8 @@ public:
 		tList = stage->getTList();
 		tIterator = tList.begin();
 		p->start(stg->getInitialPlayer());
+
+		screenLighting = new ScreenLighting();
 	}
 
 public:
@@ -237,6 +243,7 @@ public:
 			p->updateLighting();
 			lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
+			instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> {cur->getHitbox(), p->getFoot()}, cam);
@@ -336,7 +343,7 @@ public:
 			p->getSprite()->move(0, &deltaT, 50);
 
 			p->updateLighting();
-			lightingCheck();
+			//lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
 
 			instance->getWindow()->display();
@@ -375,9 +382,15 @@ public:
 			if (ob->getLightSource() != NULL) {
 				LightSource* light = ob->getLightSource();
 				light->updatePos(ob->getSprite()->getCameraPosition());
-				p->lightingCheck(light);
+				//p->lightingCheck(light);
+
+				screenLightingUpdate(light);
 			}
 		}
+	}
+
+	void screenLightingUpdate(LightSource* l) {
+		screenLighting->lightingCheck(l, cam);
 	}
 
 

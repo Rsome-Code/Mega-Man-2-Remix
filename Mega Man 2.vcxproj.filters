@@ -367,5 +367,8 @@
     <ClCompile Include="transition angle.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
+    <ClCompile Include="Screen Lighting.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
