@@ -44,6 +44,9 @@ class scene {
 	int section = 0;
 	int transitionType;
 
+	bool lastFlagRight = true;
+	Vector2f lastFlagPos;
+
 	Texture* enemyT;
 
 	ScreenLighting* screenLighting;
@@ -71,6 +74,7 @@ public:
 		tList = stage->getTList();
 		tIterator = tList.begin();
 		p->start(stg->getInitialPlayer());
+		lastFlagPos = Vector2f(0, 0);
 
 		screenLighting = new ScreenLighting();
 	}
@@ -259,32 +263,52 @@ public:
 	}
 
 	void flagCheck(renderer* instance, float targetRate) {
+		
+
 		Vector2f flagPos = stage->getFlag();
+		
+
+		
 		enum transitionAngle ang = stage->getAngle();
 
 		cameraFlagCheck(flagPos, ang);
-		if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
+		if (ang == RIGHT) {
+			if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
 
-			loadNextSection();
-			
-			sectionTransition(instance, targetRate, ang, flagPos);
+				lastFlagRight = true;
 
-			deletePrevSection();
+				loadNextSection();
+
+				sectionTransition(instance, targetRate, ang, flagPos);
+
+				deletePrevSection();
+			}
+		}
+		else if (ang == DOWN) {
+			if (p->getSprite()->getPosition().y + 48 >= flagPos.y) {
+				lastFlagRight = false;
+				loadNextSection();
+
+				sectionTransition(instance, targetRate, ang, flagPos);
+
+				deletePrevSection();
+			}
 		}
 	}
 
 	void cameraFlagCheck(Vector2f flagPos, enum transitionAngle angle) {
-		Vector2f lastPos = stage->getLastFlagPos();
-		if (angle == RIGHT) {
-			if ((cam->getPosition().x + 1920) >= flagPos.x) {
-				cam->setPosition(Vector2f(flagPos.x - 1920, cam->getPosition().y));
+		
+
+		//if (angle == RIGHT) {
+			if ((cam->getPosition().x + 1920) >= flagPos.x + (16*4)) {
+				cam->setPosition(Vector2f(flagPos.x - (1920 - (16*4)), cam->getPosition().y));
 			}
-			if (lastPos != Vector2f(0, 0)) {
-				if (cam->getPosition().x <= stage->getLastFlagPos().x) {
-					cam->setPosition(Vector2f(lastPos.x, cam->getPosition().y));
+			if (lastFlagPos != Vector2f(0, 0)) {
+				if (cam->getPosition().x <= lastFlagPos.x) {
+					cam->setPosition(Vector2f(lastFlagPos.x, cam->getPosition().y));
 				}
 			}
-		}
+		//}
 	}
 
 	void sectionTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos) {
@@ -306,7 +330,7 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			p->getAnimation()->toeAnim(&deltaT, true);
+			
 
 
 			for (tile* t : z4List) {
@@ -336,11 +360,41 @@ public:
 
 			if (ang == RIGHT) {
 				cam->move(0, &deltaT, float(400));
+				if (p->getGrounded()) {
+					p->getAnimation()->toeAnim(&deltaT, true);
+				}
+				else {
+					p->getAnimation()->runJump();
+				}
+				p->getSprite()->move(0, &deltaT, 50);
 				if (cam->getPosition().x >= flagPos.x) {
 					run = false;
 				}
 			}
-			p->getSprite()->move(0, &deltaT, 50);
+			else if (ang == UP) {
+				cam->move(90, &deltaT, float(400));
+				p->getAnimation()->ladderAnim(&deltaT);
+				p->getSprite()->move(270, &deltaT, 50);
+				if (cam->getPosition().y <= flagPos.y) {
+					run = false;
+				}
+			}
+			
+			else if (ang == DOWN) {
+				cam->move(90, &deltaT, float(400));
+				if (p->getControls()->getOnLadder()) {
+					p->getAnimation()->ladderAnim(&deltaT);
+				}
+				else {
+					p->getAnimation()->runJump();
+				}
+				
+				p->getSprite()->move(90, &deltaT, 70);
+				if (cam->getPosition().y >= flagPos.y) {
+					run = false;
+				}
+
+			}
 
 			p->updateLighting();
 			//lightingCheck();
@@ -349,6 +403,13 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
+		}
+
+		if (lastFlagRight) {
+			lastFlagPos = stage->getLastFlagPos();
+		}
+		else {
+			lastFlagPos = cam->getPosition();
 		}
 
 

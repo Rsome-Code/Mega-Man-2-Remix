@@ -71,6 +71,16 @@ public:
 		}
 	}
 
+	void screenLightingDisplay(list <RectangleShape*> rectangles) {
+		for (RectangleShape* rect : rectangles) {
+			RectangleShape* temp = new RectangleShape();
+			temp->setPosition(rect->getPosition());
+			temp->setSize(rect->getSize());
+			temp->setFillColor(rect->getFillColor());
+			w->draw(*temp);
+		}
+	}
+
 	void objectSetup(objectSprite* object, camera* cam) {
 		Vector2f cPosition = cam->getPosition();
 		float zoom = cam->getZoom();

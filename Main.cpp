@@ -46,7 +46,7 @@ vector<int> split(const string& str, char sep)
 }
 int main() {
 	//Set the framerate here
-	double targetFPS = 120;
+	double targetFPS = 60;
 
 	pController* p1 = new pController();
 
@@ -102,13 +102,13 @@ int main() {
 	//test->run(instance, targetFPS);
 
 
-	//l->loop(instance, targetFPS);
-	//o->loop(instance, targetFPS);
+	l->loop(instance, targetFPS);
+	o->loop(instance, targetFPS);
 
 	area->loop(instance, targetFPS);
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

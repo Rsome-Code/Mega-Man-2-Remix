@@ -341,7 +341,7 @@ public:
 		z3List.clear();
 		z4List.clear();
 		Load* load = new Load();
-		if (section != 0) {
+		if (section) {
 			load->load(levelName + to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 		}
 		else {
@@ -474,11 +474,12 @@ public:
 		return Vector2i(int((mousePos.x + cam->getPosition().x / 2) / (4 * 8)), int((mousePos.y + cam->getPosition().y / 2) / (4 * 8)));
 	}
 
+
 	void mouse1Release(list<tile*> *tileList, Vector2i mousePos) {
 		
 		Vector2i currentWorld = mouseWorld(mousePos);
 		//currentPos = Vector2i(currentPos.x , currentPos.x + (cam->getPosition().x / 2));
-		Vector2f highlightW = Vector2f((worldHighlight.getPosition().x + cam->getPosition().x/2) /(16*2), (worldHighlight.getPosition().y +cam->getPosition().y /2 )/ (16 * 2));
+		Vector2f highlightW = Vector2f((worldHighlight.getPosition().x + cam->getPosition().x/2) /(16*2), (worldHighlight.getPosition().y +cam->getPosition().y /2)/ (16 * 2));
 
 		Vector2i start = Vector2i(highlightW.x,highlightW.y);
 
@@ -745,7 +746,7 @@ public:
 		Vector2f screenPos = Vector2f(worldPos.x / (4 * 8), worldPos.y / (4 * 8));
 		if (!worldCheck(worldPos, screenPos)) {
 			//selectedTile = NULL;
-			selectedTile = tileCreation(worldPos, selectedType, 999);
+			selectedTile = tileCreation(worldPos, selectedType, selectedTexture);
 			created = true;
 			
 			selectedTile->getSprite()->setZ(z);
