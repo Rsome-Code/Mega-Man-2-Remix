@@ -3,6 +3,8 @@
 #include "Player Animations.cpp"
 #include "bullet.cpp"
 #include "Mega Buster.cpp"
+#include "weapon.cpp"
+#include "atomic fire.cpp"
 
 #pragma once
 
@@ -41,9 +43,10 @@ class pControls {
 	bool ladderBelow = false;
 	bool ladderAbove = true;
 
-	list<bullet*> bullets;
+	//list<bullet*> bullets;
+	Weapon* weapon;
 	Texture* bT;
-	int weapon = 0;
+	//int weapon = 0;
 
 	
 public:
@@ -53,7 +56,12 @@ public:
 		pAnim = a;
 		bT = new Texture();
 		bT->loadFromFile("Assets\\Weapons.png");
-		bullets = { new megaBuster(sprite, bT), new megaBuster(sprite, bT), new megaBuster(sprite, bT) };
+		AtomicFire* m = new AtomicFire(s, bT);
+		weapon = m;
+	}
+
+	Weapon* getWeapon() {
+		return weapon;
 	}
 
 	bool checkTeleport() {
@@ -77,7 +85,7 @@ public:
 
 	list<objectSprite*> getBullets() {
 		list<objectSprite*> bul;
-		for (bullet* b : bullets) {
+		for (bullet* b : weapon->getBullets()) {
 			bul.push_back(b->getSprite());
 		}
 		return bul;
@@ -276,45 +284,35 @@ public:
 
 	void shoot(float* deltaT) {
 		if (p1->checkB() && !BPressed) {
-			bool shot = false;
-			
-
-			for (bullet* b : bullets) {
-				if (!b->getShooting()) {
-					b->start(pAnim->getFacingRight());
-					shot = true;
-					break;
-				}
-			}
-			if (shot) {
+			BPressed = true;
+			if (weapon->fire(pAnim->getFacingRight())) {
 				pAnim->shootStart();
 			}
 
 		}
 
-		if (p1->checkB()) {
-			BPressed = true;
+		else if (p1->checkB()) {
+			weapon->hold(deltaT);
 		}
-		else {
+		else if (!p1->checkB() && BPressed) {
 			BPressed = false;
+			if (weapon->release(pAnim->getFacingRight())) {
+				pAnim->shootStart();
+			}
 		}
 
 	}
 
 	list<bullet*> getBulletObjects() {
-		return bullets;
+		return weapon->getBullets();
 	}
 
 	bullet* getBulletObject() {
-		return *bullets.begin();
+		return *weapon->getBullets().begin();
 	}
 
 	void shootEachFrame(float* deltaT) {
-		for (bullet* b : bullets) {
-			if (b->getShooting()) {
-				b->eachFrame(deltaT);
-			}
-		}
+		weapon->eachFrame(deltaT);
 	}
 
 
@@ -375,7 +373,7 @@ public:
 
 	list<objectHitbox*> getBulletHitboxes() {
 		list<objectHitbox*> hits;
-		for (bullet* b : bullets) {
+		for (bullet* b : weapon->getBullets()) {
 			hits.push_back(b->getHitbox());
 		}
 		return hits;

@@ -60,6 +60,7 @@ public:
 	virtual void offsetList() {};
 	virtual void lowerHP(int h) {};
 	virtual int busterDam() { return NULL; };
+	virtual int atomicDam() { return NULL; };
 	virtual bool checkHurt(objectHitbox* bullet) { return false; };
 	virtual bool checkHit(objectHitbox* pHit) { return false; };
 	virtual objectHitbox* getHitbox() { return NULL; };

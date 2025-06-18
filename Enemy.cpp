@@ -126,6 +126,10 @@ public:
 		return genericDam();
 	}
 
+	virtual int atomicDam() {
+		return genericDam();
+	}
+
 	
 
 	virtual int genericDam() { return 1; }

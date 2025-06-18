@@ -136,4 +136,9 @@ public: string getType() {
 		  return cameraScale;
 	  }
 
+	  void setTexture(Texture* t) {
+		  this->texture = t;
+		  loadTexture();
+	  }
+
 };

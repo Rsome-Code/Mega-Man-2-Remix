@@ -49,7 +49,7 @@ class scene {
 
 	Texture* enemyT;
 
-	ScreenLighting* screenLighting;
+	//ScreenLighting* screenLighting;
 
 
 public:
@@ -76,7 +76,7 @@ public:
 		p->start(stg->getInitialPlayer());
 		lastFlagPos = Vector2f(0, 0);
 
-		screenLighting = new ScreenLighting();
+		//screenLighting = new ScreenLighting();
 	}
 
 public:
@@ -185,32 +185,6 @@ public:
 			}
 
 
-			//transitionCheck();
-
-
-			/*else {
-				if (cam->interpTo(newCamPos, 600, &deltaT)) {
-					interpolating = false;
-				}
-				if (transitionType == 0) {
-					p->getSprite()->move(0, &deltaT, 100);
-					if (p->getGrounded()) {
-						p->getAnimation()->toeAnim(&deltaT, true);
-					}
-				}
-				else if (transitionType == 1) {
-					p->getSprite()->move(270, &deltaT, 100);
-
-					p->getAnimation()->ladderAnim(&deltaT);
-
-				}
-				else if (transitionType == 2) {
-					p->getSprite()->move(90, &deltaT, 100);
-					if (p->getControls()->getOnLadder()) {
-						p->getAnimation()->ladderAnim(&deltaT);
-					}
-				}
-			}*/
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
@@ -244,10 +218,10 @@ public:
 
 			instance->objectDisplay(p->getBullets(), cam);
 			instance->objectAccess(p->getDamEffect(), cam);
-			p->updateLighting();
-			lightingCheck();
+			//p->updateLighting();
+			//lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
-			instance->screenLightingDisplay(screenLighting->getRectangles());
+			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> {cur->getHitbox(), p->getFoot()}, cam);
@@ -443,15 +417,15 @@ public:
 			if (ob->getLightSource() != NULL) {
 				LightSource* light = ob->getLightSource();
 				light->updatePos(ob->getSprite()->getCameraPosition());
-				//p->lightingCheck(light);
+				p->lightingCheck(light);
 
-				screenLightingUpdate(light);
+				//screenLightingUpdate(light);
 			}
 		}
 	}
 
 	void screenLightingUpdate(LightSource* l) {
-		screenLighting->lightingCheck(l, cam);
+		//screenLighting->lightingCheck(l, cam);
 	}
 
 

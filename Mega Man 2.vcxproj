@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\include;D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\lib;D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -121,14 +121,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\include;D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\lib;D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window.lib;sfml-audio.lib;sfml-network.lib;sfml-system.lib;sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -186,7 +186,11 @@
     <ClCompile Include="Animate.cpp" />
     <ClCompile Include="Animation Test.cpp" />
     <ClCompile Include="Animation Timer.cpp" />
+    <ClCompile Include="Atomic Fire Bullet.cpp" />
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Atomic Fire.cpp" />
+    <ClCompile Include="Mega Buster.cpp" />
+    <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Screen Lighting.cpp" />
     <ClCompile Include="transition angle.cpp" />
     <ClCompile Include="Ceiling Tile.cpp" />
@@ -208,7 +212,7 @@
     <ClCompile Include="Main Menu.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Maths.cpp" />
-    <ClCompile Include="Mega Buster.cpp" />
+    <ClCompile Include="Mega Buster Bullet.cpp" />
     <ClCompile Include="Menu Selection.cpp" />
     <ClCompile Include="Menu Tab.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -240,6 +244,7 @@
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI Hitbox.cpp" />
     <ClCompile Include="UI Sprite.cpp" />
+    <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Wood Man Stage.cpp" />
     <ClCompile Include="XControl.cpp" />
   </ItemGroup>

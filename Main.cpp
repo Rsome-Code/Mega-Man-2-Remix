@@ -95,15 +95,17 @@ int main() {
 	list<object*> obList = { new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
 	ObjectPlacer* o = new ObjectPlacer(wT, word, obList);
 
-	list<IntRect> testAnim = list<IntRect>{ IntRect(134, 117, 30, 20), IntRect(170, 117, 24, 28), IntRect(206, 117, 18, 19) };
-	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 5), Vector2f((12), 2), Vector2f(24, 0)};
-	AnimationTest* test = new AnimationTest(testAnim, testOffset, enemyT);
+	list<IntRect> testAnim = list<IntRect>{ IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20) };
+	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(8, 8) };
+	Texture* testT = new Texture();
+	testT->loadFromFile("Assets\\weapons.png");
+	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT);
 
 	//test->run(instance, targetFPS);
 
 
-	l->loop(instance, targetFPS);
-	o->loop(instance, targetFPS);
+	//l->loop(instance, targetFPS);
+	//o->loop(instance, targetFPS);
 
 	area->loop(instance, targetFPS);
 

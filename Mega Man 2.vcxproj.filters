@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Game Files\Objects">
       <UniqueIdentifier>{e9b1eb26-e21b-4d45-8b68-738f3137f213}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Player\Weapons">
+      <UniqueIdentifier>{9120521c-ed1a-43e4-afb1-b0c09580f620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Player\Weapons\Bullets">
+      <UniqueIdentifier>{1a31d3b8-337c-4e6c-b3c1-1557dc9f565b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -232,12 +238,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mega Buster.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="grid.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
@@ -366,6 +366,27 @@
     </ClCompile>
     <ClCompile Include="transition angle.cpp">
       <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen Lighting.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Mega Buster.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Mega Buster Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Atomic Fire.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Atomic Fire Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

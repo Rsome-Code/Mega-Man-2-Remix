@@ -51,6 +51,7 @@ public:
 
 		pAnim = new playerAnimation(sprite);
 		controls = new pControls(p1, sprite, pAnim);
+		loadPallete();
 
 		hit = new objectHitbox(IntRect(Vector2i(5 * sprite->getScale().x, 2 * sprite->getScale().y), Vector2i(11, 22)), true, sprite);
 		foot = new objectHitbox(IntRect(Vector2i(9 * sprite->getScale().x, 7 * sprite->getScale().y), Vector2i(4, 20)), true, sprite);
@@ -84,7 +85,7 @@ public:
 
 	void start(Vector2f pos) {
 		tele = new teleport(sprite, pos, 0);
-		setPosition(Vector2f(pos.x, 0));
+		setPosition(Vector2f(pos.x, pos.y));
 	}
 
 	void setPosition(Vector2f pos) {
@@ -237,7 +238,15 @@ public:
 	}
 
 
+	void loadPallete() {
+		Weapon* temp = getWeapon();
+		this->texture = temp->getTexture();
+		sprite->setTexture(texture);
+	}
 
+	Weapon* getWeapon() {
+		return getControls()->getWeapon();
+	}
 
 private:
 	void takingDamage(float* deltaT) {
