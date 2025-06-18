@@ -144,6 +144,8 @@ public:
 					p->getControls()->setLadder(onLadder);
 					p->getControls()->setInfrontOfLadder(onLadder);
 
+					ladderAbove(tileList);
+
 					if (!headLadderTileCheck(tileList)) {
 						p->getAnimation()->ladderGetUp();
 					}
@@ -236,12 +238,19 @@ public:
 		}
 	}
 
+	void ladderAbove(list<tile*> tileList) {
+		for (tile* t : tileList) {
+			if (t->getCeiling() != NULL) {
+				if (hitboxCheck(p->getHead(), t->getCeiling())) {
+					p->setPosition(Vector2f(p->getSprite()->getPosition().x, t->getCeiling()->getPosition().y + 2));
+				}
+			}
+		}
+	}
+
 	void flagCheck(renderer* instance, float targetRate) {
 		
-
 		Vector2f flagPos = stage->getFlag();
-		
-
 		
 		enum transitionAngle ang = stage->getAngle();
 
@@ -306,31 +315,34 @@ public:
 
 			
 
-
+			for (tile* t : newZ4List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : newZ4List) {
+			
+			
+			for (tile* t : newZ3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 			for (tile* t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : newZ3List) {
+			
+			for (tile* t : newZ2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 			for (tile* t : z2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : newZ2List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+			for (tile* t : newTileList) {
+				instance->objectAccess(t, cam);
 			}
 			for (tile* t : tileList) {
 				instance->objectAccess(t, cam);
 			}
-			for (tile* t : newTileList) {
-				instance->objectAccess(t, cam);
-			}
+			
 
 			if (ang == RIGHT) {
 				cam->move(0, &deltaT, float(400));
@@ -370,7 +382,7 @@ public:
 
 			}
 
-			p->updateLighting();
+			//p->updateLighting();
 			//lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
 

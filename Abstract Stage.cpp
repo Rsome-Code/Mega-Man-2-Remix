@@ -44,7 +44,7 @@ public:
 		levelName = name;
 		tileTexture = new Texture();
 		tileTexture->loadFromFile("Assets\\" + name + "-stage.png");
-		setInitialPlayer(Vector2f((15 * 4) * 16, (13 * 4) * 16));
+		setInitialPlayer(Vector2f((58 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12 * 4 * 16, (2 * 4) * 16));
 		bossTexture = new Texture();
 		bossTexture->loadFromFile("Assets\\" + name + ".png");
