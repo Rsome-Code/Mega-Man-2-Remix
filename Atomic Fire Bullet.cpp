@@ -112,4 +112,11 @@ public:
 		shootReset();
 	}
 
+	float getHoldTime() {
+		return holdTime;
+	}
+	float getMaxHoldTime() {
+		return maxHold;
+	}
+
 };

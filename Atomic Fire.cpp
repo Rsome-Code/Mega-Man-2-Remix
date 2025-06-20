@@ -12,9 +12,10 @@ public:
 		colourP->loadFromFile("Assets\\Atomic fire.png");
 	}
 
-	void hold(float* deltaT) {
+	bool hold(float* deltaT) {
 		bullet* temp = *bullets.begin();
 		temp->hold(deltaT);
+		return true;
 	}
 
 	bool release(bool right) {
@@ -29,5 +30,14 @@ public:
 
 	bool uniqueFire() {
 		return false;
+	}
+
+	float getHoldTime() {
+		bullet* temp = *bullets.begin();
+		return temp->getHoldTime();
+	}
+	float getMaxHoldTime() {
+		bullet* temp = *bullets.begin();
+		return temp->getMaxHoldTime();
 	}
 };

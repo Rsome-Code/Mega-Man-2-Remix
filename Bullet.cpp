@@ -36,6 +36,8 @@ public:
 	virtual void onHit() {};
 	virtual int checkDamage(object* en) { return NULL; };
 	virtual void hold(float* deltaT) {};
+	virtual float getHoldTime() { return NULL; };
+	virtual float getMaxHoldTime() { return NULL; };
 
 	void shootReset() {
 		sprite->setPosition(Vector2f(0, 0));

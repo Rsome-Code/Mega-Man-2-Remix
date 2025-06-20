@@ -43,10 +43,13 @@ class pControls {
 	bool ladderBelow = false;
 	bool ladderAbove = true;
 
+
 	//list<bullet*> bullets;
 	Weapon* weapon;
 	Texture* bT;
 	//int weapon = 0;
+
+	bool holding = false;
 
 	
 public:
@@ -267,6 +270,10 @@ public:
 			idle(deltaT);
 		}
 	}
+	
+	bool getHold() {
+		return holding;
+	}
 
 	void idle(float* deltaT) {
 		pAnim->resetRun();
@@ -292,10 +299,14 @@ public:
 		}
 
 		else if (p1->checkB()) {
-			weapon->hold(deltaT);
+			if (weapon->hold(deltaT) != NULL) {
+				holding = true;
+			}
+			
 		}
 		else if (!p1->checkB() && BPressed) {
 			BPressed = false;
+			holding = false;
 			if (weapon->release(pAnim->getFacingRight())) {
 				pAnim->shootStart();
 			}
@@ -324,6 +335,27 @@ public:
 		}
 	}
 
+	int holdin() {
+		float holdTime = weapon->getHoldTime();
+		if (holdTime < weapon->getMaxHoldTime()) {
+			int animFrame = ((holdTime * 1000000000) / 90000000);
+			animFrame = animFrame % 4;
+
+
+
+			return animFrame * 380;
+
+		}
+		else {
+			int animFrame = ((holdTime * 1000000000) / 7500000);
+			animFrame = animFrame % 4;
+
+
+
+			return animFrame * 380;
+		}
+		return 0;
+	}
 
 	void jumpConditions(float* deltaT) {
 		if (grounded) {

@@ -59,8 +59,11 @@ public:
 
 	virtual bool uniqueFire() { return true; };
 	virtual void secondFire() {};
-	virtual void hold(float* deltaT) {};
+	virtual bool hold(float* deltaT) { return NULL; };
 	virtual bool release(bool right) { return false; };
+
+	virtual float getHoldTime() { return NULL; };
+	virtual float getMaxHoldTime() { return NULL; };
 
 	Texture* getTexture() {
 		return colourP;

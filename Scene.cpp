@@ -223,6 +223,7 @@ public:
 			//p->updateLighting();
 			//lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
+			p->getSprite()->setRect(IntRect(Vector2i(p->getSprite()->getRect().getPosition().x, p->getBeforeHold()), p->getSprite()->getRect().getSize()));
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);

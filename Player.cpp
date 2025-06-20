@@ -25,6 +25,10 @@ class player {
 	objectHitbox* ladderBelow;
 	objectHitbox* ladderAbove;
 
+	int holdAdd = 0;
+	float holdTime = 0.2;
+	int cycles = 0;
+
 	playerAnimation* pAnim;
 
 	energyBar* health;
@@ -143,6 +147,33 @@ public:
 
 		updateHitbox();
 
+
+		checkHold(deltaT);
+
+		cout << sprite->getRect().getPosition().y;
+		cout << ", ";
+
+	}
+
+	int beforeHold = 0;
+
+	void checkHold(float* deltaT) {
+		int holdAdd = 0;
+		
+
+		holdAdd = controls->holdin();
+		
+		beforeHold = sprite->getRect().getPosition().y;
+
+		sprite->setRect(IntRect(Vector2i(sprite->getRect().getPosition().x, sprite->getRect().getPosition().y + holdAdd), sprite->getRect().getSize()));
+	}
+
+	int getBeforeHold() {
+		return beforeHold;
+	}
+
+	int getHoldAdd() {
+		return holdAdd;
 	}
 
 	void updateLighting() {
