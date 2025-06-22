@@ -337,22 +337,22 @@ public:
 
 	int holdin() {
 		float holdTime = weapon->getHoldTime();
-		if (holdTime < weapon->getMaxHoldTime()) {
-			int animFrame = ((holdTime * 1000000000) / 90000000);
-			animFrame = animFrame % 4;
+		if (holding) {
+			if (holdTime < weapon->getMaxHoldTime()) {
+				int animFrame = ((holdTime * 1000000000) / 90000000);
+				animFrame = animFrame % 3;
+				animFrame = animFrame + 1;
 
+				return animFrame * 380;
 
+			}
+			else {
+				int animFrame = ((holdTime * 1000000000) / 7500000);
+				animFrame = animFrame % 3;
+				animFrame = animFrame + 1;
 
-			return animFrame * 380;
-
-		}
-		else {
-			int animFrame = ((holdTime * 1000000000) / 7500000);
-			animFrame = animFrame % 4;
-
-
-
-			return animFrame * 380;
+				return animFrame * 380;
+			}
 		}
 		return 0;
 	}

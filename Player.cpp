@@ -148,7 +148,7 @@ public:
 		updateHitbox();
 
 
-		checkHold(deltaT);
+		//checkHold();
 
 		cout << sprite->getRect().getPosition().y;
 		cout << ", ";
@@ -157,7 +157,7 @@ public:
 
 	int beforeHold = 0;
 
-	void checkHold(float* deltaT) {
+	void checkHold() {
 		int holdAdd = 0;
 		
 

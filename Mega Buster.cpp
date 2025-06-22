@@ -13,5 +13,9 @@ public:
 		colourP->loadFromFile("Assets\\NES - Mega Man 2 - Mega Man.png");
 
 	}
+
+	bool checkAmmo() {
+		return true;
+	}
 	
 };

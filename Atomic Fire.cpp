@@ -10,17 +10,30 @@ public:
 		maxWeaponCount = 1;
 		colourP = new Texture();
 		colourP->loadFromFile("Assets\\Atomic fire.png");
+
+		maxAmmo = 5;
+		ammo = 5;
 	}
 
 	bool hold(float* deltaT) {
-		bullet* temp = *bullets.begin();
-		temp->hold(deltaT);
-		return true;
+		if (checkAmmo()) {
+			bullet* temp = *bullets.begin();
+			temp->hold(deltaT);
+			return true;
+		}
+		return false;
 	}
 
 	bool release(bool right) {
-		bullet* temp = *bullets.begin();
-		return temp->release(right);
+		if (checkAmmo()) {
+			
+			bullet* temp = *bullets.begin();
+			if (temp->release(right)) {
+				ammo--;
+				return true;
+			}
+		}
+		return false;
 
 	}
 

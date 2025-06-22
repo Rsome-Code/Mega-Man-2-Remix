@@ -3,8 +3,9 @@
 
 class movable:public objectSprite {
 	using objectSprite::objectSprite;
-	protected: float speed;
-
+protected: 
+	float speed;
+	bool canMove = true;
 
 public:
 	movable(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, int cameraSpeed) {
@@ -46,32 +47,38 @@ public: movable() {
 	}
 
 public:
+	void setMove(bool b) {
+		canMove = b;
+	}
 	void move(float angle, float* since) {
+		if (canMove) {
+			float last = *since;
 
-		float last = *since;
 
+			float thisFrameD = speed * last;
 
-		float thisFrameD = speed * last;
-
-		Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
-		setPosition(amount);
+			Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
+			setPosition(amount);
+		}
 	}
 
 	void move(float angle, float* since, float speed) {
+		if (canMove) {
+			float last = *since;
 
-		float last = *since;
+			float thisFrameD = speed * last;
 
-		float thisFrameD = speed * last;
-
-		Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
-		setPosition(amount);
+			Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
+			setPosition(amount);
+		}
 	}
 	void move(float angle, float dist) {
+		if (canMove) {
+			float thisFrameD = dist;
 
-		float thisFrameD = dist;
-
-		Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
-		setPosition(amount);
+			Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
+			setPosition(amount);
+		}
 	}
 
 	//accel is in pixel per second per second

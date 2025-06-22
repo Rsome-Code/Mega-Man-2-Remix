@@ -11,6 +11,9 @@ protected:
 	int weaponCount = 0;
 	int maxWeaponCount;
 
+	int ammo = 0;
+	int maxAmmo = 0;
+
 	Texture* colourP;
 
 public:
@@ -29,11 +32,12 @@ public:
 		fireReady = b;
 	}
 
-	bool fire(bool right) {
+	virtual bool fire(bool right) {
 		bool fired = false;
-		if (fireReady) {
+		if (fireReady && checkAmmo()) {
 			weaponCount++;
-			
+			ammo--;
+
 			for (bullet* b : bullets) {
 				if (!b->getShooting()) {
 					b->start(right);
@@ -64,6 +68,13 @@ public:
 
 	virtual float getHoldTime() { return NULL; };
 	virtual float getMaxHoldTime() { return NULL; };
+
+	virtual bool checkAmmo() {
+		if (ammo > 0) {
+			return true;
+		}
+		return false;
+	}
 
 	Texture* getTexture() {
 		return colourP;

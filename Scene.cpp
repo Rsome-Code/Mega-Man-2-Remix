@@ -81,6 +81,8 @@ public:
 
 public:
 
+	bool afterT = false;
+	bool justAfterT = false;
 
 	void loop(renderer* instance, double targetRate) {
 
@@ -88,24 +90,6 @@ public:
 		auto* startP = &start;
 		float deltaT = 0;
 
-		//Texture* t = new Texture();
-
-		//objectSprite* wall = new objectSprite ("left wall", t, Vector2i(0,0), Vector2i(100, 4000), Vector2f(0, 200), Vector2f(1,1), 1);
-		//objectHitbox* wallHit = new objectHitbox(IntRect(Vector2i(0,0), Vector2i(100, 4000)), true, wall);
-		//objectSprite* wall1 = new objectSprite("right wall", t, Vector2i(0, 0), Vector2i(100, 4000), Vector2f(100, 200), Vector2f(1,1), 1);
-		//objectHitbox* wallHit1 = new objectHitbox(IntRect(Vector2i(500, 0), Vector2i(100, 4000)), true, wall1);
-
-		//objectSprite* ladder = new objectSprite("ladder", t, Vector2i(800, 324), Vector2i(400, 500), Vector2f(1000, 902), Vector2f(1, 1),1);
-		//objectHitbox* ladderHit = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(400, 1000)), true, ladder);
-
-
-
-		//Texture* te = new Texture();
-		//te->loadFromFile("Assets\\Woodman.png");
-
-
-
-		//cam->setXLimit(Vector2f(currentT->getSprite()->getPosition().x, nextT->getHitbox()->getPosition().x + nextT->getHitbox()->getSize().x - 1920));
 
 
 		while (instance->getWindow()->isOpen() && run) {
@@ -120,7 +104,26 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
+			if (afterT) {
+				p->getSprite()->setMove(true);
+				p->getSprite()->setVVelocity(0);
+				afterT = false;
+			}
 
+			else if (flagCheck(instance, targetRate)) {
+				deltaT = 0;
+				p->getSprite()->setMove(false);
+
+				
+				justAfterT = true;
+				
+			}
+			else if (justAfterT) {
+				//p->getSprite()->setMove(true);
+				afterT = true;
+				justAfterT = false;
+			}
+			
 			p->eachFrame(&deltaT);
 
 
@@ -156,11 +159,16 @@ public:
 				p->getControls()->setLadderAbove(ladderAboveTileCheck(tileList));
 
 			}
+			
 
 			cam->followX();
 
-			flagCheck(instance, targetRate);
 
+			Vector2f flagPos = stage->getFlag();
+
+			enum transitionAngle ang = stage->getAngle();
+
+			cameraFlagCheck(flagPos, ang);
 
 
 			enemyDistanceCheck(instance, objects);
@@ -222,13 +230,15 @@ public:
 			instance->objectAccess(p->getDamEffect(), cam);
 			//p->updateLighting();
 			//lightingCheck();
+			p->checkHold();
 			instance->objectDisplay(p->getSprite(), cam);
+			
 			p->getSprite()->setRect(IntRect(Vector2i(p->getSprite()->getRect().getPosition().x, p->getBeforeHold()), p->getSprite()->getRect().getSize()));
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
-			//instance->objectHitboxSetup(list<objectHitbox*> {cur->getHitbox(), p->getFoot()}, cam);
-			//instance->hitboxDisplay(list<UIHitbox*> {cur->getHitbox(), p->getFoot()});
+			instance->objectHitboxSetup(list<objectHitbox*> { p->getFoot()}, cam);
+			instance->hitboxDisplay(list<UIHitbox*> {p->getFoot()});
 			
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
@@ -249,13 +259,13 @@ public:
 		}
 	}
 
-	void flagCheck(renderer* instance, float targetRate) {
+	bool flagCheck(renderer* instance, float targetRate) {
 		
 		Vector2f flagPos = stage->getFlag();
 		
 		enum transitionAngle ang = stage->getAngle();
 
-		cameraFlagCheck(flagPos, ang);
+
 		if (ang == RIGHT) {
 			if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
 
@@ -266,6 +276,7 @@ public:
 				sectionTransition(instance, targetRate, ang, flagPos);
 
 				deletePrevSection();
+				return true;
 			}
 		}
 		else if (ang == DOWN) {
@@ -276,8 +287,10 @@ public:
 				sectionTransition(instance, targetRate, ang, flagPos);
 
 				deletePrevSection();
+				return true;
 			}
 		}
+		return false;
 	}
 
 	void cameraFlagCheck(Vector2f flagPos, enum transitionAngle angle) {
@@ -382,7 +395,7 @@ public:
 				}
 
 			}
-
+			p->updateHitbox();
 			//p->updateLighting();
 			//lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
