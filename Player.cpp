@@ -150,8 +150,6 @@ public:
 
 		//checkHold();
 
-		cout << sprite->getRect().getPosition().y;
-		cout << ", ";
 
 	}
 
