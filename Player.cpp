@@ -38,12 +38,15 @@ class player {
 	float tempDTime = 0.5;
 
 	damageEffect* dam;
+
+	MegaBuster* megaBuster;
+	AtomicFire* atomicFire;
 	
 
 public:
 	player(pController* p1) {
 		texture = new Texture();
-		if (!texture->loadFromFile("Assets\\NES - Mega Man 2 - Mega Man.png")) {
+		if (!texture->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png")) {
 			cout << "error";
 		}
 
@@ -70,10 +73,24 @@ public:
 
 		dam = new damageEffect(sprite);
 
+		Texture* t = new Texture();
+		t->loadFromFile("assets\\weapons.png");
+
+		megaBuster = new MegaBuster(sprite, t);
+		atomicFire = new AtomicFire(sprite, t);
+
+
 	}
 
 	objectHitbox* getFoot() {
 		return foot;
+	}
+
+	MegaBuster* getMegaBuster() {
+		return megaBuster;
+	}
+	AtomicFire* getAtomicFire() {
+		return atomicFire;
 	}
 
 	bool getGrounded() {
@@ -190,6 +207,10 @@ public:
 
 	bool getDamage() {
 		return damage;
+	}
+
+	int getHP() {
+		return health->getAmount();
 	}
 
 	void updateHitbox() {

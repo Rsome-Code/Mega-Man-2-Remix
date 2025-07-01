@@ -24,7 +24,7 @@ public:animTimer(animation* anim, float fps, bool loop) {
 
 
 public: 
-	//Returns true when animation has finished/looped
+	//Returns true when animation has proceeded
 	bool run(float* delta) {
 		bool nextFrame = false;
 		if (*delta >= countDown) {

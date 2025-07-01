@@ -20,6 +20,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "pause.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -106,6 +107,11 @@ int main() {
 
 	//l->loop(instance, targetFPS);
 	//o->loop(instance, targetFPS);
+
+	Pause* pause = new Pause("Wood Man", col);
+
+	pause->loop(instance, targetFPS);
+
 
 	area->loop(instance, targetFPS);
 

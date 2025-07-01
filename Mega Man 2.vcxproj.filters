@@ -55,6 +55,9 @@
     <Filter Include="Source Files\Game Files\Player\Weapons\Bullets">
       <UniqueIdentifier>{1a31d3b8-337c-4e6c-b3c1-1557dc9f565b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Menus\Pause">
+      <UniqueIdentifier>{f311a9a2-459b-4c54-93dd-a54acdacdb69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -256,9 +259,6 @@
     <ClCompile Include="Hitbox detector.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Energy Bar.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="Damage Effect.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
@@ -388,8 +388,17 @@
     <ClCompile Include="Atomic Fire Bullet.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
     </ClCompile>
+    <ClCompile Include="Energy Bar.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
     <ClCompile Include="Pause.cpp">
-      <Filter>Source Files\Game Files\Menus</Filter>
+      <Filter>Source Files\Game Files\Menus\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon Option.cpp">
+      <Filter>Source Files\Game Files\Menus\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Ammo Bar.cpp">
+      <Filter>Source Files\Game Files\Menus\Pause</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

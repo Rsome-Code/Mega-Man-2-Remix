@@ -9,10 +9,11 @@ public:
 		bullets = { new AtomicFireB(player, t)};
 		maxWeaponCount = 1;
 		colourP = new Texture();
-		colourP->loadFromFile("Assets\\Atomic fire.png");
+		colourP->loadFromFile("Assets\\player\\Atomic fire.png");
 
 		maxAmmo = 5;
 		ammo = 5;
+		name = "Atomic Fire";
 	}
 
 	bool hold(float* deltaT) {

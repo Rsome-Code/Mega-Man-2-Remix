@@ -15,6 +15,7 @@ public:
 		hitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(8, 6)), true, sprite);
 		shootTime = 0.5;
 		shootTemp = 0.5;
+
 	}
 
 	int checkDamage(object* en) {

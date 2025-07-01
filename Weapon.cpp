@@ -16,7 +16,15 @@ protected:
 
 	Texture* colourP;
 
+	string name;
+
 public:
+	int getMaxAmmo() {
+		return maxAmmo;
+	}
+	string getName() {
+		return name;
+	}
 	void eachFrame(float* deltaT) {
 		for (bullet* b : bullets) {
 			if (b->eachFrame(deltaT)) {
@@ -74,6 +82,10 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	int getAmmo() {
+		return ammo;
 	}
 
 	Texture* getTexture() {

@@ -183,6 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Abstract Stage.cpp" />
+    <ClCompile Include="Ammo Bar.cpp" />
     <ClCompile Include="Animate.cpp" />
     <ClCompile Include="Animation Test.cpp" />
     <ClCompile Include="Animation Timer.cpp" />
@@ -244,6 +245,7 @@
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI Hitbox.cpp" />
     <ClCompile Include="UI Sprite.cpp" />
+    <ClCompile Include="Weapon Option.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Wood Man Stage.cpp" />
     <ClCompile Include="XControl.cpp" />

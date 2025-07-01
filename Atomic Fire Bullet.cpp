@@ -60,6 +60,7 @@ public:
 			hitbox->updatePos();
 			return false;
 		}
+		return false;
 	}
 
 	void start(bool r) {
