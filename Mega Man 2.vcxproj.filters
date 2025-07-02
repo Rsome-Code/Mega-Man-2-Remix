@@ -400,5 +400,11 @@
     <ClCompile Include="Ammo Bar.cpp">
       <Filter>Source Files\Game Files\Menus\Pause</Filter>
     </ClCompile>
+    <ClCompile Include="Pause Option.cpp">
+      <Filter>Source Files\Game Files\Menus\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Page Option.cpp">
+      <Filter>Source Files\Game Files\Menus\Pause</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

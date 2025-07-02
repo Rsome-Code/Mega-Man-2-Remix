@@ -108,6 +108,9 @@ public:
 		return false;
 	}
 
+	void resetHoldTime() {
+		holdTime = 0;
+	}
 
 	void onHit() {
 		shootReset();

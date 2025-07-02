@@ -108,15 +108,13 @@ int main() {
 	//l->loop(instance, targetFPS);
 	//o->loop(instance, targetFPS);
 
-	Pause* pause = new Pause("Wood Man", col);
 
-	pause->loop(instance, targetFPS);
 
 
 	area->loop(instance, targetFPS);
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+	//cout << "hi";
 
 }

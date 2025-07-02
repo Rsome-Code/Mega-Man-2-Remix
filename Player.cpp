@@ -25,6 +25,8 @@ class player {
 	objectHitbox* ladderBelow;
 	objectHitbox* ladderAbove;
 
+	bool gotAtomicFire = true;
+
 	int holdAdd = 0;
 	float holdTime = 0.2;
 	int cycles = 0;
@@ -41,6 +43,8 @@ class player {
 
 	MegaBuster* megaBuster;
 	AtomicFire* atomicFire;
+
+	Weapon* active = megaBuster;
 	
 
 public:
@@ -49,6 +53,8 @@ public:
 		if (!texture->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png")) {
 			cout << "error";
 		}
+		Texture* t = new Texture();
+		t->loadFromFile("assets\\weapons.png");
 
 		Image im = texture->copyToImage();
 		Image* image = &im;
@@ -58,7 +64,10 @@ public:
 
 		pAnim = new playerAnimation(sprite);
 		controls = new pControls(p1, sprite, pAnim);
-		loadPallete();
+		megaBuster = new MegaBuster(sprite, t);
+		setActiveWeapon(megaBuster);
+
+		
 
 		hit = new objectHitbox(IntRect(Vector2i(5 * sprite->getScale().x, 2 * sprite->getScale().y), Vector2i(11, 22)), true, sprite);
 		foot = new objectHitbox(IntRect(Vector2i(9 * sprite->getScale().x, 7 * sprite->getScale().y), Vector2i(4, 20)), true, sprite);
@@ -73,8 +82,7 @@ public:
 
 		dam = new damageEffect(sprite);
 
-		Texture* t = new Texture();
-		t->loadFromFile("assets\\weapons.png");
+
 
 		megaBuster = new MegaBuster(sprite, t);
 		atomicFire = new AtomicFire(sprite, t);
@@ -86,11 +94,27 @@ public:
 		return foot;
 	}
 
+	pController* getController() {
+		return controls->getController();
+	}
+
+
+
+	void setActiveWeapon(Weapon* w) {
+		active = w;
+		controls->setWeapon(active);
+		loadPallete();
+	}
+
 	MegaBuster* getMegaBuster() {
 		return megaBuster;
 	}
 	AtomicFire* getAtomicFire() {
 		return atomicFire;
+	}
+
+	bool hasAtomicFire() {
+		return true;
 	}
 
 	bool getGrounded() {
@@ -107,6 +131,10 @@ public:
 	void start(Vector2f pos) {
 		tele = new teleport(sprite, pos, 0);
 		setPosition(Vector2f(pos.x, pos.y));
+	}
+
+	Weapon* getActiveWeapon() {
+		return active;
 	}
 
 	void setPosition(Vector2f pos) {

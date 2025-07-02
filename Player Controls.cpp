@@ -59,8 +59,7 @@ public:
 		pAnim = a;
 		bT = new Texture();
 		bT->loadFromFile("Assets\\Weapons.png");
-		AtomicFire* m = new AtomicFire(s, bT);
-		weapon = m;
+
 	}
 
 	Weapon* getWeapon() {
@@ -73,6 +72,10 @@ public:
 
 	bool getOnLadder() {
 		return onLadder;
+	}
+
+	pController* getController() {
+		return p1;
 	}
 
 	void setGrounded(bool b) {
@@ -274,6 +277,9 @@ public:
 	bool getHold() {
 		return holding;
 	}
+	void setHold(bool b) {
+		holding = b;
+	}
 
 	void idle(float* deltaT) {
 		pAnim->resetRun();
@@ -286,6 +292,16 @@ public:
 			}
 			pAnim->idleAnim(deltaT);
 		}
+	}
+
+	void setWeapon(Weapon* weap) {
+		weapon = weap;
+	}
+
+	void resetHold() {
+		setHold(false);
+		weapon->resetHold();
+		BPressed = false;
 	}
 
 
@@ -313,6 +329,7 @@ public:
 		}
 
 	}
+
 
 	list<bullet*> getBulletObjects() {
 		return weapon->getBullets();

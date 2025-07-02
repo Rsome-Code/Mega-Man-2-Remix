@@ -9,6 +9,7 @@
 #include "Screen Transition.cpp"
 #include "transition angle.cpp"
 #include "screen lighting.cpp"
+#include "pause.cpp"
 #include <list>
 #pragma once
 
@@ -50,6 +51,9 @@ class scene {
 	Texture* enemyT;
 
 	//ScreenLighting* screenLighting;
+	Pause* pause;
+
+	bool startPressed = true;
 
 
 public:
@@ -77,6 +81,9 @@ public:
 		lastFlagPos = Vector2f(0, 0);
 
 		//screenLighting = new ScreenLighting();
+		
+
+
 	}
 
 public:
@@ -103,6 +110,16 @@ public:
 			deltaT = time->checkTimer(startP);
 			start = time->timerStart();
 			startP = &start;
+
+			if (checkPause(instance, targetRate)) {
+				p->getSprite()->setVVelocity(0);
+				p->start(p->getSprite()->getPosition());
+				if (p->getActiveWeapon()->getHoldTime() == NULL || !p->getController()->checkB()) {
+
+					p->getControls()->resetHold();
+
+				}
+			}
 
 			if (afterT) {
 				p->getSprite()->setMove(true);
@@ -214,8 +231,8 @@ public:
 				if (t->getDisplay() && t->getSprite() !=NULL) {
 					instance->objectAccess(t, cam);
 					if (t->getGround() != NULL) {
-						instance->objectHitboxSetup(list<objectHitbox*> {t->getGround()}, cam);
-						instance->hitboxDisplay(list<UIHitbox*> {t->getGround()});
+						//instance->objectHitboxSetup(list<objectHitbox*> {t->getGround()}, cam);
+						//instance->hitboxDisplay(list<UIHitbox*> {t->getGround()});
 					}
 				}
 			}
@@ -237,8 +254,8 @@ public:
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
-			instance->objectHitboxSetup(list<objectHitbox*> { p->getFoot()}, cam);
-			instance->hitboxDisplay(list<UIHitbox*> {p->getFoot()});
+			//instance->objectHitboxSetup(list<objectHitbox*> { p->getFoot()}, cam);
+			//instance->hitboxDisplay(list<UIHitbox*> {p->getFoot()});
 			
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
@@ -247,6 +264,19 @@ public:
 			
 
 		}
+	}
+
+	bool  checkPause(renderer* instance, float targetRate) {
+		if (p->getController()->checkSTART() && !startPressed) {
+			pause = new Pause(stageName, p);
+			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
+			startPressed = true;
+			return true;
+		}
+		else if (!p->getController()->checkSTART()) {
+			startPressed = false;
+		}
+		return false;
 	}
 
 	void ladderAbove(list<tile*> tileList) {

@@ -191,6 +191,8 @@
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Atomic Fire.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
+    <ClCompile Include="Page Option.cpp" />
+    <ClCompile Include="Pause Option.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Screen Lighting.cpp" />
     <ClCompile Include="transition angle.cpp" />

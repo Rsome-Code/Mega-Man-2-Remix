@@ -73,6 +73,7 @@ public:
 	virtual void secondFire() {};
 	virtual bool hold(float* deltaT) { return NULL; };
 	virtual bool release(bool right) { return false; };
+	virtual void resetHold() {};
 
 	virtual float getHoldTime() { return NULL; };
 	virtual float getMaxHoldTime() { return NULL; };
