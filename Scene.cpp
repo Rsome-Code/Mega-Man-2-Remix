@@ -10,6 +10,7 @@
 #include "transition angle.cpp"
 #include "screen lighting.cpp"
 #include "pause.cpp"
+#include "item.cpp"
 #include <list>
 #pragma once
 
@@ -54,6 +55,7 @@ class scene {
 	Pause* pause;
 
 	bool startPressed = true;
+	bool paused = false;
 
 
 public:
@@ -91,13 +93,15 @@ public:
 	bool afterT = false;
 	bool justAfterT = false;
 
+
+
 	void loop(renderer* instance, double targetRate) {
 
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
-
-
+		
+		bool unPaused = false;
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -112,15 +116,24 @@ public:
 			startP = &start;
 
 			if (checkPause(instance, targetRate)) {
+				paused = true;
 				p->getSprite()->setVVelocity(0);
-				p->start(p->getSprite()->getPosition());
 				if (p->getActiveWeapon()->getHoldTime() == NULL || !p->getController()->checkB()) {
 
 					p->getControls()->resetHold();
 
 				}
+				p->start(p->getSprite()->getPosition());
+				unPaused = true;
+			}
+			enemyCheck(objects, instance, targetRate);
+			if (paused) {
+				
+				
+
 				start = time->timerStart();
 				startP = &start;
+				paused = false;
 			}
 
 			if (afterT) {
@@ -151,31 +164,38 @@ public:
 				ground = false;
 				onLadder = false;
 
-				if (!p->getControls()->getOnLadder()) {
+				if (!unPaused) {
+					if (!p->getControls()->getOnLadder()) {
 
 
-					tileCheck(tileList);
+						tileCheck(tileList);
 
-					p->setGrounded(ground);
-					p->getControls()->setInfrontOfLadder(onLadder);
+						p->setGrounded(ground);
+						p->getControls()->setInfrontOfLadder(onLadder);
 
-				}
-
-				else {
-					onLadder = ladderTileCheck(tileList);
-					p->getControls()->setLadder(onLadder);
-					p->getControls()->setInfrontOfLadder(onLadder);
-
-					ladderAbove(tileList);
-
-					if (!headLadderTileCheck(tileList)) {
-						p->getAnimation()->ladderGetUp();
 					}
 
-				}
+					else {
+						onLadder = ladderTileCheck(tileList);
+						p->getControls()->setLadder(onLadder);
+						p->getControls()->setInfrontOfLadder(onLadder);
 
-				p->getControls()->setLadderBelow(ladderBelowTileCheck(tileList));
-				p->getControls()->setLadderAbove(ladderAboveTileCheck(tileList));
+						ladderAbove(tileList);
+
+						if (!headLadderTileCheck(tileList)) {
+							p->getAnimation()->ladderGetUp();
+						}
+
+					}
+
+					p->getControls()->setLadderBelow(ladderBelowTileCheck(tileList));
+					p->getControls()->setLadderAbove(ladderAboveTileCheck(tileList));
+				}
+				else {
+					unPaused = false;
+					p->getControls()->setLadder(false);
+					p->getControls()->setInfrontOfLadder(false);
+				}
 
 			}
 			
@@ -191,7 +211,7 @@ public:
 
 
 			enemyDistanceCheck(instance, objects);
-			enemyCheck(objects);
+			
 
 
 
@@ -232,10 +252,6 @@ public:
 
 				if (t->getDisplay() && t->getSprite() !=NULL) {
 					instance->objectAccess(t, cam);
-					if (t->getGround() != NULL) {
-						//instance->objectHitboxSetup(list<objectHitbox*> {t->getGround()}, cam);
-						//instance->hitboxDisplay(list<UIHitbox*> {t->getGround()});
-					}
 				}
 			}
 
@@ -511,7 +527,7 @@ public:
 
 	}
 
-	void enemyCheck(list<object*> eList) {
+	void enemyCheck(list<object*> eList, renderer* instance, float targetRate) {
 		for (object* e : eList) {
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
@@ -521,16 +537,92 @@ public:
 						}
 					}
 					else {
-						itemGet(e);
+						
+						itemGet(instance, targetRate, e);
 					}
 				}
 			}
 		}
 	}
 
-	void itemGet(object* item) {
-		if (item->getSprite()->getType() == "health") {
-			p->heal(item->getIncrease());
+	void itemGet(renderer* instance, float targetRate, object* item) {
+		itemLoop(instance, targetRate, item);
+
+		item->used();
+		paused = true;
+	}
+
+	void itemLoop(renderer* instance, float targetRate, object* item) {
+		auto start = time->timerStart();
+		auto* startP = &start;
+		float deltaT = 0;
+
+		bool run = true;
+
+		float healRate = 0.2;
+		float healRate_left = healRate;
+
+		int healLeft = item->getIncrease();
+
+		if (28 - p->getHP() < healLeft) {
+			healLeft = 28 - p->getHP();
+		}
+
+		while (instance->getWindow()->isOpen() && run) {
+			Event event;
+			while (instance->getWindow()->pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					instance->getWindow()->close();
+			}
+			time->frameLimiter(targetRate, startP);
+			deltaT = time->checkTimer(startP);
+			start = time->timerStart();
+			startP = &start;
+
+
+
+
+
+			for (tile* t : z4List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z3List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			tileDistanceCheck(instance, tileList);
+			for (tile* t : tileList) {
+
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->objectAccess(t, cam);
+				}
+			}
+			for (object* t : objects) {
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->objectAccess(t, cam);
+				}
+			}
+			instance->objectDisplay(p->getSprite(), cam);
+			
+			healRate_left = healRate_left - deltaT;
+			if (healRate_left <= 0) {
+				healRate_left = healRate;
+				if (item->getSprite()->getType() == "health") {
+					p->heal(1);
+				}
+				healLeft--;
+				
+			}
+			if (healLeft <= 0) {
+				run = false;
+			}
+			instance->UIDisplay(p->getUI());
+			instance->getWindow()->display();
+			instance->getWindow()->clear();
+			
 		}
 	}
 
@@ -563,49 +655,50 @@ public:
 		float camPos = cam->getPosition().x;
 		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
 		for (object* e : objects) {
+			if (e->getIncrease() == NULL) {
+				float initial = e->getInitialPosition().x;
+				if (!e->getOffScreen()) {
+					float ePos = e->getSprite()->getPosition().x;
 
-			float initial = e->getInitialPosition().x;
-			if (!e->getOffScreen()) {
-				float ePos = e->getSprite()->getPosition().x;
 
+					if (ePos > camPos && ePos < camEdge) {
+						if (e->getOffScreen()) {
+							e->setOffScreen(false);
+							e->setDisplay(true);
+							e->setAct(true);
+						}
 
-				if (ePos > camPos && ePos < camEdge) {
-					if (e->getOffScreen()) {
-						e->setOffScreen(false);
-						e->setDisplay(true);
-						e->setAct(true);
+					}
+					else if (e->getOffScreen() == false) {
+						e->setOffScreen(true);
+						e->setAct(false);
+						e->setDisplay(false);
+						//e->deleteSprite();
+
 					}
 
-				}
-				else if (e->getOffScreen() == false) {
-					e->setOffScreen(true);
-					e->setAct(false);
-					e->setDisplay(false);
-					//e->deleteSprite();
-
-				}
-
-			}
-			else {
-				if (e->getInitOffScreen()) {
-					if (initial > camPos && initial < camEdge) {
-						e->initial();
-						e->reset();
-
-						e->setDisplay(true);
-						e->setAct(true);
-						e->setOffScreen(false);
-						e->setInitOffScreen(false);
-					}
-				}
-				
-				if (initial > camPos && initial < camEdge) {
-					e->setInitOffScreen(false);
 				}
 				else {
-					e->setInitOffScreen(true);
-				}
+					if (e->getInitOffScreen()) {
+						if (initial > camPos && initial < camEdge) {
+							e->initial();
+							e->reset();
 
+							e->setDisplay(true);
+							e->setAct(true);
+							e->setOffScreen(false);
+							e->setInitOffScreen(false);
+						}
+					}
+
+					if (initial > camPos && initial < camEdge) {
+						e->setInitOffScreen(false);
+					}
+					else {
+						e->setInitOffScreen(true);
+					}
+
+				}
 			}
 		}
 	}

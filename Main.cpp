@@ -118,6 +118,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

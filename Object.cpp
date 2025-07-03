@@ -72,6 +72,7 @@ public:
 	}
 
 	virtual int getIncrease() { return NULL; };
+	virtual void used(){};
 
 	virtual enum transitionAngle getAngle() {
 		enum transitionAngle r = RIGHT;
