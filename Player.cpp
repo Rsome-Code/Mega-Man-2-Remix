@@ -310,6 +310,10 @@ public:
 		sprite->setVVelocity(0);
 	}
 
+	void heal(int h) {
+		health->increaseAmount(h);
+	}
+
 	string getBulletType() {
 		bullet* b = controls->getBulletObject();
 		return b->getSprite()->getType();

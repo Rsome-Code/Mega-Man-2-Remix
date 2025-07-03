@@ -14,6 +14,7 @@
 #include "top ladder tile.cpp"
 #include "End Flag.cpp"
 #include "Bat.cpp"
+#include "big health.cpp"
 #include "torch.cpp"
 
 #pragma once
@@ -101,6 +102,9 @@ public:
 
 		ifstream inputFile(levelName + "-objects.txt");
 
+		Texture* misc = new Texture();
+		misc->loadFromFile("Assets\\misc.png");
+
 		string line;
 		string variable;
 
@@ -139,6 +143,9 @@ public:
 			}
 			else if (type == "flag-down") {
 				add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
+			}
+			else if (type == "health-big") {
+				add = new BigHealth(misc, Vector2f(worldX, worldY));
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

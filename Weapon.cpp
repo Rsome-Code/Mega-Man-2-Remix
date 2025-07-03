@@ -8,11 +8,12 @@ protected:
 	list<bullet*> bullets;
 	
 	bool fireReady = true;
-	int weaponCount = 0;
+	float weaponCount = 0;
 	int maxWeaponCount;
 
-	int ammo = 0;
-	int maxAmmo = 0;
+	int ammo = 28;
+	int maxAmmo = 28;
+	int ammoDecrease = 1;
 
 	Texture* colourP;
 
@@ -44,7 +45,10 @@ public:
 		bool fired = false;
 		if (fireReady && checkAmmo()) {
 			weaponCount++;
-			ammo--;
+			ammo = ammo - ammoDecrease;
+			if (ammo < 0) {
+				ammo = 0;
+			}
 
 			for (bullet* b : bullets) {
 				if (!b->getShooting()) {

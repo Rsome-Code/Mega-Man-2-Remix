@@ -70,6 +70,9 @@ public:
 	virtual bool getInitOffScreen() {
 		return NULL;
 	}
+
+	virtual int getIncrease() { return NULL; };
+
 	virtual enum transitionAngle getAngle() {
 		enum transitionAngle r = RIGHT;
 		return r;

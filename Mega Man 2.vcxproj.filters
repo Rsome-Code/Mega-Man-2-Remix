@@ -58,6 +58,9 @@
     <Filter Include="Source Files\Game Files\Menus\Pause">
       <UniqueIdentifier>{f311a9a2-459b-4c54-93dd-a54acdacdb69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Objects\Items">
+      <UniqueIdentifier>{3c619750-6305-440a-adda-71752a39d833}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -405,6 +408,12 @@
     </ClCompile>
     <ClCompile Include="Page Option.cpp">
       <Filter>Source Files\Game Files\Menus\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\Game Files\Objects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Big Health.cpp">
+      <Filter>Source Files\Game Files\Objects\Items</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

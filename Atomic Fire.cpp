@@ -14,8 +14,7 @@ public:
 		colourP = new Texture();
 		colourP->loadFromFile("Assets\\player\\Atomic fire.png");
 
-		maxAmmo = 5;
-		ammo = 5;
+		ammoDecrease = 5;
 		name = "Atomic Fire";
 	}
 
@@ -33,7 +32,10 @@ public:
 			
 			bullet* temp = *bullets.begin();
 			if (temp->release(right)) {
-				ammo--;
+				ammo = ammo - ammoDecrease;
+				if (ammo < 0) {
+					ammo = 0;
+				}
 				return true;
 			}
 		}

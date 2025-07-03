@@ -93,7 +93,10 @@ int main() {
 	wT->loadFromFile("assets\\" + word + "-stage.png");
 	levelEditor* l = new levelEditor(wT, word);
 
-	list<object*> obList = { new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
+	Texture* misc = new Texture();
+	misc->loadFromFile("assets\\misc.png");
+
+	list<object*> obList = { new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
 	ObjectPlacer* o = new ObjectPlacer(wT, word, obList);
 
 	list<IntRect> testAnim = list<IntRect>{ IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20) };

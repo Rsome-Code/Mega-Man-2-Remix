@@ -119,6 +119,8 @@ public:
 					p->getControls()->resetHold();
 
 				}
+				start = time->timerStart();
+				startP = &start;
 			}
 
 			if (afterT) {
@@ -198,7 +200,7 @@ public:
 
 				if (t->getAct() && t->getHitbox() != NULL) {
 					t->eachFrame(&deltaT, p->getSprite());
-					t->checkHit(p->getHitbox());
+					//t->checkHit(p->getHitbox());
 
 
 					for (bullet* h : p->getControls()->getBulletObjects()) {
@@ -513,14 +515,24 @@ public:
 		for (object* e : eList) {
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
-					if (!p->getDamage()) {
-						p->takeDamage(e->getDamage());
+					if (e->getIncrease() == NULL) {
+						if (!p->getDamage()) {
+							p->takeDamage(e->getDamage());
+						}
+					}
+					else {
+						itemGet(e);
 					}
 				}
 			}
 		}
 	}
 
+	void itemGet(object* item) {
+		if (item->getSprite()->getType() == "health") {
+			p->heal(item->getIncrease());
+		}
+	}
 
 	void tileDistanceCheck(renderer* instance, list<tile*> tileList) {
 
@@ -711,23 +723,6 @@ public:
 
 
 	bool hitboxCheck(objectHitbox* pHit, objectHitbox* hit) {
-
-		/*if (pHit->getPosition().x > hit->getPosition().x + hit->getSize().x) {
-
-		}
-		else if (pHit->getPosition().x + pHit->getSize().x < hit->getPosition().x) {
-
-		}
-		else if (pHit->getPosition().y > hit->getPosition().y + hit->getSize().y) {
-
-		}
-		else if (pHit->getPosition().y + pHit->getSize().y < hit->getPosition().y) {
-
-		}
-		else {		
-			return true;
-		}
-		return false;*/
 
 		return hitboxDetect::hitboxDetection(pHit, hit);
 

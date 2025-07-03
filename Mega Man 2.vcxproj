@@ -190,6 +190,8 @@
     <ClCompile Include="Atomic Fire Bullet.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Atomic Fire.cpp" />
+    <ClCompile Include="Big Health.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
     <ClCompile Include="Page Option.cpp" />
     <ClCompile Include="Pause Option.cpp" />

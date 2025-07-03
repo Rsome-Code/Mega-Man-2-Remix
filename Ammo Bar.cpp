@@ -28,7 +28,8 @@ public:
 	}
 
 	void update(int newVal) {
-		barVal = Maths::map(0, ammoMax, 0, barMax, newVal);
+		//barVal = Maths::map(0, ammoMax, 0, barMax, newVal);
+		barVal = newVal;
 
 		int fullBars = barVal/ 4;
 		int left = barVal % 4;
