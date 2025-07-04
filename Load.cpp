@@ -106,7 +106,7 @@ public:
 		ifstream inputFile(levelName + "-objects.txt");
 
 		Texture* misc = new Texture();
-		misc->loadFromFile("Assets\\misc.png");
+		misc->loadFromFile("Assets\\misc\\mega buster.png");
 
 		string line;
 		string variable;

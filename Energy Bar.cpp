@@ -10,13 +10,13 @@ protected:
 public:
 	energyBar(Texture* t, Vector2f loc, int ini) {
 		amount = ini;
-		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(5, 5));
+		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4));
 		setAmount();
 	}
 	energyBar(Texture* t, Vector2f loc) {
 		amount = max;
 
-		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(5, 5));
+		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4));
 		setAmount();
 	}
 

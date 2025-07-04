@@ -18,7 +18,7 @@ public:
 		Texture* t = new Texture();
 		t->loadFromFile("assets\\pause\\bars\\" + w->getName() + ".png");
 
-		bar = new AmmoBar(w->getMaxAmmo(), Vector2f(position.x + (13 *4), position.y), t);
+		bar = new AmmoBar(t, Vector2f(position.x + (13 *4), position.y));
 		icon = new UISprite("Letter", t, IntRect(0, 8, 8, 8), position, Vector2f(4,4));
 		bar->update(weapon->getAmmo());
 	}

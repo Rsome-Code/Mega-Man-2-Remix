@@ -288,6 +288,14 @@ public:
 		if (p->getController()->checkSTART() && !startPressed) {
 			pause = new Pause(stageName, p);
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
+			for (object* o : objects) {
+				Texture* temp = new Texture();
+				temp->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
+				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health") {
+
+					o->getSprite()->setTexture(temp);
+				}
+			}
 			startPressed = true;
 			return true;
 		}
@@ -645,6 +653,7 @@ public:
 			if (healLeft <= 0) {
 				run = false;
 			}
+			p->updateAmmo();
 			instance->UIDisplay(p->getUI());
 			instance->getWindow()->display();
 			instance->getWindow()->clear();

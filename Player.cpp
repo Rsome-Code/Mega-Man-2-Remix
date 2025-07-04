@@ -9,6 +9,7 @@
 #include "mega buster.cpp"
 #include "Energy Bar.cpp"
 #include "Damage Effect.cpp"
+#include "ammo bar.cpp"
 #pragma once
 
 class player {
@@ -34,6 +35,9 @@ class player {
 	playerAnimation* pAnim;
 
 	energyBar* health;
+	AmmoBar* ammoBar;
+	Vector2f ammoPos = Vector2f(20 + (2*(8*4)), 20);
+	bool displayAmmo = false;
 
 	bool damage = false;
 	float damageTime = 0.5;
@@ -86,8 +90,10 @@ public:
 
 		megaBuster = new MegaBuster(sprite, t);
 		atomicFire = new AtomicFire(sprite, t);
-
-
+		Texture* aB = new Texture();
+		aB->loadFromFile("assets\\bars\\atomic fire.png");
+		ammoBar = new AmmoBar(aB, ammoPos);
+		ammoBar->setVertical();
 	}
 
 	objectHitbox* getFoot() {
@@ -104,6 +110,19 @@ public:
 		active = w;
 		controls->setWeapon(active);
 		loadPallete();
+		if (active->getName() == "Mega Buster") {
+			displayAmmo = false;
+		}
+		else {
+			displayAmmo = true;
+			Texture* temp = new Texture();
+			temp->loadFromFile("assets\\bars\\" + active->getName() + ".png");
+			ammoBar = new AmmoBar(temp, ammoPos);
+			ammoBar->update(active->getAmmo());
+			ammoBar->setVertical();
+		}
+		
+		
 	}
 
 	MegaBuster* getMegaBuster() {
@@ -147,7 +166,12 @@ public:
 		ladderAbove->updatePos();
 	}
 
+	void updateAmmo() {
+		ammoBar->update(active->getAmmo());
+	}
+
 	void eachFrame(float* deltaT) {
+		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
 
@@ -280,7 +304,14 @@ public:
 	}
 
 	list<UISprite*> getUI() {
-		return list<UISprite*> {health->getSprite()};
+		if (displayAmmo) {
+			list<UISprite*> temp = ammoBar->getSprites();
+			temp.push_back(health->getSprite());
+			return temp;
+		}
+		else {
+			return list<UISprite*> {health->getSprite()};
+		}
 	}
 
 	list<objectSprite*> getBullets() {

@@ -8,7 +8,7 @@ public:
 	damageEffect(objectSprite* fol) {
 		follow = fol;
 		Texture* dET = new Texture();
-		dET->loadFromFile("Assets\\misc.png");
+		dET->loadFromFile("Assets\\misc\\mega buster.png");
 		sprite = new objectSprite("effect", dET, Vector2i(1, 22), Vector2i(24, 24), fol->getPosition(), Vector2f(fol->getScale().x + 1, fol->getScale().y + 1), 1);
 		setDisplay(false);
 		sprite->setVisualOffset(Vector2f(-8, 0));

@@ -55,7 +55,7 @@ int main() {
 	enemyT->loadFromFile("Assets\\enemy.png");
 
 	Texture* miscT = new Texture();
-	miscT->loadFromFile("Assets\\misc.png");
+	miscT->loadFromFile("Assets\\misc\\mega buster.png");
 
 	player* col = new player(p1);
 
@@ -94,7 +94,7 @@ int main() {
 	levelEditor* l = new levelEditor(wT, word);
 
 	Texture* misc = new Texture();
-	misc->loadFromFile("assets\\misc.png");
+	misc->loadFromFile("assets\\misc\\mega buster.png");
 
 	list<object*> obList = { new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
 	ObjectPlacer* o = new ObjectPlacer(wT, word, obList);

@@ -6,3 +6,5 @@ e1,1439,836,1
 flag-down,4371,1032,1
 ammo-big,3013,773,1
 ammo-small,2948,781,1
+health-big,945,883,1
+health-small,857,903,1
