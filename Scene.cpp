@@ -559,7 +559,7 @@ public:
 
 		bool run = true;
 
-		float healRate = 0.2;
+		float healRate = 0.15;
 		float healRate_left = healRate;
 
 		int healLeft = item->getIncrease();
