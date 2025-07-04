@@ -546,8 +546,24 @@ public:
 	}
 
 	void itemGet(renderer* instance, float targetRate, object* item) {
-		itemLoop(instance, targetRate, item);
+		bool loop = true;
+		if (item->getSprite()->getType() == "health") {
+			if (p->getHP() == 28) {
+				loop = false;
+			}
+		}
 
+		if (item->getSprite()->getType() == "ammo") {
+			if (p->getActiveWeapon()->getAmmo() == 28) {
+				loop = false;
+			}
+			cout << p->getActiveWeapon()->getAmmo();
+			cout << ", ";
+		}
+
+		if (loop) {
+			itemLoop(instance, targetRate, item);
+		}
 		item->used();
 		paused = true;
 	}
@@ -564,8 +580,15 @@ public:
 
 		int healLeft = item->getIncrease();
 
-		if (28 - p->getHP() < healLeft) {
-			healLeft = 28 - p->getHP();
+		if (item->getSprite()->getType() == "health") {
+			if (28 - p->getHP() < healLeft) {
+				healLeft = 28 - p->getHP();
+			}
+		}
+		if (item->getSprite()->getType() == "ammo") {
+			if (28 - p->getActiveWeapon()->getAmmo() < healLeft) {
+				healLeft = 28 - p->getActiveWeapon()->getAmmo();
+			}
 		}
 
 		while (instance->getWindow()->isOpen() && run) {
@@ -612,6 +635,9 @@ public:
 				healRate_left = healRate;
 				if (item->getSprite()->getType() == "health") {
 					p->heal(1);
+				}
+				else if (item->getSprite()->getType() == "ammo") {
+					p->getActiveWeapon()->addAmmo(1);
 				}
 				healLeft--;
 				

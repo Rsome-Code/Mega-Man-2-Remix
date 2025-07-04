@@ -295,12 +295,14 @@ public:
 			if (tab->checkActive(mousePos)) {
 				tab->checkMouse(mousePos);
 				selectedObject = tab->getSelected();
+				worldSelect = false;
 			}
 			else {
 				worldSelect = true;
 				mousePos = mouseCorrection(mousePos);
 				worldClick(mousePos);
 			}
+			mouse1Pressed = true;
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 

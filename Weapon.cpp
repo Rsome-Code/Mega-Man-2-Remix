@@ -89,6 +89,10 @@ public:
 		return false;
 	}
 
+	void addAmmo(int a) {
+		ammo = ammo + a;
+	}
+
 	int getAmmo() {
 		return ammo;
 	}

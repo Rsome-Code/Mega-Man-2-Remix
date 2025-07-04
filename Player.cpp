@@ -215,6 +215,8 @@ public:
 		return beforeHold;
 	}
 
+
+
 	int getHoldAdd() {
 		return holdAdd;
 	}

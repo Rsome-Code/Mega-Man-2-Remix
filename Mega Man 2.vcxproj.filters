@@ -415,5 +415,14 @@
     <ClCompile Include="Big Health.cpp">
       <Filter>Source Files\Game Files\Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Small Health.cpp">
+      <Filter>Source Files\Game Files\Objects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Big Ammo.cpp">
+      <Filter>Source Files\Game Files\Objects\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Small Ammo.cpp">
+      <Filter>Source Files\Game Files\Objects\Items</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

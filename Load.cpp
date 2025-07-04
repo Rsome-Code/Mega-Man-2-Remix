@@ -16,6 +16,9 @@
 #include "Bat.cpp"
 #include "big health.cpp"
 #include "torch.cpp"
+#include "small health.cpp"
+#include "big ammo.cpp"
+#include "small ammo.cpp"
 
 #pragma once
 
@@ -146,6 +149,15 @@ public:
 			}
 			else if (type == "health-big") {
 				add = new BigHealth(misc, Vector2f(worldX, worldY));
+			}
+			else if (type == "health-small"){
+				add = new SmallHealth(misc, Vector2f(worldX, worldY));
+			}
+			else if (type == "ammo-big") {
+				add = new BigAmmo(misc, Vector2f(worldX, worldY));
+			}
+			else if (type == "ammo-small") {
+				add = new SmallAmmo(misc, Vector2f(worldX, worldY));
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

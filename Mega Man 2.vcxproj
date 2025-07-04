@@ -190,6 +190,7 @@
     <ClCompile Include="Atomic Fire Bullet.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Atomic Fire.cpp" />
+    <ClCompile Include="Big Ammo.cpp" />
     <ClCompile Include="Big Health.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
@@ -197,6 +198,8 @@
     <ClCompile Include="Pause Option.cpp" />
     <ClCompile Include="Pause.cpp" />
     <ClCompile Include="Screen Lighting.cpp" />
+    <ClCompile Include="Small Ammo.cpp" />
+    <ClCompile Include="Small Health.cpp" />
     <ClCompile Include="transition angle.cpp" />
     <ClCompile Include="Ceiling Tile.cpp" />
     <ClCompile Include="Bullet.cpp" />
