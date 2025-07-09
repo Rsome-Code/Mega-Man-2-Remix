@@ -64,12 +64,15 @@ public:
 	virtual bool checkHurt(objectHitbox* bullet) { return false; };
 	virtual bool checkHit(objectHitbox* pHit) { return false; };
 	virtual objectHitbox* getHitbox() { return NULL; };
+	virtual objectHitbox* getHurtbox() {return NULL;};
 	virtual int getDamage() { return NULL; };
 	virtual LightSource* getLightSource() { return NULL; };
 	virtual void setInitOffScreen(bool o) {};
 	virtual bool getInitOffScreen() {
 		return NULL;
 	}
+
+	virtual int getHP() { return NULL; };
 
 	virtual int getIncrease() { return NULL; };
 	virtual void used(){};

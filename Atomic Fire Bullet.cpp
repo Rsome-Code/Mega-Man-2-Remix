@@ -51,12 +51,9 @@ public:
 
 		if (shooting) {
 			aTimer->run(deltaT);
-			if (right) {
-				sprite->move(0, deltaT, speed);
-			}
-			else { 
-				sprite->move(180, deltaT, speed);
-			}
+		
+			sprite->move(direction, deltaT, speed);
+			
 			hitbox->updatePos();
 			return false;
 		}
@@ -87,6 +84,9 @@ public:
 	}
 
 	bool release(bool r) {
+
+		
+
 		holdTime = 0;
 		if (!shooting) {
 			sprite->setScale(Vector2f(size, size));
@@ -102,6 +102,12 @@ public:
 			}
 			sprite->setPosition(Vector2f(origin->getPosition().x + offset, (origin->getPosition().y + 38) - yPosAdd));
 			right = r;
+			if (right) {
+				direction = 0;
+			}
+			else {
+				direction = 180;
+			}
 			shootTemp = shootTime;
 			return true;
 		}
@@ -110,10 +116,6 @@ public:
 
 	void resetHoldTime() {
 		holdTime = 0;
-	}
-
-	void onHit() {
-		shootReset();
 	}
 
 	float getHoldTime() {

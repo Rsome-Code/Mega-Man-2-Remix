@@ -15,6 +15,8 @@ protected:
 	float speed = 1750;
 	bool right;
 
+	float direction;
+
 public:
 	bullet() {}
 
@@ -33,11 +35,29 @@ public:
 
 
 	virtual objectHitbox* getHitbox() { return hitbox; };
-	virtual void onHit() {};
+	virtual void onHit(object* e) {
+		if (e->getHP() > 0) {
+			shootReset();
+		}
+	};
 	virtual int checkDamage(object* en) { return NULL; };
 	virtual void hold(float* deltaT) {};
 	virtual float getHoldTime() { return NULL; };
 	virtual float getMaxHoldTime() { return NULL; };
+	
+	virtual void deflect() {
+		
+		if (right) {
+			direction = 330;
+		}
+		else {
+			direction = 210;
+		}
+	}
+
+	void setDirection(float num) {
+		direction = num;
+	}
 
 	void shootReset() {
 		sprite->setPosition(Vector2f(0, 0));

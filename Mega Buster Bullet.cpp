@@ -24,6 +24,9 @@ public:
 
 	void start(bool r) {
 		shooting = true;
+
+		
+
 		float offset;
 		if (r) {
 			offset = 80;
@@ -33,6 +36,12 @@ public:
 		}
 		sprite->setPosition(Vector2f(origin->getPosition().x + offset, origin->getPosition().y + 38));
 		right = r;
+		if (right) {
+			direction = 0;
+		}
+		else {
+			direction = 180;
+		}
 		shootTemp = shootTime;
 	}
 
@@ -44,22 +53,21 @@ public:
 		}
 
 		if (shooting) {
-			if (right) {
-				sprite->move(0, deltaT, speed);
-			}
-			else {
-				sprite->move(180, deltaT, speed);
-			}
+
+			sprite->move(direction, deltaT, speed);
+
 			hitbox->updatePos();
 			return false;
 		}
 	}
 
+	
+
 	objectHitbox* getHitbox() {
 		return hitbox;
 	}
 
-	void onHit(){
+	void onHit(object* e){
 		shootReset();
 	}
 

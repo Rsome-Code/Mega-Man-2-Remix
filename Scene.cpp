@@ -213,25 +213,7 @@ public:
 			enemyDistanceCheck(instance, objects);
 			
 
-
-
-
-			for (object* t : objects) {
-
-				if (t->getAct() && t->getHitbox() != NULL) {
-					t->eachFrame(&deltaT, p->getSprite());
-					//t->checkHit(p->getHitbox());
-
-
-					for (bullet* h : p->getControls()->getBulletObjects()) {
-						if (t->checkHurt(h->getHitbox())) {
-
-							t->lowerHP(h->checkDamage(t));
-							h->onHit();
-						}
-					}
-				}
-			}
+			bulletCollisionCheck(deltaT);
 
 
 
@@ -281,6 +263,36 @@ public:
 
 			
 
+		}
+	}
+
+	void bulletCollisionCheck(float deltaT) {
+		for (object* enemy : objects) {
+
+			if (enemy->getAct() && enemy->getHurtbox() != NULL) {
+				enemy->eachFrame(&deltaT, p->getSprite());
+				//t->checkHit(p->getHitbox());
+
+
+				for (bullet* bull : p->getControls()->getBulletObjects()) {
+					if (enemy->checkHurt(bull->getHitbox())) {
+
+						enemy->lowerHP(bull->checkDamage(enemy));
+						
+
+						if (bull->checkDamage(enemy) <= 0){
+							bull->deflect();
+						}
+						else {
+							bull->onHit(enemy);
+						}
+					}
+					else if (enemy->checkHit(bull->getHitbox())) {
+						bull->deflect();
+					}
+					
+				}
+			}
 		}
 	}
 
