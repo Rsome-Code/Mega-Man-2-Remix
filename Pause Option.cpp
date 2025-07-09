@@ -6,7 +6,7 @@
 class Option {
 protected:
 	UISprite* icon;
-	float flashTime = 0.25;
+	float flashTime = 0.15;
 	float flashTime_left = flashTime;
 
 	bool displayIcon = true;

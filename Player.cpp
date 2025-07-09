@@ -13,11 +13,15 @@
 #pragma once
 
 class player {
+	int lives = 2;
+	int ETanks = 0;
 	physicsObject* sprite;
 	Texture* texture;
 	pControls* controls;
 	bool grounded = true;
 	teleport* tele;
+
+	int maxHP = 28;
 
 	objectHitbox* hit;
 	objectHitbox* foot;
@@ -26,7 +30,7 @@ class player {
 	objectHitbox* ladderBelow;
 	objectHitbox* ladderAbove;
 
-	bool gotAtomicFire = true;
+	bool gotAtomicFire = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -100,11 +104,24 @@ public:
 		return foot;
 	}
 
+	int getETanks() {
+		return ETanks;
+	}
+
 	pController* getController() {
 		return controls->getController();
 	}
 
+	void setAtomicFire(bool b) {
+		gotAtomicFire = b;
+	}
+	void setETanks(int e) {
+		ETanks = e;
+	}
 
+	int getMaxHP() {
+		return maxHP;
+	}
 
 	void setActiveWeapon(Weapon* w) {
 		active = w;
@@ -132,8 +149,12 @@ public:
 		return atomicFire;
 	}
 
+	void setLives(int l) {
+		lives = l;
+	}
+
 	bool hasAtomicFire() {
-		return true;
+		return gotAtomicFire;
 	}
 
 	bool getGrounded() {

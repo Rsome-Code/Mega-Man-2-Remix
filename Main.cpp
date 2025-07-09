@@ -21,6 +21,8 @@
 #include <string>
 #include <sstream>
 #include "pause.cpp"
+#include "load.cpp"
+#include "E tank.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -46,6 +48,7 @@ vector<int> split(const string& str, char sep)
 	return tokens;
 }
 int main() {
+
 	//Set the framerate here
 	double targetFPS = 60;
 
@@ -58,6 +61,10 @@ int main() {
 	miscT->loadFromFile("Assets\\misc\\mega buster.png");
 
 	player* col = new player(p1);
+	Load* load = new Load();
+	load->loadSaveFile(col);
+
+	delete(load);
 
 	//woodManStage* wood = new woodManStage(enemyT, miscT);
 
@@ -76,28 +83,29 @@ int main() {
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 	LevelSelect* levelMenu = new LevelSelect(bg);
 
-	//string word = levelMenu->loop(instance, targetFPS, bg);
-	string word = "wood man";
+	
+	//string bossName = levelMenu->loop(instance, targetFPS, bg);
+	string bossName = "wood man";
 	bool hold = levelMenu->checkA();
-	abstractStage* wood = new abstractStage(word);
+	abstractStage* wood = new abstractStage(bossName);
 
 	scene* area = new scene(col, wood, enemyT);
 
 	Texture* bossT;
 	bossT = new Texture ();
-	bossT->loadFromFile("assets\\" + word + ".png");
+	bossT->loadFromFile("assets\\" + bossName + ".png");
 
-	StageIntro* intro = new StageIntro(word, hold, bg, bossT);
+	StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 	//intro->loop(instance, targetFPS);
 
-	wT->loadFromFile("assets\\" + word + "-stage.png");
-	levelEditor* l = new levelEditor(wT, word);
+	wT->loadFromFile("assets\\" + bossName + "-stage.png");
+	levelEditor* l = new levelEditor(wT, bossName);
 
 	Texture* misc = new Texture();
 	misc->loadFromFile("assets\\misc\\mega buster.png");
 
-	list<object*> obList = { new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
-	ObjectPlacer* o = new ObjectPlacer(wT, word, obList);
+	list<object*> obList = { new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, obList);
 
 	list<IntRect> testAnim = list<IntRect>{ IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20) };
 	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(8, 8) };
@@ -105,10 +113,15 @@ int main() {
 	testT->loadFromFile("Assets\\weapons.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT);
 
+	//Uncomment this if you want to use the animation tester
 	//test->run(instance, targetFPS);
 
 
+
+	//Un-comment this if you want to use the level editor
 	//l->loop(instance, targetFPS);
+	//
+	// Un-comment this if you want to use the object placer
 	//o->loop(instance, targetFPS);
 
 

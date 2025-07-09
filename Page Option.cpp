@@ -21,4 +21,8 @@ public:
 		
 		return temp;
 	}
+
+	UISprite* getWordSprite() {
+		return word;
+	}
 };

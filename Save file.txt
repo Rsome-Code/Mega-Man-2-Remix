@@ -1,0 +1,10 @@
+lives,2
+E-tanks,4
+Heat Man,y
+Wood Man,n
+Bubble Man,n
+Metal Man,n
+Quick Man,n
+Flash Man,n
+Crash Man,n
+Air Man,n

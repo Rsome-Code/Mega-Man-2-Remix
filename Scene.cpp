@@ -291,7 +291,7 @@ public:
 			for (object* o : objects) {
 				Texture* temp = new Texture();
 				temp->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
-				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health") {
+				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank") {
 
 					o->getSprite()->setTexture(temp);
 				}
@@ -565,15 +565,20 @@ public:
 			if (p->getActiveWeapon()->getAmmo() == 28) {
 				loop = false;
 			}
-			cout << p->getActiveWeapon()->getAmmo();
-			cout << ", ";
+		}
+
+		if (item->getSprite()->getType() == "E Tank") {
+			if (p->getETanks() <= 3) {
+				p->setETanks(p->getETanks() + 1);
+			}
 		}
 
 		if (loop) {
 			itemLoop(instance, targetRate, item);
+			paused = true;
 		}
 		item->used();
-		paused = true;
+		
 	}
 
 	void itemLoop(renderer* instance, float targetRate, object* item) {

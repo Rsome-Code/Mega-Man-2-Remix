@@ -21,6 +21,16 @@ class objectHitbox:public UIHitbox {
 		relativeRect = IntRect(Vector2i(relativePos), Vector2i(relative.getSize().x * scale.x, relative.getSize().y * scale.y));
 	}
 
+	objectHitbox(IntRect relative, objectSprite* s) {
+		sprite = s;
+		relativePos = Vector2f(relative.getPosition());
+		worldPos = Vector2f(relativePos.x + sprite->getPosition().x, relativePos.y + sprite->getPosition().y);
+		visible = false;
+
+		scale = sprite->getScale();
+		relativeRect = IntRect(Vector2i(relativePos), Vector2i(relative.getSize().x * scale.x, relative.getSize().y * scale.y));
+	}
+
 	public:void updatePos() {
 		this->worldPos = sprite->getPosition() + relativePos;
 	}

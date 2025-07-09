@@ -19,6 +19,8 @@
 #include "small health.cpp"
 #include "big ammo.cpp"
 #include "small ammo.cpp"
+#include "player.cpp"
+#include "E Tank.cpp"
 
 #pragma once
 
@@ -101,6 +103,44 @@ public:
 		return tokens;
 	}
 
+	void loadSaveFile(player* p) {
+		ifstream inputFile("save file.txt");
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "lives") {
+				p->setLives(stoi(*valI));
+			}
+			else if (type == "E-tanks") {
+				p->setETanks(stoi(*valI));
+			}
+			else if (type == "Heat Man") {
+				if (*valI == "y") {
+					p->setAtomicFire(true);
+				}
+				else {
+					p->setAtomicFire(false);
+				}
+			}
+
+		}
+
+
+	}
+
 	void loadObjects(string levelName, list<object*>* objects, Texture* t) {
 
 		ifstream inputFile(levelName + "-objects.txt");
@@ -109,7 +149,7 @@ public:
 		misc->loadFromFile("Assets\\misc\\mega buster.png");
 
 		string line;
-		string variable;
+
 
 		while (getline(inputFile, line)) {
 
@@ -158,6 +198,9 @@ public:
 			}
 			else if (type == "ammo-small") {
 				add = new SmallAmmo(misc, Vector2f(worldX, worldY));
+			}
+			else if (type == "E Tank") {
+				add = new ETank(misc, Vector2f(worldX, worldY));
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

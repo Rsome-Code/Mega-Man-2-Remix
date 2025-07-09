@@ -51,6 +51,17 @@ public:
 		cameraPosition = Vector2f(0, 0);
 		zAxis = z;
 	}
+	objectSprite(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect);
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		zAxis = 1;
+	}
 
 	objectSprite(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, float z, float defaultTransparency) {
 		this->type = type;

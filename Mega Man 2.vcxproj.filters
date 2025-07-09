@@ -424,5 +424,11 @@
     <ClCompile Include="Small Ammo.cpp">
       <Filter>Source Files\Game Files\Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="E Tank Option.cpp">
+      <Filter>Source Files\Game Files\Menus\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="E Tank.cpp">
+      <Filter>Source Files\Game Files\Objects\Items</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
