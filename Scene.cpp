@@ -57,6 +57,8 @@ class scene {
 	bool startPressed = true;
 	bool paused = false;
 
+	text* readyText;
+	Font font;
 
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
@@ -84,6 +86,10 @@ public:
 
 		//screenLighting = new ScreenLighting();
 		
+		
+		font.loadFromFile("Assets//font.otf");
+		readyText = new text(string("READY"), Vector2f(900, 500), float(16), &font, &Color::White);
+
 
 
 	}
@@ -102,6 +108,8 @@ public:
 		float deltaT = 0;
 		
 		bool unPaused = false;
+
+		startAnim(instance, targetRate);
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -156,7 +164,7 @@ public:
 				justAfterT = false;
 			}
 			
-			p->eachFrame(&deltaT);
+			p->eachFrame(&deltaT, tileList);
 
 
 
@@ -260,19 +268,120 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
-
-			
+			if (p->getHP() <= 0) {
+				startAnim(instance, targetRate);
+				respawn();
+				p->heal(2);
+			}
 
 		}
 	}
 
+	void death() {
+
+	}
+
+	void startAnim(renderer* instance, float targetRate) {
+
+		cam->setPosition(Vector2f(stage->getLastFlagPos().x, cam->getPosition().y));
+
+
+		for (object* e : objects) {
+			e->setOffScreen(true);
+			e->setAct(false);
+			e->setDisplay(false);
+			e->initial();
+			e->reset();
+
+			e->setDisplay(true);
+			e->setAct(true);
+			e->setOffScreen(false);
+			e->setInitOffScreen(false);
+		}
+		
+
+		auto start = time->timerStart();
+		auto* startP = &start;
+		float deltaT = 0;
+
+		float flashTime = 0.4;
+		float flashTime_left = flashTime;
+		bool display = false;
+
+		float timeLeft = 4;
+		bool run = true;
+
+		//cam->followX();
+
+		while (instance->getWindow()->isOpen() && run) {
+			Event event;
+			while (instance->getWindow()->pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					instance->getWindow()->close();
+			}
+			time->frameLimiter(targetRate, startP);
+			deltaT = time->checkTimer(startP);
+			start = time->timerStart();
+			startP = &start;
+
+
+			for (tile* t : z4List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z3List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (tile* t : z2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+
+
+
+			tileDistanceCheck(instance, tileList);
+			for (tile* t : tileList) {
+
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->objectAccess(t, cam);
+				}
+			}
+
+			flashTime_left -= deltaT;
+			timeLeft -= deltaT;
+			if (flashTime_left <= 0) {
+				display = !display;
+				flashTime_left = flashTime;
+			}
+
+			if (display) {
+				instance->textDisplay(readyText);
+			}
+
+			if (timeLeft <= 0) {
+				run = false;
+			}
+
+			instance->getWindow()->display();
+			instance->getWindow()->clear();
+		}
+
+	}
+
+	void respawn() {
+		
+		p->getSprite()->setPosition(Vector2f(cam->getPosition().x + 900, cam->getPosition().y + 500));
+		p->start(Vector2f(cam->getPosition().x + 900, (13*4)*16));
+		
+	
+	}
+
 	void bulletCollisionCheck(float deltaT) {
 		for (object* enemy : objects) {
-
+		
 			if (enemy->getAct() && enemy->getHurtbox() != NULL) {
-				enemy->eachFrame(&deltaT, p->getSprite());
+				
 				//t->checkHit(p->getHitbox());
-
+				enemy->eachFrame(&deltaT, p->getSprite());
 
 				for (bullet* bull : p->getControls()->getBulletObjects()) {
 					if (enemy->checkHurt(bull->getHitbox())) {
@@ -292,6 +401,10 @@ public:
 					}
 					
 				}
+			}
+
+			else if (enemy->getIncrease() != NULL) {
+				enemy->eachFrame(&deltaT, p->getSprite());
 			}
 		}
 	}
@@ -326,6 +439,8 @@ public:
 			}
 		}
 	}
+
+
 
 	bool flagCheck(renderer* instance, float targetRate) {
 		

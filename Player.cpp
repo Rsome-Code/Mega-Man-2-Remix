@@ -94,10 +94,14 @@ public:
 
 		megaBuster = new MegaBuster(sprite, t);
 		atomicFire = new AtomicFire(sprite, t);
+
+		//Define ammo bars here
 		Texture* aB = new Texture();
 		aB->loadFromFile("assets\\bars\\atomic fire.png");
 		ammoBar = new AmmoBar(aB, ammoPos);
 		ammoBar->setVertical();
+
+		health->increaseAmount(-27);
 	}
 
 	objectHitbox* getFoot() {
@@ -161,6 +165,8 @@ public:
 		return grounded;
 	}
 
+
+
 	objectHitbox* getBelow() {
 		return ladderBelow;
 	}
@@ -169,8 +175,8 @@ public:
 	}
 
 	void start(Vector2f pos) {
-		tele = new teleport(sprite, pos, 0);
-		setPosition(Vector2f(pos.x, pos.y));
+		tele = new teleport(sprite, pos, -300);
+		//setPosition(Vector2f(pos.x, pos.y));
 	}
 
 	Weapon* getActiveWeapon() {
@@ -191,7 +197,9 @@ public:
 		ammoBar->update(active->getAmmo());
 	}
 
-	void eachFrame(float* deltaT) {
+
+
+	void eachFrame(float* deltaT, list<tile*> tiles) {
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
@@ -212,7 +220,7 @@ public:
 
 			}
 			else {
-				if (tele->eachFrame(deltaT)) {
+				if (tele->eachFrame(deltaT, tiles)) {
 					delete tele;
 					tele = NULL;
 					pAnim->resetIdle();
@@ -221,8 +229,17 @@ public:
 			}
 		}
 		else {
-			dam->flicker(deltaT);
-			takingDamage(deltaT);
+			if (tele == NULL) {
+				dam->flicker(deltaT);
+				takingDamage(deltaT);
+			}
+			else {
+				sprite->setMovable(true);
+				tempDTime = 0;
+				damage = false;
+				sprite->setMovable(true);
+				dam->reset();
+			}
 			
 		}
 
@@ -383,6 +400,8 @@ public:
 	Weapon* getWeapon() {
 		return getControls()->getWeapon();
 	}
+
+
 
 private:
 	void takingDamage(float* deltaT) {

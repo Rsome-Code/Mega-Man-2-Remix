@@ -41,6 +41,13 @@ public:
 		}
 	}
 
+	void textDisplay(text* text) {
+		//list<text*> temp = resolutionTextScale(textList);
+
+		w->draw(*text->getRender());
+		
+	}
+
 	void objectAccess(object* object, camera* cam) {
 		if (object->getDisplay()) {
 			objectDisplay(object->getSprite(), cam);

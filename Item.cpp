@@ -23,7 +23,8 @@ public:
 		display = false;
 	}
 
-	virtual void alive(float* deltaT) {
+
+	virtual void eachFrame(float* deltaT, objectSprite* p) {
 		if (timer != NULL) {
 			timer->run(deltaT);
 		}

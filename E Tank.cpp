@@ -2,7 +2,7 @@
 #pragma once
 
 class ETank : public Item {
-
+	
 public:
 	ETank(Texture* t, Vector2f position) {
 		sprite = new objectSprite("E Tank", t, IntRect(122, 1, 16, 16), position, Vector2f(4,4));
@@ -18,6 +18,7 @@ public:
 	void eachFrame(float* deltaT, objectSprite* p) {
 		timer->run(deltaT);
 	}
+
 
 	int getIncrease() { return 1; }
 };

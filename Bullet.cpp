@@ -47,7 +47,7 @@ public:
 	
 	virtual void deflect() {
 		
-		if (right) {
+		if (!right) {
 			direction = 330;
 		}
 		else {

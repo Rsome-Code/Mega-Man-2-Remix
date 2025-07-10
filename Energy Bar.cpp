@@ -21,8 +21,14 @@ public:
 	}
 
 	void setAmount() {
+		
 		int temp = 1 + (9 * amount);
-		sprite->setRect(Vector2i(temp, 1), Vector2i(8, 56));
+		if (temp == NULL) {
+			sprite->setRect(Vector2i(0, 1), Vector2i(8, 56));
+		}
+		else {
+			sprite->setRect(Vector2i(temp, 1), Vector2i(8, 56));
+		}
 	}
 
 	int getAmount() {
@@ -31,6 +37,9 @@ public:
 	void increaseAmount(int a) {
 		if (amount + a > max) {
 			amount = max;
+		}
+		else if (amount + a < 0) {
+			amount = 0;
 		}
 		else {
 			amount = amount + a;

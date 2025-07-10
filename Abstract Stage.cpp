@@ -35,6 +35,8 @@ protected:
 	Vector2f flagPos;
 	Vector2f lastFlagPos;
 	enum transitionAngle transAngle;
+	enum transitionAngle lastAngle;
+	
 
 	float z = 1;
 	
@@ -54,6 +56,7 @@ public:
 
 		load(name);
 		lastFlagPos = Vector2f(0,0);
+		
 	}
 
 protected:
