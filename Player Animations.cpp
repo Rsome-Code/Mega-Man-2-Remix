@@ -100,6 +100,8 @@ public:
 		}
 	}
 
+	
+
 	void ladderStart() {
 		ladder->thisFrame();
 	}

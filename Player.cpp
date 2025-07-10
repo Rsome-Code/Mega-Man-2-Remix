@@ -174,8 +174,8 @@ public:
 		return ladderAbove;
 	}
 
-	void start(Vector2f pos) {
-		tele = new teleport(sprite, pos, -300);
+	void start(int startHeight) {
+		tele = new teleport(sprite, startHeight);
 		//setPosition(Vector2f(pos.x, pos.y));
 	}
 
@@ -215,12 +215,12 @@ public:
 				
 
 				if (controls->checkTeleport()) {
-					tele = new teleport(sprite, sprite->getPosition());
+					tele = new teleport(sprite, sprite->getPosition().x);
 				}
 
 			}
 			else {
-				if (tele->eachFrame(deltaT, tiles)) {
+				if (tele->eachFrame(deltaT, tiles, foot)) {
 					delete tele;
 					tele = NULL;
 					pAnim->resetIdle();
@@ -262,6 +262,10 @@ public:
 
 	int beforeHold = 0;
 
+	void swapDirection() {
+		controls->swapDirection();
+	}
+
 	void checkHold() {
 		int holdAdd = 0;
 		
@@ -295,6 +299,10 @@ public:
 
 		sprite->lightingCheck(light);
 
+	}
+
+	teleport* getTeleport() {
+		return tele;
 	}
 
 	bool getDamage() {

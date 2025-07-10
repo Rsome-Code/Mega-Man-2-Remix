@@ -67,7 +67,7 @@ public:
 		p->getSprite()->setMovable(true);
 		time = new timer();
 		cam = new camera(p->getSprite(), Vector2f(-960, -540));
-		p->setPosition(stg->getInitialPlayer());
+		//p->setPosition(stg->getInitialPlayer());
 		cam->setPosition(stg->getInitialCamera());
 		background = new grid();
 		stage = stg;
@@ -81,14 +81,14 @@ public:
 		objects = stage->getObjects();
 		tList = stage->getTList();
 		tIterator = tList.begin();
-		p->start(stg->getInitialPlayer());
+		//p->start(stg->getInitialPlayer().x);
 		lastFlagPos = Vector2f(0, 0);
 
 		//screenLighting = new ScreenLighting();
 		
 		
 		font.loadFromFile("Assets//font.otf");
-		readyText = new text(string("READY"), Vector2f(900, 500), float(16), &font, &Color::White);
+		readyText = new text(string("READY"), Vector2f(900, 500), float(22), &font, &Color::White);
 
 
 
@@ -110,6 +110,7 @@ public:
 		bool unPaused = false;
 
 		startAnim(instance, targetRate);
+		respawn();
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -131,10 +132,14 @@ public:
 					p->getControls()->resetHold();
 
 				}
-				p->start(p->getSprite()->getPosition());
+				Vector2f prevPosition = p->getSprite()->getPosition();
+				p->start(p->getSprite()->getPosition().x);
+				p->getTeleport()->forceEnd(prevPosition);
 				unPaused = true;
 			}
-			enemyCheck(objects, instance, targetRate);
+			if (!p->isTeleporting()) {
+				enemyCheck(objects, instance, targetRate);
+			}
 			if (paused) {
 				
 				
@@ -221,8 +226,9 @@ public:
 			enemyDistanceCheck(instance, objects);
 			
 
-			bulletCollisionCheck(deltaT);
-
+			if (!p->isTeleporting()) {
+				bulletCollisionCheck(deltaT);
+			}
 
 
 			for (tile* t : z4List) {
@@ -265,6 +271,11 @@ public:
 			//instance->objectHitboxSetup(list<objectHitbox*> { p->getFoot()}, cam);
 			//instance->hitboxDisplay(list<UIHitbox*> {p->getFoot()});
 			
+
+
+
+
+
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
@@ -308,7 +319,7 @@ public:
 		float flashTime_left = flashTime;
 		bool display = false;
 
-		float timeLeft = 4;
+		float timeLeft = 3;
 		bool run = true;
 
 		//cam->followX();
@@ -370,7 +381,8 @@ public:
 	void respawn() {
 		
 		p->getSprite()->setPosition(Vector2f(cam->getPosition().x + 900, cam->getPosition().y + 500));
-		p->start(Vector2f(cam->getPosition().x + 900, (13*4)*16));
+		p->start(cam->getPosition().y + (16*4));
+		p->swapDirection();
 		
 	
 	}

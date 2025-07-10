@@ -7,24 +7,28 @@
 #pragma once
 class teleport {
 	movable* sprite;
-	float* speed = new float(1000);
-	Vector2f* targetLoc;
+	float* speed = new float(2000);
+	float startX;
 	Vector2f* startLoc;
 	bool* initial;
 	animation* teleportAnim;
 	animTimer* timer;
-	objectHitbox* hit;
+
 
 	bool hitFloor = false;
+
+	bool looped = false;
+
+
 
 	
 
 public:
-	teleport(movable* sprite, Vector2f target, float startY){
+	teleport(movable* sprite, float startX, float startY){
 		this->sprite = sprite;
-		targetLoc = new Vector2f(target);
+		this->startX = startX;
 		initial = new bool(true);
-		startLoc = new Vector2f(targetLoc->x, startY);
+		startLoc = new Vector2f(startX, startY);
 		this->sprite->setPosition(*startLoc);
 
 		teleportAnim = new animation(list<IntRect> {IntRect(Vector2i(124, 128), Vector2i(7, 24)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19))}, sprite);
@@ -34,12 +38,13 @@ public:
 		teleportAnim->thisFrame();
 		timer = new animTimer(teleportAnim, 12, false);
 
-		hit = new objectHitbox(IntRect(0,0,24,24), sprite);
+
 	}
 
-	teleport(movable* sprite, Vector2f target) {
+	teleport(movable* sprite, float startX) {
 		this->sprite = sprite;
-		targetLoc = new Vector2f (target);
+
+		this->startX = startX;
 		initial = new bool (false);
 		teleportAnim = new animation(list<IntRect> {IntRect(Vector2i(124, 128), Vector2i(7, 24)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19))}, sprite);
 
@@ -47,14 +52,21 @@ public:
 
 		teleportAnim->thisFrame();
 		timer = new animTimer(teleportAnim, 12, false);
-		hit = new objectHitbox(IntRect(0, 0, 24, 24), sprite);
+
 	}
 
-	bool eachFrame(float* deltaT, list<tile*> tiles) {
+	bool eachFrame(float* deltaT, list<tile*> tiles, objectHitbox* foot) {
 		//if (sprite->getPosition().y < targetLoc->y) {
-		hit->updatePos();
-		if (floorCheck(tiles)) {
-			hitFloor = true;
+
+		if (looped) {
+
+			if (floorCheck(tiles, foot)) {
+				hitFloor = true;
+			}
+			
+		}
+		else {
+			looped = true;
 		}
 		if(!hitFloor){
 			sprite->move(90, deltaT, *speed);
@@ -66,7 +78,7 @@ public:
 				delete teleportAnim;
 				delete initial;
 				delete startLoc;
-				delete targetLoc;
+				
 				delete speed;
 				return true;
 			}
@@ -74,14 +86,20 @@ public:
 		return false;
 	}
 
-	bool floorCheck(list<tile*> tiles) {
+	void forceEnd(Vector2f pos) {
+		sprite->setPosition(pos);
+		hitFloor = true;
+	}
+
+	bool floorCheck(list<tile*> tiles, objectHitbox* foot) {
 
 		float currentX = sprite->getSprite()->getPosition().x;
 		for (tile* t : tiles) {
+
 			if (t->getGround() != NULL) {
-				if (hitboxDetect::hitboxDetection(hit, t->getGround())) {
+				if (hitboxDetect::hitboxDetection(foot, t->getGround())) {
 					
-					sprite->setPosition(Vector2f(sprite->getPosition().x, t->getSprite()->getPosition().y - (16 * 4)));
+					sprite->setPosition(Vector2f(sprite->getPosition().x, t->getSprite()->getPosition().y - (24 * 4)));
 
 					return true;
 
@@ -90,8 +108,11 @@ public:
 				}
 			}
 
-			return false;
 		}
+
+		return false;
 	}
+
+
 
 };

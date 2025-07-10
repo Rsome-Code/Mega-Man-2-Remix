@@ -97,6 +97,10 @@ public:
 		return bul;
 	}
 
+	void swapDirection() {
+		pAnim->swapDirection(true);
+	}
+
 	void checkControls(float* deltaT) {
 		teleport = false;
 
