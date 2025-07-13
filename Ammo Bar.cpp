@@ -10,7 +10,7 @@ class AmmoBar {
 	Vector2f position;
 
 	IntRect four = IntRect(0, 0, 8, 8);
-	IntRect three = IntRect(0, 0, 8, 8);
+	IntRect three = IntRect(9, 0, 8, 8);
 	IntRect two = IntRect(18, 0, 8, 8);
 	IntRect one = IntRect(27, 0, 8, 8);
 	IntRect zero = IntRect(36, 0, 8, 8);

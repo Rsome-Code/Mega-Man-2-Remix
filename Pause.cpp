@@ -55,7 +55,7 @@ class Pause {
 
 	bool healing = false;
 	int toHeal = 0;
-	float healTime = 0.15;
+	float healTime = 0.1;
 	float healTime_left = healTime;
 
 public:
