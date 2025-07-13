@@ -110,7 +110,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\lib;D:\programming\Mega Man 2\SFML-2.6.1\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-window-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-window-s-d.lib;sfml-system-s-d.lib;opengl32.lib;freetype.lib;sfml-audio-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-network-s-d.lib;ws2_32.lib;winmm.lib;sfml-graphics-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -192,8 +192,10 @@
     <ClCompile Include="Atomic Fire.cpp" />
     <ClCompile Include="Big Ammo.cpp" />
     <ClCompile Include="Big Health.cpp" />
+    <ClCompile Include="Death Animation.cpp" />
     <ClCompile Include="E Tank Option.cpp" />
     <ClCompile Include="E Tank.cpp" />
+    <ClCompile Include="Freeze.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
     <ClCompile Include="Page Option.cpp" />

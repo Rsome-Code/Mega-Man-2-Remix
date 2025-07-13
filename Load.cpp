@@ -91,6 +91,50 @@ public:
 
 	}
 
+	void loadFlags(string levelName, list<EndFlag*>* flags, Texture* t) {
+		ifstream inputFile(levelName + "-flags.txt");
+		string line;
+		string variable;
+		char sep = ',';
+
+		while (getline(inputFile, line)) {
+
+			vector<string> current = splitString(line, sep);
+			EndFlag* temp;
+
+			vector<string>::iterator valI = current.begin();
+
+			string value = *valI;
+
+			int sect = stoi(value);
+			valI = next(valI);
+			value = *valI;
+			enum transitionAngle angle;
+			if (value == "flag") {
+				angle = RIGHT;
+			}
+			else if (value == "flag-down") {
+				angle = DOWN;
+			}
+			else if (value == "flag-up") {
+				angle = UP;
+			}
+			else if (value == "flag-left") {
+				angle = LEFT;
+			}
+			valI = next(valI);
+
+			int xPos = stoi(*valI);
+			valI = next(valI);
+			int yPos = stoi(*valI);
+
+			temp = new EndFlag (t, Vector2f(xPos, yPos), angle, sect);
+
+			flags->push_back(temp);
+
+		}
+	}
+
 	std::vector<std::string> splitString(const std::string& str, char delimiter) {
 		std::vector<std::string> tokens;
 		std::stringstream ss(str);
@@ -178,7 +222,7 @@ public:
 			else if (type == "trch-R") {
 				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
 			}
-			else if (type == "flag") {
+			/*else if (type == "flag") {
 				add = new EndFlag(t, Vector2f(worldX, worldY));
 			}
 			else if (type == "flag-up") {
@@ -186,7 +230,7 @@ public:
 			}
 			else if (type == "flag-down") {
 				add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
-			}
+			}*/
 			else if (type == "health-big") {
 				add = new BigHealth(misc, Vector2f(worldX, worldY));
 			}

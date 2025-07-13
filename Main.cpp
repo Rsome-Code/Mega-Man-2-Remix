@@ -89,6 +89,8 @@ int main() {
 	bool hold = levelMenu->checkA();
 	abstractStage* wood = new abstractStage(bossName);
 
+	wood->reload(string("wood man"));
+
 	scene* area = new scene(col, wood, enemyT);
 
 	Texture* bossT;
@@ -104,15 +106,22 @@ int main() {
 	Texture* misc = new Texture();
 	misc->loadFromFile("assets\\misc\\mega buster.png");
 
-	list<object*> obList = { new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), UP),  new EndFlag(enemyT, Vector2f(0,0), DOWN) };
+
+//Object Placer setup
+	list<object*> obList = { new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	ObjectPlacer* o = new ObjectPlacer(wT, bossName, obList);
 
+
+	//Test animation setup
+	//////////////////////
 	list<IntRect> testAnim = list<IntRect>{ IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20) };
 	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(8, 8) };
+
 	Texture* testT = new Texture();
 	testT->loadFromFile("Assets\\weapons.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT);
-
+	////////////////////////////////
+	// 
 	//Uncomment this if you want to use the animation tester
 	//test->run(instance, targetFPS);
 
@@ -131,6 +140,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

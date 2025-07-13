@@ -36,6 +36,8 @@ protected:
 	Vector2f lastFlagPos;
 	enum transitionAngle transAngle;
 	enum transitionAngle lastAngle;
+
+	list<EndFlag*> flags;
 	
 
 	float z = 1;
@@ -93,6 +95,7 @@ public:
 		z3List.clear();
 		z4List.clear();
 		objects.clear();
+		//flags.clear();
 		load(name);
 	}
 
@@ -105,17 +108,17 @@ public:
 	}
 
 	//Only last placed flag is counted for each section
-	void addEndFlag() {
-		if (transAngle == RIGHT) {
-			lastFlagPos = flagPos;
-		}
-		for (object* o : objects) {
-			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up") {
-				flagPos = o->getSprite()->getPosition();
-				transAngle = o->getAngle();
-			}
+	void addEndFlag(EndFlag* flag) {
+		
+		lastFlagPos = flagPos;
+		
+
+		
+		flagPos = flag->getSprite()->getPosition();
+		transAngle = flag->getAngle();
 			
-		}
+		
+
 	}
 
 	Vector2f getLastFlagPos() {
@@ -149,8 +152,17 @@ public:
 		zCorrection();
 		
 		load->loadObjects(name, &objects, enemyTexture);
-		addEndFlag();
 
+		if (flags.size() == 0) {
+			load->loadFlags(name, &flags, enemyTexture);
+		}
+
+		
+
+	}
+
+	list<EndFlag*> getFlags() {
+		return flags;
 	}
 
 	void zCorrection() {

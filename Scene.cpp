@@ -11,6 +11,7 @@
 #include "screen lighting.cpp"
 #include "pause.cpp"
 #include "item.cpp"
+#include "freeze.cpp"
 #include <list>
 #pragma once
 
@@ -48,6 +49,8 @@ class scene {
 
 	bool lastFlagRight = true;
 	Vector2f lastFlagPos;
+
+	Vector2f lastCheckPoint;
 
 	Texture* enemyT;
 
@@ -90,6 +93,7 @@ public:
 		font.loadFromFile("Assets//font.otf");
 		readyText = new text(string("READY"), Vector2f(900, 500), float(22), &font, &Color::White);
 
+		loadFlag();
 
 
 	}
@@ -124,6 +128,18 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
+			if (p->getHP() <= 0) {
+
+				if (death(instance, targetRate, cam)) {
+					startAnim(instance, targetRate);
+					respawn();
+					p->heal(2);
+					p->setNotDead();
+				}
+
+
+			}
+
 			if (checkPause(instance, targetRate)) {
 				paused = true;
 				p->getSprite()->setVVelocity(0);
@@ -138,7 +154,7 @@ public:
 				unPaused = true;
 			}
 			if (!p->isTeleporting()) {
-				enemyCheck(objects, instance, targetRate);
+				enemyCollisionCheck(objects, instance, targetRate);
 			}
 			if (paused) {
 				
@@ -258,11 +274,14 @@ public:
 			}
 
 			instance->objectDisplay(p->getBullets(), cam);
-			instance->objectAccess(p->getDamEffect(), cam);
+			if (p->getDamEffect() != NULL) {
+				instance->objectAccess(p->getDamEffect(), cam);
+			}
+			
 			//p->updateLighting();
 			//lightingCheck();
 			p->checkHold();
-			instance->objectDisplay(p->getSprite(), cam);
+			instance->objectDisplay(p->getSprites(), cam);
 			
 			p->getSprite()->setRect(IntRect(Vector2i(p->getSprite()->getRect().getPosition().x, p->getBeforeHold()), p->getSprite()->getRect().getSize()));
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
@@ -279,23 +298,31 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 
-			if (p->getHP() <= 0) {
-				startAnim(instance, targetRate);
-				respawn();
-				p->heal(2);
-			}
+
 
 		}
 	}
 
-	void death() {
-
+	bool death(renderer* instance, float tRate, camera* cam) {
+		if (p->setDead()) {
+			
+			Freeze::stop(instance, tRate, p->getSprite(), tileList, z2List, z3List, z4List, objects, cam, 0.75);
+			paused = true;
+		}
+		return p->checkDeathFinish();
+			
+		
 	}
+
 
 	void startAnim(renderer* instance, float targetRate) {
 
-		cam->setPosition(Vector2f(stage->getLastFlagPos().x, cam->getPosition().y));
-
+		if (lastFlagRight) {
+			cam->setPosition(Vector2f(stage->getLastFlagPos().x, cam->getPosition().y));
+		}
+		else {
+			cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, cam->getPosition().y));
+		}
 
 		for (object* e : objects) {
 			e->setOffScreen(true);
@@ -380,7 +407,7 @@ public:
 
 	void respawn() {
 		
-		p->getSprite()->setPosition(Vector2f(cam->getPosition().x + 900, cam->getPosition().y + 500));
+		p->setPosition(Vector2f(cam->getPosition().x + (1920/2), cam->getPosition().y));
 		p->start(cam->getPosition().y + (16*4));
 		p->swapDirection();
 		
@@ -610,10 +637,24 @@ public:
 
 	}
 
+	void loadFlag() {
+		EndFlag* thisOne = NULL;
+		for (EndFlag* flag : stage->getFlags()) {
+			if (flag->getSection() == section) {
+				thisOne = flag;
+			}
+		}
+		if (thisOne != NULL) {
+			stage->addEndFlag(thisOne);
+		}
+	}
+
 	void loadNextSection() {
 		section++;
 
 		stage->reload(stageName + to_string(section));
+		loadFlag();
+		
 		newTileList = stage->getTiles();
 		newZ2List = stage->getZ2List();
 		newZ3List = stage->getZ3List();
@@ -650,31 +691,9 @@ public:
 	}
 
 
-	void transitionCheck() {
-		if (next(next(tIterator)) != tList.end()) {
-			transition* cur = *next(tIterator);
-			if (hitboxCheck(p->getHitbox(), cur->getHitbox())) {
-				interpolating = true;
-				
-				transition* ne = *next(next(tIterator));
-
-				transitionType = ne->getType();
-
-				if (transitionType == 0) {
-					newCamPos = Vector2f(cur->getHitbox()->getPosition().x, cam->getPosition().y);
-				}
-				else if (transitionType == 1 || transitionType == 2) {
-					newCamPos = Vector2f(cam->getPosition().x, cur->getHitbox()->getPosition().y);
-				}
-				cam->setXLimit(Vector2f(cur->getSprite()->getPosition().x, ne->getHitbox()->getPosition().x + ne->getHitbox()->getSize().x - 1920));
-				tIterator = next(tIterator);
-			}
-		}
 
 
-	}
-
-	void enemyCheck(list<object*> eList, renderer* instance, float targetRate) {
+	void enemyCollisionCheck(list<object*> eList, renderer* instance, float targetRate) {
 		for (object* e : eList) {
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {

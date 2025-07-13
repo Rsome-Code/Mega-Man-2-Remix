@@ -74,6 +74,8 @@ public:
 
 	virtual int getHP() { return NULL; };
 
+	virtual int getSection(){ return NULL; };
+
 	virtual int getIncrease() { return NULL; };
 	virtual void used(){};
 

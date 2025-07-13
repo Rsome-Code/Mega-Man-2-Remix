@@ -430,5 +430,11 @@
     <ClCompile Include="E Tank.cpp">
       <Filter>Source Files\Game Files\Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Death Animation.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Freeze.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

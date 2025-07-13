@@ -419,7 +419,7 @@ public:
 			mouse2Pressed = false;
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) && mouse3Pressed != true) //specifies
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) && mouse3Pressed != true || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) //specifies
 		{
 			mouse3Pressed = true;
 

@@ -8,14 +8,17 @@ using namespace std;
 class EndFlag : public object {
 
 	enum transitionAngle angle;
+	int section;
 
 public:
-	EndFlag(Texture* t, Vector2f pos) {
+	EndFlag(Texture* t, Vector2f pos, int section) {
 		sprite = new objectSprite("Flag", t, IntRect(288, 685,17,27), pos, Vector2f(4,4), 1);
 		angle = RIGHT;
+		this->section = section;
+		setCode();
 	}
 
-	EndFlag(Texture* t, Vector2f pos, enum transitionAngle ang) {
+	EndFlag(Texture* t, Vector2f pos, enum transitionAngle ang, int section) {
 		if (ang == RIGHT) {
 			sprite = new objectSprite("Flag", t, IntRect(288, 685, 17, 27), pos, Vector2f(4, 4), 1);
 		}
@@ -26,6 +29,8 @@ public:
 			sprite = new objectSprite("Flag", t, IntRect(342, 685, 17, 27), pos, Vector2f(4, 4), 1);
 		}
 		angle = ang;
+		setCode();
+		this->section = section;
 	}
 
 	enum transitionAngle getAngle() {
@@ -42,5 +47,9 @@ public:
 		else if (angle == UP) {
 			code = "flag-up";
 		}
+	}
+
+	int getSection() {
+		return section;
 	}
 };

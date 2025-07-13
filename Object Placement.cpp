@@ -58,6 +58,8 @@ class ObjectPlacer {
 	object* selectedPlaced = NULL;
 	Texture* enemyT;
 
+	list<EndFlag*> flagList;
+
 public:
 	ObjectPlacer(Texture* T, string levelN, list<object*> obList) {
 		this->levelName = levelN;
@@ -79,6 +81,17 @@ public:
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
 		l->loadObjects(saveFile, &objects, enemyT);
+		l->loadFlags(levelName, &flagList, enemyT);
+		
+		
+		for (object* ob : flagList) {
+			if (ob->getSection() == section) {
+				objects.push_back(ob);
+			}
+		}
+		
+
+	
 		
 	}
 	
@@ -174,6 +187,11 @@ public:
 
 			for (object* o : objects) {
 				instance->objectAccess(o, cam);
+				
+			}
+
+			for (object* o : flagList) {
+				//instance->objectAccess(o, cam);
 			}
 
 			instance->UIDisplay(tab->getSprites());
@@ -188,6 +206,7 @@ public:
 	void keyBoardCheck() {
 		if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
 			section++;
+			
 			reload();
 			rightPressed = true;
 		}
@@ -197,6 +216,7 @@ public:
 
 		if (Keyboard::isKeyPressed(Keyboard::Scan::Left) && !leftPressed) {
 			section--;
+			
 			reload();
 			leftPressed = true;
 		}
@@ -226,6 +246,12 @@ public:
 			load->loadObjects(levelName, &objects, enemyT);
 		}
 
+		for (object* ob : flagList) {
+			if (ob->getSection() == section) {
+				objects.push_back(ob);
+			}
+		}
+
 		changeZ();
 
 	}
@@ -252,6 +278,19 @@ public:
 			objects.push_back(tempLoc);
 			objectIt = prev(objects.end());
 			selectedPlaced = *objectIt;
+
+			if (selectedObject->getCode() == "flag-down") {
+
+				for (EndFlag* flag : flagList) {
+					if (flag->getSection() == section) {
+						flagList.remove(flag);
+						break;
+					}
+				}
+
+				EndFlag* temp = new EndFlag(selectedObject->getSprite()->getTexture(), worldPos, DOWN, section);
+				flagList.push_back(temp);
+			}
 		}
 
 	}
@@ -288,7 +327,7 @@ public:
 	}
 
 	void mouseCheck(Vector2i mousePos) {
-		
+
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouse1Pressed != true) //specifies
 		{
 			mouse1Pressed = true;
@@ -344,15 +383,31 @@ public:
 			mouse2Pressed = false;
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) 
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			save();
 		}
 	}
 
+	std::vector<std::string> splitString(const std::string& str, char delimiter) {
+		std::vector<std::string> tokens;
+		std::stringstream ss(str);
+		std::string token;
+
+		while (std::getline(ss, token, delimiter)) {
+			tokens.push_back(token);
+		}
+
+		return tokens;
+	}
+
+
+
 	void save() {
 		ofstream* myfile;
 		myfile = new ofstream();
+
+
 		if (section == 0) {
 			myfile->open(saveFile + "-objects.txt");
 		}
@@ -360,18 +415,100 @@ public:
 			myfile->open(saveFile + to_string(section) + "-objects.txt");
 		}
 
+
+
+		int cameraHeight = 0;
+
 		for (object* o : objects) {
-			*myfile << o->getCode() + ",";
-			*myfile << o->getSprite()->getPosition().x;
-			*myfile << ",";
-			*myfile << o->getSprite()->getPosition().y;
-			*myfile << ",";
-			*myfile << o->getSprite()->getZ();
+			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up" || o->getCode() == "flag-left") {
+
+				
+				checkFlagDuplicates(o);
+
+				ofstream* flagfile;
+				flagfile = new ofstream();
+				flagfile->open(saveFile + "-flags.txt", std::ios::app);
+
+				*flagfile << section;
+				*flagfile << ",";
+				*flagfile << o->getCode() + ",";
+				*flagfile << o->getSprite()->getPosition().x;
+				*flagfile << ",";
+				*flagfile << o->getSprite()->getPosition().y;
+				*flagfile << "\n";
+
+				flagfile->close();
+				
+
+			}
+			else {
+				*myfile << o->getCode() + ",";
+				*myfile << o->getSprite()->getPosition().x;
+				*myfile << ",";
+				*myfile << o->getSprite()->getPosition().y;
+				*myfile << ",";
+				*myfile << o->getSprite()->getZ();
 
 
-			*myfile << "\n";
+				*myfile << "\n";
+			}
 		}
 		myfile->close();
+	}
+
+	void checkFlagDuplicates(object* o) {
+
+
+		string line;
+
+		char sep = ',';
+
+		bool run = true;
+
+		while (run) {
+			run = false;
+			ifstream* flagfile;
+			flagfile = new ifstream();
+			flagfile->open(levelName + "-flags.txt");
+			while (getline(*flagfile, line)) {
+				vector<string> values = splitString(line, sep);
+				vector<string>::iterator valI = values.begin();
+				string current = *valI;
+				if (stoi(current) == o->getSection()) {
+					flagfile->close();
+					eraseFileLine(saveFile + "-flags.txt", line);
+					run = true;
+				}
+			}
+			flagfile->close();
+		}
+		//flagfile->close();
+
+	}
+
+	void eraseFileLine(std::string path, std::string eraseLine) {
+		std::string line;
+		std::ifstream fin;
+
+		fin.open(path);
+		// contents of path must be copied to a temp file then
+		// renamed back to the path file
+		std::ofstream temp;
+		temp.open("temp.txt");
+
+		while (getline(fin, line)) {
+			// write all lines to temp other than the line marked for erasing
+			if (line != eraseLine)
+				temp << line << std::endl;
+		}
+
+		temp.close();
+		fin.close();
+
+		// required conversion for remove and rename functions
+		const char* p = path.c_str();
+		remove(p);
+		rename("temp.txt", p);
 	}
 
 	void drag(Vector2i mouse) {

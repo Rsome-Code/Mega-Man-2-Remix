@@ -10,6 +10,7 @@
 #include "Energy Bar.cpp"
 #include "Damage Effect.cpp"
 #include "ammo bar.cpp"
+#include "Death Animation.cpp"
 #pragma once
 
 class player {
@@ -53,6 +54,16 @@ class player {
 	AtomicFire* atomicFire;
 
 	Weapon* active = megaBuster;
+
+	string palette;
+
+	DeathAnim* deathAnim;
+	DeathAnim* deathAnim1;
+	DeathAnim* deathAnim2;
+
+	float deathTime = 6;
+	float deathTime_left = deathTime;
+
 	
 
 public:
@@ -102,7 +113,13 @@ public:
 		ammoBar->setVertical();
 
 		health->increaseAmount(-27);
+
+		palette = active->getName();
+		deathAnim = NULL;
+		deathAnim1 = NULL;
+		deathAnim2 = NULL;
 	}
+
 
 	objectHitbox* getFoot() {
 		return foot;
@@ -142,8 +159,12 @@ public:
 			ammoBar->update(active->getAmmo());
 			ammoBar->setVertical();
 		}
-		
-		
+
+		palette = active->getName();
+	}
+
+	string getPalette() {
+		return palette;
 	}
 
 	MegaBuster* getMegaBuster() {
@@ -165,6 +186,24 @@ public:
 		return grounded;
 	}
 
+	bool setDead() {
+		if (deathAnim == NULL) {
+			deathAnim = new DeathAnim(sprite, palette);
+			return true;
+		}
+		else if (deathTime_left <= deathTime - 0.75 && deathAnim1 == NULL) {
+			deathAnim1 = new DeathAnim(sprite, palette);
+		}
+		else if (deathTime_left <= deathTime - 1.5 && deathAnim2 == NULL) {
+			deathAnim2 = new DeathAnim(sprite, palette);
+		}
+		return false;
+	}
+	void setNotDead() {
+		deathAnim = NULL;
+		deathAnim1 = NULL;
+		deathAnim2 = NULL;
+	}
 
 
 	objectHitbox* getBelow() {
@@ -198,8 +237,42 @@ public:
 	}
 
 
-
 	void eachFrame(float* deltaT, list<tile*> tiles) {
+		if (deathAnim == NULL) {
+			alive(deltaT, tiles);
+		}
+		else {
+			dead(deltaT);
+		}
+	}
+
+	void dead(float* deltaT) {
+		deathAnim->run(deltaT);
+
+		if (deathAnim1 != NULL) {
+			deathAnim1->run(deltaT);
+		}
+		if (deathAnim2 != NULL) {
+			deathAnim2->run(deltaT);
+		}
+
+		deathTime_left -= *deltaT;
+		
+	}
+
+	bool checkDeathFinish() {
+		if (deathTime_left <= 0) {
+			deathTime_left = deathTime;
+			deathAnim = NULL;
+			deathAnim1 = NULL;
+			deathAnim2 = NULL;
+			return true;
+		}
+		return false;
+
+	}
+
+	void alive(float* deltaT, list<tile*> tiles) {
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
@@ -339,14 +412,32 @@ public:
 
 	physicsObject* getSprite() {
 		return sprite;
+		
+
 	}
 
 	list<objectSprite*> getSprites() {
-		return list<objectSprite*> {dam->getSprite(), sprite};
+		if (deathAnim == NULL) {
+			return list<objectSprite*> {sprite};
+		}
+		else {
+			list<objectSprite*> temp = {deathAnim->getSprite()};
+			if (deathAnim1 != NULL) {
+				temp.push_back(deathAnim1->getSprite());
+			}
+			if (deathAnim2 != NULL) {
+				temp.push_back(deathAnim2->getSprite());
+			}
+			return temp;
+		}
 	}
 
 	object* getDamEffect() {
-		return dam;
+		if (deathAnim == NULL) {
+			return dam;
+		}
+		return NULL;
+		
 	}
 
 	list<UISprite*> getUI() {
