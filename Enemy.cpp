@@ -4,6 +4,11 @@
 #include "animate.cpp"
 #include "animation Timer.cpp"
 #include "movable object.cpp"
+#include "big health.cpp"
+#include "small health.cpp"
+#include "big ammo.cpp"
+#include "small ammo.cpp"
+
 #pragma once
 class enemy:public object{
 protected:
@@ -18,6 +23,7 @@ protected:
 	bool initOffScreen = true;
 	Vector2f initialPos;
 	bool spawnDisplay = true;
+
 
 
 public:
@@ -141,4 +147,34 @@ public:
 	bool getOffScreen() {
 		return offScreen;
 	}
+
+	virtual void spawnItem(list<object*>* obList, Texture* t, Vector2f pos) {
+		int itemChance = rand();
+		itemChance = itemChance % 100;
+
+		object* item = NULL;
+
+		if (itemChance > 25 && itemChance <= 50) {
+			item = new SmallAmmo(t, pos);
+		}
+		else if (itemChance > 50 && itemChance <= 75) {
+			item = new SmallHealth(t, pos);
+		}
+		else if (itemChance > 75 && itemChance <= 85) {
+			item = new BigHealth(t, pos);
+		}
+		else if (itemChance > 85 && itemChance <= 95) {
+			item = new BigAmmo(t, pos);
+		}
+		else if (itemChance > 95) {
+			
+		}
+
+		if (item != NULL) {
+			cout << item->getSprite()->getSize().x;
+			item->getSprite()->setPosition(Vector2f(item->getSprite()->getPosition().x - (item->getSprite()->getSize().x / 6), item->getSprite()->getPosition().y - (item->getSprite()->getSize().y / 2)));
+			obList->push_back(item);
+		}
+	}
+
 };

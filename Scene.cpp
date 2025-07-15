@@ -63,6 +63,8 @@ class scene {
 	text* readyText;
 	Font font;
 
+	Texture* miscT;
+
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 		enemyT = en;
@@ -95,7 +97,8 @@ public:
 
 		loadFlag();
 
-
+		miscT = new Texture();
+		refreshMisc();
 	}
 
 public:
@@ -157,9 +160,6 @@ public:
 				enemyCollisionCheck(objects, instance, targetRate);
 			}
 			if (paused) {
-				
-				
-
 				start = time->timerStart();
 				startP = &start;
 				paused = false;
@@ -414,6 +414,18 @@ public:
 	
 	}
 
+	void spawnItemFromObject(object* ob) {
+		
+		Vector2f middle = Vector2f((ob->getSprite()->getPosition().x + (ob->getSprite()->getSize().x/6)), (ob->getSprite()->getPosition().y + (ob->getSprite()->getSize().y/2)));
+
+		ob->spawnItem(&objects, miscT, middle);
+
+	}
+
+	void refreshMisc() {
+		miscT->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
+	}
+
 	void bulletCollisionCheck(float deltaT) {
 		for (object* enemy : objects) {
 		
@@ -422,23 +434,30 @@ public:
 				//t->checkHit(p->getHitbox());
 				enemy->eachFrame(&deltaT, p->getSprite());
 
-				for (bullet* bull : p->getControls()->getBulletObjects()) {
-					if (enemy->checkHurt(bull->getHitbox())) {
+				if (enemy->getHP() > 0) {
 
-						enemy->lowerHP(bull->checkDamage(enemy));
-						
+					for (bullet* bull : p->getControls()->getBulletObjects()) {
+						if (enemy->checkHurt(bull->getHitbox())) {
 
-						if (bull->checkDamage(enemy) <= 0){
+							enemy->lowerHP(bull->checkDamage(enemy));
+
+
+							if (bull->checkDamage(enemy) <= 0) {
+								bull->deflect();
+							}
+							else {
+								bull->onHit(enemy);
+								if (enemy->getHP() <= 0) {
+									spawnItemFromObject(enemy);
+
+								}
+							}
+						}
+						else if (enemy->checkHit(bull->getHitbox())) {
 							bull->deflect();
 						}
-						else {
-							bull->onHit(enemy);
-						}
+
 					}
-					else if (enemy->checkHit(bull->getHitbox())) {
-						bull->deflect();
-					}
-					
 				}
 			}
 
@@ -448,16 +467,17 @@ public:
 		}
 	}
 
+	
+
 	bool  checkPause(renderer* instance, float targetRate) {
 		if (p->getController()->checkSTART() && !startPressed) {
 			pause = new Pause(stageName, p);
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
 			for (object* o : objects) {
-				Texture* temp = new Texture();
-				temp->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
+				refreshMisc();
 				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank") {
 
-					o->getSprite()->setTexture(temp);
+					o->getSprite()->setTexture(miscT);
 				}
 			}
 			startPressed = true;
@@ -752,8 +772,8 @@ public:
 		int healLeft = item->getIncrease();
 
 		if (item->getSprite()->getType() == "health") {
-			if (28 - p->getHP() < healLeft) {
-				healLeft = 28 - p->getHP();
+			if (p->getMaxHP() - p->getHP() < healLeft) {
+				healLeft = p->getMaxHP() - p->getHP();
 			}
 		}
 		if (item->getSprite()->getType() == "ammo") {

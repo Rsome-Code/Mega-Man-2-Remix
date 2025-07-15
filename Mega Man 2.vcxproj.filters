@@ -214,9 +214,6 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files\Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="Object Hitbox.cpp">
       <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
@@ -434,6 +431,9 @@
       <Filter>Source Files\Game Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="Freeze.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
   </ItemGroup>

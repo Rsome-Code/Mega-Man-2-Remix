@@ -2,6 +2,7 @@
 #include "object hitbox.cpp"
 #include "light source.cpp"
 #include "transition angle.cpp"
+
 #pragma once
 
 
@@ -82,5 +83,9 @@ public:
 	virtual enum transitionAngle getAngle() {
 		enum transitionAngle r = RIGHT;
 		return r;
+	}
+	virtual void spawnItem(list<object*>* obList, Texture* t, Vector2f pos) {
+
+
 	}
 };
