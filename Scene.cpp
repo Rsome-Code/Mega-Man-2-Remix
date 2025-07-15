@@ -106,7 +106,7 @@ public:
 	bool afterT = false;
 	bool justAfterT = false;
 
-
+	
 
 	void loop(renderer* instance, double targetRate) {
 
@@ -131,17 +131,7 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			if (p->getHP() <= 0) {
-
-				if (death(instance, targetRate, cam)) {
-					startAnim(instance, targetRate);
-					respawn();
-					p->heal(2);
-					p->setNotDead();
-				}
-
-
-			}
+			pDeathCheck(instance, targetRate);
 
 			if (checkPause(instance, targetRate)) {
 				paused = true;
@@ -303,6 +293,28 @@ public:
 		}
 	}
 
+	void pDeathCheck(renderer* instance, float targetRate) {
+		if (p->getHP() <= 0) {
+
+			if (p->getLives() > 0) {
+
+
+				if (death(instance, targetRate, cam)) {
+					startAnim(instance, targetRate);
+					respawn();
+					p->heal(2);
+					p->setNotDead();
+
+					p->setLives(p->getLives() - 1);
+
+				}
+			}
+			else {
+				run = false;
+			}
+		}
+	}
+
 	bool death(renderer* instance, float tRate, camera* cam) {
 		if (p->setDead()) {
 			
@@ -314,6 +326,22 @@ public:
 		
 	}
 
+	void resetObjects() {
+		for (object* e : objects) {
+			if (e->getIncrease() == NULL) {
+				e->setOffScreen(true);
+				e->setAct(false);
+				e->setDisplay(false);
+				e->initial();
+				e->reset();
+
+				e->setDisplay(true);
+				e->setAct(true);
+				e->setOffScreen(false);
+				e->setInitOffScreen(false);
+			}
+		}
+	}
 
 	void startAnim(renderer* instance, float targetRate) {
 
@@ -324,19 +352,8 @@ public:
 			cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, cam->getPosition().y));
 		}
 
-		for (object* e : objects) {
-			e->setOffScreen(true);
-			e->setAct(false);
-			e->setDisplay(false);
-			e->initial();
-			e->reset();
 
-			e->setDisplay(true);
-			e->setAct(true);
-			e->setOffScreen(false);
-			e->setInitOffScreen(false);
-		}
-		
+		resetObjects();
 
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -475,7 +492,7 @@ public:
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
 			for (object* o : objects) {
 				refreshMisc();
-				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank") {
+				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank" || o->getSprite()->getType() == "Extra Life") {
 
 					o->getSprite()->setTexture(miscT);
 				}
@@ -725,6 +742,7 @@ public:
 					else {
 						
 						itemGet(instance, targetRate, e);
+						
 					}
 				}
 			}
@@ -734,7 +752,7 @@ public:
 	void itemGet(renderer* instance, float targetRate, object* item) {
 		bool loop = true;
 		if (item->getSprite()->getType() == "health") {
-			if (p->getHP() == 28) {
+			if (p->getHP() == p->getMaxHP()) {
 				loop = false;
 			}
 		}
@@ -749,6 +767,14 @@ public:
 			if (p->getETanks() <= 3) {
 				p->setETanks(p->getETanks() + 1);
 			}
+			loop = false;
+		}
+
+		if (item->getSprite()->getType() == "Extra Life") {
+			if (p->getLives() <= 8) {
+				p->setLives(p->getLives() + 1);
+			}
+			loop = false;
 		}
 
 		if (loop) {
@@ -756,6 +782,8 @@ public:
 			paused = true;
 		}
 		item->used();
+		
+		
 		
 	}
 

@@ -500,6 +500,10 @@ public:
 		return getControls()->getWeapon();
 	}
 
+	int getLives() {
+		return lives;
+	}
+
 
 
 private:

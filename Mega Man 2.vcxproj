@@ -195,6 +195,7 @@
     <ClCompile Include="Death Animation.cpp" />
     <ClCompile Include="E Tank Option.cpp" />
     <ClCompile Include="E Tank.cpp" />
+    <ClCompile Include="Extra Life.cpp" />
     <ClCompile Include="Freeze.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Mega Buster.cpp" />

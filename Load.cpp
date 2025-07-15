@@ -21,6 +21,7 @@
 #include "small ammo.cpp"
 #include "player.cpp"
 #include "E Tank.cpp"
+#include "Extra Life.cpp"
 
 #pragma once
 
@@ -245,6 +246,9 @@ public:
 			}
 			else if (type == "E Tank") {
 				add = new ETank(misc, Vector2f(worldX, worldY));
+			}
+			else if (type == "Extra Life") {
+				add = new ExtraLife(misc, Vector2f(worldX, worldY));
 			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));

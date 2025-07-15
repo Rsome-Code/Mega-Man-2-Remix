@@ -13,6 +13,7 @@
 #include "Page Option.cpp"
 #include "tile.cpp"
 #include "camera.cpp"
+#include "text.cpp"
 #include "E Tank Option.cpp"
 #pragma once
 
@@ -58,6 +59,11 @@ class Pause {
 	float healTime = 0.1;
 	float healTime_left = healTime;
 
+
+	UISprite* lifeSprite;
+	text* lifeText;
+	Font font;
+
 public:
 
 	Pause(string level, player* p) {
@@ -102,6 +108,11 @@ public:
 		page1Options.push_back(pageOpt);
 		
 
+		font.loadFromFile("Assets//font.otf");
+		string numString = to_string(p->getLives());
+		lifeText = new text(string(": 0" + numString), Vector2f(iconX + 32*4, position.y + (64 * 4) * 2), float(38), &font, &Color::White);
+
+		lifeSprite = new UISprite("ui", miscT, IntRect(139, 2, 16, 15), Vector2f(iconX + (16 * 4), position.y + (62 * 4) * 2), Vector2f(4,4));
 
 	}
 
@@ -240,7 +251,8 @@ public:
 	}
 
 	void displayPage2(renderer* instance) {
-
+		instance->UIDisplay(lifeSprite);
+		instance->textDisplay(lifeText);
 	}
 
 	bool runMenu(float* deltaT, renderer* instance) {
@@ -286,8 +298,7 @@ public:
 			if (currentSelect == maxSelect1) {
 				currentSelect = 0;
 			}
-			cout << currentSelect;
-			cout << ", ";
+
 		}
 		else if (!controller->checkDOWN()) {
 			downPressed = false;
@@ -298,8 +309,7 @@ public:
 			if (currentSelect == -1) {
 				currentSelect = maxSelect1-1;
 			}
-			cout << currentSelect;
-			cout << ", ";
+
 		}
 		else if (!controller->checkUP()) {
 			upPressed = false;

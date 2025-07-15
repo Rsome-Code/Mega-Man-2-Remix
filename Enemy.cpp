@@ -171,7 +171,6 @@ public:
 		}
 
 		if (item != NULL) {
-			cout << item->getSprite()->getSize().x;
 			item->getSprite()->setPosition(Vector2f(item->getSprite()->getPosition().x - (item->getSprite()->getSize().x / 6), item->getSprite()->getPosition().y - (item->getSprite()->getSize().y / 2)));
 			obList->push_back(item);
 		}
