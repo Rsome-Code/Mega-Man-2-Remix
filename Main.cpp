@@ -51,7 +51,7 @@ vector<int> split(const string& str, char sep)
 int main() {
 
 	//Set the framerate here
-	double targetFPS = 60;
+	double targetFPS = 120;
 
 	pController* p1 = new pController();
 
@@ -121,11 +121,10 @@ int main() {
 	Texture* testT = new Texture();
 	testT->loadFromFile("Assets\\weapons.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT);
+
 	////////////////////////////////
-	// 
 	//Uncomment this if you want to use the animation tester
 	//test->run(instance, targetFPS);
-
 
 
 	//Un-comment this if you want to use the level editor
@@ -141,6 +140,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

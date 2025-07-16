@@ -103,14 +103,18 @@ public:
 		return levelName;
 	}
 
-	Vector2f getFlag() {
-		return flagPos;
+	Vector2f getFlagPos(int section) {
+		for (EndFlag* flag : flags) {
+			if (flag->getSection() == section) {
+				return flag->getSprite()->getPosition();
+			}
+		}
 	}
 
 	//Only last placed flag is counted for each section
 	void addEndFlag(EndFlag* flag) {
 		
-		lastFlagPos = flagPos;
+		//lastFlagPos = flagPos;
 		
 
 		
@@ -121,8 +125,48 @@ public:
 
 	}
 
+	void updateSection(int section) {
+		for (EndFlag* flag : flags) {
+			if (flag->getSection() == section - 1) {
+				lastFlagPos = flag->getSprite()->getPosition();
+			}
+			else if (flag->getSection() == section) {
+				flagPos = flag->getSprite()->getPosition();
+			}
+		}
+
+		
+	}
+
+	EndFlag* getLastFlag(int section) {
+		for (EndFlag* flag : flags) {
+			if (flag->getSection() == section - 1) {
+				
+				return flag;
+			}
+		}
+		return NULL;
+	}
+	EndFlag* getCurrentFlag(int section) {
+		for (EndFlag* flag : flags) {
+			if (flag->getSection() == section) {
+				return flag;
+			}
+		}
+		return NULL;
+	}
+
 	Vector2f getLastFlagPos() {
 		return lastFlagPos;
+	}
+
+	Vector2f getLastFlagPos(int section) {
+		for (EndFlag* flag : flags) {
+			if (flag->getSection() == section - 1) {
+
+				return flag->getSprite()->getPosition();
+			}
+		}
 	}
 
 	enum transitionAngle getAngle() {

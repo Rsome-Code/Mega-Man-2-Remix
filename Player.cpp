@@ -112,7 +112,7 @@ public:
 		ammoBar = new AmmoBar(aB, ammoPos);
 		ammoBar->setVertical();
 
-		health->increaseAmount(-27);
+		//health->increaseAmount(-27);
 
 		palette = active->getName();
 		deathAnim = NULL;

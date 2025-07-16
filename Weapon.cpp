@@ -100,5 +100,9 @@ public:
 	Texture* getTexture() {
 		return colourP;
 	}
+
+	int getMAxAmmo() {
+		return maxAmmo;
+	}
 	
 };
