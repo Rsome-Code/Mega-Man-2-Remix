@@ -114,6 +114,7 @@ public:
 	void updateFlags() {
 		currentFlag = stage->getCurrentFlag(section);
 		lastFlag = stage->getCurrentFlag(section - 1);
+		lastFlagPos = lastFlag->getSprite()->getPosition();
 		if (lastFlag != NULL) {
 			if (lastFlag->getAngle() == LEFT) {
 				revLastAngle = RIGHT;
@@ -131,6 +132,8 @@ public:
 
 	}
 
+
+
 	void loop(renderer* instance, double targetRate) {
 
 		auto start = time->timerStart();
@@ -140,15 +143,18 @@ public:
 		bool unPaused = false;
 		
 
-		//forceLoadSection(1);
+		forceLoadSection(0);
+
+
+
 		checkLastFlagRight();
 		loadFlag();
-
+		updateFlags();
 		startAnim(instance, targetRate);
 		respawn();
-		//p->heal(-28);
+		//p->heal(-27);
 
-		updateFlags();
+		
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -186,26 +192,27 @@ public:
 				paused = false;
 			}
 
-			if (afterT) {
-				p->getSprite()->setMove(true);
-				p->getSprite()->setVVelocity(0);
-				afterT = false;
-			}
+			if (!p->isTeleporting()) {
+				if (afterT) {
+					p->getSprite()->setMove(true);
+					p->getSprite()->setVVelocity(0);
+					afterT = false;
+				}
 
-			else if (flagCheck(instance, targetRate, currentFlag->getAngle(), currentFlag->getSprite()->getPosition(), true) || flagCheck(instance, targetRate, revLastAngle, lastFlag->getSprite()->getPosition(), false)) {
-				deltaT = 0;
-				p->getSprite()->setMove(false);
+				else if (flagCheck(instance, targetRate, currentFlag->getAngle(), currentFlag->getSprite()->getPosition(), true) || flagCheck(instance, targetRate, revLastAngle, lastFlag->getSprite()->getPosition(), false)) {
+					deltaT = 0;
+					p->getSprite()->setMove(false);
 
-				
-				justAfterT = true;
-				
+
+					justAfterT = true;
+
+				}
+				else if (justAfterT) {
+					//p->getSprite()->setMove(true);
+					afterT = true;
+					justAfterT = false;
+				}
 			}
-			else if (justAfterT) {
-				//p->getSprite()->setMove(true);
-				afterT = true;
-				justAfterT = false;
-			}
-			
 			p->eachFrame(&deltaT, tileList);
 
 
@@ -257,8 +264,9 @@ public:
 
 			enum transitionAngle ang = stage->getAngle();
 
-			cameraFlagCheck(flagPos);
-
+			if (!p->isTeleporting()) {
+				cameraFlagCheck(flagPos);
+			}
 
 			enemyDistanceCheck(instance, objects);
 			
@@ -308,8 +316,8 @@ public:
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
-			//instance->objectHitboxSetup(list<objectHitbox*> { p->getFoot()}, cam);
-			//instance->hitboxDisplay(list<UIHitbox*> {p->getFoot()});
+			instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
+			instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
 			
 
 
@@ -381,7 +389,12 @@ public:
 
 		}
 		else {
-			cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, stage->getLastFlagPos().y));
+			if (lastFlag->getAngle() == UP) {
+				cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, stage->getLastFlagPos().y - 1080));
+			}
+			else {
+				cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, stage->getLastFlagPos().y));
+			}
 		}
 		Vector2f flagPos = stage->getFlagPos(section);
 		cameraFlagCheck(flagPos);
@@ -635,24 +648,29 @@ public:
 
 	void cameraFlagCheck(Vector2f flagPos) {
 		
+		if (currentFlag->getSprite()->getPosition().x > lastFlagPos.x) {
 
-		if (flagPos.x > stage->getLastFlagPos(section).x) {
+			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {
+				cam->setPosition(Vector2f(lastFlagPos.x, cam->getPosition().y));
+			}
 
-			isCameraRightOfFlag(flagPos);
+			isCameraRightOfFlag(currentFlag->getSprite()->getPosition());
 
-			isCameraLeftOfFlag(stage->getLastFlagPos(section));
+			isCameraLeftOfFlag(lastFlagPos);
 
-			cout << flagPos.x;
-			cout << ", ";
-			cout << stage->getLastFlagPos(section).x;
-			cout << "\n";
+
 		}
 		else {
-			isCameraRightOfFlag(stage->getLastFlagPos(section));
+			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {
+				cam->setPosition(Vector2f(lastFlagPos.x - (1920 - (16 * 4)), cam->getPosition().y));
+			}
+			else {
+				isCameraRightOfFlag(lastFlagPos);
 
-			isCameraLeftOfFlag(flagPos);
-		
+				isCameraLeftOfFlag(currentFlag->getSprite()->getPosition());
+			}
 		}
+		
 
 
 	}
@@ -751,7 +769,7 @@ public:
 			if (ang == LEFT) {
 				cam->move(180, &deltaT, float(400));
 				if (p->getGrounded()) {
-					p->getAnimation()->toeAnim(&deltaT, true);
+					p->getAnimation()->toeAnim(&deltaT, false);
 				}
 				else {
 					p->getAnimation()->runJump();
@@ -1079,7 +1097,7 @@ public:
 			if (t->getAct()) {
 				if (t->getLadder() != NULL) {
 					if (hitboxCheck(p->getLadderHitbox(), t->getLadder())) {
-						p->setPosition(Vector2f(t->getLadder()->getPosition().x - 8, p->getSprite()->getPosition().y));
+						p->setPosition(Vector2f(t->getLadder()->getPosition().x - 4, p->getSprite()->getPosition().y));
 						return true;
 					}
 				}

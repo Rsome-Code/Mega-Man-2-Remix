@@ -128,7 +128,7 @@ int main() {
 
 
 	//Un-comment this if you want to use the level editor
-	//l->loop(instance, targetFPS);
+	l->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
 	//o->loop(instance, targetFPS);
@@ -140,6 +140,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+cout << "hi";
 
 }

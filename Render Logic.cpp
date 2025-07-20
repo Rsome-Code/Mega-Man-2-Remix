@@ -200,7 +200,7 @@ public:
 
 	void objectHitboxSetup(list<objectHitbox*> hitList, camera* cam) {
 
-		Vector2f camPosition = cam->getPosition();
+		
 		for (objectHitbox* hit : hitList) {
 			objectHitboxSetup(hit, cam);
 

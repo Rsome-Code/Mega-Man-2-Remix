@@ -14,7 +14,7 @@ class pControls {
 	playerAnimation* pAnim;
 	float maxSpeed = 450;
 	float groundAccel = 10000;
-	float jumpForce = 1000;
+	float jumpForce = 1100;
 
 	bool grounded = false;
 	bool APressed = false;
@@ -110,16 +110,19 @@ public:
 			sprite->enableGravity(false);
 			sprite->setVVelocity(0);
 			sprite->setHVelocity(0);
+			jumping = false;
 		}
 		else if (grounded) {
 			sprite->enableGravity(false);
 			sprite->setFriction(4500);
 			sprite->setVVelocity(0);
+			jumping = false;
 		}
 		else {
 			sprite->enableGravity(true);
 			pAnim->runJump();
 			sprite->setFriction(4500);
+			jumping = true;
 		}
 
 
@@ -422,6 +425,10 @@ public:
 		sprite->setPosition(Vector2f(sprite->getPosition().x, sprite->getPosition().y - 5));
 		sprite->setVVelocity(jumpForce);
 		setGrounded(false);
+	}
+
+	bool isJumping() {
+		return jumping;
 	}
 
 	list<objectHitbox*> getBulletHitboxes() {

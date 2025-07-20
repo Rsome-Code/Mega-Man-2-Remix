@@ -11,6 +11,7 @@
 #include "Damage Effect.cpp"
 #include "ammo bar.cpp"
 #include "Death Animation.cpp"
+#include "hitbox detector.cpp"
 #pragma once
 
 class player {
@@ -30,6 +31,7 @@ class player {
 	objectHitbox* ladderHit;
 	objectHitbox* ladderBelow;
 	objectHitbox* ladderAbove;
+	objectHitbox* belowBox;
 
 	bool gotAtomicFire = false;
 
@@ -94,6 +96,7 @@ public:
 		ladderHit = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 24 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
 		ladderBelow = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
 		ladderAbove = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 21 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
+		belowBox = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 20)), true, sprite);
 
 		Texture* hbT = new Texture();
 		hbT->loadFromFile("Assets\\Health.png");
@@ -119,6 +122,41 @@ public:
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
 	}
+
+	void ladderJumpExtend(list<tile*> tiles) {
+		if ((controls->isJumping() && ladderNotBelow(tiles) )|| (controls->getOnLadder() && ladderNotBelow(tiles))) {
+			ladderHit->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 0 * sprite->getScale().y));
+			ladderAbove->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, -3 * sprite->getScale().y));
+			ladderBelow->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 2 * sprite->getScale().y));
+		 }
+		else {
+			ladderHit->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 24 * sprite->getScale().y));
+			ladderAbove->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 21 * sprite->getScale().y));
+			ladderBelow->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 26 * sprite->getScale().y));
+		}
+	}
+
+	objectHitbox* getBelowBox() {
+		return belowBox;
+	}
+
+	bool ladderNotBelow(list<tile*> tiles) {
+		belowBox->updatePos();
+		for (tile* t : tiles) {
+			if (t->getLadder() != NULL) {
+				if (hitboxDetect::hitboxDetection(t->getLadder(), belowBox)) {
+					return false;
+				}
+			}
+			if (t->getGround() != NULL) {
+				if (hitboxDetect::hitboxDetection(t->getGround(), belowBox)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 
 
 	objectHitbox* getFoot() {
@@ -240,6 +278,7 @@ public:
 	void eachFrame(float* deltaT, list<tile*> tiles) {
 		if (deathAnim == NULL) {
 			alive(deltaT, tiles);
+			ladderJumpExtend(tiles);
 		}
 		else {
 			dead(deltaT);
@@ -393,6 +432,7 @@ public:
 		head->updatePos();
 		ladderBelow->updatePos();
 		ladderAbove->updatePos();
+		belowBox->updatePos();
 	}
 
 	bool isTeleporting() {

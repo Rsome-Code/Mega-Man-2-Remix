@@ -49,4 +49,7 @@ public: objectSprite* getSprite() {
 	  void setRelativePosition(Vector2f p) {
 		  this->relativePos = p;
 	  }
+		Vector2f getRelativePosition() {
+		  return this->relativePos;
+	  }
 };

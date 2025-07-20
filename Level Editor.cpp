@@ -422,7 +422,7 @@ public:
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) && mouse3Pressed != true || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) //specifies
 		{
 			mouse3Pressed = true;
-
+			z = 1;
 			save();
 
 		}
@@ -485,22 +485,26 @@ public:
 
 		Vector2i size = Vector2i(worldHighlight.getSize().x / (16*2), worldHighlight.getSize().y/(16*2));
 
+		
 		list<tile*>::iterator tI = tileList->begin();
 
 		for (int i = 0; i < (size.x); i++) {
 			for (int j = 0; j < (size.y ); j++) {
-
+				tI = tileList->begin();
 				bool check = false;
-				for (tile* t : *tileList) {
-					check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
-					if (check) {
-						break;
-					}
-					tI = next(tI);
-				}
 
-				if (check) {
-					tileList->erase(tI);
+				if (tileList->size() > 0) {
+					for (tile* t : *tileList) {
+						check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
+						if (check) {
+							break;
+						}
+						tI = next(tI);
+					}
+
+					if (check) {
+						tileList->erase(tI);
+					}
 				}
 				tI = tileList->begin();
 				if (!del) {
@@ -592,6 +596,8 @@ public:
 				z = 1;
 			}
 
+			selectedType = 0;
+
 			changeZ();
 
 		}
@@ -629,7 +635,7 @@ public:
 				t->getSprite()->setZ(1.5);
 			}
 			else if (z == 3) {
-				t->getSprite()->setZ(1.75);
+				t->getSprite()->setZ(1.25);
 			}
 			else {
 				t->getSprite()->setZ(1);
