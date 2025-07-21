@@ -43,7 +43,7 @@ class Pause {
 	int width = 96;
 	int height = 160;
 
-	//This probably should have been an array
+	//These should have been arrays
 	list<Option*> page1Options;
 	list<Option*> page2Options;
 

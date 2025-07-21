@@ -25,6 +25,8 @@ protected:
 	string levelName;
 
 	list<object*> objects;
+
+	//This should have been a vector
 	list<transition*> tList;
 	Texture* tileTexture;
 	Texture* enemyTexture;

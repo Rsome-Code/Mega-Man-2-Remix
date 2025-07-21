@@ -261,6 +261,10 @@ public:
 
 	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 
+		//Instead of using sub-classes to store different types of collision,
+		//I should have just used one tile class and activated different collision using functions.
+		//That would have been a way to avoid the magic numbering you see below.
+
 		if (selectedType == 0) {
 			return new tile(worldPos, tex, selectedTexture, z);
 		}
