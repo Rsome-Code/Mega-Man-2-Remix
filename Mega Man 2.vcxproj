@@ -193,6 +193,7 @@
     <ClCompile Include="Big Ammo.cpp" />
     <ClCompile Include="Big Health.cpp" />
     <ClCompile Include="Death Animation.cpp" />
+    <ClCompile Include="Door.cpp" />
     <ClCompile Include="E Tank Option.cpp" />
     <ClCompile Include="E Tank.cpp" />
     <ClCompile Include="Extra Life.cpp" />

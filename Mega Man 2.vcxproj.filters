@@ -439,5 +439,8 @@
     <ClCompile Include="Extra Life.cpp">
       <Filter>Source Files\Game Files\Objects\Items</Filter>
     </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

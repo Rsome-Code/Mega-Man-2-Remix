@@ -12,6 +12,8 @@
 #include "pause.cpp"
 #include "item.cpp"
 #include "freeze.cpp"
+#include "door.cpp"
+#include "end flag.cpp"
 #include <list>
 #pragma once
 
@@ -69,6 +71,9 @@ class scene {
 	EndFlag* lastFlag;
 	enum transitionAngle revLastAngle;
 
+	Door* door1;
+	Door* door2;
+
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 		
@@ -104,6 +109,9 @@ public:
 
 		miscT = new Texture();
 		refreshMisc();
+
+		door1 = stage->getDoor1();
+		door2 = stage->getDoor2();
 	}
 
 public:
@@ -143,7 +151,7 @@ public:
 		bool unPaused = false;
 		
 
-		forceLoadSection(0);
+		forceLoadSection(1);
 
 
 
@@ -307,6 +315,11 @@ public:
 				instance->objectAccess(p->getDamEffect(), cam);
 			}
 			
+
+			instance->objectAccess(door1, cam);
+			instance->objectAccess(door2, cam);
+
+
 			//p->updateLighting();
 			//lightingCheck();
 			p->checkHold();
@@ -316,8 +329,8 @@ public:
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
-			instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
-			instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
+			//instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
+			//instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
 			
 
 
@@ -382,21 +395,33 @@ public:
 		}
 	}
 
+	EndFlag* getLastCheckpoint() {
+		return stage->getLastCheckpoint(section);
+	}
+
 	void startAnim(renderer* instance, float targetRate) {
 
-		if (lastFlagRight) {
-			cam->setPosition(Vector2f(stage->getLastFlagPos().x, cam->getPosition().y));
+		EndFlag* flag = getLastCheckpoint();
+
+		section = flag->getSection() + 1;
+
+		forceLoadSection(section);
+
+		
+
+		if (flag->getAngle() == RIGHT) {
+			cam->setPosition(flag->getPosition());
 
 		}
 		else {
 			if (lastFlag->getAngle() == UP) {
-				cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, stage->getLastFlagPos().y - 1080));
+				cam->setPosition(Vector2f(flag->getPosition().x - 1920, flag->getPosition().y - 1080));
 			}
 			else {
-				cam->setPosition(Vector2f(stage->getLastFlagPos().x - 1920, stage->getLastFlagPos().y));
+				cam->setPosition(Vector2f(flag->getPosition().x - 1920, flag->getPosition().y));
 			}
 		}
-		Vector2f flagPos = stage->getFlagPos(section);
+		Vector2f flagPos = flag->getPosition();
 		cameraFlagCheck(flagPos);
 
 		resetObjects();
@@ -566,10 +591,18 @@ public:
 
 	bool flagCheck(renderer* instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection) {
 
+
+
 		if (ang == RIGHT) {
 			if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
 
+				bool door = doorCheck(instance, targetRate);
+
 				startTransition(instance, targetRate, ang, flagPos, nextSection);
+				
+				if (door) {
+					doorClose(instance, targetRate);
+				}
 				return true;
 			}
 		}
@@ -595,6 +628,30 @@ public:
 
 		return false;
 	}
+
+	bool doorCheck(renderer* instance, float targetRate) {
+		if (door1->getSection() == section) {
+			door1->loop(instance, cam, targetRate, p->getSprite(), door2->getSprite(), tileList, z2List, z3List, z4List, true);
+			return true;
+		}
+		if (door2->getSection() == section) {
+			door2->loop(instance, cam, targetRate, p->getSprite(), door1->getSprite(), tileList, z2List, z3List, z4List, true);
+			return true;
+		}
+		return false;
+	}
+
+	void doorClose(renderer* instance, float targetRate) {
+		if (door1->getSection() == section -1) {
+			door1->loop(instance, cam, targetRate, p->getSprite(), door2->getSprite(), tileList, z2List, z3List, z4List, false);
+			
+		}
+		if (door2->getSection() == section -1) {
+			door2->loop(instance, cam, targetRate, p->getSprite(), door1->getSprite(), tileList, z2List, z3List, z4List, false);
+			
+		}
+	}
+
 
 	void startTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool nextSection) {
 		checkLastFlagRight();
@@ -779,6 +836,9 @@ public:
 					run = false;
 				}
 			}
+
+			instance->objectAccess(door1, cam);
+			instance->objectAccess(door2, cam);
 
 			p->updateHitbox();
 			//p->updateLighting();

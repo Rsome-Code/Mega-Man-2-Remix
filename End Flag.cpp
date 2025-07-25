@@ -9,6 +9,7 @@ class EndFlag : public object {
 
 	enum transitionAngle angle;
 	int section;
+	bool checkpoint = false;
 
 public:
 	EndFlag(Texture* t, Vector2f pos, int section) {
@@ -33,6 +34,14 @@ public:
 		this->section = section;
 	}
 
+	void setCheckpoint() {
+		checkpoint = true;
+	}
+
+	bool getCheckpoint() {
+		return checkpoint;
+	}
+
 	enum transitionAngle getAngle() {
 		return angle;
 	}
@@ -47,9 +56,12 @@ public:
 		else if (angle == UP) {
 			code = "flag-up";
 		}
+
 	}
 
 	int getSection() {
 		return section;
 	}
+
+
 };

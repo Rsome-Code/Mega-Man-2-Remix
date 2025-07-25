@@ -40,6 +40,20 @@ public:
 		
 	}
 
+	bool reverse(float* delta) {
+		bool nextFrame = false;
+		if (*delta >= countDown) {
+			nextFrame = true;
+			anim->prevFrame();
+			countDown = targetDelta;
+		}
+		else {
+			countDown = countDown - *delta;
+
+		}
+		return nextFrame;
+	}
+
 	bool isFinished(float *deltaT) {
 		if (loop) {
 			return anim->isFinishedLoop() && *deltaT >= countDown;
@@ -56,6 +70,8 @@ public:
 			return anim->isFinishedNotLoop();
 		}
 	}
+
+
 
 	void skip() {
 		countDown = 0;

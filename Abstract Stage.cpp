@@ -13,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include "load.cpp"
+#include "door.cpp"
 #pragma once
 
 class abstractStage {
@@ -43,10 +44,16 @@ protected:
 	
 
 	float z = 1;
+
+	Door* door1;
+	Door* door2;
+
+	Load* l;
 	
 
 public:
 	abstractStage(string name) {
+		l = new Load();
 		levelName = name;
 		tileTexture = new Texture();
 		tileTexture->loadFromFile("Assets\\" + name + "-stage.png");
@@ -60,6 +67,9 @@ public:
 
 		load(name);
 		lastFlagPos = Vector2f(0,0);
+
+		
+
 		
 	}
 
@@ -171,6 +181,7 @@ public:
 		}
 	}
 
+
 	enum transitionAngle getAngle() {
 		return transAngle;
 	}
@@ -193,17 +204,45 @@ public:
 	}
 
 	void load(string name) {
-		Load* load = new Load();
-		load->load(name, tileTexture, &tileList, &z2List, &z3List, &z4List);
+		
+		l->load(name, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();
 		
-		load->loadObjects(name, &objects, enemyTexture);
+		l->loadObjects(name, &objects, enemyTexture);
 
 		if (flags.size() == 0) {
-			load->loadFlags(name, &flags, enemyTexture);
+			l->loadFlags(name, &flags, enemyTexture);
 		}
 
+		door1 = l->getDoor1();
+		door2 = l->getDoor2();
 		
+
+	}
+
+	Door* getDoor1() {
+		return door1;
+	}
+	Door* getDoor2() {
+		return door2;
+	}
+
+	EndFlag* getLastCheckpoint(int sect) {
+		bool found = true;
+		int current = sect - 1;
+		while (found) {
+			found = false;
+			for (EndFlag* flag : flags) {
+				if (flag->getSection() == current) {
+					found = true;
+					if (flag->getCheckpoint()) {
+						return flag;
+					}
+				}
+			}
+			current -= 1;
+		}
+		return NULL;
 
 	}
 

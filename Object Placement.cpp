@@ -12,8 +12,10 @@
 #include "Solid Tile.cpp"
 #include "ladder tile.cpp"
 #include "top ladder tile.cpp"
+#include "door.cpp"
 #include "Mouse.cpp"
 #include <SFML/Window/Mouse.hpp>
+#include "object.cpp"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -60,12 +62,20 @@ class ObjectPlacer {
 
 	list<EndFlag*> flagList;
 
+	Door* door1;
+	Door* door2;
+	Load* l;
+
+	bool checkpoint = false;
+	bool cPressed = false;
+
+
 public:
 	ObjectPlacer(Texture* T, string levelN, list<object*> obList) {
 		this->levelName = levelN;
 		saveFile = levelN;
 		tex = T;
-		Load* l = new Load();
+		l = new Load();
 		l->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
 
 		changeZ();
@@ -91,7 +101,8 @@ public:
 		}
 		
 
-	
+		door1 = l->getDoor1();
+		door2 = l->getDoor2();
 		
 	}
 	
@@ -254,6 +265,20 @@ public:
 
 		changeZ();
 
+		door1 = l->getDoor1();
+		door2 = l->getDoor2();
+
+		if (door1 != NULL) {
+			if (door1->getSection() == section) {
+				objects.push_back(door1);
+			}
+		}
+		if (door2 != NULL) {
+			if (door2->getSection() == section) {
+				objects.push_back(door2);
+			}
+		}
+
 	}
 
 	bool checkActive(Vector2i mousePos) {
@@ -278,21 +303,108 @@ public:
 			objects.push_back(tempLoc);
 			objectIt = prev(objects.end());
 			selectedPlaced = *objectIt;
+			
+			
 
-			if (selectedObject->getCode() == "flag-down") {
 
-				for (EndFlag* flag : flagList) {
-					if (flag->getSection() == section) {
-						flagList.remove(flag);
-						break;
-					}
-				}
 
-				EndFlag* temp = new EndFlag(selectedObject->getSprite()->getTexture(), worldPos, DOWN, section);
-				flagList.push_back(temp);
-			}
+
+			
 		}
 
+	}
+
+	void addFlagList(object* object) {
+		EndFlag* temp;
+		if (selectedObject->getCode() == "flag-down" || selectedObject->getCode() == "flag-up" || selectedObject->getCode() == "flag") {
+
+			for (EndFlag* flag : flagList) {
+				if (flag->getSection() == section) {
+					flagList.remove(flag);
+					break;
+				}
+			}
+
+			temp = new EndFlag(selectedObject->getSprite()->getTexture(), selectedObject->getSprite()->getPosition(), selectedObject->getAngle(), section);
+			flagList.push_back(temp);
+
+
+
+		}
+	}
+
+	void hFlagYPos(object* thisFlag) {
+		
+		int sectCheck = section - 1;
+		EndFlag* lastVFlag = getFlag(sectCheck);
+		while (lastVFlag != NULL && lastVFlag->getAngle() != UP && lastVFlag->getAngle() != DOWN) {
+			sectCheck -= 1;
+			lastVFlag = getFlag(sectCheck);
+				
+		}
+		if (lastVFlag != NULL) {
+			if (lastVFlag->getAngle() == DOWN) {
+				thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y));
+			}
+			else {
+				thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y - 1080));
+			}
+		}
+		
+	}
+
+	void downFlagYPos(object* thisFlag) {
+
+		EndFlag* lastFlag = getFlag(section - 1);
+
+		if (lastFlag->getCode() == "flag-up") {
+			if (thisFlag->getSprite()->getPosition().y < lastFlag->getSprite()->getPosition().y) {
+				EndFlag* lastVFlag = getLastFlagOfAngle(thisFlag, UP);
+
+				if (lastVFlag != NULL) {
+					thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y));
+				}
+			}
+		}
+		
+	}
+
+	void upFlagYPos(object* thisFlag) {
+		EndFlag* lastFlag = getFlag(section - 1);
+
+		if (lastFlag->getCode() == "flag-down") {
+			if (thisFlag->getSprite()->getPosition().y > lastFlag->getSprite()->getPosition().y) {
+				EndFlag* lastVFlag = getLastFlagOfAngle(thisFlag, DOWN);
+
+
+
+				if (lastVFlag != NULL) {
+					thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y));
+				}
+			}
+		}
+	}
+
+	EndFlag* getLastFlagOfAngle(object* thisFlag, enum transitionAngle ang) {
+		int sectCheck = section - 1;
+		EndFlag* lastFlag = getFlag(sectCheck);
+		while (lastFlag != NULL && lastFlag->getAngle() != ang) {
+			sectCheck -= 1;
+			lastFlag = getFlag(sectCheck);
+
+		}
+		return lastFlag;
+
+		
+	}
+
+	EndFlag* getFlag(int sect) {
+		for (EndFlag* flag : flagList) {
+			if (flag->getSection() == sect) {
+				return flag;
+			}
+		}
+		return NULL;
 	}
 
 	object* checkPlaced(Vector2f mousePos) {
@@ -322,6 +434,16 @@ public:
 			Vector2f worldPos = Vector2f(mousePos.x + cam->getPosition().x, mousePos.y + cam->getPosition().y);
 			{
 				selectedPlaced->getSprite()->setPosition(worldPos);
+				if (selectedPlaced->getCode() == "flag" || selectedPlaced->getCode() == "flag-left") {
+					
+					hFlagYPos(selectedPlaced);
+				}
+				else if (selectedPlaced->getCode() == "flag-down") {
+					downFlagYPos(selectedPlaced);
+				}
+				else if (selectedPlaced->getCode() == "flag-up") {
+					upFlagYPos(selectedPlaced);
+				}
 			}
 		}
 	}
@@ -353,11 +475,14 @@ public:
 			}
 
 		}
-		else {
+		else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouse1Pressed == true) {
 			mouse1Pressed = false;
+			if (selectedObject != NULL) {
+				addFlagList(selectedObject);
+			}
 		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::XButton1) && mouseX1Pressed != true) //specifies
+		if ((sf::Mouse::isButtonPressed(sf::Mouse::XButton1) && mouseX1Pressed != true )|| sf::Keyboard::isKeyPressed(sf::Keyboard::D)) //specifies
 		{
 			if (objectIt != objects.end()) {
 				objects.erase(objectIt);
@@ -386,6 +511,15 @@ public:
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			save();
+			l->loadFlags(levelName, &flagList, enemyT);
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !cPressed) {
+			checkpoint = !checkpoint;
+			cPressed = true;
+		}
+		else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+			cPressed = false;
 		}
 	}
 
@@ -419,26 +553,50 @@ public:
 
 		int cameraHeight = 0;
 
+		if (door1 != NULL) {
+			door1->setCheckpoint();
+		}
+
 		for (object* o : objects) {
-			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up" || o->getCode() == "flag-left") {
+			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up" || o->getCode() == "flag-left" || o->getCode() == "door") {
+				bool skip = false;
+				if (o->getCode() == "flag") {
+					if (door1 != NULL && door2 != NULL) {
+						if (door1->getSection() == o->getSection() || door2->getSection() == o->getSection()) {
+							skip = true;
+						}
+					}
+				}
 
-				
-				checkFlagDuplicates(o);
+				if (!skip) {
 
-				ofstream* flagfile;
-				flagfile = new ofstream();
-				flagfile->open(saveFile + "-flags.txt", std::ios::app);
+					if (checkpoint) {
+						o->setCheckpoint();
+					}
 
-				*flagfile << section;
-				*flagfile << ",";
-				*flagfile << o->getCode() + ",";
-				*flagfile << o->getSprite()->getPosition().x;
-				*flagfile << ",";
-				*flagfile << o->getSprite()->getPosition().y;
-				*flagfile << "\n";
+					checkFlagDuplicates(o);
 
-				flagfile->close();
-				
+					ofstream* flagfile;
+					flagfile = new ofstream();
+					flagfile->open(saveFile + "-flags.txt", std::ios::app);
+
+					*flagfile << section;
+					*flagfile << ",";
+					*flagfile << o->getCode() + ",";
+					*flagfile << o->getSprite()->getPosition().x;
+					*flagfile << ",";
+					*flagfile << o->getSprite()->getPosition().y;
+					*flagfile << ",";
+					if (o->getCheckpoint()) {
+						*flagfile << "1";
+					}
+					else {
+						*flagfile << "0";
+					}
+					*flagfile << "\n";
+
+					flagfile->close();
+				}
 
 			}
 			else {

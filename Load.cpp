@@ -22,6 +22,7 @@
 #include "player.cpp"
 #include "E Tank.cpp"
 #include "Extra Life.cpp"
+#include "door.cpp"
 
 #pragma once
 
@@ -31,6 +32,9 @@ using namespace sf;
 class Load {
 	int z = 1;
 	Texture* tex;
+	Door* door1 = NULL;
+	Door* door2 = NULL;
+
 
 public:
 	void load(string levelName, Texture* texture,  list<tile*>* tileList, list<tile*>* z2List, list<tile*>* z3List, list<tile*>* z4List) {
@@ -97,7 +101,7 @@ public:
 		string line;
 		string variable;
 		char sep = ',';
-
+		
 		while (getline(inputFile, line)) {
 
 			vector<string> current = splitString(line, sep);
@@ -123,18 +127,85 @@ public:
 			else if (value == "flag-left") {
 				angle = LEFT;
 			}
+			else if (value == "door") {
+				angle = RIGHT;
+				
+			}
 			valI = next(valI);
 
 			int xPos = stoi(*valI);
 			valI = next(valI);
 			int yPos = stoi(*valI);
 
+			valI = next(valI);
+			bool checkpoint;
+			if (stoi(*valI) == 1){
+				checkpoint = true;
+			}
+			else {
+				checkpoint = false;
+			}
+
+		
+
 			temp = new EndFlag (t, Vector2f(xPos, yPos), angle, sect);
+			if (value == "door") {
+				hFlagYPos(temp, flags);
+				if (door1 == NULL) {
+					door1 = new Door(levelName, Vector2f(xPos, yPos), sect);
+					door1->setCheckpoint();
+				}
+				else {
+					door2 = new Door(levelName, Vector2f(xPos, yPos), sect);
+				}
+			}
+
+			if (checkpoint) {
+				temp->setCheckpoint();
+			}
+		
 
 			flags->push_back(temp);
 
 		}
 	}
+
+	Door* getDoor1() {
+		return door1;
+	}
+	Door* getDoor2() {
+		return door2;
+	}
+
+	EndFlag* getFlag(int sect, list<EndFlag*> flagList) {
+		for (EndFlag* flag : flagList) {
+			if (flag->getSection() == sect) {
+				return flag;
+			}
+		}
+		return NULL;
+	}
+
+	void hFlagYPos(EndFlag* thisFlag, list<EndFlag*>* flagList) {
+
+		int sectCheck = thisFlag->getSection() - 1;
+		EndFlag* lastVFlag = getFlag(sectCheck, *flagList);
+		while (lastVFlag != NULL && lastVFlag->getAngle() != UP && lastVFlag->getAngle() != DOWN) {
+			sectCheck -= 1;
+			lastVFlag = getFlag(sectCheck, *flagList);
+
+		}
+		if (lastVFlag != NULL) {
+			if (lastVFlag->getAngle() == DOWN) {
+				thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y));
+			}
+			else {
+				thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y - 1080));
+			}
+		}
+
+	}
+
 
 	std::vector<std::string> splitString(const std::string& str, char delimiter) {
 		std::vector<std::string> tokens;

@@ -52,6 +52,10 @@ public:
 		sprite = NULL;
 	}
 
+	void setCode(string cod) {
+		code = cod;
+	}
+
 	virtual void eachFrame(float* deltaT, objectSprite* player) {};
 	virtual void initial() {};
 	virtual bool getOffScreen() { return false; };
@@ -85,7 +89,10 @@ public:
 		return r;
 	}
 	virtual void spawnItem(list<object*>* obList, Texture* t, Vector2f pos) {
-
-
 	}
+	virtual void setCheckpoint(){}
+	Vector2f getPosition() {
+		return sprite->getPosition();
+	}
+	virtual bool getCheckpoint() { return false; };
 };
