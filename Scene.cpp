@@ -316,6 +316,9 @@ public:
 				}
 			}
 			
+			for (object* o : eBullets) {
+				instance->objectAccess(o, cam);
+			}
 
 			instance->objectDisplay(p->getBullets(), cam);
 			if (p->getDamEffect() != NULL) {
