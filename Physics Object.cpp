@@ -162,4 +162,11 @@ public:
 	void setMovable(bool b) {
 		movable = b;
 	}
+
+	float getHVelocity() {
+		return horizontalAcc;
+	}
+	float getVVelocity() {
+		return verticalAcc;
+	}
 };

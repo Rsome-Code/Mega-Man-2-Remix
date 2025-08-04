@@ -43,4 +43,27 @@ public:
 		
 	}
 
+	static float getAngle(Vector2f pos, Vector2f pos1) {
+		float xDiff = fabs(pos.x - pos1.x);
+		float yDiff = fabs(pos.y - pos1.y);
+
+		float angle = atan(yDiff / xDiff);
+
+		if (pos1.x > pos.x) {
+			if (pos1.y < pos.y) {
+				angle += 270;
+			}
+		}
+		if (pos1.x < pos.x) {
+			if (pos1.y < pos.y) {
+				angle += 180;
+			}
+			else if (pos1.y > pos.y) {
+				angle += 90;
+			}
+		}
+
+		return angle;
+	}
+
 };

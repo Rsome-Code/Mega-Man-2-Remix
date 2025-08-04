@@ -8,6 +8,9 @@
 #include "small health.cpp"
 #include "big ammo.cpp"
 #include "small ammo.cpp"
+#include "tile.cpp"
+#include "player.cpp"
+#include "enemy Bullet.cpp"
 
 #pragma once
 class enemy:public object{
@@ -27,6 +30,7 @@ protected:
 
 
 public:
+	enemy(){}
 	enemy(Texture* t, Vector2f i) {
 
 		sprite = new movable("enemy", t, Vector2i(3, 117), Vector2i(16, 23), Vector2f(1200, 1200), Vector2f(4, 4), 1);
@@ -95,11 +99,11 @@ public:
 		return hitboxDetect::hitboxDetection(bullet, hurt);
 	}
 
-	virtual void eachFrame(float* deltaT, objectSprite* player) {
+	virtual void eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
 		if (hp > 0) {
 			hit->updatePos();
 			hurt->updatePos(); 
-			alive(player, deltaT); }
+			alive(p, deltaT, tileList, enemyList, bList); }
 		else { death(deltaT); }
 	}
 
@@ -107,7 +111,7 @@ public:
 		hp = hp - h;
 	}
 
-	virtual void alive(objectSprite* player, float* deltaT) = 0;
+	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) = 0;
 
 
 	void death(float* deltaT) {

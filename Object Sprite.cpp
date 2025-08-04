@@ -198,6 +198,10 @@ public:
 		return pixels;
 	}
 
+	Vector2f getMiddlePos() {
+		return Vector2f(position.x + (getSize().x / 2), position.y + (getSize().y / 2));
+	}
+
 	void updateLighting() {
 		pixelSetup();
 		setFullColour(new Color(0, 0, 0, defaultTransparency));

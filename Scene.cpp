@@ -44,8 +44,8 @@ class scene {
 	list<tile*> newZ4List;
 
 	list<object*> objects;
-	list<transition*> tList;
-	list<transition*>::iterator tIterator;
+	list<enemy*> enemies;
+	list<EnemyBullet*> eBullets;
 	int section = 0;
 	int transitionType;
 
@@ -94,8 +94,8 @@ public:
 		stageName = stage->getName();
 
 		objects = stage->getObjects();
-		tList = stage->getTList();
-		tIterator = tList.begin();
+		enemies = stage->getEnemies();
+
 		//p->start(stg->getInitialPlayer().x);
 		lastFlagPos = Vector2f(0, 0);
 
@@ -151,7 +151,7 @@ public:
 		bool unPaused = false;
 		
 
-		forceLoadSection(1);
+		section = 0;
 
 
 
@@ -192,7 +192,7 @@ public:
 				unPaused = true;
 			}
 			if (!p->isTeleporting()) {
-				enemyCollisionCheck(objects, instance, targetRate);
+				enemyCollisionCheck(enemies, instance, targetRate);
 			}
 			if (paused) {
 				start = time->timerStart();
@@ -276,7 +276,7 @@ public:
 				cameraFlagCheck(flagPos);
 			}
 
-			enemyDistanceCheck(instance, objects);
+			enemyDistanceCheck(instance, enemies);
 			
 
 			if (!p->isTeleporting()) {
@@ -309,6 +309,13 @@ public:
 					instance->objectAccess(t, cam);
 				}
 			}
+
+			for (enemy* t : enemies) {
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->objectAccess(t, cam);
+				}
+			}
+			
 
 			instance->objectDisplay(p->getBullets(), cam);
 			if (p->getDamEffect() != NULL) {
@@ -379,7 +386,7 @@ public:
 	}
 
 	void resetObjects() {
-		for (object* e : objects) {
+		for (enemy* e : enemies) {
 			if (e->getIncrease() == NULL) {
 				e->setOffScreen(true);
 				e->setAct(false);
@@ -403,10 +410,10 @@ public:
 
 		EndFlag* flag = getLastCheckpoint();
 
-		section = flag->getSection() + 1;
+		//section = flag->getSection() + 1;
 
 		forceLoadSection(section);
-
+		
 		
 
 		if (flag->getAngle() == RIGHT) {
@@ -515,43 +522,42 @@ public:
 	}
 
 	void bulletCollisionCheck(float deltaT) {
-		for (object* enemy : objects) {
+		for (enemy* enemy : enemies) {
 		
-			if (enemy->getAct() && enemy->getHurtbox() != NULL) {
+
 				
-				//t->checkHit(p->getHitbox());
-				enemy->eachFrame(&deltaT, p->getSprite());
+			//t->checkHit(p->getHitbox());
+			enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets);
 
-				if (enemy->getHP() > 0) {
+			if (enemy->getHP() > 0) {
 
-					for (bullet* bull : p->getControls()->getBulletObjects()) {
-						if (enemy->checkHurt(bull->getHitbox())) {
+				for (bullet* bull : p->getControls()->getBulletObjects()) {
+					if (enemy->checkHurt(bull->getHitbox())) {
 
-							enemy->lowerHP(bull->checkDamage(enemy));
+						enemy->lowerHP(bull->checkDamage(enemy));
 
 
-							if (bull->checkDamage(enemy) <= 0) {
-								bull->deflect();
-							}
-							else {
-								bull->onHit(enemy);
-								if (enemy->getHP() <= 0) {
-									spawnItemFromObject(enemy);
-
-								}
-							}
-						}
-						else if (enemy->checkHit(bull->getHitbox())) {
+						if (bull->checkDamage(enemy) <= 0) {
 							bull->deflect();
 						}
+						else {
+							bull->onHit(enemy);
+							if (enemy->getHP() <= 0) {
+								spawnItemFromObject(enemy);
 
+							}
+						}
 					}
+					else if (enemy->checkHit(bull->getHitbox())) {
+						bull->deflect();
+					}
+
 				}
 			}
-
-			else if (enemy->getIncrease() != NULL) {
-				enemy->eachFrame(&deltaT, p->getSprite());
-			}
+			
+		}
+		for (object* o : objects) {
+			o->eachFrame(&deltaT, p->getSprite());
 		}
 	}
 
@@ -880,6 +886,7 @@ public:
 		loadFlag();
 		loadSection();
 		deletePrevSection();
+		updateFlags();
 	}
 	void loadSection() {
 		if (section != 0) {
@@ -933,8 +940,8 @@ public:
 
 
 
-	void enemyCollisionCheck(list<object*> eList, renderer* instance, float targetRate) {
-		for (object* e : eList) {
+	void enemyCollisionCheck(list<enemy*> eList, renderer* instance, float targetRate) {
+		for (enemy* e : eList) {
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
 					if (e->getIncrease() == NULL) {
@@ -1100,10 +1107,10 @@ public:
 
 
 
-	void enemyDistanceCheck(renderer* instance, list<object*> objects) {
+	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
 		float camPos = cam->getPosition().x;
 		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
-		for (object* e : objects) {
+		for (enemy* e : objects) {
 			if (e->getIncrease() == NULL) {
 				float initial = e->getInitialPosition().x;
 				if (!e->getOffScreen()) {

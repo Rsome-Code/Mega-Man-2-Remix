@@ -123,6 +123,10 @@ public:
 		deathAnim2 = NULL;
 	}
 
+	Vector2f getPosition() {
+		return sprite->getPosition();
+	}
+
 	void ladderJumpExtend(list<tile*> tiles) {
 		if ((controls->isJumping() && ladderNotBelow(tiles) )|| (controls->getOnLadder() && ladderNotBelow(tiles))) {
 			ladderHit->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 0 * sprite->getScale().y));

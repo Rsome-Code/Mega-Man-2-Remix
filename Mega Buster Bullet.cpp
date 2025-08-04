@@ -1,7 +1,7 @@
 #include "Movable Object.cpp"
 #include "Object Hitbox.cpp"
 #include "Bullet.cpp"
-#include "enemy.cpp"
+#include "object.cpp"
 #pragma once
 class megaBuster : public bullet{
 

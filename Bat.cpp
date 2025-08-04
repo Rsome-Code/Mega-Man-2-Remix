@@ -72,23 +72,23 @@ public:
 
 	
 
-	void alive(objectSprite* player, float* deltaT) {
+	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
 
 		if (!awake) {
 
 			if (flyFromRight) {
-				if (player->getPosition().x > sprite->getPosition().x - 600 && player->getPosition().x < sprite->getPosition().x) {
+				if (p->getPosition().x > sprite->getPosition().x - 600 && p->getPosition().x < sprite->getPosition().x) {
 					awake = true;
 				}
 			}
 			else {
-				if (player->getPosition().x < sprite->getPosition().x + 500 && player->getPosition().x > sprite->getPosition().x) {
+				if (p->getPosition().x < sprite->getPosition().x + 500 && p->getPosition().x > sprite->getPosition().x) {
 					awake = true;
 				}
 			}
 		}
 		else if (!flyToPlayer) {
-			flyDown(player, deltaT);
+			flyDown(p->getSprite(), deltaT);
 		}
 		else {
 			flyForwards(deltaT);

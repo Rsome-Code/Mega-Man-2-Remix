@@ -26,6 +26,8 @@ protected:
 	string levelName;
 
 	list<object*> objects;
+	list<enemy*> enemies;
+
 
 	//This should have been a vector
 	list<transition*> tList;
@@ -199,6 +201,9 @@ public:
 	list<object*> getObjects() {
 		return objects;
 	}
+	list<enemy*> getEnemies() {
+		return enemies;
+	}
 	list<transition*> getTList() {
 		return tList;
 	}
@@ -208,7 +213,7 @@ public:
 		l->load(name, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();
 		
-		l->loadObjects(name, &objects, enemyTexture);
+		l->loadObjects(name, &objects, &enemies, enemyTexture);
 
 		if (flags.size() == 0) {
 			l->loadFlags(name, &flags, enemyTexture);

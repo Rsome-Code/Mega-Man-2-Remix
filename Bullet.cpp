@@ -1,6 +1,6 @@
 #include "movable object.cpp"
 #include "object hitbox.cpp"
-#include "enemy.cpp"
+#include "object.cpp"
 #pragma once
 
 class bullet {

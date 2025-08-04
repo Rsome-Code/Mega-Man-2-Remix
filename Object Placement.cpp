@@ -87,6 +87,7 @@ public:
 		
 		for (object* o : obList) {
 			o->setCode();
+			o->setDisplay(true);
 		}
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
@@ -197,6 +198,7 @@ public:
 			}
 
 			for (object* o : objects) {
+				o->setDisplay(true);
 				instance->objectAccess(o, cam);
 				
 			}
