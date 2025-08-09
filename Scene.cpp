@@ -277,12 +277,15 @@ public:
 			}
 
 			enemyDistanceCheck(instance, enemies);
+
+
 			
 
 			if (!p->isTeleporting()) {
 				bulletCollisionCheck(deltaT);
 			}
 
+			enemyBullets(deltaT);
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
@@ -352,6 +355,15 @@ public:
 
 
 
+		}
+	}
+
+	void enemyBullets(float deltaT) {
+		for (EnemyBullet* b : eBullets) {
+			b->eachFrame(&deltaT);
+			if (hitboxCheck(p->getHitbox(), b->getHitbox())) {
+				p->takeDamage(b->getDamage());
+			}
 		}
 	}
 

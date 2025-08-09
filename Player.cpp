@@ -516,12 +516,14 @@ public:
 	}
 
 	void takeDamage(int dam) {
-		health->increaseAmount(-dam);
-		sprite->setMovable(false);
-		damage = true;
-		pAnim->hurtAnim();
-		sprite->setHVelocity(0);
-		sprite->setVVelocity(0);
+		if (!damage) {
+			health->increaseAmount(-dam);
+			sprite->setMovable(false);
+			damage = true;
+			pAnim->hurtAnim();
+			sprite->setHVelocity(0);
+			sprite->setVVelocity(0);
+		}
 	}
 
 	void heal(int h) {

@@ -29,4 +29,8 @@ public:
 		return false;
 	}
 
+	objectHitbox* getHitbox() {
+		return hit;
+	}
+
 };

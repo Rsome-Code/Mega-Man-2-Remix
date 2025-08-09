@@ -192,10 +192,12 @@
     <ClCompile Include="Atomic Fire.cpp" />
     <ClCompile Include="Big Ammo.cpp" />
     <ClCompile Include="Big Health.cpp" />
+    <ClCompile Include="Carrot.cpp" />
     <ClCompile Include="Death Animation.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="E Tank Option.cpp" />
     <ClCompile Include="E Tank.cpp" />
+    <ClCompile Include="Enemy Bullet.cpp" />
     <ClCompile Include="Extra Life.cpp" />
     <ClCompile Include="Freeze.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -203,6 +205,7 @@
     <ClCompile Include="Page Option.cpp" />
     <ClCompile Include="Pause Option.cpp" />
     <ClCompile Include="Pause.cpp" />
+    <ClCompile Include="Rabbit.cpp" />
     <ClCompile Include="Screen Lighting.cpp" />
     <ClCompile Include="Small Ammo.cpp" />
     <ClCompile Include="Small Health.cpp" />

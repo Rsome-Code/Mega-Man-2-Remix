@@ -442,5 +442,14 @@
     <ClCompile Include="Door.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Rabbit.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Carrot.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
