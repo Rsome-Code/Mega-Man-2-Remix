@@ -193,6 +193,7 @@ public:
 			}
 			if (!p->isTeleporting()) {
 				enemyCollisionCheck(enemies, instance, targetRate);
+				itemCollisionCheck(objects, instance, targetRate);
 			}
 			if (paused) {
 				start = time->timerStart();
@@ -968,6 +969,18 @@ public:
 						
 						itemGet(instance, targetRate, e);
 						
+					}
+				}
+			}
+		}
+	}
+
+	void itemCollisionCheck(list<object*> eList, renderer* instance, float targetRate) {
+		for (object* e : eList) {
+			if (e->getAct() && e->getHitbox() != NULL) {
+				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
+					if (e->getIncrease() != NULL) {
+						itemGet(instance, targetRate, e);
 					}
 				}
 			}

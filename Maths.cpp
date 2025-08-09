@@ -47,11 +47,12 @@ public:
 		float xDiff = fabs(pos.x - pos1.x);
 		float yDiff = fabs(pos.y - pos1.y);
 
-		float angle = atan(yDiff / xDiff);
+		float angle = (atan(yDiff / xDiff)) * 57.295779513082320876798154814105;
 
 		if (pos1.x > pos.x) {
+			angle -= (angle * 2);
 			if (pos1.y < pos.y) {
-				angle += 270;
+				angle += 0;
 			}
 		}
 		if (pos1.x < pos.x) {
@@ -59,7 +60,7 @@ public:
 				angle += 180;
 			}
 			else if (pos1.y > pos.y) {
-				angle += 90;
+				angle += 180;
 			}
 		}
 

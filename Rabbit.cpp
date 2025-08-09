@@ -48,6 +48,8 @@ class Rabbit : public PhysicsEnemy {
 		damage = 4;
 
 		setCode("rabbit");
+
+		offSetList();
 		
 	}
 
@@ -110,7 +112,7 @@ class Rabbit : public PhysicsEnemy {
 	}
 
 	void checkShoot(player* p) {
-		gonnaShoot = p->getGrounded();
+		gonnaShoot = true;
 	}
 
 	void jumpTimeRun(float* deltaT) {

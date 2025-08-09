@@ -119,11 +119,11 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20) };
-	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(8, 8) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))};
+	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(4*4,4*4),Vector2f(6*4, 6*4),Vector2f(7*4, 7*4),Vector2f(10 *4, 10 *4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\weapons.png");
+	testT->loadFromFile("Assets\\enemy.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT);
 
 	////////////////////////////////
@@ -144,6 +144,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+	//cout << "hi";
 
 }

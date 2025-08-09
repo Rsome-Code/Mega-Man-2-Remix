@@ -27,6 +27,9 @@ protected:
 	Vector2f initialPos;
 	bool spawnDisplay = true;
 
+	bool dead = false;
+
+
 
 
 public:
@@ -34,10 +37,11 @@ public:
 	enemy(Texture* t, Vector2f i) {
 
 		sprite = new movable("enemy", t, Vector2i(3, 117), Vector2i(16, 23), Vector2f(1200, 1200), Vector2f(4, 4), 1);
-		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
+		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
 		
 		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
 
+		offSetList();
 
 		deathTimer = new animTimer(deathAnim, 16, false);
 		initialPos = i;
@@ -57,15 +61,7 @@ public:
 	}
 
 	void offSetList() {
-		Vector2f center = sprite->getRelativeCenter();
-		list<Vector2f> temp;
-		temp.push_back(Vector2f(center.x - 48, center.y - 48));
-		temp.push_back(Vector2f(center.x - 32, center.y - 32));
-		temp.push_back(Vector2f(center.x - 24, center.y - 24));
-		temp.push_back(Vector2f(center.x - 20, center.y - 20));
-		temp.push_back(Vector2f(center.x - 8, center.y - 8));
-
-		
+		list<Vector2f> temp = list<Vector2f>{ Vector2f(0, 0), Vector2f(4 * 4, 4 * 4), Vector2f(6 * 4, 6 * 4), Vector2f(7 * 4, 7 * 4), Vector2f(10 * 4, 10 * 4) };
 		deathAnim->setOffsetList(temp);
 	}
 
@@ -115,9 +111,14 @@ public:
 
 
 	void death(float* deltaT) {
+		if (!dead) {
+			sprite->setPosition(sprite->getMiddlePos());
+			dead = true;
+		}
 		hit->setPosition(Vector2f(-1000, 0));
 		hurt->setPosition(Vector2f(-1000, 0));
 		deathAnim->thisFrame();
+		
 		if (!deathTimer->isFinished()) {
 			deathTimer->run(deltaT);
 		}
