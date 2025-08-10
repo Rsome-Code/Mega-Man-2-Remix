@@ -34,6 +34,10 @@ class objectHitbox:public UIHitbox {
 	public:void updatePos() {
 		this->worldPos = sprite->getPosition() + relativePos;
 	}
+
+	 IntRect getRelativeRect() {
+			  return relativeRect;
+	}
 public:void setCameraPos(Vector2f pos) {
 	this->cameraPos = pos;
 }

@@ -14,6 +14,7 @@
 #include "freeze.cpp"
 #include "door.cpp"
 #include "end flag.cpp"
+#include "item.cpp"
 #include <list>
 #pragma once
 
@@ -46,6 +47,7 @@ class scene {
 	list<object*> objects;
 	list<enemy*> enemies;
 	list<EnemyBullet*> eBullets;
+	list<Item*> items;
 	int section = 0;
 	int transitionType;
 
@@ -193,7 +195,8 @@ public:
 			}
 			if (!p->isTeleporting()) {
 				enemyCollisionCheck(enemies, instance, targetRate);
-				itemCollisionCheck(objects, instance, targetRate);
+				itemCollisionCheck(instance, targetRate);
+				itemLoop(deltaT);
 			}
 			if (paused) {
 				start = time->timerStart();
@@ -320,9 +323,14 @@ public:
 				}
 			}
 			
+			for (object* i : items) {
+				instance->objectAccess(i, cam);
+			}
+
 			for (object* o : eBullets) {
 				instance->objectAccess(o, cam);
 			}
+			
 
 			instance->objectDisplay(p->getBullets(), cam);
 			if (p->getDamEffect() != NULL) {
@@ -387,6 +395,12 @@ public:
 			else {
 				run = false;
 			}
+		}
+	}
+
+	void itemLoop(float deltaT) {
+		for (Item* o : items) {
+			o->eachFrame(&deltaT, p->getSprite(), &tileList);
 		}
 	}
 
@@ -525,11 +539,13 @@ public:
 	
 	}
 
-	void spawnItemFromObject(object* ob) {
+	void spawnItemFromEnemy(enemy* en) {
 		
-		Vector2f middle = Vector2f((ob->getSprite()->getPosition().x + (ob->getSprite()->getSize().x/6)), (ob->getSprite()->getPosition().y + (ob->getSprite()->getSize().y/2)));
+		Vector2f middle = Vector2f((en->getSprite()->getPosition().x + (en->getSprite()->getSize().x/6)), (en->getSprite()->getPosition().y + (en->getSprite()->getSize().y/2)));
 
-		ob->spawnItem(&objects, miscT, middle);
+		
+
+		en->spawnItem(&items, miscT, middle);
 
 	}
 
@@ -559,7 +575,7 @@ public:
 						else {
 							bull->onHit(enemy);
 							if (enemy->getHP() <= 0) {
-								spawnItemFromObject(enemy);
+								spawnItemFromEnemy(enemy);
 
 							}
 						}
@@ -572,9 +588,7 @@ public:
 			}
 			
 		}
-		for (object* o : objects) {
-			o->eachFrame(&deltaT, p->getSprite());
-		}
+
 	}
 
 	
@@ -975,8 +989,8 @@ public:
 		}
 	}
 
-	void itemCollisionCheck(list<object*> eList, renderer* instance, float targetRate) {
-		for (object* e : eList) {
+	void itemCollisionCheck(renderer* instance, float targetRate) {
+		for (Item* e : items) {
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
 					if (e->getIncrease() != NULL) {

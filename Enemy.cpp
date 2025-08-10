@@ -112,7 +112,7 @@ public:
 
 	void death(float* deltaT) {
 		if (!dead) {
-			sprite->setPosition(sprite->getMiddlePos());
+			sprite->setPosition(Vector2f(sprite->getMiddlePos().x - (12*4), sprite->getMiddlePos().y - (12 * 4)));
 			dead = true;
 		}
 		hit->setPosition(Vector2f(-1000, 0));
@@ -153,11 +153,11 @@ public:
 		return offScreen;
 	}
 
-	virtual void spawnItem(list<object*>* obList, Texture* t, Vector2f pos) {
+	virtual void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos) {
 		int itemChance = rand();
 		itemChance = itemChance % 100;
 
-		object* item = NULL;
+		Item* item = NULL;
 
 		if (itemChance > 25 && itemChance <= 50) {
 			item = new SmallAmmo(t, pos);
@@ -176,7 +176,7 @@ public:
 		}
 
 		if (item != NULL) {
-			item->getSprite()->setPosition(Vector2f(item->getSprite()->getPosition().x - (item->getSprite()->getSize().x / 6), item->getSprite()->getPosition().y - (item->getSprite()->getSize().y / 2)));
+			item->getSprite()->setPosition(Vector2f(item->getSprite()->getPosition().x + (item->getSprite()->getSize().x / 4), item->getSprite()->getPosition().y + (item->getSprite()->getSize().y / 4)));
 			obList->push_back(item);
 		}
 	}

@@ -205,6 +205,7 @@
     <ClCompile Include="Page Option.cpp" />
     <ClCompile Include="Pause Option.cpp" />
     <ClCompile Include="Pause.cpp" />
+    <ClCompile Include="Physics Enemy.cpp" />
     <ClCompile Include="Rabbit.cpp" />
     <ClCompile Include="Screen Lighting.cpp" />
     <ClCompile Include="Small Ammo.cpp" />
