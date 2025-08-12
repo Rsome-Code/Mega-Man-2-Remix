@@ -55,11 +55,11 @@ public:
 		display = false;
 		act = false;
 
+		setCode("e1");
+
 	}
 
-	void setCode() {
-		code = "e1";
-	}
+
 
 	int genericDam() {
 		if (awake) {

@@ -50,8 +50,9 @@ public:
 		float angle = (atan(yDiff / xDiff)) * 57.295779513082320876798154814105;
 
 		if (pos1.x > pos.x) {
-			angle -= (angle * 2);
+			
 			if (pos1.y < pos.y) {
+				angle -= (angle * 2);
 				angle += 0;
 			}
 		}
@@ -60,6 +61,7 @@ public:
 				angle += 180;
 			}
 			else if (pos1.y > pos.y) {
+				angle -= (angle * 2);
 				angle += 180;
 			}
 		}

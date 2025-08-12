@@ -14,7 +14,7 @@ class Rabbit : public PhysicsEnemy {
 
 	float untilJump = 3;
 	float untilJump_left = untilJump;
-	float untilShoot = 0.5;
+	float untilShoot = 0.75;
 	float untilShoot_left = untilShoot;
 
 
@@ -23,6 +23,9 @@ class Rabbit : public PhysicsEnemy {
 	int jumpForce = 1500;
 
 	list<Carrot*> cList;
+
+	int maxShoot = 3;
+	int shootLeft = maxShoot;
 
 	
 
@@ -34,12 +37,12 @@ class Rabbit : public PhysicsEnemy {
 		sprite = phys;
 
 		jumpAnim = new animation(list<IntRect>{IntRect(124, 574, 32, 37), IntRect(157, 576, 32, 35), IntRect(190, 571, 29, 40)}, phys);
-		landAnim = new animation(list<IntRect>{IntRect(190, 571, 29, 40), IntRect(157, 576, 32, 35), IntRect(124, 574, 32, 37)}, phys);
+		landAnim = new animation(list<IntRect>{ IntRect(157, 576, 32, 35), IntRect(124, 574, 32, 37)}, phys);
 		jumpTimer = new animTimer(jumpAnim, 20, false);
 		landTimer = new animTimer(landAnim, 20, false);
 
 		jumpAnim->setOffsetList(list<Vector2f>{ Vector2f(0, 0), Vector2f(0, 2 * 4), Vector2f(0, 0)});
-		landAnim->setOffsetList(list<Vector2f>{ Vector2f(0, 0), Vector2f(0, 2 * 4), Vector2f(0, 0)});
+		landAnim->setOffsetList(list<Vector2f>{  Vector2f(0, 2 * 4), Vector2f(0, 0)});
 		deathAnim->setSprite(sprite);
 		hit = new objectHitbox(IntRect(0, 0, 32, 37), phys);
 		hurt = new objectHitbox(IntRect(0, 0, 32, 37), phys);
@@ -58,6 +61,7 @@ class Rabbit : public PhysicsEnemy {
 		checkDirection(p->getSprite());
 
 		if (grounded) {
+			landTimer->run(deltaT);
 			phys->enableGravity(false);
 			if (gonnaShoot) {
 				runShoot(p->getSprite(), bList, deltaT);
@@ -70,6 +74,7 @@ class Rabbit : public PhysicsEnemy {
 		else {
 			phys->enableGravity(true);
 			runJumping(p, deltaT, tileList);
+			landAnim->reset();
 		}
 
 
@@ -82,7 +87,11 @@ class Rabbit : public PhysicsEnemy {
 		if (untilShoot_left <= 0) {
 			shoot(player, bList);
 			untilShoot_left = untilShoot;
-			gonnaShoot = false;
+			shootLeft -= 1;
+			if (shootLeft == 0) {
+				shootLeft = maxShoot;
+				gonnaShoot = false;
+			}
 		}
 	}
 
@@ -102,6 +111,7 @@ class Rabbit : public PhysicsEnemy {
 
 
 	void runJumping(player* p, float* deltaT, list<tile*>* tileList) {
+		jumpTimer->run(deltaT);
 		phys->eachFrame(deltaT);
 		
 		tileCollision(tileList);
@@ -125,6 +135,7 @@ class Rabbit : public PhysicsEnemy {
 	}
 
 	void jump() {
+		jumpAnim->reset();
 		phys->setPosition(Vector2f(sprite->getPosition().x, sprite->getPosition().y - 5));
 		phys->setVVelocity(jumpForce);
 		grounded = false;

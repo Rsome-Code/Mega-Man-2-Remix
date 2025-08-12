@@ -12,7 +12,7 @@ public:
 		mov = new movable("eBullet", t, IntRect(109, 574, 12, 13), position, Vector2f(4, 4));
 		sprite = mov;
 		this->angle = angle;
-		speed = 600;
+		speed = 800;
 		hit = new objectHitbox(IntRect(0, 0, 12, 13), mov);
 	}
 

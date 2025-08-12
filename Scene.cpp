@@ -1148,7 +1148,7 @@ public:
 	}
 
 
-
+	//Needs to be re-written
 	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
 		float camPos = cam->getPosition().x;
 		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
@@ -1160,11 +1160,11 @@ public:
 
 
 					if (ePos > camPos && ePos < camEdge) {
-						if (e->getOffScreen()) {
+						//if (e->getOffScreen()) {
 							e->setOffScreen(false);
 							e->setDisplay(true);
 							e->setAct(true);
-						}
+						//}
 
 					}
 					else if (e->getOffScreen() == false) {

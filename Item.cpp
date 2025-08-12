@@ -35,6 +35,7 @@ public:
 
 
 	virtual void eachFrame(float* deltaT, objectSprite* p, list<tile*>* tiles) {
+		hit->updatePos();
 		if (timer != NULL) {
 			timer->run(deltaT);
 		}
@@ -56,10 +57,10 @@ public:
 
 	void groundCheck(tile* t) {
 		if (!hC) {
-			gHit = new objectHitbox(IntRect(hit->getRelativeRect().getPosition(), Vector2i(hit->getRelativeRect().getSize().x, hit->getRelativeRect().getPosition().y + 32)), phys);
+			//gHit = new objectHitbox(IntRect(hit->getRelativeRect().getPosition(), Vector2i(hit->getRelativeRect().getSize().x, hit->getRelativeRect().getPosition().y + 16)), phys);
 			hC = true;
 		}
-		if (hitboxDetect::hitboxDetection(t->getGround(), gHit)) {
+		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			grounded = true;
 			phys->enableGravity(false);
 			phys->setVVelocity(0);

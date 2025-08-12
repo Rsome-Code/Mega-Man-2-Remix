@@ -97,9 +97,12 @@ public:
 
 	virtual void eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
 		if (hp > 0) {
-			hit->updatePos();
-			hurt->updatePos(); 
-			alive(p, deltaT, tileList, enemyList, bList); }
+			if (act) {
+				hit->updatePos();
+				hurt->updatePos();
+				alive(p, deltaT, tileList, enemyList, bList);
+			}
+		}
 		else { death(deltaT); }
 	}
 
@@ -125,7 +128,7 @@ public:
 		else{
 			act = false;
 			display = false;
-			sprite->setPosition(Vector2f(-1000, -1000));
+		sprite->setPosition(Vector2f(-1100, -1000));
 		}
 	}
 
