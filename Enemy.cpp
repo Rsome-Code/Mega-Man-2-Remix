@@ -88,6 +88,11 @@ public:
 		return hurt;
 	}
 
+	void updateHitbox() {
+		hit->updatePos();
+		hurt->updatePos();
+	}
+
 	bool checkHit(objectHitbox* pHit) {
 		return hitboxDetect::hitboxDetection(pHit, hit);
 	}

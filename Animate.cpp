@@ -20,6 +20,7 @@ class animation {
 	list<Vector2f>::iterator offsetI;
 	int currentIndex = 0;
 	int assoSprites = 1;
+	bool swapped = false;
 
 
 public: 
@@ -164,6 +165,9 @@ public:void reset() {
 	currentIndex = 0;
 }
 	  void swapAll() {
+
+		  swapped = !swapped;
+
 		  int change = sprite->getTexture()->getSize().x;
 		 
 
@@ -193,6 +197,10 @@ public:void reset() {
 	  }
 	  list<Vector2f>::iterator getOffsetI(){
 		  return offsetI;
+	  }
+
+	  bool getSwapped() {
+		  return swapped;
 	  }
 
 };

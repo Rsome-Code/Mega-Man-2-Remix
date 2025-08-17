@@ -1149,7 +1149,7 @@ public:
 
 
 	//Needs to be re-written
-	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
+	/*void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
 		float camPos = cam->getPosition().x;
 		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
 		for (enemy* e : objects) {
@@ -1199,6 +1199,58 @@ public:
 				}
 			}
 		}
+	}*/
+
+	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
+		float camPos = cam->getPosition().x;
+		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
+
+		for (enemy* e : objects) {
+			//If object is still active
+			if (e->getAct() && e->getDisplay()) {
+				e->setOffScreen(checkObOffScreen(e, camPos, camEdge));
+				//and has just left the screen
+				if (e->getOffScreen()) {
+					e->setAct(false);
+					e->setDisplay(false);
+					e->getSprite()->setPosition(Vector2f(-9999, -9999));
+					e->updateHitbox();
+				}
+			}
+			else {
+				//If object is not active and...
+
+				//initial position has not left the screen
+				if (!e->getInitOffScreen()) {
+					e->setInitOffScreen(checkInitInScreen(e, camPos, camEdge));
+				}
+				//initial position has left the screen
+				else {
+					e->setInitOffScreen(checkInitInScreen(e, camPos, camEdge));
+					//and initial position has just re-entered the screen
+					if (!e->getInitOffScreen()) {
+						
+						e->initial();
+						e->setDisplay(true);
+						e->setAct(true);
+					}
+				}
+			}
+		}
+	}
+
+	bool checkObOffScreen(enemy* e, float camPos, float camEdge) {
+		if (e->getPosition().x > camEdge || e->getPosition().x + e->getSprite()->getSize().x < camPos) {
+			return true;
+		}
+		return false;
+	}
+
+	bool checkInitInScreen(enemy* e, float camPos, float camEdge) {
+		if (e->getInitialPosition().x > camEdge || e->getInitialPosition().x < camPos) {
+			return true;
+		}
+		return false;
 	}
 
 	bool ladderTileCheck(list<tile*> tileList) {

@@ -34,6 +34,7 @@ class Rabbit : public PhysicsEnemy {
 		//delete sprite;
 		//phys = new physicsObject("enemy", t, IntRect(124, 574, 32, 37), initialPos, Vector2f(4, 4), 1);
 		phys->setRect(IntRect(124, 574, 32, 37));
+		phys->setPosition(initialPos);
 		sprite = phys;
 
 		jumpAnim = new animation(list<IntRect>{IntRect(124, 574, 32, 37), IntRect(157, 576, 32, 35), IntRect(190, 571, 29, 40)}, phys);
@@ -152,10 +153,19 @@ class Rabbit : public PhysicsEnemy {
 	}
 
 	void setFacing(bool right) {
-		if (right != faceRight) {
+		if (right) {
 			faceRight = right;
-			jumpAnim->swapAll();
-			landAnim->swapAll();
+			if (!jumpAnim->getSwapped()) {
+				jumpAnim->swapAll();
+				landAnim->swapAll();
+			}
+			
+		}
+		else {
+			if (jumpAnim->getSwapped()) {
+				jumpAnim->swapAll();
+				landAnim->swapAll();
+			}
 		}
 	}
 };
