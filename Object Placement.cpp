@@ -76,7 +76,7 @@ public:
 		saveFile = levelN;
 		tex = T;
 		l = new Load();
-		l->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
+		l->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 
 		changeZ();
 		cam = new camera();
@@ -91,7 +91,7 @@ public:
 		}
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
-		l->loadObjects(saveFile, &objects, enemyT);
+		l->loadObjects(saveFile, to_string(section), &objects, enemyT);
 		l->loadFlags(levelName, &flagList, enemyT);
 		
 		
@@ -245,19 +245,12 @@ public:
 		z4List.clear();
 		objects.clear();
 		Load* load = new Load();
-		if (section != 0) {
-			load->load(levelName + to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
-		}
-		else {
-			load->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
-		}
 
-		if (section != 0) {
-			load->loadObjects(levelName + to_string(section), &objects, enemyT);
-		}
-		else {
-			load->loadObjects(levelName, &objects, enemyT);
-		}
+		load->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
+
+		load->loadObjects(levelName, to_string(section), &objects, enemyT);
+		
+
 
 		for (object* ob : flagList) {
 			if (ob->getSection() == section) {
@@ -543,15 +536,8 @@ public:
 		ofstream* myfile;
 		myfile = new ofstream();
 
-
-		if (section == 0) {
-			myfile->open(saveFile + "-objects.txt");
-		}
-		else {
-			myfile->open(saveFile + to_string(section) + "-objects.txt");
-		}
-
-
+		myfile->open(saveFile + "\\" + to_string(section) + "-objects.txt");
+		
 
 		int cameraHeight = 0;
 
@@ -580,7 +566,7 @@ public:
 
 					ofstream* flagfile;
 					flagfile = new ofstream();
-					flagfile->open(saveFile + "-flags.txt", std::ios::app);
+					flagfile->open(saveFile + "\\flags.txt", std::ios::app);
 
 					*flagfile << section;
 					*flagfile << ",";
@@ -629,14 +615,14 @@ public:
 			run = false;
 			ifstream* flagfile;
 			flagfile = new ifstream();
-			flagfile->open(levelName + "-flags.txt");
+			flagfile->open(levelName + "\\flags.txt");
 			while (getline(*flagfile, line)) {
 				vector<string> values = splitString(line, sep);
 				vector<string>::iterator valI = values.begin();
 				string current = *valI;
 				if (stoi(current) == o->getSection()) {
 					flagfile->close();
-					eraseFileLine(saveFile + "-flags.txt", line);
+					eraseFileLine(saveFile + "\\flags.txt", line);
 					run = true;
 				}
 			}

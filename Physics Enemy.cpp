@@ -31,7 +31,7 @@ public:
 
 	void tileCollision(list<tile*>* tileList) {
 		for (tile* t : *tileList) {
-			if (t->getGround() != NULL) {
+			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
 				groundCheck(t);
 			}
 

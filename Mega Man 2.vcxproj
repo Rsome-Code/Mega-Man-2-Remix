@@ -200,6 +200,7 @@
     <ClCompile Include="Enemy Bullet.cpp" />
     <ClCompile Include="Extra Life.cpp" />
     <ClCompile Include="Freeze.cpp" />
+    <ClCompile Include="Gorilla.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
     <ClCompile Include="Page Option.cpp" />

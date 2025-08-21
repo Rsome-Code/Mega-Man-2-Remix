@@ -67,7 +67,7 @@ public:
 		enemyTexture = new Texture();
 		enemyTexture->loadFromFile("Assets\\enemy.png");
 
-		load(name);
+		load(name, "0");
 		lastFlagPos = Vector2f(0,0);
 
 		
@@ -103,14 +103,14 @@ protected:
 
 public:
 
-	void reload(string name) {
+	void reload(string name, string section) {
 		tileList.clear();
 		z2List.clear();
 		z3List.clear();
 		z4List.clear();
 		objects.clear();
 		//flags.clear();
-		load(name);
+		load(name, section);
 	}
 
 	string getName() {
@@ -208,12 +208,12 @@ public:
 		return tList;
 	}
 
-	void load(string name) {
+	void load(string name, string section) {
 		
-		l->load(name, tileTexture, &tileList, &z2List, &z3List, &z4List);
+		l->load(name, section, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();
 		
-		l->loadObjects(name, &objects, &enemies, enemyTexture);
+		l->loadObjects(name, section, &objects, &enemies, enemyTexture);
 
 		if (flags.size() == 0) {
 			l->loadFlags(name, &flags, enemyTexture);

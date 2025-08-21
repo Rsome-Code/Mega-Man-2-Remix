@@ -30,7 +30,7 @@ class Rabbit : public PhysicsEnemy {
 	
 
 	void initial() {
-		Texture* t = sprite->getTexture();
+		//Texture* t = sprite->getTexture();
 		//delete sprite;
 		//phys = new physicsObject("enemy", t, IntRect(124, 574, 32, 37), initialPos, Vector2f(4, 4), 1);
 		phys->setRect(IntRect(124, 574, 32, 37));
@@ -54,7 +54,7 @@ class Rabbit : public PhysicsEnemy {
 		setCode("rabbit");
 
 		offSetList();
-		
+		dead = false;
 	}
 
 
@@ -143,14 +143,7 @@ class Rabbit : public PhysicsEnemy {
 		
 	}
 
-	void checkDirection(objectSprite* player) {
-		if (player->getPosition().x > sprite->getPosition().x) {
-			setFacing(true);
-		}
-		else {
-			setFacing(false);
-		}
-	}
+
 
 	void setFacing(bool right) {
 		if (right) {

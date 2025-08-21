@@ -56,7 +56,7 @@ public:
 		act = false;
 
 		setCode("e1");
-
+		dead = false;
 	}
 
 

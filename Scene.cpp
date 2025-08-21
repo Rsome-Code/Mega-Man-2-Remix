@@ -556,9 +556,6 @@ public:
 	void bulletCollisionCheck(float deltaT) {
 		for (enemy* enemy : enemies) {
 		
-
-				
-			//t->checkHit(p->getHitbox());
 			enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets);
 
 			if (enemy->getHP() > 0) {
@@ -919,12 +916,9 @@ public:
 		updateFlags();
 	}
 	void loadSection() {
-		if (section != 0) {
-			stage->reload(stageName + to_string(section));
-		}
-		else {
-			stage->reload(stageName);
-		}
+
+		stage->reload(stageName, to_string(section));
+
 		loadFlag();
 
 		newTileList = stage->getTiles();
@@ -1148,58 +1142,7 @@ public:
 	}
 
 
-	//Needs to be re-written
-	/*void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
-		float camPos = cam->getPosition().x;
-		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
-		for (enemy* e : objects) {
-			if (e->getIncrease() == NULL) {
-				float initial = e->getInitialPosition().x;
-				if (!e->getOffScreen()) {
-					float ePos = e->getSprite()->getPosition().x;
 
-
-					if (ePos > camPos && ePos < camEdge) {
-						//if (e->getOffScreen()) {
-							e->setOffScreen(false);
-							e->setDisplay(true);
-							e->setAct(true);
-						//}
-
-					}
-					else if (e->getOffScreen() == false) {
-						e->setOffScreen(true);
-						e->setAct(false);
-						e->setDisplay(false);
-						//e->deleteSprite();
-
-					}
-
-				}
-				else {
-					if (e->getInitOffScreen()) {
-						if (initial > camPos && initial < camEdge) {
-							e->initial();
-							e->reset();
-
-							e->setDisplay(true);
-							e->setAct(true);
-							e->setOffScreen(false);
-							e->setInitOffScreen(false);
-						}
-					}
-
-					if (initial > camPos && initial < camEdge) {
-						e->setInitOffScreen(false);
-					}
-					else {
-						e->setInitOffScreen(true);
-					}
-
-				}
-			}
-		}
-	}*/
 
 	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
 		float camPos = cam->getPosition().x;

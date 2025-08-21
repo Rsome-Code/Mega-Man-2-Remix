@@ -25,6 +25,7 @@
 #include "E tank.cpp"
 #include "door.cpp"
 #include "Extra life.cpp"
+#include "gorilla.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -91,7 +92,7 @@ int main() {
 	bool hold = levelMenu->checkA();
 	abstractStage* wood = new abstractStage(bossName);
 
-	wood->reload(string("wood man"));
+	wood->reload(string("wood man"), string("0"));
 
 	scene* area = new scene(col, wood, enemyT);
 
@@ -110,7 +111,7 @@ int main() {
 
 
 //Object Placer setup
-	list<object*> obList = {new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
+	list<object*> obList = {new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
 	for (object* o : obList) {
 		o->initial();
 	}
@@ -119,8 +120,8 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))};
-	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(4*4,4*4),Vector2f(6*4, 6*4),Vector2f(7*4, 7*4),Vector2f(10 *4, 10 *4) };
+	list<IntRect> testAnim = list<IntRect>{IntRect(35, 503, 33, 47), IntRect(69, 500, 33, 47), IntRect(103, 503, 33, 47) };
+	list<Vector2f> testOffset = list<Vector2f>{Vector2f(8*4,0*4),Vector2f(-3*4, 0*4),Vector2f(-12*4, 0*4)};
 
 	Texture* testT = new Texture();
 	testT->loadFromFile("Assets\\enemy.png");
@@ -144,6 +145,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+	//cout << "hi";
 
 }

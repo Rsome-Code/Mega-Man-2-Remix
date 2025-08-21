@@ -26,19 +26,32 @@ class animation {
 public: 
 	animation(list<IntRect> indexes, UISprite* sprite) {
 	this->frameIndexes = indexes;
-	this->sprite = sprite;
-	//this->repeat = repeat;
-	this->current = frameIndexes.begin();
+		this->sprite = sprite;
+		//this->repeat = repeat;
+		this->current = frameIndexes.begin();
 	
-	size = indexes.size();
+		size = indexes.size();
 
-	for (IntRect f : frameIndexes) {
-		offsetList.push_back(Vector2f(0, 0));
+		for (IntRect f : frameIndexes) {
+			offsetList.push_back(Vector2f(0, 0));
+		}
+		offsetI = offsetList.begin();
+
 	}
-	offsetI = offsetList.begin();
+	animation(IntRect index, UISprite* sprite) {
+		this->frameIndexes = list<IntRect>{ index };
+		this->sprite = sprite;
+		//this->repeat = repeat;
+		this->current = frameIndexes.begin();
+
+		size = frameIndexes.size();
+
+		for (IntRect f : frameIndexes) {
+			offsetList.push_back(Vector2f(0, 0));
+		}
+		offsetI = offsetList.begin();
 
 	}
-
 public:
 	animation() {
 		cout << "AY";

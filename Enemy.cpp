@@ -29,6 +29,8 @@ protected:
 
 	bool dead = false;
 
+	bool faceRight = false;
+
 
 
 
@@ -117,14 +119,26 @@ public:
 
 	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) = 0;
 
+	void checkDirection(objectSprite* player) {
+		if (player->getPosition().x > sprite->getPosition().x) {
+			setFacing(true);
+		}
+		else {
+			setFacing(false);
+		}
+	}
+
+	virtual void setFacing(bool right) {};
 
 	void death(float* deltaT) {
 		if (!dead) {
 			sprite->setPosition(Vector2f(sprite->getMiddlePos().x - (12*4), sprite->getMiddlePos().y - (12 * 4)));
 			dead = true;
+			deathAnim->reset();
 		}
 		hit->setPosition(Vector2f(-1000, 0));
 		hurt->setPosition(Vector2f(-1000, 0));
+		
 		deathAnim->thisFrame();
 		
 		if (!deathTimer->isFinished()) {

@@ -131,12 +131,9 @@ public:
 	void flagCheck() {
 		Load* load = new Load();
 		list<object*> objects;
-		if (section == 0) {
-			load->loadObjects(levelName, &objects, new Texture());
-		}
-		else {
-			load->loadObjects(levelName + to_string(section), &objects, new Texture());
-		}
+
+		load->loadObjects(levelName, to_string(section), &objects, new Texture());
+
 		for (object* o : objects) {
 			if (o->getCode() == "flag") {
 				flagLoc = o->getSprite()->getPosition();
@@ -153,7 +150,7 @@ public:
 		float deltaT = 0;
 
 		Load* l = new Load();
-		l->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
+		l->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 		changeZ();
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -341,12 +338,8 @@ public:
 		z3List.clear();
 		z4List.clear();
 		Load* load = new Load();
-		if (section) {
-			load->load(levelName + to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
-		}
-		else {
-			load->load(levelName, tex, &tileList, &z2List, &z3List, &z4List);
-		}
+		load->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
+		
 		flagCheck();
 		changeZ();
 	}
@@ -701,12 +694,10 @@ public:
 	void save() {
 		ofstream* myfile;
 		myfile = new ofstream();
-		if (section == 0) {
-			myfile->open(levelName + ".txt");
-		}
-		else {
-			myfile->open(levelName + to_string(section) + ".txt");
-		}
+
+		myfile->open(levelName + "\\" + to_string(section) + ".txt");
+		
+
 		miniSave(tileList, myfile);
 		miniSave(z2List, myfile);
 		miniSave(z3List, myfile);

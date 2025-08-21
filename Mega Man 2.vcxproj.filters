@@ -454,5 +454,8 @@
     <ClCompile Include="Physics Enemy.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Gorilla.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

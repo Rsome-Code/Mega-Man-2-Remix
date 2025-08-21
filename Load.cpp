@@ -24,6 +24,7 @@
 #include "Extra Life.cpp"
 #include "door.cpp"
 #include "rabbit.cpp"
+#include "gorilla.cpp"
 
 #pragma once
 
@@ -38,9 +39,9 @@ class Load {
 
 
 public:
-	void load(string levelName, Texture* texture,  list<tile*>* tileList, list<tile*>* z2List, list<tile*>* z3List, list<tile*>* z4List) {
+	void load(string levelName, string section, Texture* texture,  list<tile*>* tileList, list<tile*>* z2List, list<tile*>* z3List, list<tile*>* z4List) {
 		// Open the input file
-		ifstream inputFile(levelName + ".txt");
+		ifstream inputFile(levelName + "\\" + section + ".txt");
 
 		tex = texture;
 
@@ -98,7 +99,7 @@ public:
 	}
 
 	void loadFlags(string levelName, list<EndFlag*>* flags, Texture* t) {
-		ifstream inputFile(levelName + "-flags.txt");
+		ifstream inputFile(levelName + "\\flags.txt");
 		string line;
 		string variable;
 		char sep = ',';
@@ -257,17 +258,16 @@ public:
 
 
 	}
-	void loadObjects(string levelName, list<object*>* objects, Texture* t) {
+	void loadObjects(string levelName, string section, list<object*>* objects, Texture* t) {
 
-		ifstream inputFile(levelName + "-objects.txt");
+		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
+
+
 
 		Texture* misc = new Texture();
 		misc->loadFromFile("Assets\\misc\\mega buster.png");
 
 		string line;
-
-
-
 
 		while (getline(inputFile, line)) {
 
@@ -296,6 +296,9 @@ public:
 			}
 			else if (type == "rabbit") {
 				enem = new Rabbit(t, Vector2f(worldX, worldY));
+			}
+			else if (type == "gorilla") {
+				enem = new Gorilla(t, Vector2f(worldX, worldY));
 			}
 			else if (type == "trch-R") {
 				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
@@ -340,19 +343,20 @@ public:
 				add->setDisplay(true);
 			}
 
-			if (enem == NULL) {
+			if (enem == NULL && add != NULL) {
 				add->initial();
 				objects->push_back(add);
 			}
-			else {
+			else if (!(add ==NULL && enem == NULL)) {
 				objects->push_back(enem);
 				enem->initial();
 			}
 		}
 	}
-	void loadObjects(string levelName, list<object*>* objects, list<enemy*>* enemies, Texture* t) {
+	
+	void loadObjects(string levelName, string section, list<object*>* objects, list<enemy*>* enemies, Texture* t) {
 
-		ifstream inputFile(levelName + "-objects.txt");
+		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
 		Texture* misc = new Texture();
 		misc->loadFromFile("Assets\\misc\\mega buster.png");
@@ -390,6 +394,9 @@ public:
 			}
 			else if (type == "rabbit") {
 				enem = new Rabbit(t, Vector2f(worldX, worldY));
+			}
+			else if (type == "gorilla") {
+				enem = new Gorilla(t, Vector2f(worldX, worldY));
 			}
 			else if (type == "trch-R") {
 				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
