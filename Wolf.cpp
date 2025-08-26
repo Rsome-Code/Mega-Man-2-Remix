@@ -3,6 +3,9 @@
 
 class Wolf :public enemy {
 	using enemy::enemy;
+
+	movable* mov;
+
 	animation* teleportAnim;
 
 	animation* idleAnim_down;
@@ -17,8 +20,11 @@ class Wolf :public enemy {
 
 public:
 	void initial() {
-		sprite->setRect(IntRect(0, 732, 67, 55));
+		mov = new movable("enemy", sprite->getTexture(), IntRect(646, 727, 14, 80), Vector2f(initialPos.x, initialPos.y - 900), Vector2f(4, 4));
+		sprite = mov;
 		hp = 20;
+
+		mov->setSpeed(500);
 
 		teleportAnim = new animation(list<IntRect>{IntRect(646, 727, 14, 80), IntRect(662, 760, 64, 14), IntRect(727, 751, 48, 32)}, sprite);
 		idleAnim_down = new animation(list<IntRect>{IntRect(0, 728, 67, 59), IntRect(146, 728, 67, 59), IntRect(292, 728, 67, 59)}, sprite);
@@ -29,5 +35,24 @@ public:
 		teleportTimer = new animTimer(teleportAnim, 15, false);
 		idleTimer = new animTimer(idleAnim_down, 15, true);
 		
+	}
+
+	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+		if (teleporting) {
+			teleportLoop(deltaT, tileList);
+		}
+	}
+
+	void teleportLoop(float* deltaT, list<tile*>* tileList) {
+
+		mov->move(90, deltaT);
+
+		for (tile* t : *tileList) {
+			if (t->getGround() != NULL) {
+				if (groundCheck(t)) {
+					teleporting = false;
+				}
+			}
+		}
 	}
 };

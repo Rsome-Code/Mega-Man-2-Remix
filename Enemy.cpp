@@ -203,4 +203,10 @@ public:
 		}
 	}
 
+	bool groundCheck(tile* t) {
+		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
+			return true;
+		}
+	}
+
 };
