@@ -266,6 +266,7 @@
     <ClCompile Include="Weapon Option.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Wolf.cpp" />
+    <ClCompile Include="wolf_fireball.cpp" />
     <ClCompile Include="Wood Man Stage.cpp" />
     <ClCompile Include="XControl.cpp" />
   </ItemGroup>

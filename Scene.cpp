@@ -283,7 +283,7 @@ public:
 			enemyDistanceCheck(instance, enemies);
 
 
-			
+
 
 			if (!p->isTeleporting()) {
 				bulletCollisionCheck(deltaT);
@@ -306,7 +306,7 @@ public:
 			tileDistanceCheck(instance, tileList);
 			for (tile* t : tileList) {
 
-				if (t->getDisplay() && t->getSprite() !=NULL) {
+				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
@@ -322,7 +322,7 @@ public:
 					instance->objectAccess(t, cam);
 				}
 			}
-			
+
 			for (object* i : items) {
 				instance->objectAccess(i, cam);
 			}
@@ -330,13 +330,13 @@ public:
 			for (object* o : eBullets) {
 				instance->objectAccess(o, cam);
 			}
-			
+
 
 			instance->objectDisplay(p->getBullets(), cam);
 			if (p->getDamEffect() != NULL) {
 				instance->objectAccess(p->getDamEffect(), cam);
 			}
-			
+
 
 			instance->objectAccess(door1, cam);
 			instance->objectAccess(door2, cam);
@@ -346,14 +346,14 @@ public:
 			//lightingCheck();
 			p->checkHold();
 			instance->objectDisplay(p->getSprites(), cam);
-			
+
 			p->getSprite()->setRect(IntRect(Vector2i(p->getSprite()->getRect().getPosition().x, p->getBeforeHold()), p->getSprite()->getRect().getSize()));
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			//transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
 			//instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
-			
+
 
 
 
@@ -368,12 +368,56 @@ public:
 	}
 
 	void enemyBullets(float deltaT) {
+
+		list<EnemyBullet*>::iterator it = eBullets.begin();
+		list<EnemyBullet*>::iterator toDelete = eBullets.end();
 		for (EnemyBullet* b : eBullets) {
 			b->eachFrame(&deltaT);
 			if (hitboxCheck(p->getHitbox(), b->getHitbox())) {
 				p->takeDamage(b->getDamage());
 			}
+			if (checkEBullOffScreen(b)) {
+				toDelete = it;
+			}
+			
+			it = next(it);
 		}
+		//removeBullets();
+		if (toDelete != eBullets.end()) {
+			*toDelete = NULL;
+			eBullets.erase(toDelete);
+			
+		}
+	}
+
+	void removeBullets() {
+		bool deleted = true;
+		while (deleted) {
+			deleted = false;
+			for (EnemyBullet* b : eBullets) {
+				if (b == NULL) {
+					eBullets.remove(b);
+					deleted = true;
+					break;
+				}
+			}
+		}
+	}
+
+	bool checkEBullOffScreen(EnemyBullet* b) {
+		if (checkObOffScreen(b, cam->getPosition().x, cam->getPosition().x + 1920)) {
+			//eBullets.remove(b);
+			//delete b;
+			return true;
+		}
+		return false;
+	}
+
+	bool checkObOffScreen(EnemyBullet* e, float camPos, float camEdge) {
+		if (e->getPosition().x > camEdge || e->getPosition().x + e->getSprite()->getSize().x < camPos) {
+			return true;
+		}
+		return false;
 	}
 
 	void pDeathCheck(renderer* instance, float targetRate) {

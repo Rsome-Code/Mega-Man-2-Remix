@@ -22,7 +22,7 @@ class Rabbit : public PhysicsEnemy {
 
 	int jumpForce = 1500;
 
-	list<Carrot*> cList;
+	//list<Carrot*> cList;
 
 	int maxShoot = 3;
 	int shootLeft = maxShoot;
@@ -99,7 +99,7 @@ class Rabbit : public PhysicsEnemy {
 	void shoot(objectSprite* player, list<EnemyBullet*>* bList) {
 		float angle = getShootAngle(player);
 		Carrot* carrot = new Carrot(sprite->getTexture(), Vector2f(sprite->getPosition().x + (sprite->getSize().x/2), sprite->getPosition().y + (sprite->getSize().y / 2) ), angle);
-		cList.push_back(carrot);
+		//cList.push_back(carrot);
 		//objectList->push_back(carrot);
 		bList->push_back(carrot);
 	}

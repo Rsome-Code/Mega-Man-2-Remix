@@ -25,6 +25,7 @@
 #include "door.cpp"
 #include "rabbit.cpp"
 #include "gorilla.cpp"
+#include "wolf.cpp"
 
 #pragma once
 
@@ -291,52 +292,9 @@ public:
 			}
 			object* add = NULL;
 			enemy* enem = NULL;
-			if (type == "e1") {
-				enem = new bat(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "rabbit") {
-				enem = new Rabbit(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "gorilla") {
-				enem = new Gorilla(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "trch-R") {
-				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
 
-			}
-			/*else if (type == "flag") {
-				add = new EndFlag(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "flag-up") {
-				add = new EndFlag(t, Vector2f(worldX, worldY), UP);
-			}
-			else if (type == "flag-down") {
-				add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
-			}*/
-			else if (type == "health-big") {
-				add = new BigHealth(misc, Vector2f(worldX, worldY));
+			checkCode(type, t, misc, worldX, worldY, &enem, &add);
 
-			}
-			else if (type == "health-small") {
-				add = new SmallHealth(misc, Vector2f(worldX, worldY));
-
-			}
-			else if (type == "ammo-big") {
-				add = new BigAmmo(misc, Vector2f(worldX, worldY));
-
-			}
-			else if (type == "ammo-small") {
-				add = new SmallAmmo(misc, Vector2f(worldX, worldY));
-
-			}
-			else if (type == "E Tank") {
-				add = new ETank(misc, Vector2f(worldX, worldY));
-
-			}
-			else if (type == "Extra Life") {
-				add = new ExtraLife(misc, Vector2f(worldX, worldY));
-
-			}
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
 				add->setCode();
@@ -389,52 +347,10 @@ public:
 			}
 			object* add = NULL;
 			enemy* enem = NULL;
-			if (type == "e1") {
-				enem = new bat(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "rabbit") {
-				enem = new Rabbit(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "gorilla") {
-				enem = new Gorilla(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "trch-R") {
-				add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
-				
-			}
-			/*else if (type == "flag") {
-				add = new EndFlag(t, Vector2f(worldX, worldY));
-			}
-			else if (type == "flag-up") {
-				add = new EndFlag(t, Vector2f(worldX, worldY), UP);
-			}
-			else if (type == "flag-down") {
-				add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
-			}*/
-			else if (type == "health-big") {
-				add = new BigHealth(misc, Vector2f(worldX, worldY));
-				
-			}
-			else if (type == "health-small"){
-				add = new SmallHealth(misc, Vector2f(worldX, worldY));
-				
-			}
-			else if (type == "ammo-big") {
-				add = new BigAmmo(misc, Vector2f(worldX, worldY));
-				
-			}
-			else if (type == "ammo-small") {
-				add = new SmallAmmo(misc, Vector2f(worldX, worldY));
-				
-			}
-			else if (type == "E Tank") {
-				add = new ETank(misc, Vector2f(worldX, worldY));
-				
-			}
-			else if (type == "Extra Life") {
-				add = new ExtraLife(misc, Vector2f(worldX, worldY));
-				
-			}
+
+			checkCode(type, t, misc, worldX, worldY, &enem, &add);
+			
+
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
 				add->setCode();
@@ -447,6 +363,59 @@ public:
 			else {
 				enemies->push_back(enem);
 			}
+		}
+	}
+
+	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, object** add) {
+		
+		if (type == "e1") {
+			*enem = new bat(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "rabbit") {
+			*enem = new Rabbit(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "gorilla") {
+			*enem = new Gorilla(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "wolf") {
+			*enem = new Wolf(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "trch-R") {
+			*add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
+
+		}
+		/*else if (type == "flag") {
+			add = new EndFlag(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "flag-up") {
+			add = new EndFlag(t, Vector2f(worldX, worldY), UP);
+		}
+		else if (type == "flag-down") {
+			add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
+		}*/
+		else if (type == "health-big") {
+			*add = new BigHealth(misc, Vector2f(worldX, worldY));
+
+		}
+		else if (type == "health-small") {
+			*add = new SmallHealth(misc, Vector2f(worldX, worldY));
+
+		}
+		else if (type == "ammo-big") {
+			*add = new BigAmmo(misc, Vector2f(worldX, worldY));
+
+		}
+		else if (type == "ammo-small") {
+			*add = new SmallAmmo(misc, Vector2f(worldX, worldY));
+
+		}
+		else if (type == "E Tank") {
+			*add = new ETank(misc, Vector2f(worldX, worldY));
+
+		}
+		else if (type == "Extra Life") {
+			*add = new ExtraLife(misc, Vector2f(worldX, worldY));
+
 		}
 	}
 

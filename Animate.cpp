@@ -216,4 +216,8 @@ public:void reset() {
 		  return swapped;
 	  }
 
+	  void setAnim(list<IntRect> newFrames) {
+		  frameIndexes = newFrames;
+	  }
+
 };

@@ -457,5 +457,11 @@
     <ClCompile Include="Gorilla.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="wolf_fireball.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
