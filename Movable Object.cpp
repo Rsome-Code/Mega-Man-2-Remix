@@ -20,6 +20,30 @@ public:
 		this->speed = 500;
 		zAxis = cameraSpeed;
 	}
+	movable(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect, rectSize);
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		this->speed = 500;
+		zAxis = 1;
+	}
+	movable(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+		this->type = type;
+		this->texture = texture;
+
+		loadTexture();
+		setRect(rect.getPosition(), rect.getSize());
+		setPosition(position);
+		setScale(scale);
+		cameraPosition = Vector2f(0, 0);
+		this->speed = 500;
+		zAxis = 1;
+	}
 	movable(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, int cameraSpeed, float defaultTransparency) {
 		this->type = type;
 		this->texture = texture;

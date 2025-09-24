@@ -33,6 +33,15 @@ public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize
 	setScale(scale);
 	setCameraPosition(position);
 }
+public: UISprite(Texture* texture) {
+	this->texture = texture;
+	this->type = "eh";
+	loadTexture();
+	Vector2i size = Vector2i(texture->getSize());
+	setRect(Vector2i(0,0), size);
+	setScale(Vector2f(1,1));
+	setCameraPosition(Vector2f(0,0));
+}
 public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position) {
 	this->texture = texture;
 	this->type = type;

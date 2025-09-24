@@ -28,6 +28,8 @@ protected:
 	list<object*> objects;
 	list<enemy*> enemies;
 
+	SpawnArea* spawn = NULL;
+
 
 	//This should have been a vector
 	list<transition*> tList;
@@ -213,7 +215,9 @@ public:
 		l->load(name, section, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();
 		
-		l->loadObjects(name, section, &objects, &enemies, enemyTexture);
+		spawn = NULL;
+
+		l->loadObjects(name, section, &objects, &enemies, enemyTexture, &spawn);
 
 		if (flags.size() == 0) {
 			l->loadFlags(name, &flags, enemyTexture);
@@ -230,6 +234,10 @@ public:
 	}
 	Door* getDoor2() {
 		return door2;
+	}
+
+	SpawnArea* getSpawner() {
+		return spawn;
 	}
 
 	EndFlag* getLastCheckpoint(int sect) {

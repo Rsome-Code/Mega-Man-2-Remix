@@ -1,12 +1,14 @@
 #include "tile.cpp"
 #include "time.cpp"
 #include "render Logic.cpp"
+#include "enemy.cpp"
+#include "enemy bullet.cpp"
 #pragma once
 
 class Freeze {
 	
 public:
-	static void stop(renderer* instance, float targetRate, objectSprite* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> obList, camera* cam, float timeLeft) {
+	static void stop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> obList, list<enemy*> eList, list<EnemyBullet*> eBList, camera* cam, float timeLeft) {
 
 		timer* time = new timer();
 
@@ -59,7 +61,21 @@ public:
 				}
 			}
 
-			instance->objectDisplay(player, cam);
+			for (enemy* e : eList) {
+				if (e->getDisplay()) {
+					instance->objectAccess(e, cam);
+				}
+			}
+
+			for (EnemyBullet* eB : eBList) {
+				if (eB->getDisplay()) {
+					instance->objectAccess(eB, cam);
+				}
+			}
+
+			instance->objectDisplay(player->getSprites(), cam);
+
+			instance->UIDisplay(player->getUI());
 
 			timeLeft -= deltaT;
 			if (timeLeft <= 0) {

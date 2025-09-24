@@ -16,6 +16,9 @@
 #include "end flag.cpp"
 #include "item.cpp"
 #include <list>
+#include "temp enemy.cpp"
+#include "spawn area.cpp"
+#include "ammo bar.cpp"
 #pragma once
 
 class scene {
@@ -76,6 +79,20 @@ class scene {
 	Door* door1;
 	Door* door2;
 
+	list<enemy*> tempEnemies;
+
+	SpawnArea* spawner;
+
+	AmmoBar** masterHealth = NULL;
+
+	DeathAnim** bossDeath = NULL;
+	DeathAnim** bossDeath1 = NULL;
+	DeathAnim** bossDeath2 = NULL;
+
+	bool levelEnd = false;
+	float levelEndTime = 5;
+	float levelEndTime_left = levelEndTime;
+
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 		
@@ -114,6 +131,10 @@ public:
 
 		door1 = stage->getDoor1();
 		door2 = stage->getDoor2();
+
+		for (enemy* e : enemies) {
+			e->initial();
+		}
 	}
 
 public:
@@ -142,7 +163,12 @@ public:
 
 	}
 
-
+	void levelEndLoop(float deltaT) {
+		levelEndTime_left -= deltaT;
+		if (levelEndTime_left <= 0) {
+			run = false;
+		}
+	}
 
 	void loop(renderer* instance, double targetRate) {
 
@@ -163,7 +189,6 @@ public:
 		startAnim(instance, targetRate);
 		respawn();
 		//p->heal(-27);
-
 		
 
 		while (instance->getWindow()->isOpen() && run) {
@@ -173,12 +198,20 @@ public:
 				if (event.type == sf::Event::Closed)
 					instance->getWindow()->close();
 			}
-			time->frameLimiter(targetRate, startP);
-			deltaT = time->checkTimer(startP);
+			if (time->frameLimiter(targetRate, startP)) {
+				deltaT = 0.0333;
+			}
+			else {
+				deltaT = time->checkTimer(startP);
+			}
 			start = time->timerStart();
 			startP = &start;
 
 			pDeathCheck(instance, targetRate);
+
+			if (levelEnd) {
+				levelEndLoop(deltaT);
+			}
 
 			if (checkPause(instance, targetRate)) {
 				paused = true;
@@ -227,7 +260,7 @@ public:
 			}
 			p->eachFrame(&deltaT, tileList);
 
-
+			
 
 			if (!p->isTeleporting()) {
 				ground = false;
@@ -282,11 +315,18 @@ public:
 
 			enemyDistanceCheck(instance, enemies);
 
-
+			if (spawner != NULL) {
+				spawnLoop(deltaT);
+			}
 
 
 			if (!p->isTeleporting()) {
-				bulletCollisionCheck(deltaT);
+				enemyCheck(deltaT, instance, targetRate);
+				if (paused) {
+					start = time->timerStart();
+					startP = &start;
+					paused = false;
+				}
 			}
 
 			enemyBullets(deltaT);
@@ -323,6 +363,17 @@ public:
 				}
 			}
 
+			if (bossDeath != NULL) {
+				DeathAnim* bD = *bossDeath;
+				instance->objectDisplay(bD->getSprite(), cam);
+				bD = *bossDeath1;
+				instance->objectDisplay(bD->getSprite(), cam);
+				bD = *bossDeath2;
+				instance->objectDisplay(bD->getSprite(), cam);
+			}
+
+
+
 			for (object* i : items) {
 				instance->objectAccess(i, cam);
 			}
@@ -350,6 +401,10 @@ public:
 			p->getSprite()->setRect(IntRect(Vector2i(p->getSprite()->getRect().getPosition().x, p->getBeforeHold()), p->getSprite()->getRect().getSize()));
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
+			if (masterHealth != NULL) {
+				AmmoBar* a = *masterHealth;
+				instance->UIDisplay(a->getSprites());
+			}
 			//transition* cur = *next(tIterator);
 			//instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
 			//instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
@@ -367,6 +422,10 @@ public:
 		}
 	}
 
+	void spawnLoop(float deltaT) {
+		spawner->eachFrame(p, deltaT, &enemies, cam);
+	}
+
 	void enemyBullets(float deltaT) {
 
 		list<EnemyBullet*>::iterator it = eBullets.begin();
@@ -376,6 +435,11 @@ public:
 			if (hitboxCheck(p->getHitbox(), b->getHitbox())) {
 				p->takeDamage(b->getDamage());
 			}
+			
+			if (bulletsCollide(b)) {
+				toDelete = it;
+			}
+
 			if (checkEBullOffScreen(b)) {
 				toDelete = it;
 			}
@@ -390,22 +454,31 @@ public:
 		}
 	}
 
-	void removeBullets() {
-		bool deleted = true;
-		while (deleted) {
-			deleted = false;
-			for (EnemyBullet* b : eBullets) {
-				if (b == NULL) {
-					eBullets.remove(b);
-					deleted = true;
-					break;
+	bool bulletsCollide(EnemyBullet* b) {
+		list<bullet*> bullets = p->getWeapon()->getBullets();
+		if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
+			for (bullet* playerB : bullets) {
+				objectHitbox* playerH = playerB->getHitbox();
+				if (hitboxCheck(playerH, b->getHitbox())) {
+					playerB->deflect();
 				}
 			}
 		}
+		else if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
+			for (bullet* playerB : bullets) {
+				objectHitbox* playerH = playerB->getHitbox();
+				if (hitboxCheck(playerH, b->getHitbox())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
+
+
 	bool checkEBullOffScreen(EnemyBullet* b) {
-		if (checkObOffScreen(b, cam->getPosition().x, cam->getPosition().x + 1920)) {
+		if (checkObOffScreen(b, cam->getPosition(), Vector2f(cam->getPosition().x + 1920, cam->getPosition().y + 1080))) {
 			//eBullets.remove(b);
 			//delete b;
 			return true;
@@ -413,8 +486,11 @@ public:
 		return false;
 	}
 
-	bool checkObOffScreen(EnemyBullet* e, float camPos, float camEdge) {
-		if (e->getPosition().x > camEdge || e->getPosition().x + e->getSprite()->getSize().x < camPos) {
+	bool checkObOffScreen(EnemyBullet* e, Vector2f camPos, Vector2f camEdge) {
+		if (e->getPosition().x > camEdge.x || e->getPosition().x + e->getSprite()->getSize().x < camPos.x) {
+			return true;
+		}
+		if (e->getPosition().y > camEdge.y || e->getPosition().y + e->getSprite()->getSize().y < camPos.y) {
 			return true;
 		}
 		return false;
@@ -451,7 +527,7 @@ public:
 	bool death(renderer* instance, float tRate, camera* cam) {
 		if (p->setDead()) {
 			
-			Freeze::stop(instance, tRate, p->getSprite(), tileList, z2List, z3List, z4List, objects, cam, 0.75);
+			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, objects, enemies, eBullets, cam, 0.75);
 			paused = true;
 		}
 		return p->checkDeathFinish();
@@ -527,7 +603,13 @@ public:
 				if (event.type == sf::Event::Closed)
 					instance->getWindow()->close();
 			}
-			time->frameLimiter(targetRate, startP);
+
+			if (time->frameLimiter(targetRate, startP)) {
+				deltaT = 0.0333;
+			}
+			else {
+				deltaT = time->checkTimer(startP);
+			}
 			deltaT = time->checkTimer(startP);
 			start = time->timerStart();
 			startP = &start;
@@ -597,10 +679,17 @@ public:
 		miscT->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
 	}
 
-	void bulletCollisionCheck(float deltaT) {
+	void levelEndCheck(enemy* e) {
+		if (e->getCode() == stage->getName()) {
+			p->enableControls(false);
+			levelEnd = true;
+		}
+	}
+
+	void enemyCheck(float deltaT, renderer* instance, float tRate) {
+		enemy* toDelete = NULL;
+
 		for (enemy* enemy : enemies) {
-		
-			enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets);
 
 			if (enemy->getHP() > 0) {
 
@@ -618,6 +707,11 @@ public:
 							if (enemy->getHP() <= 0) {
 								spawnItemFromEnemy(enemy);
 
+								if (enemy->getDeathAnims()[0] != NULL) {
+									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, objects, enemies, eBullets, cam, 0.75);
+									paused = true;
+									levelEndCheck(enemy);
+								}
 							}
 						}
 					}
@@ -627,7 +721,19 @@ public:
 
 				}
 			}
+
+			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets)) {
+				toDelete = enemy;
+			}
+
+			if (!levelEnd) {
+				p->enableControls(enemy->getIntroDone());
+			}
 			
+			
+		}
+		if (toDelete != NULL) {
+			enemies.remove(toDelete);
 		}
 
 	}
@@ -635,7 +741,7 @@ public:
 	
 
 	bool  checkPause(renderer* instance, float targetRate) {
-		if (p->getController()->checkSTART() && !startPressed) {
+		if (p->getController()->checkSTART() && !startPressed && p->checkInControl()) {
 			pause = new Pause(stageName, p);
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
 			for (object* o : objects) {
@@ -970,7 +1076,41 @@ public:
 		newZ3List = stage->getZ3List();
 		newZ4List = stage->getZ4List();
 		objects = stage->getObjects();
+		enemies = stage->getEnemies();
+		for (enemy* e : enemies) {
+			e->initial();
+		}
+		spawner = stage->getSpawner();
+
+		bossCheck();
 	}
+
+	void bossCheck() {
+		bool bossHere = false;
+		for (enemy* e : enemies) {
+
+			if (e->getBar() != NULL) {
+				masterHealth = e->getBar();
+				bossHere = true;
+			}
+
+			if (e->getDeathAnims()[0] != NULL) {
+				bossDeath = e->getDeathAnims()[0];
+				bossDeath1 = e->getDeathAnims()[1];
+				bossDeath2 = e->getDeathAnims()[2];
+			}
+			else {
+				bossDeath = NULL;
+				bossDeath1 = NULL;
+				bossDeath2 = NULL;
+			}
+
+		}
+		if (!bossHere) {
+			masterHealth = NULL;
+		}
+	}
+
 	void loadNextSection() {
 		section++;
 
@@ -1186,11 +1326,11 @@ public:
 	}
 
 
-
-
 	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
 		float camPos = cam->getPosition().x;
 		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
+
+		enemy* toDelete = NULL;
 
 		for (enemy* e : objects) {
 			//If object is still active
@@ -1200,7 +1340,10 @@ public:
 				if (e->getOffScreen()) {
 					e->setAct(false);
 					e->setDisplay(false);
-					e->getSprite()->setPosition(Vector2f(-9999, -9999));
+					//e->getSprite()->setPosition(Vector2f(-9999, -9999));
+					if (e->isDead(&enemies)) {
+						toDelete = e;
+					}
 					e->updateHitbox();
 				}
 			}
@@ -1223,6 +1366,10 @@ public:
 					}
 				}
 			}
+		}
+		
+		if (toDelete != NULL) {
+			enemies.remove(toDelete);
 		}
 	}
 

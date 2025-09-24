@@ -247,9 +247,6 @@
     <ClCompile Include="Abstract Stage.cpp">
       <Filter>Source Files\Game Files\Stages</Filter>
     </ClCompile>
-    <ClCompile Include="Wood Man Stage.cpp">
-      <Filter>Source Files\Game Files\Stages</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
@@ -462,6 +459,57 @@
     </ClCompile>
     <ClCompile Include="wolf_fireball.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Bird.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Temp Enemy.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="spawn point.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="egg.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Temp Physics Enemy.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="small bird.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawn Area.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bird Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Chicken.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Chicken Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Master.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Wood Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf up shot.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Shield Boss.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Shield Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Float.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss Intro.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

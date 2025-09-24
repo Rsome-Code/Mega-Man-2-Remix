@@ -66,6 +66,8 @@ class player {
 	float deathTime = 6;
 	float deathTime_left = deathTime;
 
+	bool inControl = true;
+
 	
 
 public:
@@ -280,13 +282,19 @@ public:
 
 
 	void eachFrame(float* deltaT, list<tile*> tiles) {
-		if (deathAnim == NULL) {
-			alive(deltaT, tiles);
-			ladderJumpExtend(tiles);
-		}
-		else {
-			dead(deltaT);
-		}
+		
+			if (deathAnim == NULL) {
+				alive(deltaT, tiles);
+				ladderJumpExtend(tiles);
+			}
+			else {
+				dead(deltaT);
+			}
+		
+	}
+
+	bool checkInControl() {
+		return inControl;
 	}
 
 	void dead(float* deltaT) {
@@ -315,13 +323,20 @@ public:
 
 	}
 
+
+
 	void alive(float* deltaT, list<tile*> tiles) {
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
 
 			if (tele == NULL) {
-				controls->checkControls(deltaT);
+				if (inControl) {
+					controls->checkControls(deltaT);
+				}
+				else {
+					controls->runWithoutControl(deltaT);
+				}
 				controls->shootEachFrame(deltaT);
 
 				pAnim->shootDecide(deltaT);
@@ -368,12 +383,21 @@ public:
 			//foot->setSize(Vector2i(4, 20));
 		}
 
-		updateHitbox();
+		if (inControl) {
+			updateHitbox();
+		}
+		else {
+			moveHitbox();
+		}
 
 
 		//checkHold();
 
 
+	}
+
+	void enableControls(bool e) {
+		inControl = e;
 	}
 
 	int beforeHold = 0;
@@ -431,6 +455,15 @@ public:
 
 	void updateHitbox() {
 		hit->updatePos();
+		ladderHit->updatePos();
+		foot->updatePos();
+		head->updatePos();
+		ladderBelow->updatePos();
+		ladderAbove->updatePos();
+		belowBox->updatePos();
+	}
+	void moveHitbox() {
+		hit->setPosition(Vector2f(-10000, -10000));
 		ladderHit->updatePos();
 		foot->updatePos();
 		head->updatePos();

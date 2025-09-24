@@ -9,7 +9,6 @@
 #include "render logic.cpp"
 #include "player.cpp"
 #include "scene.cpp"
-#include "Wood Man Stage.cpp"
 #include "Energy Bar.cpp"
 #include "Level Editor.cpp"
 #include "Object Placement.cpp"
@@ -27,6 +26,8 @@
 #include "Extra life.cpp"
 #include "gorilla.cpp"
 #include "wolf.cpp"
+#include "spawn point.cpp"
+#include "wood man.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -52,6 +53,7 @@ vector<int> split(const string& str, char sep)
 	return tokens;
 }
 int main() {
+	bool run = true;
 
 	//Set the framerate here
 	double targetFPS = 120;
@@ -91,18 +93,15 @@ int main() {
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
 	string bossName = "wood man";
 	bool hold = levelMenu->checkA();
-	abstractStage* wood = new abstractStage(bossName);
+	
 
-	wood->reload(string("wood man"), string("0"));
-
-	scene* area = new scene(col, wood, enemyT);
+	
 
 	Texture* bossT;
 	bossT = new Texture ();
 	bossT->loadFromFile("assets\\" + bossName + ".png");
 
-	StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-	//intro->loop(instance, targetFPS);
+	
 
 	wT->loadFromFile("assets\\" + bossName + "-stage.png");
 	levelEditor* l = new levelEditor(wT, bossName);
@@ -110,9 +109,11 @@ int main() {
 	Texture* misc = new Texture();
 	misc->loadFromFile("assets\\misc\\mega buster.png");
 
+	Texture* woodBossT = new Texture();
+	woodBossT->loadFromFile("assets\\wood man.png");
 
 //Object Placer setup
-	list<object*> obList = {new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
+	list<object*> obList = { new WoodMan(woodBossT, Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
 	for (object* o : obList) {
 		o->initial();
 	}
@@ -121,8 +122,8 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{IntRect(35, 503, 33, 47), IntRect(69, 500, 33, 47), IntRect(103, 503, 33, 47) };
-	list<Vector2f> testOffset = list<Vector2f>{Vector2f(8*4,0*4),Vector2f(-3*4, 0*4),Vector2f(-12*4, 0*4)};
+	list<IntRect> testAnim = list<IntRect>{ IntRect(245, 311, 34, 37), IntRect(289, 308, 27, 40), IntRect(350, 311, 40, 37), IntRect(289, 308, 27, 40) };
+	list<Vector2f> testOffset = list<Vector2f>{Vector2f(0*4,0*4),Vector2f(3*4, 0*4),Vector2f(-2*4, 0*4), Vector2f(3 * 4, 0 * 4) };
 
 	Texture* testT = new Texture();
 	testT->loadFromFile("Assets\\enemy.png");
@@ -140,9 +141,25 @@ int main() {
 	//o->loop(instance, targetFPS);
 
 
+	bg = new Texture();
+	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
+
+	while (run) {
+		LevelSelect* levelMenu = new LevelSelect(bg);
 
 
-	area->loop(instance, targetFPS);
+		string bossName = levelMenu->loop(instance, targetFPS, bg);
+
+		StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
+		intro->loop(instance, targetFPS);
+
+		abstractStage* stage = new abstractStage(bossName);
+
+		stage->reload(string("wood man"), string("0"));
+
+		scene* area = new scene(col, stage, enemyT);
+		area->loop(instance, targetFPS);
+	}
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);

@@ -23,6 +23,16 @@ public:
 		this->visible = visible;
 		relativeRect = IntRect(Vector2i(relativePos), Vector2i(rect.getSize().x * scale.x, rect.getSize().y * scale.y));
 	}
+
+	UIHitbox(IntRect rect, UISprite* sprite) {
+		this->sprite = sprite;
+		relativePos = Vector2f(rect.getPosition());
+		cameraPos = Vector2f(sprite->getCameraPosition().x + relativePos.x, sprite->getCameraPosition().y + relativePos.y);
+		scale = sprite->getScale();
+		this->visible = true;
+		relativeRect = IntRect(Vector2i(relativePos), Vector2i(rect.getSize().x * scale.x, rect.getSize().y * scale.y));
+	}
+
 	UIHitbox() {
 		//cout << "heh";
 	}

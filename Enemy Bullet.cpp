@@ -4,12 +4,18 @@
 #pragma once
 
 class EnemyBullet : public object {
+public:
+	enum CollisionType {
+		NONE, DESTROY, DESTRUCT
+	};
+
 protected:
 	objectHitbox* hit;
 	movable* mov;
 	int damage = 1;
 	float angle;
 	float speed = 0;
+	CollisionType collType = NONE;
 
 public:
 	EnemyBullet() {
@@ -22,15 +28,12 @@ public:
 		return damage;
 	}
 
-	bool checkOffScreen(list<EnemyBullet*>* objectList) {
-		if (sprite->getCameraPosition().x > 1920 || (sprite->getCameraPosition().x - sprite->getSize().x)< 0) {
-			return true;
-		}
-		return false;
-	}
-
 	objectHitbox* getHitbox() {
 		return hit;
+	}
+
+	CollisionType getCollType() {
+		return collType;
 	}
 
 };

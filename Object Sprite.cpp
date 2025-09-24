@@ -120,6 +120,21 @@ public:
 		pixelSetup();
 	}
 
+	objectSprite(Texture* texture) {
+		this->texture = texture;
+		this->type = "eh";
+		loadTexture();
+		Vector2i size = Vector2i(texture->getSize());
+		setRect(Vector2i(0, 0), size);
+		setScale(Vector2f(1, 1));
+		setPosition(Vector2f(0, 0));
+		cameraPosition = Vector2f(0, 0);
+		zAxis = 1;
+
+		//pixelSetup();
+
+	}
+
 	objectSprite(objectSprite* s) {
 		this->type = s->getType();
 		this->texture = s->getTexture();

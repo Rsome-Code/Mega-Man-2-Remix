@@ -91,7 +91,7 @@ public:
 		}
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
-		l->loadObjects(saveFile, to_string(section), &objects, enemyT);
+		l->loadObjects(saveFile, to_string(section), &objects, enemyT, cam);
 		l->loadFlags(levelName, &flagList, enemyT);
 		
 		
@@ -248,7 +248,7 @@ public:
 
 		load->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 
-		load->loadObjects(levelName, to_string(section), &objects, enemyT);
+		load->loadObjects(levelName, to_string(section), &objects, enemyT, cam);
 		
 
 

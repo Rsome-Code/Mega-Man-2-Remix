@@ -7,9 +7,11 @@
 #include "animation timer.cpp"
 #include <random>
 #include "physics object.cpp"
+#include "wood man.cpp"
 #pragma once
 
 class StageIntro{
+	bool run;
 	Text* text;
 	list<movable*> particles;
 	UISprite* background;
@@ -24,12 +26,26 @@ class StageIntro{
 	bool flap = false;
 	float flapTime = 0.05;
 	float flapTime_left = flapTime;
-	physicsObject* boss;
+	Master* boss = NULL;
+
+	UIHitbox* floor;
+
+	bool textStart = false;
+	float textTime = 0.2;
+	float textTime_left = textTime;
+
+	int charaNum = 0;
+	bool textFin = false;
+
+	float timer = 5;
+	float timer_left = timer;
 
 public:
 	StageIntro(string name, bool aHold, Texture* bg, Texture* bossT) {
 		birds = aHold;
 		textBuffer = name;
+		transform(textBuffer.begin(), textBuffer.end(), textBuffer.begin(),::toupper);
+
 		background = new UISprite("bg", bg, IntRect(0, 359, 700, 293), Vector2f(0, 0), Vector2f(4, 4));
 		birds = aHold;
 		if (!aHold) {
@@ -50,11 +66,22 @@ public:
 		}
 		aTimer = new animTimer(fadeIn, 10, false);
 
-		bossSetup(bossT);
+		bossSetup(name, bossT);
+
+		floor = new UIHitbox(IntRect(0, 430, 1, 1), background);
+
+		text = new Text();
+		Font* font = new Font();
+		font->loadFromFile("assets\\font.otf");
+		text->setFont(*font);
+		text->setPosition(850, 570);
 	}
 
-	void bossSetup(Texture* bossT) {
-		
+	void bossSetup(string name, Texture* bossT) {
+		if (name == "wood man") {
+			boss = new WoodMan(bossT, Vector2f(900, 0));
+			boss->initial();
+		}
 	}
 
 	void dotSetup(Texture* bg, IntRect startFrame) {
@@ -134,8 +161,25 @@ public:
 		}
 	}
 
-	void bossAnim() {
+	void bossAnim(float deltaT) {
+		textStart = boss->titleLoop(&deltaT, floor);
+	}
 
+	void textAnim(float deltaT) {
+		textTime_left -= deltaT;
+		if (textTime_left <= 0) {
+			textTime_left = textTime;
+			charaNum++;
+			string temp;
+			for (int i = 0; i < charaNum; i++) {
+				temp = temp + textBuffer[i];
+			}
+			
+			text->setString(temp);
+
+			textFin = (charaNum == textBuffer.size());
+			
+		}
 	}
 
 	//Copied animation for multiple sprites
@@ -156,12 +200,19 @@ public:
 		}
 	}
 
+	void timerRun(float deltaT){
+		timer_left -= deltaT;
+		if (timer_left <= 0) {
+			run = false;
+		}
+	}
+
 	void loop(renderer* instance, float targetRate) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
 
-		bool run = true;
+		run = true;
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
@@ -169,14 +220,26 @@ public:
 				if (event.type == sf::Event::Closed)
 					instance->getWindow()->close();
 			}
-			time->frameLimiter(targetRate, startP);
-			deltaT = time->checkTimer(startP);
+			if (time->frameLimiter(targetRate, startP)) {
+				deltaT = 0.0333;
+			}
+			else {
+				deltaT = time->checkTimer(startP);
+			}
+
 			start = time->timerStart();
 			startP = &start;
 
 			moveParticles(&deltaT, instance, cam);
 
-			bossAnim();
+			if (!textStart) {
+				bossAnim(deltaT);
+			}
+			else if (!textFin) {
+				textAnim(deltaT);
+			}
+
+			timerRun(deltaT);
 
 			if (birds) {
 				
@@ -194,12 +257,16 @@ public:
 				fadeInAnim(&deltaT);
 			}
 
-			instance->UIDisplay(background);
+			
 			list<objectSprite*> obs;
 			for (objectSprite* ob : particles) {
 				obs.push_back(ob);
 			}
 			instance->bObjectDisplay(obs, cam);
+
+			instance->UIDisplay(background);
+			instance->objectDisplay(boss->getSprite(), cam);
+			instance->textDisplay(text);
 
 			instance->getWindow()->display();
 			instance->getWindow()->clear();

@@ -12,6 +12,7 @@
 #include "player.cpp"
 #include "enemy Bullet.cpp"
 
+
 #pragma once
 class enemy:public object{
 protected:
@@ -38,7 +39,7 @@ public:
 	enemy(){}
 	enemy(Texture* t, Vector2f i) {
 
-		sprite = new movable("enemy", t, Vector2i(3, 117), Vector2i(16, 23), Vector2f(1200, 1200), Vector2f(4, 4), 1);
+		sprite = new movable(t);
 		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
 		
 		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
@@ -50,6 +51,7 @@ public:
 		act = false;
 		display = false;
 		
+
 
 	}
 
@@ -102,7 +104,7 @@ public:
 		return hitboxDetect::hitboxDetection(bullet, hurt);
 	}
 
-	virtual void eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
+	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
 		if (hp > 0) {
 			if (act) {
 				hit->updatePos();
@@ -110,14 +112,19 @@ public:
 				alive(p, deltaT, tileList, enemyList, bList);
 			}
 		}
-		else { death(deltaT); }
+		else { return death(deltaT, enemyList); }
+		return false;
+	}
+
+	virtual bool getIntroDone() {
+		return true;
 	}
 
 	void lowerHP(int h) {
 		hp = hp - h;
 	}
 
-	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) = 0;
+	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {};
 
 	void checkDirection(objectSprite* player) {
 		if (player->getPosition().x > sprite->getPosition().x) {
@@ -130,7 +137,7 @@ public:
 
 	virtual void setFacing(bool right) {};
 
-	void death(float* deltaT) {
+	virtual bool death(float* deltaT, list<enemy*>* tempEList) {
 		if (!dead) {
 			sprite->setPosition(Vector2f(sprite->getMiddlePos().x - (12*4), sprite->getMiddlePos().y - (12 * 4)));
 			dead = true;
@@ -145,10 +152,17 @@ public:
 			deathTimer->run(deltaT);
 		}
 		else{
-			act = false;
-			display = false;
-		sprite->setPosition(Vector2f(-1100, -1000));
+			return isDead(tempEList);
+			
 		}
+		return false;
+	}
+
+	virtual bool isDead(list<enemy*>* tempEList) {
+		act = false;
+		display = false;
+		sprite->setPosition(Vector2f(-1100, -1000));
+		return false;
 	}
 
 	void reset() {
@@ -207,6 +221,15 @@ public:
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			return true;
 		}
+	}
+
+
+	virtual AmmoBar** getBar() {
+		return NULL;
+	}
+
+	virtual vector<DeathAnim**> getDeathAnims() {
+		return vector<DeathAnim**>{NULL, NULL, NULL};
 	}
 
 };

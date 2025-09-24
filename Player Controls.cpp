@@ -101,6 +101,81 @@ public:
 		pAnim->swapDirection(true);
 	}
 
+	void runWithoutControl(float* deltaT) {
+
+		teleport = false;
+
+		shooting = pAnim->getShooting();
+
+		if (onLadder) {
+			sprite->enableGravity(false);
+			sprite->setVVelocity(0);
+			sprite->setHVelocity(0);
+			jumping = false;
+		}
+		else if (grounded) {
+			sprite->enableGravity(false);
+			sprite->setFriction(4500);
+			sprite->setVVelocity(0);
+			jumping = false;
+		}
+		else {
+			sprite->enableGravity(true);
+			pAnim->runJump();
+			sprite->setFriction(4500);
+			jumping = true;
+		}
+
+
+
+
+		if (!onLadder) {
+			//jumpConditions(deltaT);
+		}
+		//shoot(deltaT);
+
+		//ladderMove(deltaT);
+
+
+
+
+	//	idle(deltaT);
+		pAnim->idleAnim(deltaT);
+
+		/*else if (p1->checkA() && !APressed) {
+			onLadder = false;
+			//grounded = false;
+			setGrounded(false);
+			APressed = true;
+		}*/
+		//else if (!p1->checkA()) {
+			//APressed = false;
+		//}
+
+
+
+		if (sprite->getAcceleration().x >= maxSpeed) {
+			sprite->setHVelocity(maxSpeed);
+		}
+		else if (sprite->getAcceleration().x <= -maxSpeed) {
+			sprite->setHVelocity(-maxSpeed);
+		}
+		/*else {
+			if (sprite->getAcceleration().x > 0) {
+				sprite->addHorizontalForce(-(groundAccel / 2), deltaT);
+			}
+			else if (sprite->getAcceleration().x < 0) {
+				sprite->addHorizontalForce((groundAccel / 2), deltaT);
+			}
+		}*/
+		if (onLadder) {
+			sprite->enableGravity(false);
+
+		}
+
+		
+	}
+
 	void checkControls(float* deltaT) {
 		teleport = false;
 

@@ -29,7 +29,7 @@ class timer {
 		return temp1;
 	}
 
-	public:void frameLimiter(double targetRate, std::chrono::steady_clock::time_point* start) {
+	public:bool frameLimiter(double targetRate, std::chrono::steady_clock::time_point* start) {
 		double targetDelta = (1 / targetRate) * 1000000000;
 		double delta = checkTimer(start);
 
@@ -38,7 +38,11 @@ class timer {
 		}
 		double delta1 = since<std::chrono::nanoseconds>(*start).count();
 		int frame = 1 / (delta1 / 1000000000);
-		//cout << frame;
-		//cout << ", ";
+		cout << frame;
+		cout << "\n";
+		if (frame <= 1) {
+			return true;
+		}
+		return (frame <= 30);
 	}
 };

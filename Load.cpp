@@ -26,6 +26,11 @@
 #include "rabbit.cpp"
 #include "gorilla.cpp"
 #include "wolf.cpp"
+#include "spawn area.cpp"
+#include "bird spawner.cpp"
+#include "chicken spawner.cpp"
+#include "spawn point.cpp"
+#include "wood man.cpp"
 
 #pragma once
 
@@ -259,7 +264,7 @@ public:
 
 
 	}
-	void loadObjects(string levelName, string section, list<object*>* objects, Texture* t) {
+	void loadObjects(string levelName, string section, list<object*>* objects, Texture* t, camera* cam) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -269,6 +274,8 @@ public:
 		misc->loadFromFile("Assets\\misc\\mega buster.png");
 
 		string line;
+
+		SpawnArea* sArea = NULL;
 
 		while (getline(inputFile, line)) {
 
@@ -293,7 +300,7 @@ public:
 			object* add = NULL;
 			enemy* enem = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &sArea);
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
@@ -310,9 +317,25 @@ public:
 				enem->initial();
 			}
 		}
+
+		if (sArea != NULL) {
+			spawnDeconstruction(sArea, objects, cam);
+		}
+	}
+
+	void spawnDeconstruction(SpawnArea* spawn, list<object*>* objects, camera* cam) {
+		float start = spawn->getStartPos();
+		float end = spawn->getEndPos();
+		enemy* en = spawn->getEnemy();
+		SpawnPoint* startP = new SpawnPoint(string(en->getCode()));
+		startP->getSprite()->setPosition(Vector2f(start, cam->getPosition().y));
+		SpawnPoint* endP = new SpawnPoint(string(en->getCode()));
+		endP->getSprite()->setPosition(Vector2f(end, cam->getPosition().y));
+		objects->push_back(startP);
+		objects->push_back(endP);
 	}
 	
-	void loadObjects(string levelName, string section, list<object*>* objects, list<enemy*>* enemies, Texture* t) {
+	void loadObjects(string levelName, string section, list<object*>* objects, list<enemy*>* enemies, Texture* t, SpawnArea** sArea) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -323,8 +346,7 @@ public:
 
 		objects->clear();
 		enemies->clear();
-
-
+		
 		while (getline(inputFile, line)) {
 
 			char sep = ',';
@@ -348,17 +370,18 @@ public:
 			object* add = NULL;
 			enemy* enem = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, sArea);
 			
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
 				add->setCode();
 				add->setDisplay(true);
+				objects->push_back(add);
 			}
 
 			if (enem == NULL) {
-				objects->push_back(add);
+				
 			}
 			else {
 				enemies->push_back(enem);
@@ -366,8 +389,10 @@ public:
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, object** add) {
+	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, object** add, SpawnArea** spawn) {
 		
+
+
 		if (type == "e1") {
 			*enem = new bat(t, Vector2f(worldX, worldY));
 		}
@@ -379,6 +404,31 @@ public:
 		}
 		else if (type == "wolf") {
 			*enem = new Wolf(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "wood man") {
+			Texture* woodBossT = new Texture();
+			woodBossT->loadFromFile("assets\\wood man.png");
+			*enem = new WoodMan(woodBossT, Vector2f(worldX, worldY));
+		}
+		else if (type == "bird-spawn") {
+			if (*spawn == NULL) {
+				*spawn = new BirdSpawner(worldX);
+			}
+			else {
+				SpawnArea* temp = *spawn;
+				temp->setEnd(worldX);
+				temp->initial();
+			}
+		}
+		else if (type == "chicken-spawn") {
+			if (*spawn == NULL) {
+				*spawn = new ChickenSpawner(worldX);
+			}
+			else {
+				SpawnArea* temp = *spawn;
+				temp->setEnd(worldX);
+				temp->initial();
+			}
 		}
 		else if (type == "trch-R") {
 			*add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);

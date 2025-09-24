@@ -132,7 +132,7 @@ public:
 		Load* load = new Load();
 		list<object*> objects;
 
-		load->loadObjects(levelName, to_string(section), &objects, new Texture());
+		load->loadObjects(levelName, to_string(section), &objects, new Texture(), cam);
 
 		for (object* o : objects) {
 			if (o->getCode() == "flag") {

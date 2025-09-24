@@ -8,7 +8,7 @@ class DeathAnim {
 	objectSprite* sprite;
 	animation* anim;
 	animTimer* timer;
-	float growRate = 1;
+	float growRate = 0.5;
 	float growAccel = 1.03;
 
 	Vector2f originPos;
@@ -19,7 +19,7 @@ public:
 	DeathAnim(objectSprite* origin, string palette) {
 		Texture* t = new Texture;
 		t->loadFromFile("Assets//death//" + palette + ".png");
-		sprite = new objectSprite("death anim", t, IntRect(0, 0, 96, 96), origin->getPosition(), Vector2f(0.000005, 0.000005));
+		sprite = new objectSprite("death anim", t, IntRect(0, 0, 96, 96), origin->getPosition(), Vector2f(0.00000, 0.00000));
 		anim = new animation(list<IntRect>{IntRect(0, 0, 96, 96), IntRect(98, 0, 96, 96), IntRect(196, 0, 96, 96), IntRect(294, 0, 96, 96)}, sprite);
 		timer = new animTimer(anim, 15, true);
 		originPos = origin->getPosition();
@@ -50,5 +50,14 @@ public:
 	
 	objectSprite* getSprite() {
 		return sprite;
+	}
+
+	animation* getAnim() {
+		return anim;
+	}
+
+	void setOrigin(objectSprite* sprite) {
+		originPos = sprite->getPosition();
+		originSize = sprite->getSize();
 	}
 };
