@@ -37,6 +37,7 @@ public:
 
 		flap = new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite);
 		flapTimer = new animTimer(flap, 15, true);
+		setCode("bird");
 	}
 	void initial(Vector2f pos) {
 
@@ -56,6 +57,9 @@ public:
 
 		hit = new objectHitbox(IntRect(0,0, 18, 16), sprite);
 		hurt = new objectHitbox(IntRect(0, 0, 18, 16), sprite);
+
+		flap = new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite);
+		flapTimer = new animTimer(flap, 15, true);
 
 		hp = 1;
 	}

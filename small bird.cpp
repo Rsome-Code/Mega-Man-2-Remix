@@ -37,7 +37,11 @@ public:
 		flapAnim = new animation(list<IntRect>{IntRect(504, 437, 8, 8), IntRect(513, 437, 8, 8)}, sprite);
 		flapTime = new animTimer(flapAnim, 15, true);
 
+		offSetList();
+
 		hp = 1;
+
+		deathAnim->setSprite(mov);
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
@@ -50,6 +54,7 @@ public:
 		else {
 			trackStart(p);
 		}
+
 
 		flapTime->run(deltaT);
 	}

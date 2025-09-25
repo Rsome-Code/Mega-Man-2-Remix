@@ -9,6 +9,7 @@ class ChickenSpawner : public SpawnArea {
 public:
 	void initial() {
 		en = new Chicken(texture, Vector2f(0, 0));
+		toSpawn = 2;
 	}
 
 	void spawn(list<enemy*>* enemyList, camera* cam) {

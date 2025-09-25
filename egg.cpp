@@ -14,9 +14,11 @@ public:
 		hit = new objectHitbox(IntRect(0, 0, 13, 10), phys);
 		hurt = new objectHitbox(IntRect(0, 0, 13, 10), phys);
 		grounded = false;
+		offSetList();
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+
 
 		if (dropped) {
 			isDropped(tileList, objectList, deltaT);

@@ -362,7 +362,7 @@ public:
 		else {
 			if (tele == NULL) {
 				dam->flicker(deltaT);
-				takingDamage(deltaT);
+				takingDamage(deltaT, tiles);
 			}
 			else {
 				sprite->setMovable(true);
@@ -586,7 +586,7 @@ public:
 
 
 private:
-	void takingDamage(float* deltaT) {
+	void takingDamage(float* deltaT, list<tile*> tileList) {
 		tempDTime = tempDTime - *deltaT;
 		if (tempDTime <= 0) {
 			tempDTime = damageTime;
@@ -603,6 +603,21 @@ private:
 			sprite->move(0, deltaT, 200);
 		}
 		
+	}
+
+	void tileCollide(list<tile*> tiles) {
+		for (tile* t : tiles) {
+			if (t->getLeft() != NULL) {
+				if (hitboxDetect::hitboxDetection(hit, t->getLeft())) {
+					sprite->setPosition(Vector2f(t->getPosition().x - hit->getSize().x, sprite->getPosition().y));
+				}
+			}
+			if (t->getRight() != NULL) {
+				if (hitboxDetect::hitboxDetection(hit, t->getRight())) {
+					sprite->setPosition(Vector2f(t->getPosition().x + t->getSprite()->getSize().x, sprite->getPosition().y));
+				}
+			}
+		}
 	}
 
 	

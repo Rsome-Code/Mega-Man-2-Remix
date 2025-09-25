@@ -55,6 +55,8 @@ class Rabbit : public PhysicsEnemy {
 
 		offSetList();
 		dead = false;
+
+		untilJump_left = 0.5;
 	}
 
 

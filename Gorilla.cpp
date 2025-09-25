@@ -33,8 +33,8 @@ class Gorilla : public PhysicsEnemy {
 		jump = new animation(IntRect(139, 503, 39, 42), phys);
 		startHang = new animation(IntRect(1, 500, 33, 42), phys);
 
-		hit = new objectHitbox(IntRect(0, 0, 40, 37), phys);
-		hurt = new objectHitbox(IntRect(0, 0, 40, 37), phys);
+		hit = new objectHitbox(IntRect(10, 20, 40, 37), phys);
+		hurt = new objectHitbox(IntRect(10, 20, 40, 37), phys);
 
 		hp = 6;
 		damage = 6;
@@ -43,6 +43,8 @@ class Gorilla : public PhysicsEnemy {
 
 		offSetList();
 		grounded = false;
+		hangTime_left = hangTime;
+		hanging = true;
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {

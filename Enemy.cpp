@@ -44,7 +44,7 @@ public:
 		
 		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
 
-		offSetList();
+		//offSetList();
 
 		deathTimer = new animTimer(deathAnim, 16, false);
 		initialPos = i;

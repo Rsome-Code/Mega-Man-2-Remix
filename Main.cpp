@@ -92,7 +92,7 @@ int main() {
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
 	string bossName = "wood man";
-	bool hold = levelMenu->checkA();
+	
 	
 
 	
@@ -143,19 +143,20 @@ int main() {
 
 	bg = new Texture();
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
-
+	bool hold;
 	while (run) {
 		LevelSelect* levelMenu = new LevelSelect(bg);
 
 
 		string bossName = levelMenu->loop(instance, targetFPS, bg);
+		hold = levelMenu->checkA();
 
 		StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 		intro->loop(instance, targetFPS);
 
 		abstractStage* stage = new abstractStage(bossName);
 
-		stage->reload(string("wood man"), string("0"));
+		stage->reload(string(bossName), string("0"));
 
 		scene* area = new scene(col, stage, enemyT);
 		area->loop(instance, targetFPS);
@@ -163,6 +164,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

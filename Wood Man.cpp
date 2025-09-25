@@ -105,7 +105,7 @@ public:
 				state = IDLESHOOT;
 				newState = true;
 			}
-			hp = 1;
+			
 		}
 
 		else if (state == IDLESHOOT) {

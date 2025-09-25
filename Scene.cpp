@@ -93,6 +93,8 @@ class scene {
 	float levelEndTime = 5;
 	float levelEndTime_left = levelEndTime;
 
+	bool fallDeath = true;
+
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 		
@@ -179,9 +181,9 @@ public:
 		bool unPaused = false;
 		
 
-		section = 0;
+		section = 7;
 
-
+		p->enableControls(true);
 
 		checkLastFlagRight();
 		loadFlag();
@@ -237,7 +239,7 @@ public:
 				paused = false;
 			}
 
-			if (!p->isTeleporting()) {
+			if (!p->isTeleporting() && p->getHP() > 0) {
 				if (afterT) {
 					p->getSprite()->setMove(true);
 					p->getSprite()->setVVelocity(0);
@@ -260,7 +262,7 @@ public:
 			}
 			p->eachFrame(&deltaT, tileList);
 
-			
+			checkFall();
 
 			if (!p->isTeleporting()) {
 				ground = false;
@@ -419,6 +421,14 @@ public:
 
 
 
+		}
+	}
+
+	void checkFall() {
+		if (p->getSprite()->getCameraPosition().y > 1080 && fallDeath) {
+			
+			p->takeDamage(28);
+			
 		}
 	}
 
@@ -722,7 +732,7 @@ public:
 				}
 			}
 
-			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets)) {
+			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets) || enemyYCheck(enemy)) {
 				toDelete = enemy;
 			}
 
@@ -738,6 +748,12 @@ public:
 
 	}
 
+	bool enemyYCheck(enemy* e) {
+		if (e->getSprite()->getCameraPosition().y > 1080) {
+			return e->isDead(&enemies);
+		}
+		return false;
+	}
 	
 
 	bool  checkPause(renderer* instance, float targetRate) {
@@ -789,7 +805,7 @@ public:
 				return true;
 			}
 		}
-		else if (ang == DOWN) {
+		else if (ang == DOWN && !fallDeath) {
 			if (p->getSprite()->getPosition().y + 48 >= flagPos.y) {
 				startTransition(instance, targetRate, ang, flagPos, nextSection);
 				return true;
@@ -875,6 +891,12 @@ public:
 		if ((cam->getPosition().x + 1920) >= flagPos.x + (16 * 4)) {
 			cam->setPosition(Vector2f(flagPos.x - (1920 - (16 * 4)), cam->getPosition().y));
 
+			if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() == DOWN) {
+				fallDeath = false;
+			}
+			else {
+				fallDeath = true;
+			}
 
 		}
 	}
@@ -882,12 +904,18 @@ public:
 		if (flagPos != Vector2f(0, 0)) {
 			if (cam->getPosition().x <= flagPos.x) {
 				cam->setPosition(Vector2f(flagPos.x, cam->getPosition().y));
+				if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() ==DOWN) {
+					fallDeath = false;
+				}
+				else {
+					fallDeath = true;
+				}
 			}
 		}
 	}
 
 	void cameraFlagCheck(Vector2f flagPos) {
-		
+		fallDeath = true;
 		if (currentFlag->getSprite()->getPosition().x > lastFlagPos.x) {
 
 			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {

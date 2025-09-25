@@ -1,0 +1,4 @@
+bird-spawn,10375,269,1
+gorilla,8183,768,1
+bird-spawn,8467,242,1
+gorilla,9675,896,1
