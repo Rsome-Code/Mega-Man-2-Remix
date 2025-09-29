@@ -512,7 +512,7 @@
       <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
     </ClCompile>
     <ClCompile Include="Master.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

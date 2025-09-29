@@ -91,13 +91,16 @@ class scene {
 	DeathAnim** bossDeath2 = NULL;
 
 	bool levelEnd = false;
-	float levelEndTime = 5;
+	float levelEndTime = 10;
 	float levelEndTime_left = levelEndTime;
 
 	bool fallDeath = true;
 
 	SoundBuffer* masterDeathB;
 	Sound* masterDeathSound;
+
+	bool victoryPlay = false;
+	Music* victoryMusic;
 	
 
 public:
@@ -147,6 +150,9 @@ public:
 		masterDeathSound = new Sound();
 		masterDeathB->loadFromFile("assets\\sound\\death.wav");
 		masterDeathSound->setBuffer(*masterDeathB);
+
+		victoryMusic = new Music();
+		victoryMusic->openFromFile("assets\\sound\\music\\15 - Victory.mp3");
 	}
 
 public:
@@ -177,7 +183,16 @@ public:
 
 	void levelEndLoop(float deltaT) {
 		levelEndTime_left -= deltaT;
+
+		if (levelEndTime_left <= 6) {
+			if (!victoryPlay) {
+				victoryPlay = true;
+				victoryMusic->play();
+			}
+		}
+
 		if (levelEndTime_left <= 0) {
+			levelEndTime_left = levelEndTime;
 			run = false;
 		}
 	}
@@ -191,7 +206,7 @@ public:
 		bool unPaused = false;
 		
 
-		section = 0;
+		section = 13;
 
 		p->enableControls(true);
 
@@ -556,7 +571,10 @@ public:
 	bool death(renderer* instance, float tRate, camera* cam) {
 		if (p->setDead()) {
 			
-			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, objects, enemies, eBullets, cam, 0.75);
+			list<object*> tempL = objects;
+			tempL.push_back(door1);
+			tempL.push_back(door2);
+			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, cam, 0.75);
 
 			masterDeathSound->play();
 
@@ -746,7 +764,10 @@ public:
 
 								if (enemy->getDeathAnims()[0] != NULL) {
 									music->stop();
-									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, objects, enemies, eBullets, cam, 0.75);
+									list<object*> tempL = objects;
+									tempL.push_back(door1);
+									tempL.push_back(door2);
+									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, cam, 0.75);
 									paused = true;
 									levelEndCheck(enemy, music);
 								}
@@ -766,6 +787,7 @@ public:
 
 			if (!levelEnd) {
 				p->enableControls(enemy->getIntroDone());
+				music->stop();
 			}
 			
 			

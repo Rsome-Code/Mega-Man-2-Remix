@@ -25,6 +25,8 @@ protected:
 	bool tauntDone = false;
 	bool introDone = false;
 	
+	Music* bossMusic;
+	bool noMusic = true;
 
 
 public:
@@ -44,6 +46,10 @@ public:
 		deathAnimation = new DeathAnim(sprite, weaponName);
 		deathAnimation1 = new DeathAnim(sprite, weaponName);
 		deathAnimation2 = new DeathAnim(sprite, weaponName);
+
+		bossMusic = new Music();
+		bossMusic->openFromFile("assets\\sound\\music\\14 - Boss Battle.mp3");
+		bossMusic->setVolume(50);
 	}
 
 	bool tauntLoop(float* deltaT, list<tile*>* tiles) {
@@ -121,6 +127,10 @@ public:
 			healthBar->update(hp);
 		}
 		else {
+			if (noMusic) {
+				bossMusic->play();
+				noMusic = false;
+			}
 			if (p->getGrounded()) {
 				introLoop(deltaT, tileList);
 			}

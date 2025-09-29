@@ -5,6 +5,7 @@
 #include "render logic.cpp"
 #include "camera.cpp"
 #include "time.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class Door : public object {
@@ -17,6 +18,11 @@ class Door : public object {
 	timer* time;
 	bool checkpoint = false;
 
+	SoundBuffer* soundB;
+	Sound* sound;
+
+	bool firstOpen = true;
+
 public:
 	Door(string levelName, Vector2f pos, int section) {
 		Texture* t = new Texture();
@@ -24,10 +30,17 @@ public:
 		sprite = new objectSprite("door", t, IntRect(0, 0, 16, 64), pos, Vector2f(4, 4));
 		anim = new animation(list<IntRect>{IntRect(0, 0, 16, 64), IntRect(0, 0, 16, 48), IntRect(0, 0, 16, 32), IntRect(0, 0, 16, 16), IntRect(0, 0, 0,0)}, sprite);
 		revAnim = new animation(list<IntRect>{IntRect(0, 0, 0,0), IntRect(0, 0, 16, 16), IntRect(0, 0, 16, 32), IntRect(0, 0, 16, 48), IntRect(0, 0, 16, 64)}, sprite);
-		aTimer = new animTimer(anim, 4, false);
-		revTimer = new animTimer(revAnim, 4, false);
+		aTimer = new animTimer(anim, 6, false);
+		revTimer = new animTimer(revAnim, 6, false);
 		this->section = section;
 		setCode();
+
+		soundB = new SoundBuffer();
+		soundB->loadFromFile("assets\\sound\\boss_door.wav");
+		sound = new Sound();
+		sound->setBuffer(*soundB);
+		float* temp = new float(0.0000001);
+		aTimer->run(temp);
 	}
 
 	void setCode() {
@@ -44,12 +57,28 @@ public:
 	}
 
 	bool openAnim(float* deltaT){
-		aTimer->run(deltaT);
+
+		if (aTimer->run(deltaT)) {
+			if (firstOpen) {
+				firstOpen = false;
+			}
+			else {
+				sound->play();
+			}
+			
+		}
 		return aTimer->isFinished(deltaT);
 	}
 
 	bool closeAnim(float* deltaT) {
-		revTimer->run(deltaT);
+		if (revTimer->run(deltaT)) {
+			if (firstOpen) {
+				firstOpen = false;
+			}
+			else {
+				sound->play();
+			}
+		}
 		return revTimer->isFinished();
 	}
 
@@ -76,11 +105,13 @@ public:
 			if (open) {
 				if (openAnim(&deltaT)) {
 					run = false;
+					firstOpen = true;
 				}
 			}
 			else {
 				if (closeAnim(&deltaT)) {
 					run = false;
+					firstOpen = true;
 				}
 			}
 

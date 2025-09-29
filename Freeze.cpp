@@ -64,6 +64,10 @@ public:
 			for (enemy* e : eList) {
 				if (e->getDisplay()) {
 					instance->objectAccess(e, cam);
+					if (e->getBar() != NULL) {
+						AmmoBar* bar = *e->getBar();
+						instance->UIDisplay(bar->getSprites());
+					}
 				}
 			}
 
