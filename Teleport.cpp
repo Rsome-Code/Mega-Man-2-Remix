@@ -3,6 +3,7 @@
 #include "Animation Timer.cpp"
 #include "tile.cpp"
 #include "hitbox detector.cpp"
+#include <SFML/audio.hpp>
 
 #pragma once
 class teleport {
@@ -19,7 +20,8 @@ class teleport {
 
 	bool looped = false;
 
-
+	Sound* teleSound;
+	SoundBuffer* teleB;
 
 	
 
@@ -38,7 +40,11 @@ public:
 		teleportAnim->thisFrame();
 		timer = new animTimer(teleportAnim, 12, false);
 
+		teleB = new SoundBuffer();
+		teleB->loadFromFile("assets\\sound\\teleport_in.wav");
 
+		teleSound = new Sound();
+		teleSound->setBuffer(*teleB);
 	}
 
 	teleport(movable* sprite, float startX) {
@@ -52,6 +58,11 @@ public:
 
 		teleportAnim->thisFrame();
 		timer = new animTimer(teleportAnim, 12, false);
+		teleB = new SoundBuffer();
+		teleB->loadFromFile("assets\\sound\\teleport_in.wav");
+
+		teleSound = new Sound();
+		teleSound->setBuffer(*teleB);
 
 	}
 
@@ -61,6 +72,11 @@ public:
 		if (looped) {
 
 			if (floorCheck(tiles, foot)) {
+
+				if (hitFloor == false) {
+					teleSound->play();
+				}
+
 				hitFloor = true;
 			}
 			
@@ -88,6 +104,7 @@ public:
 
 	void forceEnd(Vector2f pos) {
 		sprite->setPosition(pos);
+		teleSound->play();
 		hitFloor = true;
 	}
 

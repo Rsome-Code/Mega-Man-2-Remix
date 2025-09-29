@@ -95,6 +95,9 @@ public:
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+
+		checkDirection(p->getSprite());
+
 		if (state == BEATING) {
 			if (newState) {
 				newState = false;
@@ -147,6 +150,16 @@ public:
 			}
 		}
 
+	}
+
+	void setFacing(bool right) {
+		
+		if (right != faceRight) {
+			beatAnim->swapAll();
+			idleAnim->swapAll();
+			throwAnim->swapAll();
+		}
+		faceRight = right;
 	}
 
 	bool idleShootLoop(float* deltaT, list<EnemyBullet*>* bList) {

@@ -34,6 +34,7 @@ class player {
 	objectHitbox* belowBox;
 
 	bool gotAtomicFire = false;
+	bool gotShield = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -72,6 +73,7 @@ class player {
 
 public:
 	player(pController* p1) {
+		
 		texture = new Texture();
 		if (!texture->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png")) {
 			cout << "error";
@@ -222,6 +224,10 @@ public:
 		lives = l;
 	}
 
+	void getShield() {
+		gotShield = true;
+	}
+
 	bool hasAtomicFire() {
 		return gotAtomicFire;
 	}
@@ -360,6 +366,9 @@ public:
 			}
 		}
 		else {
+
+			controls->shootEachFrame(deltaT);
+
 			if (tele == NULL) {
 				dam->flicker(deltaT);
 				takingDamage(deltaT, tiles);
@@ -619,6 +628,33 @@ private:
 			}
 		}
 	}
+	public:
+	bool checkAtomicFire() {
+		return gotAtomicFire;
+	}
+	bool checkShield() {
+		return gotShield;
+	}
+	bool checkTornado() {
+		return false;
+	}
+	bool checkBlade() {
+		return false;
+	}
+	bool checkBomb() {
+		return false;
+	}
+	bool checkStopper() {
+		return false;
+	}
+	bool checkLead() {
+		return false;
+	}
+	bool checkBoomerang() {
+		return false;
+	}
+
+	
 
 	
 };

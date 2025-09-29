@@ -2,6 +2,7 @@
 #include "animate.cpp"
 #include "animation timer.cpp"
 #include "Maths.cpp"
+#include <SFML\audio.hpp>
 #pragma once
 
 class AtomicFireB : public bullet {
@@ -24,8 +25,16 @@ public:
 
 	float yPosAdd = 0;
 	float maxYPos = 32;
-	
 
+	SoundBuffer* startHoldB;
+	SoundBuffer* midHoldB;
+	SoundBuffer* fullHoldB;
+	Sound* holdSound;
+
+	SoundBuffer* shootB;
+	Sound* shootSound;
+
+	
 	AtomicFireB(objectSprite* o, Texture* t) {
 		shootTime = 1;
 		shootTemp = shootTime;
@@ -39,10 +48,30 @@ public:
 		aTimer = new animTimer(anim, 10, true);
 		list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(8, 8) };
 		anim->setOffsetList(testOffset);
+
+		holdSound = new Sound();
+		startHoldB = new SoundBuffer();
+		startHoldB->loadFromFile("assets\\sound\\atomic_fire_charge.wav");
+
+		midHoldB = new SoundBuffer();
+		midHoldB->loadFromFile("assets\\sound\\atomic_fire_charge_mid.wav");
+
+		fullHoldB = new SoundBuffer();
+		fullHoldB->loadFromFile("assets\\sound\\atomic_fire_full.wav");
+
+		holdSound->setBuffer(*startHoldB);
+		holdSound->setLoop(true);
+
+		shootB = new SoundBuffer();
+		shootB->loadFromFile("assets\\sound\\atomic_fire.wav");
+
+		shootSound = new Sound();
+		shootSound->setBuffer(*shootB);
+		
 	}
 
 	bool eachFrame(float* deltaT) {
-		
+
 		shootTemp = shootTemp - *deltaT;
 		if (shootTemp <= 0) {
 			shootReset();
@@ -51,9 +80,9 @@ public:
 
 		if (shooting) {
 			aTimer->run(deltaT);
-		
+
 			sprite->move(direction, deltaT, speed);
-			
+
 			hitbox->updatePos();
 			return false;
 		}
@@ -61,6 +90,8 @@ public:
 	}
 
 	void start(bool r) {
+		holdSound->setBuffer(*startHoldB);
+		holdSound->play();
 		
 	}
 
@@ -68,8 +99,25 @@ public:
 		return (en->atomicDam() * power);
 	}
 
+	void holdSoundTime(float* deltaT) {
+		if (holdTime >= maxHold && holdSound->getBuffer() == midHoldB) {
+			holdSound->setBuffer(*fullHoldB);
+			holdSound->play();
+		}
+		else if (holdTime >= (maxHold/ 2) && holdSound->getBuffer() == startHoldB) {
+			holdSound->setBuffer(*midHoldB);
+			holdSound->play();
+		}
+		
+
+		
+
+	}
+
 	void hold(float* deltaT) {
 		holdTime = holdTime + *deltaT;
+
+		holdSoundTime(deltaT);
 		
 		if (holdTime <= maxHold) {
 			power = Maths::map(float(0), maxHold, minPower, maxPower, holdTime);
@@ -85,7 +133,8 @@ public:
 
 	bool release(bool r) {
 
-		
+		holdSound->stop();
+		shootSound->play();
 
 		holdTime = 0;
 		if (!shooting) {

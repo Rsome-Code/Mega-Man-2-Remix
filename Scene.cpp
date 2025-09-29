@@ -19,6 +19,7 @@
 #include "temp enemy.cpp"
 #include "spawn area.cpp"
 #include "ammo bar.cpp"
+#include <sfml/audio.hpp>
 #pragma once
 
 class scene {
@@ -95,6 +96,10 @@ class scene {
 
 	bool fallDeath = true;
 
+	SoundBuffer* masterDeathB;
+	Sound* masterDeathSound;
+	
+
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 		
@@ -137,6 +142,11 @@ public:
 		for (enemy* e : enemies) {
 			e->initial();
 		}
+
+		masterDeathB = new SoundBuffer();
+		masterDeathSound = new Sound();
+		masterDeathB->loadFromFile("assets\\sound\\death.wav");
+		masterDeathSound->setBuffer(*masterDeathB);
 	}
 
 public:
@@ -172,25 +182,30 @@ public:
 		}
 	}
 
-	void loop(renderer* instance, double targetRate) {
+	bool loop(renderer* instance, double targetRate) {
 
 		auto start = time->timerStart();
 		auto* startP = &start;
-		float deltaT = 0;
+		float deltaT = 8;
 		
 		bool unPaused = false;
 		
 
-		section = 7;
+		section = 0;
 
 		p->enableControls(true);
 
 		checkLastFlagRight();
 		loadFlag();
 		updateFlags();
-		startAnim(instance, targetRate);
+		
+		Music* music = stage->getMusic();
+		
+
+		startAnim(instance, targetRate, music);
 		respawn();
 		//p->heal(-27);
+		
 		
 
 		while (instance->getWindow()->isOpen() && run) {
@@ -209,7 +224,7 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			pDeathCheck(instance, targetRate);
+			pDeathCheck(instance, targetRate, music);
 
 			if (levelEnd) {
 				levelEndLoop(deltaT);
@@ -323,7 +338,7 @@ public:
 
 
 			if (!p->isTeleporting()) {
-				enemyCheck(deltaT, instance, targetRate);
+				enemyCheck(deltaT, instance, targetRate, music);
 				if (paused) {
 					start = time->timerStart();
 					startP = &start;
@@ -422,6 +437,7 @@ public:
 
 
 		}
+		return levelEnd;
 	}
 
 	void checkFall() {
@@ -506,25 +522,28 @@ public:
 		return false;
 	}
 
-	void pDeathCheck(renderer* instance, float targetRate) {
+	void pDeathCheck(renderer* instance, float targetRate, Music* music) {
 		if (p->getHP() <= 0) {
 
-			if (p->getLives() > 0) {
+			music->stop();
 
 
-				if (death(instance, targetRate, cam)) {
-					startAnim(instance, targetRate);
+			if (death(instance, targetRate, cam)) {
+				if (p->getLives() > 0) {
+					startAnim(instance, targetRate, music);
 					respawn();
 					p->heal(p->getMaxHP());
 					p->setNotDead();
 
 					p->setLives(p->getLives() - 1);
-
 				}
+				else {
+					run = false;
+				}
+
 			}
-			else {
-				run = false;
-			}
+			
+			
 		}
 	}
 
@@ -538,6 +557,9 @@ public:
 		if (p->setDead()) {
 			
 			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, objects, enemies, eBullets, cam, 0.75);
+
+			masterDeathSound->play();
+
 			paused = true;
 		}
 		return p->checkDeathFinish();
@@ -566,11 +588,13 @@ public:
 		return stage->getLastCheckpoint(section);
 	}
 
-	void startAnim(renderer* instance, float targetRate) {
+	void startAnim(renderer* instance, float targetRate, Music* music) {
+
+		music->play();
 
 		EndFlag* flag = getLastCheckpoint();
 
-		//section = flag->getSection() + 1;
+		section = flag->getSection() + 1;
 
 		forceLoadSection(section);
 		
@@ -689,14 +713,17 @@ public:
 		miscT->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
 	}
 
-	void levelEndCheck(enemy* e) {
+	void levelEndCheck(enemy* e, Music* music) {
 		if (e->getCode() == stage->getName()) {
 			p->enableControls(false);
 			levelEnd = true;
+			masterDeathSound->play();
+			
+
 		}
 	}
 
-	void enemyCheck(float deltaT, renderer* instance, float tRate) {
+	void enemyCheck(float deltaT, renderer* instance, float tRate, Music* music) {
 		enemy* toDelete = NULL;
 
 		for (enemy* enemy : enemies) {
@@ -718,9 +745,10 @@ public:
 								spawnItemFromEnemy(enemy);
 
 								if (enemy->getDeathAnims()[0] != NULL) {
+									music->stop();
 									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, objects, enemies, eBullets, cam, 0.75);
 									paused = true;
-									levelEndCheck(enemy);
+									levelEndCheck(enemy, music);
 								}
 							}
 						}
@@ -921,7 +949,9 @@ public:
 			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {
 				cam->setPosition(Vector2f(lastFlagPos.x, cam->getPosition().y));
 			}
+#
 
+			//Should be in else statement?
 			isCameraRightOfFlag(currentFlag->getSprite()->getPosition());
 
 			isCameraLeftOfFlag(lastFlagPos);
@@ -931,6 +961,7 @@ public:
 		else {
 			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {
 				cam->setPosition(Vector2f(lastFlagPos.x - (1920 - (16 * 4)), cam->getPosition().y));
+				fallDeath = false;
 			}
 			else {
 				isCameraRightOfFlag(lastFlagPos);
@@ -1305,6 +1336,11 @@ public:
 					instance->objectAccess(t, cam);
 				}
 			}
+			for (object* t : enemies) {
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->objectAccess(t, cam);
+				}
+			}
 			instance->objectDisplay(p->getSprite(), cam);
 			
 			healRate_left = healRate_left - deltaT;
@@ -1509,7 +1545,7 @@ public:
 							if (hitboxCheck(p->getHitbox(), t->getLeft())) {
 								//p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x - p->getSprite()->getHDistanceTraveled(), p->getSprite()->getPosition().y));
 								//p->getSprite()->setVVelocity(0);
-								p->getSprite()->setPosition(Vector2f(t->getLeft()->getPosition().x - t->getLeft()->getSize().x - p->getHitbox()->getSize().x - 20, p->getSprite()->getPosition().y));
+								p->getSprite()->setPosition(Vector2f(t->getLeft()->getPosition().x - t->getLeft()->getSize().x - p->getHitbox()->getSize().x - 16, p->getSprite()->getPosition().y));
 								p->updateHitbox();
 							}
 						}

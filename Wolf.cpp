@@ -65,7 +65,7 @@ public:
 
 		setCode("wolf");
 
-		hit = new objectHitbox(IntRect(0, 0, 67, 59), sprite);
+		hit = new objectHitbox(IntRect(30, 0, 1, 59), sprite);
 		hurt = new objectHitbox(IntRect(0, 0, 67, 59), sprite);
 		state = teleporting;
 
@@ -154,6 +154,8 @@ public:
 			if (t->getGround() != NULL) {
 				if (groundCheck(t)) {
 					state = standing;
+					hit->reset(IntRect(0, 0, 67, 59));
+					hit->updatePos();
 				}
 			}
 		}

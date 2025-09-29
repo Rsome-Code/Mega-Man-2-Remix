@@ -11,7 +11,7 @@
 #include "tile.cpp"
 #include "player.cpp"
 #include "enemy Bullet.cpp"
-
+#include <sfml/audio.hpp>
 
 #pragma once
 class enemy:public object{
@@ -32,7 +32,8 @@ protected:
 
 	bool faceRight = false;
 
-
+	SoundBuffer* hitB;
+	Sound* hitSound;
 
 
 public:
@@ -51,11 +52,15 @@ public:
 		act = false;
 		display = false;
 		
-
+		hitB = new SoundBuffer();
+		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
+		hitSound = new Sound();
+		hitSound->setBuffer(*hitB);
 
 	}
 
 public:
+
 
 	bool getInitOffScreen() {
 		return initOffScreen;
@@ -121,6 +126,7 @@ public:
 	}
 
 	void lowerHP(int h) {
+		hitSound->play();
 		hp = hp - h;
 	}
 

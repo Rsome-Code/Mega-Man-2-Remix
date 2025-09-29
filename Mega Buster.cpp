@@ -14,6 +14,10 @@ public:
 		name = "Mega Buster";
 		maxAmmo = 28;
 
+		shootB = new SoundBuffer();
+		shootB->loadFromFile("Assets\\sound\\buster.wav");
+		shootSound = new Sound();
+		shootSound->setBuffer(*shootB);
 	}
 
 	bool checkAmmo() {

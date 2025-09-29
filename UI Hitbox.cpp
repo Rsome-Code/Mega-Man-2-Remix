@@ -40,6 +40,12 @@ public:
 public: void updatePos() {
 	this->cameraPos = relativePos + sprite->getCameraPosition();
 }
+
+	  void reset(IntRect rect) {
+		  relativePos = Vector2f(rect.getPosition());
+		  relativeRect = IntRect(Vector2i(relativePos), Vector2i(rect.getSize().x * scale.x, rect.getSize().y * scale.y));
+	  }
+
 public: bool isVisible() {
 	return visible;
 }

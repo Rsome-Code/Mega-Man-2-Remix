@@ -14,6 +14,7 @@
 #include <fstream>
 #include "load.cpp"
 #include "door.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class abstractStage {
@@ -46,13 +47,13 @@ protected:
 
 	list<EndFlag*> flags;
 	
-
 	float z = 1;
 
 	Door* door1;
 	Door* door2;
 
 	Load* l;
+	Music* music;
 	
 
 public:
@@ -72,9 +73,23 @@ public:
 		load(name, "0");
 		lastFlagPos = Vector2f(0,0);
 
-		
+
+		music = new Music();
+
+		music->openFromFile("assets\\sound\\music\\" + name + ".mp3");
 
 		
+		music->setVolume(30);
+
+		setMusicLoop();
+		
+	}
+
+	void setMusicLoop() {
+		music->setLoop(true);
+		if (levelName == "wood man"){
+			music->setLoopPoints({ sf::seconds(6.5), seconds(100) });
+		}
 	}
 
 protected:
@@ -104,6 +119,10 @@ protected:
 	}
 
 public:
+
+	Music* getMusic() {
+		return music;
+	}
 
 	void reload(string name, string section) {
 		tileList.clear();

@@ -66,6 +66,14 @@ public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position,
 	setCameraPosition(position);
 	setScale(scale);
 }
+public: UISprite(Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+	this->texture = texture;
+
+	loadTexture();
+	setRect(rect.getPosition(), rect.getSize());
+	setCameraPosition(position);
+	setScale(scale);
+}
 public: UISprite() {
 	//cout << "huh?";
 }

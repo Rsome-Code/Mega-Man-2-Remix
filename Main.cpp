@@ -52,6 +52,11 @@ vector<int> split(const string& str, char sep)
 
 	return tokens;
 }
+void updatePlayer(player* p, string levelName) {
+	if (levelName == "wood man") {
+		p->getShield();
+	}
+}
 int main() {
 	bool run = true;
 
@@ -87,7 +92,6 @@ int main() {
 	Texture* bg;
 	bg = new Texture();
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
-	LevelSelect* levelMenu = new LevelSelect(bg);
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
@@ -122,12 +126,12 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(245, 311, 34, 37), IntRect(289, 308, 27, 40), IntRect(350, 311, 40, 37), IntRect(289, 308, 27, 40) };
-	list<Vector2f> testOffset = list<Vector2f>{Vector2f(0*4,0*4),Vector2f(3*4, 0*4),Vector2f(-2*4, 0*4), Vector2f(3 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(35, 503, 33, 47), IntRect(69, 500, 33, 50), IntRect(103, 503, 33, 47), IntRect(69, 500, 33, 50) };
+	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(-8 * 4,0 * 4),Vector2f(3 * 4, 0 * 4),Vector2f(12 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4) };
 
 	Texture* testT = new Texture();
 	testT->loadFromFile("Assets\\enemy.png");
-	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT);
+	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, true);
 
 	////////////////////////////////
 	//Uncomment this if you want to use the animation tester
@@ -144,22 +148,25 @@ int main() {
 	bg = new Texture();
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 	bool hold;
+	LevelSelect* levelMenu;
 	while (run) {
-		LevelSelect* levelMenu = new LevelSelect(bg);
-
-
+		levelMenu = new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb());
 		string bossName = levelMenu->loop(instance, targetFPS, bg);
 		hold = levelMenu->checkA();
 
 		StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 		intro->loop(instance, targetFPS);
 
+		col->setGrounded(true);
+
 		abstractStage* stage = new abstractStage(bossName);
 
-		stage->reload(string(bossName), string("0"));
+		//stage->reload(string(bossName), string("0"));
 
 		scene* area = new scene(col, stage, enemyT);
-		area->loop(instance, targetFPS);
+		if (area->loop(instance, targetFPS)) {
+			updatePlayer(col, bossName);
+		}
 	}
 
 	//mainMenu* menu = new mainMenu();
@@ -167,3 +174,4 @@ int main() {
 	cout << "hi";
 
 }
+

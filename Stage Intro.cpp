@@ -8,6 +8,7 @@
 #include <random>
 #include "physics object.cpp"
 #include "wood man.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class StageIntro{
@@ -37,8 +38,11 @@ class StageIntro{
 	int charaNum = 0;
 	bool textFin = false;
 
-	float timer = 5;
+	float timer = 6.6;
 	float timer_left = timer;
+
+	Music* music;
+
 
 public:
 	StageIntro(string name, bool aHold, Texture* bg, Texture* bossT) {
@@ -75,6 +79,11 @@ public:
 		font->loadFromFile("assets\\font.otf");
 		text->setFont(*font);
 		text->setPosition(850, 570);
+
+		music = new Music();
+		music->openFromFile("assets\\sound\\music\\5 - Enemy Chosen.mp3");
+		music->setVolume(50);
+		
 	}
 
 	void bossSetup(string name, Texture* bossT) {
@@ -213,6 +222,9 @@ public:
 		float deltaT = 0;
 
 		run = true;
+
+		music->play();
+		
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
@@ -271,5 +283,6 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 		}
+		
 	}
 };

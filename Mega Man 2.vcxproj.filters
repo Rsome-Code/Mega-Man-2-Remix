@@ -61,6 +61,9 @@
     <Filter Include="Source Files\Game Files\Objects\Items">
       <UniqueIdentifier>{3c619750-6305-440a-adda-71752a39d833}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Wood man">
+      <UniqueIdentifier>{9f0d363c-d94c-4274-87b0-bdca42a9b1d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -490,26 +493,26 @@
     <ClCompile Include="Chicken Spawner.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Master.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
-    </ClCompile>
-    <ClCompile Include="Wood Man.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
-    </ClCompile>
-    <ClCompile Include="Leaf up shot.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
-    </ClCompile>
-    <ClCompile Include="Leaf Shield Boss.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
-    </ClCompile>
-    <ClCompile Include="Leaf Shield Bullet.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
-    </ClCompile>
-    <ClCompile Include="Leaf Float.cpp">
-      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
-    </ClCompile>
     <ClCompile Include="Boss Intro.cpp">
       <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Wood Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Float.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Shield Boss.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Shield Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf up shot.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
+    </ClCompile>
+    <ClCompile Include="Master.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -65,6 +65,12 @@ class Pause {
 	text* lifeText;
 	Font font;
 
+	SoundBuffer* openB;
+	Sound* openSound;
+
+	SoundBuffer* optionB;
+	Sound* optionSound;
+
 public:
 
 	Pause(string level, player* p) {
@@ -115,6 +121,17 @@ public:
 
 		lifeSprite = new UISprite("ui", miscT, IntRect(139, 2, 16, 15), Vector2f(iconX + (16 * 4), position.y + (62 * 4) * 2), Vector2f(4,4));
 
+		openB = new SoundBuffer();
+		openB->loadFromFile("assets\\sound\\pause.wav");
+		openSound = new Sound();
+		openSound->setBuffer(*openB);
+
+		optionB = new SoundBuffer();
+		optionB->loadFromFile("Assets\\sound\\cursor_move.wav");
+
+		optionSound = new Sound();
+		optionSound->setBuffer(*optionB);
+
 	}
 
 	void loop(renderer* instance, float targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, camera* cam) {
@@ -125,6 +142,8 @@ public:
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
+
+		openSound->play();
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -179,6 +198,7 @@ public:
 							run = false;
 						}
 						else if (active == pageOpt) {
+							optionSound->play();
 							page1 = !page1;
 						}
 						else if (active == eTanks) {
@@ -291,9 +311,11 @@ public:
 		}
 	}
 
+	//Returns true when start is pressed
 	bool checkInput() {
 		
 		if (controller->checkDOWN() && !downPressed) {
+			optionSound->play();
 			downPressed = true;
 			currentSelect++;
 			if (currentSelect == maxSelect1) {
@@ -305,6 +327,7 @@ public:
 			downPressed = false;
 		}
 		if (controller->checkUP() && !upPressed) {
+			optionSound->play();
 			upPressed = true;
 			currentSelect--;
 			if (currentSelect == -1) {

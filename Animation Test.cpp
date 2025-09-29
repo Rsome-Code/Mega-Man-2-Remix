@@ -10,13 +10,13 @@ class AnimationTest {
 	animation* anim;
 	timer* time;
 
-
+	bool flipped = false;
 
 	bool leftPressed = false;
 	bool rightPressed = false;
 
 public:
-	AnimationTest(list<IntRect> animList, list<Vector2f> offsetList, Texture* t) {
+	AnimationTest(list<IntRect> animList, list<Vector2f> offsetList, Texture* t, bool flipped) {
 		
 		IntRect start = *animList.begin();
 		object = new objectSprite("o", t, start, Vector2f(100, 100), Vector2f(4,4), 1);
@@ -26,6 +26,10 @@ public:
 		bT->loadFromFile("Assets\\grid.png");
 		grid = new objectSprite("b",bT, IntRect(0,0,600,600), Vector2f(0,0), Vector2f(4,4), 1);
 		time = new timer();
+
+		if (flipped) {
+			anim->swapAll();
+		}
 	}
 
 	void run(renderer* instance, float targetRate) {

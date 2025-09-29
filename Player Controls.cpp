@@ -5,6 +5,7 @@
 #include "Mega Buster.cpp"
 #include "weapon.cpp"
 #include "atomic fire.cpp"
+#include <SFML\Audio.hpp>
 
 #pragma once
 
@@ -16,7 +17,7 @@ class pControls {
 	float groundAccel = 10000;
 	float jumpForce = 1100;
 
-	bool grounded = false;
+	bool grounded = true;
 	bool APressed = false;
 	bool BPressed = false;
 	bool LPressed = false;
@@ -51,6 +52,9 @@ class pControls {
 
 	bool holding = false;
 
+	Sound* landSound;
+	SoundBuffer* landB;
+
 	
 public:
 	pControls(pController* p, physicsObject* s, playerAnimation* a) {
@@ -60,6 +64,11 @@ public:
 		bT = new Texture();
 		bT->loadFromFile("Assets\\Weapons.png");
 
+		landB = new SoundBuffer();
+		landB->loadFromFile("assets\\sound\\land.wav");
+		landSound = new Sound();
+		landSound->setBuffer(*landB);
+		
 	}
 
 	Weapon* getWeapon() {
@@ -82,7 +91,7 @@ public:
 		if (b == true) {
 			if (grounded == false) {
 				pAnim->landed(p1->checkLEFT() || p1->checkRIGHT());
-				PlaySound(TEXT("Assets//Sound//land.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				landSound->play();
 			}
 		}
 		grounded = b;

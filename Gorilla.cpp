@@ -106,6 +106,7 @@ class Gorilla : public PhysicsEnemy {
 				stand->swapAll();
 				jump->swapAll();
 				startHang->swapAll();
+				hangAnim->swapAllOffset();
 			}
 		}
 		else {
@@ -114,6 +115,7 @@ class Gorilla : public PhysicsEnemy {
 				stand->swapAll();
 				jump->swapAll();
 				startHang->swapAll();
+				hangAnim->swapAllOffset();
 			}
 		}
 	}

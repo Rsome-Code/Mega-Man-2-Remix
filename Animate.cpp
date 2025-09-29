@@ -185,12 +185,25 @@ public:void reset() {
 		 
 
 		  list<IntRect>::iterator j = frameIndexes.begin();
+		  
 		  //frameIndexes.clear();
 		  for (IntRect FI : frameIndexes) {
 			  int changeSize = FI.getSize().x;
 
 			  *j = IntRect(Vector2i((change - FI.getPosition().x) - changeSize, FI.getPosition().y) , FI.getSize());
 			  j = next(j);
+		  }
+	  }
+
+	  void swapAllOffset() {
+
+		  list<Vector2f>::iterator k = offsetList.begin();
+		  for (Vector2f off : offsetList) {
+			  off.x = off.x - (off.x * 2);
+			  off.y = off.y - (off.y * 2);
+
+			  *k = Vector2f(off.x, off.y);
+			  k = next(k);
 		  }
 	  }
 

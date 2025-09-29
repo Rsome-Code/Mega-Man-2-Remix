@@ -1,6 +1,7 @@
 #include "movable object.cpp"
 #include "object hitbox.cpp"
 #include "bullet.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class Weapon {
@@ -19,6 +20,9 @@ protected:
 
 	string name;
 
+	Sound* shootSound;
+	SoundBuffer* shootB;
+
 public:
 	int getMaxAmmo() {
 		return maxAmmo;
@@ -29,6 +33,7 @@ public:
 	void eachFrame(float* deltaT) {
 		for (bullet* b : bullets) {
 			if (b->eachFrame(deltaT)) {
+				
 				weaponCount--;
 			}
 		}
@@ -53,10 +58,12 @@ public:
 			for (bullet* b : bullets) {
 				if (!b->getShooting()) {
 					b->start(right);
+					shootSound->play();
 					break;
 				}
 			}
 			fired = true;
+			
 			fired = uniqueFire();
 			if (weaponCount >= maxWeaponCount) {
 				fireReady = false;

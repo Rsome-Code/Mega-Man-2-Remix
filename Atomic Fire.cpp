@@ -6,6 +6,7 @@ class AtomicFire : public Weapon {
 
 	AtomicFireB* bul;
 
+
 public:
 	AtomicFire(objectSprite* player, Texture* t) {
 		bul = new AtomicFireB(player, t);
@@ -16,6 +17,7 @@ public:
 
 		ammoDecrease = 5;
 		name = "Atomic Fire";
+
 	}
 
 	bool hold(float* deltaT) {
@@ -44,6 +46,7 @@ public:
 	}
 
 	bool fire(bool right) {
+		bul->start(false);
 		return false;
 	}
 
