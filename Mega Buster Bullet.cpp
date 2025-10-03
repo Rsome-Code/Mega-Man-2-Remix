@@ -14,7 +14,8 @@ public:
 		
 		hitbox = new objectHitbox(IntRect(Vector2i(-2, -2), Vector2i(8, 10)), true, sprite);
 		shootTime = 0.5;
-		shootTemp = 0.5;
+		shootTemp = 0;
+		dinkSetup();
 
 	}
 

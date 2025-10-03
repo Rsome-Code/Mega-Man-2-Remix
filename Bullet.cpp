@@ -1,6 +1,7 @@
 #include "movable object.cpp"
 #include "object hitbox.cpp"
 #include "object.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class bullet {
@@ -16,6 +17,18 @@ protected:
 	bool right;
 
 	float direction;
+	Sound* dink;
+	SoundBuffer* dinkB;
+
+public:
+
+	void dinkSetup() {
+		dinkB = new SoundBuffer();
+		dinkB->loadFromFile("Assets\\sound\\dink.wav");
+
+		dink = new Sound();
+		dink->setBuffer(*dinkB);
+	}
 
 public:
 	bullet() {}
@@ -46,7 +59,7 @@ public:
 	virtual float getMaxHoldTime() { return NULL; };
 	
 	virtual void deflect() {
-		
+		dink->play();
 		if (!right) {
 			direction = 330;
 		}

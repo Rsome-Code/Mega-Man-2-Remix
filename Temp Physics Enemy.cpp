@@ -23,7 +23,10 @@ public:
 		//act = false;
 		//display = false;
 		//initial();
-
+		hitB = new SoundBuffer();
+		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
+		hitSound = new Sound();
+		hitSound->setBuffer(*hitB);
 	}
 
 

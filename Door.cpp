@@ -39,8 +39,7 @@ public:
 		soundB->loadFromFile("assets\\sound\\boss_door.wav");
 		sound = new Sound();
 		sound->setBuffer(*soundB);
-		float* temp = new float(0.0000001);
-		aTimer->run(temp);
+
 	}
 
 	void setCode() {
@@ -143,5 +142,8 @@ public:
 
 
 		}
+		anim->reset();
+		revAnim->reset();
+
 	}
 };

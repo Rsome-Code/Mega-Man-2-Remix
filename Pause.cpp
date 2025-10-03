@@ -143,6 +143,8 @@ public:
 		auto* startP = &start;
 		float deltaT = 0;
 
+		
+
 		openSound->play();
 
 		while (instance->getWindow()->isOpen() && run) {

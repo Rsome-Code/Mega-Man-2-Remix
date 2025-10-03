@@ -23,5 +23,9 @@ public:
 	bool checkAmmo() {
 		return true;
 	}
+
+	String getSymbol() {
+		return "";
+	}
 	
 };

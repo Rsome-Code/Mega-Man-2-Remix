@@ -238,9 +238,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="Teleport.cpp">
-      <Filter>Source Files\Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files\Game Files</Filter>
     </ClCompile>
@@ -493,9 +490,6 @@
     <ClCompile Include="Chicken Spawner.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Boss Intro.cpp">
-      <Filter>Source Files\Game Files\Menus</Filter>
-    </ClCompile>
     <ClCompile Include="Wood Man.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
     </ClCompile>
@@ -513,6 +507,30 @@
     </ClCompile>
     <ClCompile Include="Master.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="flash.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleport.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleport Out.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Get Equipped.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Shield.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Equip Menu.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Over.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Over Menu.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

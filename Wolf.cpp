@@ -47,7 +47,8 @@ public:
 	void initial() {
 		mov = new movable("enemy", sprite->getTexture(), IntRect(646, 727, 14, 80), Vector2f(initialPos.x, initialPos.y), Vector2f(4, 4));
 		sprite = mov;
-		hp = 20;
+		hp = 15;
+		damage = 4;
 
 		mov->setSpeed(500);
 
@@ -108,7 +109,7 @@ public:
 	}
 
 	void shoot(list<EnemyBullet*>* bList) {
-		WolfFireBall* bullet = new WolfFireBall(this->sprite->getTexture(), sprite->getPosition());
+		WolfFireBall* bullet = new WolfFireBall(this->sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + 24 * 4));
 
 		bList->push_back(bullet);
 	}
@@ -162,6 +163,6 @@ public:
 	}
 
 	int atomicDam() {
-		return 4;
+		return 3;
 	}
 };

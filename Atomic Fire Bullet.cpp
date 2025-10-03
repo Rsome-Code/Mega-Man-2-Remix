@@ -67,6 +67,8 @@ public:
 
 		shootSound = new Sound();
 		shootSound->setBuffer(*shootB);
+
+		dinkSetup();
 		
 	}
 
@@ -131,15 +133,20 @@ public:
 		}
 	}
 
+	void forceStop() {
+		holdSound->stop();
+	}
+
 	bool release(bool r) {
 
 		holdSound->stop();
-		shootSound->play();
+
 
 		holdTime = 0;
 		if (!shooting) {
 			sprite->setScale(Vector2f(size, size));
 
+			shootSound->play();
 
 			shooting = true;
 			float offset;
@@ -165,6 +172,7 @@ public:
 
 	void resetHoldTime() {
 		holdTime = 0;
+		holdSound->stop();
 	}
 
 	float getHoldTime() {

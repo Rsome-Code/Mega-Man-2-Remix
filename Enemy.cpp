@@ -61,6 +61,7 @@ public:
 
 public:
 
+	virtual void stopMusic() {};
 
 	bool getInitOffScreen() {
 		return initOffScreen;
@@ -126,7 +127,9 @@ public:
 	}
 
 	void lowerHP(int h) {
-		hitSound->play();
+		if (h > 0) {
+			hitSound->play();
+		}
 		hp = hp - h;
 	}
 

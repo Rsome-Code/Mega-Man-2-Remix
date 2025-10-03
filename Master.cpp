@@ -152,7 +152,15 @@ public:
 		return introDone;
 	}
 
+	void stopMusic() {
+		bossMusic->stop();
+	}
+
 	bool death(float* deltaT, list<enemy*>* tempEList){
+
+		bossMusic->stop();
+
+		healthBar->update(0);
 
 		if (act) {
 			

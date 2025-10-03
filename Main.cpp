@@ -28,6 +28,10 @@
 #include "wolf.cpp"
 #include "spawn point.cpp"
 #include "wood man.cpp"
+#include "get equipped.cpp"
+#include "equip menu.cpp"
+#include "game over.cpp"
+#include "game over menu.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -52,16 +56,19 @@ vector<int> split(const string& str, char sep)
 
 	return tokens;
 }
-void updatePlayer(player* p, string levelName) {
+Weapon* updatePlayer(player* p, string levelName) {
 	if (levelName == "wood man") {
-		p->getShield();
+		return p->getShield();
+	}
+	else if (levelName == "heat man") {
+		return p->getAtomicFire();
 	}
 }
 int main() {
 	bool run = true;
 
 	//Set the framerate here
-	double targetFPS = 120;
+	double targetFPS = 180;
 
 	pController* p1 = new pController();
 
@@ -126,11 +133,11 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(35, 503, 33, 47), IntRect(69, 500, 33, 50), IntRect(103, 503, 33, 47), IntRect(69, 500, 33, 50) };
-	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(-8 * 4,0 * 4),Vector2f(3 * 4, 0 * 4),Vector2f(12 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(124, 128), Vector2i(7, 24)) };
+	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0 * 4,6 * 4),Vector2f(0 * 4, 10 * 4),Vector2f(0 * 4, 6 * 4), Vector2f(7 * 4, 0 * 4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\enemy.png");
+	testT->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, true);
 
 	////////////////////////////////
@@ -142,22 +149,36 @@ int main() {
 	//l->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
-	//o->loop(instance, targetFPS);
+//	o->loop(instance, targetFPS);
 
 
 	bg = new Texture();
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 	bool hold;
 	LevelSelect* levelMenu;
+	
+	bool restart = false;
 	while (run) {
 		levelMenu = new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb());
-		string bossName = levelMenu->loop(instance, targetFPS, bg);
-		hold = levelMenu->checkA();
+		
+		if (!restart) {
+			bossName = levelMenu->loop(instance, targetFPS, bg);
 
-		StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-		intro->loop(instance, targetFPS);
+			hold = levelMenu->checkA();
+
+			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
+		}
+		restart = false;
+		//intro->loop(instance, targetFPS);
 
 		col->setGrounded(true);
+		col->HPReset();
+		
+		if (col->getLives() < 2) {
+			col->setLives(2);
+		}
+		//col->heal(-27);
+		//col->setLives(0);
 
 		abstractStage* stage = new abstractStage(bossName);
 
@@ -165,13 +186,50 @@ int main() {
 
 		scene* area = new scene(col, stage, enemyT);
 		if (area->loop(instance, targetFPS)) {
-			updatePlayer(col, bossName);
+		
+			Weapon* newW = updatePlayer(col, bossName);
+
+			EquipAnim* equip = new EquipAnim(newW);
+			equip->loop(instance, targetFPS);
+			EquipMenu* eMenu = new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650));
+			
+			bool eLoop = true;
+			while (eLoop) {
+				eLoop = eMenu->loop(instance, targetFPS, equip->getMusic());
+				if (eLoop) {
+					//This is where the password screen will be run
+				}
+			}
 		}
+		else {
+			bool gLoop = true;
+			while (gLoop) {
+				GameOver* gO = new GameOver();
+				gO->loop(instance, targetFPS);
+				GameOverMenu* gMenu = new GameOverMenu();
+				
+				GameOverMenu::Option option = gMenu->loop(instance, targetFPS);
+				if (option == GameOverMenu::Option::Password) {
+					//This is where the password screen will be run
+				}
+				else {
+					gLoop = false;
+					if (option == GameOverMenu::Option::Continue) {
+						restart = true;
+					}
+					else if (option == GameOverMenu::Option::StageSelect) {
+						//???
+					}
+				}
+			}
+		}
+		
+		run = instance->getWindow()->isOpen();
+		
 	}
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	// cout << "hi";
+	cout << "hi";
 
 }
-

@@ -108,6 +108,7 @@ public:
 	}
 	
 	void loop(renderer* instance, double targetRate) {
+		time = new timer();
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -203,9 +204,9 @@ public:
 				
 			}
 
-			for (object* o : flagList) {
+			//for (object* o : flagList) {
 				//instance->objectAccess(o, cam);
-			}
+			//}
 
 			instance->UIDisplay(tab->getSprites());
 

@@ -119,7 +119,7 @@ public:
 	list<UISprite*> getSprites() {
 		list<UISprite*> temp;
 		temp = obSprites;
-		obSprites.push_front(background);
+		temp.push_front(background);
 		return temp;
 	}
 };

@@ -1,5 +1,6 @@
 #include "UI Sprite.cpp"
 #include "Maths.cpp"
+#include <sfml/audio.hpp>
 #pragma once;
 
 class AmmoBar {
@@ -15,6 +16,11 @@ class AmmoBar {
 	IntRect one = IntRect(27, 0, 8, 8);
 	IntRect zero = IntRect(36, 0, 8, 8);
 
+	SoundBuffer* soundB;
+	Sound* sound;
+
+
+
 public:
 
 	AmmoBar(Texture* t, Vector2f pos) {
@@ -25,6 +31,11 @@ public:
 			UISprite* temp = new UISprite("option", t, four, Vector2f (position.x + (i*8) * 4, position.y), Vector2f(4,4));
 			sprites.push_back(temp);
 		}
+
+		soundB = new SoundBuffer();
+		soundB->loadFromFile("assets\\sound\\refill.wav");
+		sound = new Sound();
+		sound->setBuffer(*soundB);
 	}
 
 	void setVertical() {
@@ -35,7 +46,14 @@ public:
 		}
 	}
 
+	void stopSound() {
+		sound->stop();
+	}
+
 	void update(int newVal) {
+		if (newVal == barVal+1) {
+			sound->play();
+		}
 		//barVal = Maths::map(0, ammoMax, 0, barMax, newVal);
 		barVal = newVal;
 

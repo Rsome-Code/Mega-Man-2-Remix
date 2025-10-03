@@ -24,6 +24,7 @@ protected:
 	SoundBuffer* shootB;
 
 public:
+
 	int getMaxAmmo() {
 		return maxAmmo;
 	}
@@ -111,5 +112,16 @@ public:
 	int getMAxAmmo() {
 		return maxAmmo;
 	}
+
+	virtual void stopSound() {}
+
+	void shootReset() {
+		for (bullet* b : bullets) {
+			b->shootReset();
+		}
+	}
+
+	virtual String getSymbol() = 0;
+
 	
 };

@@ -23,7 +23,7 @@ class LevelSelect {
 	bool upPressed = false;
 	bool downPressed = false;
 	bool rightPressed = false;
-	bool startPressed = false;
+	bool startPressed = true;
 
 	float flashTime = 0.1;
 	float flashTime_left = flashTime;
@@ -34,6 +34,16 @@ class LevelSelect {
 
 	SoundBuffer* optionB;
 	Sound* optionSound;
+	SoundBuffer* selectB;
+	Sound* selectSound;
+
+	RectangleShape rectangle;
+	float screenFlashTime = 0.1;
+	float screenFlashTime_left = screenFlashTime;
+	bool rectDisplay = true;
+
+	int flashes = 5;
+	
 
 public:
 
@@ -59,6 +69,17 @@ public:
 
 		optionSound = new Sound();
 		optionSound->setBuffer(*optionB);
+
+		selectB = new SoundBuffer();
+		selectB->loadFromFile("Assets\\sound\\teleport_out.wav");
+
+		selectSound = new Sound();
+		selectSound->setBuffer(*selectB);
+
+		rectangle.setFillColor(Color(255,255,255,220));
+		rectangle.setPosition(0, 0);
+		rectangle.setSize(Vector2f(1920, 1080));
+		
 	}
 
 	void winIconSetup(bool bubble, bool heat, bool metal, bool wood, bool air, bool quick, bool flash, bool crash) {
@@ -124,6 +145,17 @@ public:
 		
 	}
 
+	void flash(float deltaT) {
+		screenFlashTime_left -= deltaT;
+		if (screenFlashTime_left <= 0) {
+			screenFlashTime_left = screenFlashTime;
+			rectDisplay = !rectDisplay;
+			if (!rectDisplay) {
+				flashes -= 1;
+			}
+		}
+	}
+
 	string loop(renderer* instance, double targetRate, Texture* bg) {
 
 		auto start = time->timerStart();
@@ -161,6 +193,48 @@ public:
 
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
+		}
+
+		run = true;
+
+		selectSound->play();
+
+		while (instance->getWindow()->isOpen() && run) {
+			Event event;
+			while (instance->getWindow()->pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+					instance->getWindow()->close();
+			}
+			time->frameLimiter(targetRate, startP);
+			deltaT = time->checkTimer(startP);
+			start = time->timerStart();
+			startP = &start;
+
+			
+
+			
+
+			instance->UIDisplay(background);
+
+			for (UISprite sprite : winIcons) {
+				instance->UIDisplay(&sprite);
+			}
+
+			
+			instance->UIDisplay(cursor);
+			
+			if (rectDisplay) {
+				instance->getWindow()->draw(rectangle);
+			}
+			instance->getWindow()->display();
+			instance->getWindow()->clear();
+
+			flash(deltaT);
+			if (flashes <= 0) {
+				run = false;
+			}
+
 		}
 
 		string r;

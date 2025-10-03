@@ -19,6 +19,7 @@
 #include "temp enemy.cpp"
 #include "spawn area.cpp"
 #include "ammo bar.cpp"
+#include "teleport Out.cpp"
 #include <sfml/audio.hpp>
 #pragma once
 
@@ -102,6 +103,12 @@ class scene {
 	bool victoryPlay = false;
 	Music* victoryMusic;
 	
+	bool nextFlagActive = true;
+	bool lastFlagActive = true;
+
+	TeleportOut* teleExit;
+	
+
 
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
@@ -153,6 +160,8 @@ public:
 
 		victoryMusic = new Music();
 		victoryMusic->openFromFile("assets\\sound\\music\\15 - Victory.mp3");
+
+		teleExit = new TeleportOut(p->getSprite());
 	}
 
 public:
@@ -163,7 +172,7 @@ public:
 	void updateFlags() {
 		currentFlag = stage->getCurrentFlag(section);
 		lastFlag = stage->getCurrentFlag(section - 1);
-		lastFlagPos = lastFlag->getSprite()->getPosition();
+		
 		if (lastFlag != NULL) {
 			if (lastFlag->getAngle() == LEFT) {
 				revLastAngle = RIGHT;
@@ -196,17 +205,17 @@ public:
 			run = false;
 		}
 	}
-
+	float deltaT = 0.00001;
 	bool loop(renderer* instance, double targetRate) {
 
 		auto start = time->timerStart();
 		auto* startP = &start;
-		float deltaT = 8;
+		deltaT = 0.00001;
 		
 		bool unPaused = false;
 		
 
-		section = 13;
+		section = 12;
 
 		p->enableControls(true);
 
@@ -215,6 +224,7 @@ public:
 		updateFlags();
 		
 		Music* music = stage->getMusic();
+		music->setVolume(60);
 		
 
 		startAnim(instance, targetRate, music);
@@ -232,10 +242,14 @@ public:
 			}
 			if (time->frameLimiter(targetRate, startP)) {
 				deltaT = 0.0333;
+				//deltaT = time->checkTimer(startP);
 			}
 			else {
 				deltaT = time->checkTimer(startP);
 			}
+
+			
+
 			start = time->timerStart();
 			startP = &start;
 
@@ -246,6 +260,7 @@ public:
 			}
 
 			if (checkPause(instance, targetRate)) {
+				
 				paused = true;
 				p->getSprite()->setVVelocity(0);
 				if (p->getActiveWeapon()->getHoldTime() == NULL || !p->getController()->checkB()) {
@@ -276,7 +291,7 @@ public:
 					afterT = false;
 				}
 
-				else if (flagCheck(instance, targetRate, currentFlag->getAngle(), currentFlag->getSprite()->getPosition(), true) || flagCheck(instance, targetRate, revLastAngle, lastFlag->getSprite()->getPosition(), false)) {
+				else if (flagCheck(instance, targetRate, currentFlag->getAngle(), currentFlag->getSprite()->getPosition(), true, nextFlagActive) || flagCheck(instance, targetRate, revLastAngle, lastFlag->getSprite()->getPosition(), false, lastFlagActive)) {
 					deltaT = 0;
 					p->getSprite()->setMove(false);
 
@@ -341,9 +356,25 @@ public:
 
 			enum transitionAngle ang = stage->getAngle();
 
-			if (!p->isTeleporting()) {
+			//if (!p->isTeleporting()) {
+				
 				cameraFlagCheck(flagPos);
-			}
+
+				if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920) {
+					flagCorrectedCam();
+				}
+
+				if (nextFlagActive && lastFlagActive) {
+					if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
+						if (currentFlag->getAngle() != UP && currentFlag->getAngle() != DOWN) {
+							centerCamera();
+						}
+						else {
+							nextFlagCam();
+						}
+					}
+				}
+			//}
 
 			enemyDistanceCheck(instance, enemies);
 
@@ -428,7 +459,10 @@ public:
 			//p->updateLighting();
 			//lightingCheck();
 			p->checkHold();
-			instance->objectDisplay(p->getSprites(), cam);
+
+			if (p->getDisplay()) {
+				instance->objectDisplay(p->getSprites(), cam);
+			}
 
 			p->getSprite()->setRect(IntRect(Vector2i(p->getSprite()->getRect().getPosition().x, p->getBeforeHold()), p->getSprite()->getRect().getSize()));
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
@@ -452,7 +486,42 @@ public:
 
 
 		}
+
+		
+
+		if (levelEnd) {
+			list<object*> temps = objects;
+			temps.push_back(door1);
+			temps.push_back(door2);
+			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, cam);
+		}
+
 		return levelEnd;
+	}
+
+	void nextFlagCam() {
+		cam->setPosition(Vector2f(currentFlag->getPosition().x - 1920, cam->getPosition().y));
+	}
+
+	void flagCorrectedCam() {
+		if (currentFlag->getPosition().x > lastFlag->getPosition().x) {
+			cam->setPosition(Vector2f(lastFlag->getPosition().x, cam->getPosition().y));
+		}
+		else {
+			cam->setPosition(Vector2f(lastFlag->getPosition().x - 1920, cam->getPosition().y));
+		}
+	}
+
+	void centerCamera() {
+		float xPos = ((fabs(currentFlag->getPosition().x - lastFlag->getPosition().x))/2) - (1920/2);
+		if (currentFlag->getPosition().x < lastFlag->getPosition().x) {
+			xPos = xPos + currentFlag->getPosition().x;
+		}
+		else {
+			xPos = xPos + lastFlag->getPosition().x;
+		}
+		int temp = xPos;
+		cam->setPosition(Vector2f(temp, cam->getPosition().y));
 	}
 
 	void checkFall() {
@@ -473,7 +542,7 @@ public:
 		list<EnemyBullet*>::iterator toDelete = eBullets.end();
 		for (EnemyBullet* b : eBullets) {
 			b->eachFrame(&deltaT);
-			if (hitboxCheck(p->getHitbox(), b->getHitbox())) {
+			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible()) {
 				p->takeDamage(b->getDamage());
 			}
 			
@@ -541,19 +610,27 @@ public:
 		if (p->getHP() <= 0) {
 
 			music->stop();
+			p->getWeapon()->stopSound();
+			for (enemy* e : enemies) {
+				e->stopMusic();
+			}
+
+
 
 
 			if (death(instance, targetRate, cam)) {
 				if (p->getLives() > 0) {
 					startAnim(instance, targetRate, music);
 					respawn();
-					p->heal(p->getMaxHP());
+					//p->heal(p->getMaxHP());
+					p->HPReset();
 					p->setNotDead();
 
 					p->setLives(p->getLives() - 1);
 				}
 				else {
 					run = false;
+					
 				}
 
 			}
@@ -607,7 +684,8 @@ public:
 	}
 
 	void startAnim(renderer* instance, float targetRate, Music* music) {
-
+		eBullets.clear();
+		p->setDeathNull();
 		music->play();
 
 		EndFlag* flag = getLastCheckpoint();
@@ -616,7 +694,7 @@ public:
 
 		forceLoadSection(section);
 		
-		
+		p->shootReset();
 
 		if (flag->getAngle() == RIGHT) {
 			cam->setPosition(flag->getPosition());
@@ -631,7 +709,23 @@ public:
 			}
 		}
 		Vector2f flagPos = flag->getPosition();
+
 		cameraFlagCheck(flagPos);
+
+		if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920) {
+			flagCorrectedCam();
+		}
+
+		if (nextFlagActive && lastFlagActive) {
+			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
+				if (currentFlag->getAngle() != UP && currentFlag->getAngle() != DOWN) {
+					centerCamera();
+				}
+				else {
+					nextFlagCam();
+				}
+			}
+		}
 
 		resetObjects();
 
@@ -662,7 +756,7 @@ public:
 			else {
 				deltaT = time->checkTimer(startP);
 			}
-			deltaT = time->checkTimer(startP);
+		//	deltaT = time->checkTimer(startP);
 			start = time->timerStart();
 			startP = &start;
 
@@ -787,7 +881,9 @@ public:
 
 			if (!levelEnd) {
 				p->enableControls(enemy->getIntroDone());
-				music->stop();
+				if (!enemy->getIntroDone()) {
+					music->stop();
+				}
 			}
 			
 			
@@ -808,6 +904,7 @@ public:
 
 	bool  checkPause(renderer* instance, float targetRate) {
 		if (p->getController()->checkSTART() && !startPressed && p->checkInControl()) {
+			p->getAtomicFire()->resetHold();
 			pause = new Pause(stageName, p);
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
 			for (object* o : objects) {
@@ -838,40 +935,42 @@ public:
 
 
 
-	bool flagCheck(renderer* instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection) {
+	bool flagCheck(renderer* instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection, bool active) {
 
 
+		if (active) {
 
-		if (ang == RIGHT) {
-			if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
+			if (ang == RIGHT) {
+				if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
 
-				bool door = doorCheck(instance, targetRate);
+					bool door = doorCheck(instance, targetRate);
 
-				startTransition(instance, targetRate, ang, flagPos, nextSection);
-				
-				if (door) {
-					doorClose(instance, targetRate);
+					startTransition(instance, targetRate, ang, flagPos, nextSection);
+
+					if (door) {
+						doorClose(instance, targetRate);
+					}
+					return true;
 				}
-				return true;
 			}
-		}
-		else if (ang == DOWN && !fallDeath) {
-			if (p->getSprite()->getPosition().y + 48 >= flagPos.y) {
-				startTransition(instance, targetRate, ang, flagPos, nextSection);
-				return true;
+			else if (ang == DOWN && !fallDeath) {
+				if (p->getSprite()->getPosition().y + 48 >= flagPos.y) {
+					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					return true;
+				}
 			}
-		}
-		else if (ang == UP) {
-			if (p->getSprite()->getPosition().y - 48 <= flagPos.y) {
-				startTransition(instance, targetRate, ang, flagPos, nextSection);
-				return true;
+			else if (ang == UP) {
+				if (p->getSprite()->getPosition().y - 48 <= flagPos.y) {
+					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					return true;
+				}
 			}
-		}
-		if (ang == LEFT) {
-			if (p->getSprite()->getPosition().x - 48 <= flagPos.x) {
+			if (ang == LEFT) {
+				if (p->getSprite()->getPosition().x <= flagPos.x) {
 
-				startTransition(instance, targetRate, ang, flagPos, nextSection);
-				return true;
+					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					return true;
+				}
 			}
 		}
 
@@ -913,11 +1012,14 @@ public:
 			loadSection();
 		}
 
-		sectionTransition(instance, targetRate, ang, flagPos);
+		updateFlags();
+
+		sectionTransition(instance, targetRate, ang, flagPos, nextSection);
 	
 		deletePrevSection();
 
-		updateFlags();
+		lastFlagPos = lastFlag->getSprite()->getPosition();
+		
 	}
 
 	void checkLastFlagRight(){
@@ -937,58 +1039,77 @@ public:
 		
 	}
 
-	void isCameraRightOfFlag(Vector2f flagPos) {
-		if ((cam->getPosition().x + 1920) >= flagPos.x + (16 * 4)) {
-			cam->setPosition(Vector2f(flagPos.x - (1920 - (16 * 4)), cam->getPosition().y));
+	bool isCameraRightOfFlag(Vector2f flagPos) {
 
-			if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() == DOWN) {
+		float nextPos = flagPos.x;
+
+		if (currentFlag->getAngle() == RIGHT) {
+			nextPos = nextPos + (16 * 4);
+		}
+		if ((cam->getPosition().x + 1920) >= nextPos) {
+			cam->setPosition(Vector2f(nextPos - (1920), cam->getPosition().y));
+
+			if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) {
 				fallDeath = false;
 			}
 			else {
-				fallDeath = true;
+				cam->setPosition(Vector2f(nextPos - (1920), cam->getPosition().y));
 			}
+			return true;
 
 		}
+		return false;
 	}
-	void isCameraLeftOfFlag(Vector2f flagPos) {
+	bool isCameraLeftOfFlag(Vector2f flagPos) {
 		if (flagPos != Vector2f(0, 0)) {
 			if (cam->getPosition().x <= flagPos.x) {
 				cam->setPosition(Vector2f(flagPos.x, cam->getPosition().y));
-				if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() ==DOWN) {
+				if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() ==UP) {
 					fallDeath = false;
 				}
 				else {
-					fallDeath = true;
+					
 				}
+				return true;
 			}
 		}
+		return false;
 	}
 
 	void cameraFlagCheck(Vector2f flagPos) {
+
+		
+
 		fallDeath = true;
 		if (currentFlag->getSprite()->getPosition().x > lastFlagPos.x) {
 
-			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {
+			//If the distance between both flags are less than the camera size...
+			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) <= 1920) {
 				cam->setPosition(Vector2f(lastFlagPos.x, cam->getPosition().y));
+				fallDeath = false;
+				nextFlagActive = true;
+				lastFlagActive = true;
 			}
-#
 
-			//Should be in else statement?
-			isCameraRightOfFlag(currentFlag->getSprite()->getPosition());
 
-			isCameraLeftOfFlag(lastFlagPos);
+			else {
+				nextFlagActive = (isCameraRightOfFlag(currentFlag->getSprite()->getPosition()));
 
+				lastFlagActive = (isCameraLeftOfFlag(lastFlagPos));
+			}
 
 		}
 		else {
-			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) < 1920) {
-				cam->setPosition(Vector2f(lastFlagPos.x - (1920 - (16 * 4)), cam->getPosition().y));
+			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) <= 1920) {
+				cam->setPosition(Vector2f(lastFlagPos.x - (1920), cam->getPosition().y));
 				fallDeath = false;
+				nextFlagActive = true;
+				lastFlagActive = true;
 			}
 			else {
-				isCameraRightOfFlag(lastFlagPos);
+				lastFlagActive = isCameraRightOfFlag(lastFlagPos);
 
-				isCameraLeftOfFlag(currentFlag->getSprite()->getPosition());
+				nextFlagActive = isCameraLeftOfFlag(currentFlag->getSprite()->getPosition());
 			}
 		}
 		
@@ -999,12 +1120,26 @@ public:
 
 	
 
-	void sectionTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos) {
+	void sectionTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool forward) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
 
 		bool run = true;
+
+		float camSpeed = 700;
+		float playerSpeed = 120;
+		float otherFlagPos;
+		transitionAngle otherAngle;
+
+		if (forward) {
+			otherFlagPos = currentFlag->getPosition().x;
+			otherAngle = currentFlag->getAngle();
+		}
+		else {
+			otherFlagPos = lastFlag->getPosition().x;
+			otherAngle = lastFlag->getAngle();
+		}
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -1014,7 +1149,12 @@ public:
 					instance->getWindow()->close();
 			}
 			time->frameLimiter(targetRate, startP);
-			deltaT = time->checkTimer(startP);
+			if (time->frameLimiter(targetRate, startP)) {
+				deltaT = 0.0333;
+			}
+			else {
+				deltaT = time->checkTimer(startP);
+			}
 			start = time->timerStart();
 			startP = &start;
 
@@ -1050,29 +1190,42 @@ public:
 			
 
 			if (ang == RIGHT) {
-				cam->move(0, &deltaT, float(400));
+				cam->move(0, &deltaT, camSpeed);
 				if (p->getGrounded()) {
 					p->getAnimation()->toeAnim(&deltaT, true);
 				}
 				else {
 					p->getAnimation()->runJump();
 				}
-				p->getSprite()->move(0, &deltaT, 50);
+				p->getSprite()->move(0, &deltaT, playerSpeed);
+
+				
+
 				if (cam->getPosition().x >= flagPos.x) {
+					run = false;
+				}
+				
+				//Special rule needed when next transition is vertical and next position is within camera shot
+				else if (otherAngle == UP || otherAngle == DOWN) {
+					if (cam->getPosition().x > otherFlagPos - 1920) {
+						run = false;
+					}
+				}
+				else if (flagPos.x - cam->getPosition().x <= (cam->getPosition().x + 1920) - otherFlagPos) {
 					run = false;
 				}
 			}
 			else if (ang == UP) {
-				cam->move(270, &deltaT, float(400));
+				cam->move(270, &deltaT, camSpeed);
 				p->getAnimation()->ladderAnim(&deltaT);
-				p->getSprite()->move(270, &deltaT, 50);
+				p->getSprite()->move(270, &deltaT, playerSpeed);
 				if (cam->getPosition().y + 1080 <= flagPos.y) {
 					run = false;
 				}
 			}
 			
 			else if (ang == DOWN) {
-				cam->move(90, &deltaT, float(400));
+				cam->move(90, &deltaT, camSpeed);
 				if (p->getControls()->getOnLadder()) {
 					p->getAnimation()->ladderAnim(&deltaT);
 				}
@@ -1080,23 +1233,35 @@ public:
 					p->getAnimation()->runJump();
 				}
 				
-				p->getSprite()->move(90, &deltaT, 70);
+				p->getSprite()->move(90, &deltaT, playerSpeed);
 				if (cam->getPosition().y >= flagPos.y) {
 					run = false;
 				}
 
 			}
 
-			if (ang == LEFT) {
-				cam->move(180, &deltaT, float(400));
+			else if (ang == LEFT) {
+				cam->move(180, &deltaT, camSpeed);
 				if (p->getGrounded()) {
 					p->getAnimation()->toeAnim(&deltaT, false);
 				}
 				else {
 					p->getAnimation()->runJump();
 				}
-				p->getSprite()->move(180, &deltaT, 50);
+				p->getSprite()->move(180, &deltaT, playerSpeed);
 				if (cam->getPosition().x + 1920 <= flagPos.x) {
+					run = false;
+				}
+
+				//Special rule needed when next transition is vertical and next position is within camera shot
+				//Needs to be tested
+				else if (otherAngle == UP || otherAngle == DOWN) {
+					if (cam->getPosition().x > otherFlagPos + 1920) {
+						run = false;
+					}
+				}
+
+				else if (flagPos.x - cam->getPosition().x >= (cam->getPosition().x + 1920) - otherFlagPos) {
 					run = false;
 				}
 			}
@@ -1230,15 +1395,17 @@ public:
 
 
 	void enemyCollisionCheck(list<enemy*> eList, renderer* instance, float targetRate) {
+		
 		for (enemy* e : eList) {
+			//p->takeDamage(e->getDamage());
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
-					if (e->getIncrease() == NULL) {
-						if (!p->getDamage()) {
-							p->takeDamage(e->getDamage());
-						}
+					if (!p->isInvincible()) {
+						
+						p->takeDamage(e->getDamage());
+						
 					}
-					else {
+					if (e->getIncrease()!=NULL) {
 						
 						itemGet(instance, targetRate, e);
 						

@@ -12,6 +12,8 @@
 #include "ammo bar.cpp"
 #include "Death Animation.cpp"
 #include "hitbox detector.cpp"
+#include "leaf Shield.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class player {
@@ -55,6 +57,7 @@ class player {
 
 	MegaBuster* megaBuster;
 	AtomicFire* atomicFire;
+	LeafShield* leafShield;
 
 	Weapon* active = megaBuster;
 
@@ -69,7 +72,15 @@ class player {
 
 	bool inControl = true;
 
-	
+	float invincibilityTime = 2;
+	float invincibilityTime_left = 0;
+
+	float flashTime = 0.01666666;
+	float flashTime_left = flashTime;
+	bool display = true;
+
+	SoundBuffer* damageB;
+	Sound* damageSound;
 
 public:
 	player(pController* p1) {
@@ -112,6 +123,7 @@ public:
 
 		megaBuster = new MegaBuster(sprite, t);
 		atomicFire = new AtomicFire(sprite, t);
+		leafShield = new LeafShield(sprite, t);
 
 		//Define ammo bars here
 		Texture* aB = new Texture();
@@ -125,6 +137,19 @@ public:
 		deathAnim = NULL;
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
+
+		damageB = new SoundBuffer();
+		damageB->loadFromFile("assets\\sound\\hit.wav");
+		damageSound = new Sound();
+		damageSound->setBuffer(*damageB);
+
+		
+	}
+
+	void shootReset() {
+		float* t = new float(0.000001);
+		megaBuster->eachFrame(t);
+		atomicFire->eachFrame(t);
 	}
 
 	Vector2f getPosition() {
@@ -165,7 +190,17 @@ public:
 		return true;
 	}
 
+	void flash(float* deltaT) {
+		flashTime_left -= *deltaT;
+		if (flashTime_left <= 0) {
+			flashTime_left = flashTime;
+			display = !display;
+		}
+	}
 
+	bool getDisplay() {
+		return display;
+	}
 
 	objectHitbox* getFoot() {
 		return foot;
@@ -188,6 +223,10 @@ public:
 
 	int getMaxHP() {
 		return maxHP;
+	}
+
+	void HPReset() {
+		health->reset();
 	}
 
 	void setActiveWeapon(Weapon* w) {
@@ -224,8 +263,9 @@ public:
 		lives = l;
 	}
 
-	void getShield() {
+	Weapon* getShield() {
 		gotShield = true;
+		return leafShield;
 	}
 
 	bool hasAtomicFire() {
@@ -236,7 +276,16 @@ public:
 		return grounded;
 	}
 
+	bool isInvincible() {
+		if (invincibilityTime_left > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	bool setDead() {
+		invincibilityTime_left = 0;
+		display = true;
 		if (deathAnim == NULL) {
 			deathAnim = new DeathAnim(sprite, palette);
 			return true;
@@ -255,6 +304,11 @@ public:
 		deathAnim2 = NULL;
 	}
 
+	void setDeathNull() {
+		deathAnim = NULL;
+		deathAnim1 = NULL;
+		deathAnim2 = NULL;
+	}
 
 	objectHitbox* getBelow() {
 		return ladderBelow;
@@ -320,9 +374,7 @@ public:
 	bool checkDeathFinish() {
 		if (deathTime_left <= 0) {
 			deathTime_left = deathTime;
-			deathAnim = NULL;
-			deathAnim1 = NULL;
-			deathAnim2 = NULL;
+
 			return true;
 		}
 		return false;
@@ -392,11 +444,20 @@ public:
 			//foot->setSize(Vector2i(4, 20));
 		}
 
+		
 		if (inControl) {
 			updateHitbox();
 		}
 		else {
 			moveHitbox();
+		}
+
+		invincibilityTime_left -= *deltaT;
+		if (invincibilityTime_left > 0) {
+			flash(deltaT);
+		}
+		else {
+			display = true;
 		}
 
 
@@ -565,6 +626,8 @@ public:
 			pAnim->hurtAnim();
 			sprite->setHVelocity(0);
 			sprite->setVVelocity(0);
+			invincibilityTime_left = invincibilityTime;
+			damageSound->play();
 		}
 	}
 

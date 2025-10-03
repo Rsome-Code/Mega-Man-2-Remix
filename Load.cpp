@@ -109,6 +109,8 @@ public:
 		string line;
 		string variable;
 		char sep = ',';
+		float lastX = NULL;
+		transitionAngle lastAngle = RIGHT;
 		
 		while (getline(inputFile, line)) {
 
@@ -142,6 +144,9 @@ public:
 			valI = next(valI);
 
 			int xPos = stoi(*valI);
+
+
+
 			valI = next(valI);
 			int yPos = stoi(*valI);
 
@@ -175,7 +180,34 @@ public:
 
 			flags->push_back(temp);
 
+
 		}
+
+		upDownConsistency(flags);
+	}
+
+	void upDownConsistency(list<EndFlag*>* flags) {
+
+		for (int i = 0; i < (flags->size()); i++) {
+			EndFlag* flag = getFlag(i-1, *flags);
+			if (flag != NULL) {
+				if (getFlag(flag->getSection() - 1, *flags) != NULL) {
+					EndFlag* lastFlag = getFlag(flag->getSection() - 1, *flags);
+					if (lastFlag->getAngle() == UP || lastFlag->getAngle() == DOWN) {
+						if (fabs(flag->getPosition().x - lastFlag->getPosition().x) < 1920) {
+							if (flag->getPosition().x > lastFlag->getPosition().x) {
+								flag->getSprite()->setPosition(Vector2f(lastFlag->getPosition().x + 1920, flag->getPosition().y));
+							}
+							else {
+								flag->getSprite()->setPosition(Vector2f(lastFlag->getPosition().x - 1920, flag->getPosition().y));
+							}
+						}
+					}
+				}
+			}
+		}
+
+
 	}
 
 	Door* getDoor1() {

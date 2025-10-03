@@ -43,6 +43,10 @@ class StageIntro{
 
 	Music* music;
 
+	sf::RectangleShape rectangle;
+	float currentTrans = 255;
+	float fadeRate = 100;
+
 
 public:
 	StageIntro(string name, bool aHold, Texture* bg, Texture* bossT) {
@@ -83,6 +87,10 @@ public:
 		music = new Music();
 		music->openFromFile("assets\\sound\\music\\5 - Enemy Chosen.mp3");
 		music->setVolume(50);
+
+		rectangle.setFillColor(Color::Black);
+		rectangle.setPosition(0, 0);
+		rectangle.setSize(Vector2f(1920, 1080));
 		
 	}
 
@@ -216,6 +224,14 @@ public:
 		}
 	}
 
+	void fadeInRect(float deltaT) {
+		
+		currentTrans -= fadeRate * deltaT;
+		if (currentTrans > 0) {
+			rectangle.setFillColor(Color(0, 0, 0, currentTrans));
+		}
+	}
+
 	void loop(renderer* instance, float targetRate) {
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -275,6 +291,10 @@ public:
 				obs.push_back(ob);
 			}
 			instance->bObjectDisplay(obs, cam);
+
+			fadeInRect(deltaT);
+
+			instance->getWindow()->draw(rectangle);
 
 			instance->UIDisplay(background);
 			instance->objectDisplay(boss->getSprite(), cam);

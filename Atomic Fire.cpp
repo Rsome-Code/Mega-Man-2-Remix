@@ -41,6 +41,9 @@ public:
 				return true;
 			}
 		}
+		else {
+			bul->forceStop();
+		}
 		return false;
 
 	}
@@ -66,5 +69,13 @@ public:
 	void resetHold() {
 	
 		bul->resetHoldTime();
+	}
+
+	void stopSound() {
+		bul->forceStop();
+	}
+
+	String getSymbol() {
+		return "H";
 	}
 };

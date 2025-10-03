@@ -194,7 +194,6 @@
     <ClCompile Include="Big Health.cpp" />
     <ClCompile Include="Bird Spawner.cpp" />
     <ClCompile Include="Bird.cpp" />
-    <ClCompile Include="Boss Intro.cpp" />
     <ClCompile Include="Carrot.cpp" />
     <ClCompile Include="Chicken Spawner.cpp" />
     <ClCompile Include="Death Animation.cpp" />
@@ -203,12 +202,18 @@
     <ClCompile Include="E Tank.cpp" />
     <ClCompile Include="egg.cpp" />
     <ClCompile Include="Enemy Bullet.cpp" />
+    <ClCompile Include="Equip Menu.cpp" />
     <ClCompile Include="Extra Life.cpp" />
+    <ClCompile Include="flash.cpp" />
     <ClCompile Include="Freeze.cpp" />
+    <ClCompile Include="Game Over Menu.cpp" />
+    <ClCompile Include="Game Over.cpp" />
+    <ClCompile Include="Get Equipped.cpp" />
     <ClCompile Include="Gorilla.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Leaf Shield Boss.cpp" />
     <ClCompile Include="Leaf Shield Bullet.cpp" />
+    <ClCompile Include="Leaf Shield.cpp" />
     <ClCompile Include="Leaf up shot.cpp" />
     <ClCompile Include="Leaf Float.cpp" />
     <ClCompile Include="Mega Buster.cpp" />
@@ -224,6 +229,7 @@
     <ClCompile Include="Small Health.cpp" />
     <ClCompile Include="Spawn Area.cpp" />
     <ClCompile Include="spawn point.cpp" />
+    <ClCompile Include="Teleport Out.cpp" />
     <ClCompile Include="Temp Enemy.cpp" />
     <ClCompile Include="Temp Physics Enemy.cpp" />
     <ClCompile Include="transition angle.cpp" />

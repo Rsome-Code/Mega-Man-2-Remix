@@ -77,7 +77,12 @@ public:
 				}
 			}
 
+			for (objectSprite* b : player->getBullets()) {
+				instance->objectDisplay(b, cam);
+			}
+
 			instance->objectDisplay(player->getSprites(), cam);
+			instance->objectDisplay(player->getSprite(), cam);
 
 			instance->UIDisplay(player->getUI());
 

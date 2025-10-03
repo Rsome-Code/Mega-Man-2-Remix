@@ -1,4 +1,5 @@
 #include "object.cpp"
+#include <SFML/audio.hpp>
 #pragma once
 
 class energyBar {
@@ -7,17 +8,29 @@ protected:
 	int amount;
 	int max = 28;
 
+	SoundBuffer* soundB;
+	Sound* sound;
+
+
 public:
 	energyBar(Texture* t, Vector2f loc, int ini) {
 		amount = ini;
 		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4));
 		setAmount();
+		soundB = new SoundBuffer();
+		soundB->loadFromFile("assets\\sound\\refill.wav");
+		sound = new Sound();
+		sound->setBuffer(*soundB);
 	}
 	energyBar(Texture* t, Vector2f loc) {
 		amount = max;
 
 		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4));
 		setAmount();
+		soundB = new SoundBuffer();
+		soundB->loadFromFile("assets\\sound\\refill.wav");
+		sound = new Sound();
+		sound->setBuffer(*soundB);
 	}
 
 	void setAmount() {
@@ -41,9 +54,18 @@ public:
 		else if (amount + a < 0) {
 			amount = 0;
 		}
-		else {
+		else{
+			if (a > 0) {
+				sound->play();
+			}
+
 			amount = amount + a;
 		}
+		setAmount();
+	}
+
+	void reset() {
+		amount = max;
 		setAmount();
 	}
 	UISprite* getSprite() {

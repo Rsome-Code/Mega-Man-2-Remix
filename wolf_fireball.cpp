@@ -13,6 +13,7 @@ public:
 		angle = 110;
 		speed = 2000;
 		hit = new objectHitbox(IntRect(0, 0, 16, 16), mov);
+		damage = 3;
 	}
 
 	void eachFrame(float* deltaT) {
