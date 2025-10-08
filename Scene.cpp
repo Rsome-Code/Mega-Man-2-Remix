@@ -104,17 +104,17 @@ class scene {
 
 	bool victoryPlay = false;
 	Music* victoryMusic;
-	
+
 	bool nextFlagActive = true;
 	bool lastFlagActive = true;
 
 	TeleportOut* teleExit;
-	
+
 
 
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
-		
+
 		enemyT = en;
 		p = pl;
 		p->getSprite()->setMovable(true);
@@ -139,8 +139,8 @@ public:
 		lastFlagPos = Vector2f(0, 0);
 
 		//screenLighting = new ScreenLighting();
-		
-		
+
+
 		font.loadFromFile("Assets//font.otf");
 		readyText = new text(string("READY"), Vector2f(900, 500), float(22), &font, &Color::White);
 
@@ -175,7 +175,7 @@ public:
 	void updateFlags() {
 		currentFlag = stage->getCurrentFlag(section);
 		lastFlag = stage->getCurrentFlag(section - 1);
-		
+
 		if (lastFlag != NULL) {
 			if (lastFlag->getAngle() == LEFT) {
 				revLastAngle = RIGHT;
@@ -214,27 +214,27 @@ public:
 		auto start = time->timerStart();
 		auto* startP = &start;
 		deltaT = 0.00001;
-		
-		bool unPaused = false;
-		
 
-		section = 7;
+		bool unPaused = false;
+
+
+		section = 0;
 
 		p->enableControls(true);
 
 		checkLastFlagRight();
 		loadFlag();
 		updateFlags();
-		
+
 		Music* music = stage->getMusic();
 		music->setVolume(60);
-		
+
 
 		startAnim(instance, targetRate, music);
 		respawn();
 		//p->heal(-27);
-		
-		
+
+
 
 		while (instance->getWindow()->isOpen() && run) {
 
@@ -320,40 +320,35 @@ public:
 
 			if (!p->isTeleporting()) {
 				ground = false;
-				onLadder = false;
+
 
 				if (!unPaused) {
 					if (!p->getControls()->getOnLadder()) {
 
 
-						tileCheck(tileList);
+						tileCheck(tileList, instance);
 
 						p->setGrounded(ground);
-						p->getControls()->setInfrontOfLadder(onLadder);
+
 
 					}
 
 					else {
-						onLadder = ladderTileCheck(tileList);
-						p->getControls()->setLadder(onLadder);
-						p->getControls()->setInfrontOfLadder(onLadder);
+						onLadderTileCheck(tileList, instance);
+						//p->getControls()->setLadder(onLadder);
+						//p->getControls()->setInfrontOfLadder(onLadder);
 
-						ladderAbove(tileList);
-
-						if (!headLadderTileCheck(tileList)) {
-							p->getAnimation()->ladderGetUp();
-						}
 
 					}
 
-					p->getControls()->setLadderBelow(ladderBelowTileCheck(tileList));
-					p->getControls()->setLadderAbove(ladderAboveTileCheck(tileList));
+
 				}
 				else {
 					unPaused = false;
 					p->getControls()->setLadder(false);
 					p->getControls()->setInfrontOfLadder(false);
 				}
+				//onLadder = false;
 
 			}
 
@@ -413,35 +408,38 @@ public:
 				instance->objectAccess(o, cam);
 			}
 
-			
+
 			//allTileOn(tileList);
 			//allTileOn(z4List);
 			//allTileOn(z3List);
 			//allTileOn(z2List);
-			tileDistanceCheck(instance, tileList);
+
+			backgroundTileDistanceCheck(z2List);
+			backgroundTileDistanceCheck(z3List);
+			backgroundTileDistanceCheck(z4List);
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 			}
 			for (tile* t : z3List) {
-				
+
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
-				
+
 			}
 			for (tile* t : z2List) {
-				
+
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
-				
+
 			}
-			
-			
+
+
 			for (tile* t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
-			
+
 
 			for (object* t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
@@ -493,7 +491,7 @@ public:
 			for (object* o : objects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite());
-				
+
 			}
 
 			//p->updateLighting();
@@ -527,7 +525,7 @@ public:
 
 		}
 
-		
+
 
 		if (levelEnd) {
 			list<object*> temps = objects;
@@ -560,7 +558,7 @@ public:
 	}
 
 	void centerCamera() {
-		float xPos = ((fabs(currentFlag->getPosition().x - lastFlag->getPosition().x))/2) - (1920/2);
+		float xPos = ((fabs(currentFlag->getPosition().x - lastFlag->getPosition().x)) / 2) - (1920 / 2);
 		if (currentFlag->getPosition().x < lastFlag->getPosition().x) {
 			xPos = xPos + currentFlag->getPosition().x;
 		}
@@ -573,9 +571,9 @@ public:
 
 	void checkFall() {
 		if (p->getSprite()->getCameraPosition().y > 1080 && fallDeath) {
-			
+
 			p->takeDamage(28);
-			
+
 		}
 	}
 
@@ -592,7 +590,7 @@ public:
 			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible()) {
 				p->takeDamage(b->getDamage());
 			}
-			
+
 			if (bulletsCollide(b)) {
 				toDelete = it;
 			}
@@ -600,14 +598,14 @@ public:
 			if (checkEBullOffScreen(b)) {
 				toDelete = it;
 			}
-			
+
 			it = next(it);
 		}
 		//removeBullets();
 		if (toDelete != eBullets.end()) {
 			*toDelete = NULL;
 			eBullets.erase(toDelete);
-			
+
 		}
 	}
 
@@ -677,12 +675,12 @@ public:
 				}
 				else {
 					run = false;
-					
+
 				}
 
 			}
-			
-			
+
+
 		}
 	}
 
@@ -694,7 +692,7 @@ public:
 
 	bool death(renderer* instance, float tRate, camera* cam) {
 		if (p->setDead()) {
-			
+
 			list<object*> tempL = objects;
 			tempL.push_back(door1);
 			tempL.push_back(door2);
@@ -705,8 +703,8 @@ public:
 			paused = true;
 		}
 		return p->checkDeathFinish();
-			
-		
+
+
 	}
 
 	void resetObjects() {
@@ -742,8 +740,8 @@ public:
 		section = flag->getSection() + 1;
 
 		forceLoadSection(section);
-		
-		
+
+
 		p->shootReset();
 
 		if (flag->getAngle() == RIGHT) {
@@ -781,7 +779,7 @@ public:
 			}
 		}
 
-		
+
 
 		resetObjects();
 
@@ -812,7 +810,7 @@ public:
 			else {
 				deltaT = time->checkTimer(startP);
 			}
-		//	deltaT = time->checkTimer(startP);
+			//	deltaT = time->checkTimer(startP);
 			start = time->timerStart();
 			startP = &start;
 
@@ -833,9 +831,9 @@ public:
 			}
 
 
-
-			tileDistanceCheck(instance, tileList);
 			for (tile* t : tileList) {
+
+				tileDistanceCheck(instance, t);
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
@@ -864,18 +862,18 @@ public:
 	}
 
 	void respawn() {
-		
-		p->setPosition(Vector2f(cam->getPosition().x + ((1920/2) - 8*4), cam->getPosition().y));
-		p->start(cam->getPosition().y + (16*4));
+
+		p->setPosition(Vector2f(cam->getPosition().x + ((1920 / 2) - 8 * 4), cam->getPosition().y));
+		p->start(cam->getPosition().y + (16 * 4));
 		p->swapDirection();
-	
+
 	}
 
 	void spawnItemFromEnemy(enemy* en) {
-		
-		Vector2f middle = Vector2f((en->getSprite()->getPosition().x + (en->getSprite()->getSize().x/6)), (en->getSprite()->getPosition().y + (en->getSprite()->getSize().y/2)));
 
-		
+		Vector2f middle = Vector2f((en->getSprite()->getPosition().x + (en->getSprite()->getSize().x / 6)), (en->getSprite()->getPosition().y + (en->getSprite()->getSize().y / 2)));
+
+
 
 		en->spawnItem(&items, miscT, middle);
 
@@ -890,7 +888,7 @@ public:
 			p->enableControls(false);
 			levelEnd = true;
 			masterDeathSound->play();
-			
+
 
 		}
 	}
@@ -921,7 +919,7 @@ public:
 									list<object*> tempL = objects;
 									tempL.push_back(door1);
 									tempL.push_back(door2);
-									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects,  cam, 0.75);
+									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
 									paused = true;
 									levelEndCheck(enemy, music);
 								}
@@ -945,8 +943,8 @@ public:
 					music->stop();
 				}
 			}
-			
-			
+
+
 		}
 		if (toDelete != NULL) {
 			enemies.remove(toDelete);
@@ -960,7 +958,7 @@ public:
 		}
 		return false;
 	}
-	
+
 
 	bool  checkPause(renderer* instance, float targetRate) {
 		if (p->getController()->checkSTART() && !startPressed && p->checkInControl()) {
@@ -969,7 +967,7 @@ public:
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, backgroundObjects, cam);
 			refreshMisc();
 			for (object* o : items) {
-				
+
 				//if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank" || o->getSprite()->getType() == "Extra Life") {
 
 				o->getSprite()->setTexture(miscT);
@@ -984,14 +982,14 @@ public:
 		return false;
 	}
 
-	void ladderAbove(list<tile*> tileList) {
-		for (tile* t : tileList) {
-			if (t->getCeiling() != NULL) {
-				if (hitboxCheck(p->getHead(), t->getCeiling())) {
-					p->setPosition(Vector2f(p->getSprite()->getPosition().x, t->getCeiling()->getPosition().y + 2));
-				}
+	void ladderAbove(tile* t) {
+
+		if (t->getCeiling() != NULL) {
+			if (hitboxCheck(p->getHead(), t->getCeiling())) {
+				p->setPosition(Vector2f(p->getSprite()->getPosition().x, t->getCeiling()->getPosition().y + 2));
 			}
 		}
+
 	}
 
 
@@ -1051,13 +1049,13 @@ public:
 	}
 
 	void doorClose(renderer* instance, float targetRate) {
-		if (door1->getSection() == section -1) {
+		if (door1->getSection() == section - 1) {
 			door1->loop(instance, cam, targetRate, p->getSprite(), door2->getSprite(), tileList, z2List, z3List, z4List, false);
-			
+
 		}
-		if (door2->getSection() == section -1) {
+		if (door2->getSection() == section - 1) {
 			door2->loop(instance, cam, targetRate, p->getSprite(), door1->getSprite(), tileList, z2List, z3List, z4List, false);
-			
+
 		}
 	}
 
@@ -1076,14 +1074,14 @@ public:
 		updateFlags();
 
 		sectionTransition(instance, targetRate, ang, flagPos, nextSection);
-	
+
 		deletePrevSection();
 
 		lastFlagPos = lastFlag->getSprite()->getPosition();
-		
+
 	}
 
-	void checkLastFlagRight(){
+	void checkLastFlagRight() {
 		EndFlag* lastFlag = stage->getLastFlag(section);
 		if (lastFlag != NULL) {
 			if (lastFlag->getAngle() == RIGHT) {
@@ -1094,10 +1092,10 @@ public:
 				lastFlagRight = false;
 				lastFlagPos = lastFlag->getSprite()->getPosition();
 			}
-			
+
 		}
 
-		
+
 	}
 
 	bool isCameraRightOfFlag(Vector2f flagPos) {
@@ -1125,11 +1123,11 @@ public:
 		if (flagPos != Vector2f(0, 0)) {
 			if (cam->getPosition().x <= flagPos.x) {
 				cam->setPosition(Vector2f(flagPos.x, cam->getPosition().y));
-				if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() ==UP) {
+				if (currentFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) {
 					fallDeath = false;
 				}
 				else {
-					
+
 				}
 				return true;
 			}
@@ -1139,7 +1137,7 @@ public:
 
 	void cameraFlagCheck(Vector2f flagPos) {
 
-		
+
 
 		fallDeath = true;
 		if (currentFlag->getSprite()->getPosition().x > lastFlagPos.x) {
@@ -1173,13 +1171,13 @@ public:
 				nextFlagActive = isCameraLeftOfFlag(currentFlag->getSprite()->getPosition());
 			}
 		}
-		
+
 
 
 	}
 
 
-	
+
 
 	void sectionTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool forward) {
 		auto start = time->timerStart();
@@ -1238,15 +1236,15 @@ public:
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			
-			
+
+
 			for (tile* t : newZ3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 			for (tile* t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			
+
 			for (tile* t : newZ2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
@@ -1259,7 +1257,7 @@ public:
 			for (tile* t : tileList) {
 				instance->objectAccess(t, cam);
 			}
-			
+
 
 			if (ang == RIGHT) {
 				cam->move(0, &deltaT, camSpeed);
@@ -1271,12 +1269,12 @@ public:
 				}
 				p->getSprite()->move(0, &deltaT, playerSpeed);
 
-				
+
 
 				if (cam->getPosition().x >= flagPos.x) {
 					run = false;
 				}
-				
+
 				//Special rule needed when next transition is vertical and next position is within camera shot
 				else if (otherAngle == UP || otherAngle == DOWN) {
 					if (cam->getPosition().x > otherFlagPos - 1920) {
@@ -1295,7 +1293,7 @@ public:
 					run = false;
 				}
 			}
-			
+
 			else if (ang == DOWN) {
 				cam->move(90, &deltaT, camSpeed);
 				if (p->getControls()->getOnLadder()) {
@@ -1304,7 +1302,7 @@ public:
 				else {
 					p->getAnimation()->runJump();
 				}
-				
+
 				p->getSprite()->move(90, &deltaT, playerSpeed);
 				if (cam->getPosition().y >= flagPos.y) {
 					run = false;
@@ -1353,7 +1351,7 @@ public:
 		}
 
 		//if (lastFlagRight) {
-			lastFlagPos = stage->getLastFlagPos();
+		lastFlagPos = stage->getLastFlagPos();
 		//}
 		//else {
 			//lastFlagPos = Vector2f(stage->getLastFlagPos().x - 1920, stage->getLastFlagPos().y);
@@ -1471,20 +1469,20 @@ public:
 
 
 	void enemyCollisionCheck(list<enemy*> eList, renderer* instance, float targetRate) {
-		
+
 		for (enemy* e : eList) {
 			//p->takeDamage(e->getDamage());
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
 					if (!p->isInvincible()) {
-						
+
 						p->takeDamage(e->getDamage());
-						
+
 					}
-					if (e->getIncrease()!=NULL) {
-						
+					if (e->getIncrease() != NULL) {
+
 						itemGet(instance, targetRate, e);
-						
+
 					}
 				}
 			}
@@ -1536,9 +1534,9 @@ public:
 			paused = true;
 		}
 		item->used();
-		
-		
-		
+
+
+
 	}
 
 	void itemLoop(renderer* instance, float targetRate, object* item) {
@@ -1582,7 +1580,10 @@ public:
 				instance->objectAccess(ob, cam);
 			}
 
-			tileDistanceCheck(instance, tileList);
+
+			for (tile* t : tileList) {
+				tileDistanceCheck(instance, t);
+			}
 
 			for (tile* t : z4List) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
@@ -1599,7 +1600,7 @@ public:
 					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
-			
+
 			for (tile* t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
@@ -1608,7 +1609,7 @@ public:
 			}
 			for (object* t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
-					
+
 				}
 			}
 
@@ -1622,7 +1623,7 @@ public:
 				}
 			}
 			instance->objectDisplay(p->getSprite(), cam);
-			
+
 			healRate_left = healRate_left - deltaT;
 			if (healRate_left <= 0) {
 				healRate_left = healRate;
@@ -1633,7 +1634,7 @@ public:
 					p->getActiveWeapon()->addAmmo(1);
 				}
 				healLeft--;
-				
+
 			}
 			if (healLeft <= 0) {
 				run = false;
@@ -1642,39 +1643,34 @@ public:
 			instance->UIDisplay(p->getUI());
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
-			
+
 		}
 	}
 
-	void tileDistanceCheck(renderer* instance, list<tile*> tileList) {
+	void tileDistanceCheck(renderer* instance, tile* t) {
 
 		Vector2f camPos = Vector2f(cam->getPosition().x - (32 * 4), cam->getPosition().y - (32 * 4));
-		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x + (64 * 4)), instance->getWindow()->getSize().y + camPos.y + (64*4));
+		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x + (64 * 4)), instance->getWindow()->getSize().y + camPos.y + (64 * 4));
 		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
 
-		for (tile* t : tileList) {
-			bool display = false;
 
-			Vector2f tilePos = t->getSprite()->getPosition();
-			
-			if (tilePos.x > camPos.x - (16 * 4) && tilePos.x < dist.x && tilePos.y > camPos.y-(16 * 4) && tilePos.y < dist.y) {
-				display = true;
-			}
+		bool display = false;
 
-			t->setDisplay(display);
-			t->setAct(display);
+		Vector2f tilePos = t->getSprite()->getPosition();
 
-
+		if (tilePos.x > camPos.x - (16 * 4) && tilePos.x < dist.x && tilePos.y > camPos.y - (16 * 4) && tilePos.y < dist.y) {
+			display = true;
 		}
 
-		backgroundTileDistanceCheck(z2List);
-		backgroundTileDistanceCheck(z3List);
-		backgroundTileDistanceCheck(z4List);
-	
+		t->setDisplay(display);
+		t->setAct(display);
+
+
+
 	}
 
 	/*void backgroundTileDistanceCheck(list<tile*> tiles) {
-		
+
 		for (tile* t : tiles) {
 			bool display = false;
 			if (t->getSprite()->getCameraPosition().x > -(16 * 4)) {
@@ -1688,7 +1684,7 @@ public:
 						}
 					}
 				}
-				
+
 			}
 			t->setDisplay(display);
 		}
@@ -1698,11 +1694,11 @@ public:
 
 		for (tile* t : tiles) {
 			float x = t->getSprite()->getCameraPosition().x;
-			bool displayX = !(x < -(16*4)) && !(1920 < x);
+			bool displayX = !(x < -(16 * 4)) && !(1920 < x);
 
 			float y = t->getSprite()->getCameraPosition().y;
 			bool displayY = !(y < -(16 * 4)) && !(1920 < y);
-			
+
 			t->setDisplay(displayX && displayY);
 		}
 
@@ -1742,7 +1738,7 @@ public:
 					e->setInitOffScreen(checkInitInScreen(e, camPos, camEdge));
 					//and initial position has just re-entered the screen
 					if (!e->getInitOffScreen()) {
-						
+
 						e->initial();
 						e->setDisplay(true);
 						e->setAct(true);
@@ -1750,7 +1746,7 @@ public:
 				}
 			}
 		}
-		
+
 		if (toDelete != NULL) {
 			enemies.remove(toDelete);
 		}
@@ -1770,62 +1766,107 @@ public:
 		return false;
 	}
 
-	bool ladderTileCheck(list<tile*> tileList) {
-		for (tile* t : tileList) {
-			if (t->getAct()) {
-				if (t->getLadder() != NULL) {
-					if (hitboxCheck(p->getLadderHitbox(), t->getLadder())) {
-						p->setPosition(Vector2f(t->getLadder()->getPosition().x - 4, p->getSprite()->getPosition().y));
-						return true;
-					}
+	bool ladderTileCheck(tile* t) {
+
+		if (t->getAct()) {
+			if (t->getLadder() != NULL) {
+				if (hitboxCheck(p->getLadderHitbox(), t->getLadder())) {
+					p->setPosition(Vector2f(t->getLadder()->getPosition().x - 4, p->getSprite()->getPosition().y));
+					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 
-	bool headLadderTileCheck(list<tile*> tileList) {
-		for (tile* t : tileList) {
-			if (t->getAct()) {
-				if (t->getLadder() != NULL) {
-					if (hitboxCheck(p->getHead(), t->getLadder())) {
-						return true;
-					}
+	bool headLadderTileCheck(tile* t) {
+
+		if (t->getAct()) {
+			if (t->getLadder() != NULL) {
+				if (hitboxCheck(p->getHead(), t->getLadder())) {
+					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 
-	bool ladderBelowTileCheck(list<tile*> tileList) {
-		for (tile* t : tileList) {
-			if (t->getAct()) {
-				if (t->getLadder() != NULL) {
-					if (hitboxCheck(p->getBelow(), t->getLadder())) {
-						return true;
-					}
+	bool ladderBelowTileCheck(tile* t) {
+
+		if (t->getAct()) {
+			if (t->getLadder() != NULL) {
+				if (hitboxCheck(p->getBelow(), t->getLadder())) {
+					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 
-	bool ladderAboveTileCheck(list<tile*> tileList) {
-		for (tile* t : tileList) {
-			if (t->getAct()) {
-				if (t->getLadder() != NULL) {
-					if (hitboxCheck(p->getAbove(), t->getLadder())) {
-						return true;
-					}
+	bool ladderAboveTileCheck(tile* t) {
+
+		if (t->getAct()) {
+			if (t->getLadder() != NULL) {
+				if (hitboxCheck(p->getAbove(), t->getLadder())) {
+					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 
+	void onLadderTileCheck(list<tile*> t, renderer* instance) {
+		p->getControls()->setInfrontOfLadder(false);
 
-	void tileCheck(list<tile*> tileList) {
+		bool lBelow = false;
+		bool lAbove = false;
+		bool getupAnim = false;
 
+		for (tile* t : tileList) {
+			tileDistanceCheck(instance, t);
+
+			if (ladderBelowTileCheck(t)) {
+				p->getControls()->setLadderBelow(true);
+				lBelow = true;
+			}
+			if (ladderAboveTileCheck(t)) {
+				p->getControls()->setLadderAbove(true);
+				lAbove = true;
+			}
+
+			if (p->getControls()->getOnLadder()) {
+				onLadder = ladderTileCheck(t);
+				p->getControls()->setInfrontOfLadder(true);
+				ladderAbove(t);
+				if (headLadderTileCheck(t)) {
+					getupAnim = true;
+				}
+			}
+		}
+
+
+		if (lBelow == false) {
+			p->getControls()->setLadderBelow(false);
+		}
+		if (lAbove == false) {
+			p->getControls()->setLadderAbove(false);
+		}
+		if (!getupAnim) {
+			p->getAnimation()->ladderGetUp();
+		}
+	}
+
+	void tileCheck(list<tile*> t, renderer* instance) {
+		p->getControls()->setInfrontOfLadder(false);
+
+		bool lBelow = false;
+		bool lAbove = false;
+
+		///////////////////////////////////////////////////////////////////////////////////////////////
 		for (tile* t : tileList) {
 
 			bool thisGround = false;
@@ -1845,7 +1886,7 @@ public:
 						}
 					}
 				}
-				if(!thisGround) {
+				if (!thisGround) {
 					if (t->getCeiling() != NULL) {
 						if (hitboxCheck(p->getHead(), t->getCeiling())) {
 							p->getControls()->jumpCancel();
@@ -1874,10 +1915,42 @@ public:
 				if (t->getLadder() != NULL) {
 					if (hitboxCheck(p->getLadderHitbox(), t->getLadder())) {
 						onLadder = true;
+						p->getControls()->setInfrontOfLadder(true);
 					}
 				}
 
 			}
+
+
+
+			tileDistanceCheck(instance, t);
+
+			if (ladderBelowTileCheck(t)) {
+				p->getControls()->setLadderBelow(true);
+				lBelow = true;
+			}
+			if (ladderAboveTileCheck(t)) {
+				p->getControls()->setLadderAbove(true);
+				lAbove = true;
+			}
+
+			if (p->getControls()->getOnLadder()) {
+				onLadder = ladderTileCheck(t);
+				p->getControls()->setInfrontOfLadder(true);
+				ladderAbove(t);
+				if (!headLadderTileCheck(t)) {
+					p->getAnimation()->ladderGetUp();
+				}
+			}
+
+
+
+		}
+		if (lBelow == false) {
+			p->getControls()->setLadderBelow(false);
+		}
+		if (lAbove == false) {
+			p->getControls()->setLadderAbove(false);
 		}
 	}
 
@@ -1888,7 +1961,7 @@ public:
 
 
 	}
-		
-	
-	
+
+
+
 };
