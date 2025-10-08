@@ -2,6 +2,7 @@
 #include "object hitbox.cpp"
 #include "light source.cpp"
 #include "transition angle.cpp"
+#include "camera.cpp"
 
 
 #pragma once
@@ -96,4 +97,5 @@ public:
 		return sprite->getPosition();
 	}
 	virtual bool getCheckpoint() { return false; };
+	virtual void setCamera(camera* camer) {};
 };

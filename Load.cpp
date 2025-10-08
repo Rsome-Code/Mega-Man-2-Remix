@@ -31,6 +31,7 @@
 #include "chicken spawner.cpp"
 #include "spawn point.cpp"
 #include "wood man.cpp"
+#include "Background.cpp"
 
 #pragma once
 
@@ -194,7 +195,7 @@ public:
 				if (getFlag(flag->getSection() - 1, *flags) != NULL) {
 					EndFlag* lastFlag = getFlag(flag->getSection() - 1, *flags);
 					if (lastFlag->getAngle() == UP || lastFlag->getAngle() == DOWN) {
-						if (fabs(flag->getPosition().x - lastFlag->getPosition().x) < 1920) {
+						if (fabs(flag->getPosition().x - lastFlag->getPosition().x) < 1920 && !((lastFlag->getAngle() == UP || lastFlag->getAngle() == DOWN) && flag->getAngle() == RIGHT)) {
 							if (flag->getPosition().x > lastFlag->getPosition().x) {
 								flag->getSprite()->setPosition(Vector2f(lastFlag->getPosition().x + 1920, flag->getPosition().y));
 							}
@@ -330,9 +331,10 @@ public:
 				z = stoi(*valI);
 			}
 			object* add = NULL;
+			object* backAdd = NULL;
 			enemy* enem = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &sArea);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea);
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
@@ -348,6 +350,10 @@ public:
 				objects->push_back(enem);
 				enem->initial();
 			}
+
+			else if (backAdd != NULL) {
+				objects->push_back(backAdd);
+			}
 		}
 
 		if (sArea != NULL) {
@@ -359,6 +365,7 @@ public:
 		float start = spawn->getStartPos();
 		float end = spawn->getEndPos();
 		enemy* en = spawn->getEnemy();
+		en->initial();
 		SpawnPoint* startP = new SpawnPoint(string(en->getCode()));
 		startP->getSprite()->setPosition(Vector2f(start, cam->getPosition().y));
 		SpawnPoint* endP = new SpawnPoint(string(en->getCode()));
@@ -367,7 +374,7 @@ public:
 		objects->push_back(endP);
 	}
 	
-	void loadObjects(string levelName, string section, list<object*>* objects, list<enemy*>* enemies, Texture* t, SpawnArea** sArea) {
+	void loadObjects(string levelName, string section, list<object*>* objects, list<object*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -400,9 +407,10 @@ public:
 				z = stoi(*valI);
 			}
 			object* add = NULL;
+			object* backAdd = NULL;
 			enemy* enem = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, sArea);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea);
 			
 
 			if (add != NULL) {
@@ -412,16 +420,17 @@ public:
 				objects->push_back(add);
 			}
 
-			if (enem == NULL) {
-				
-			}
-			else {
+			if (enem != NULL) {
 				enemies->push_back(enem);
+			}
+			
+			if (backAdd != NULL) {
+				backgroundOb->push_back(backAdd);
 			}
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, object** add, SpawnArea** spawn) {
+	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, object** add, object** backAdd, SpawnArea** spawn) {
 		
 
 
@@ -462,6 +471,7 @@ public:
 				temp->initial();
 			}
 		}
+		
 		else if (type == "trch-R") {
 			*add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
 
@@ -499,7 +509,17 @@ public:
 			*add = new ExtraLife(misc, Vector2f(worldX, worldY));
 
 		}
+
+		//Checks variable codes
+		else {
+			vector<string> spl = splitString(type, char('-'));
+			string altType = spl[0];
+			if (altType == "background") {
+				*backAdd = new Background(stoi(spl[1]));
+			}
+		}
 	}
+
 
 	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 

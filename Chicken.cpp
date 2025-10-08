@@ -31,6 +31,12 @@ public:
 
 		hit = new objectHitbox(IntRect(0, 0, 34, 37), sprite);
 		hurt = new objectHitbox(IntRect(0, 0, 34, 37), sprite);
+
+		setCode("chicken");
+	}
+
+	void initial() {
+		setCode("chicken");
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {

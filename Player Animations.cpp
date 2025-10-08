@@ -85,6 +85,8 @@ public:
 		ladderThrow = new animation(list<IntRect>{IntRect(Vector2i(248, 69), Vector2i(30, 30))}, sprite);
 
 		hurt = new animation(list<IntRect>{IntRect(Vector2i(387, 12), Vector2i(26, 28))}, sprite);
+
+		//metalBlade = true;
 	}
 public:
 

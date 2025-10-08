@@ -38,6 +38,7 @@ public:
 		flap = new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite);
 		flapTimer = new animTimer(flap, 15, true);
 		setCode("bird");
+		deathAnim->setSprite(sprite);
 	}
 	void initial(Vector2f pos) {
 
@@ -62,6 +63,7 @@ public:
 		flapTimer = new animTimer(flap, 15, true);
 
 		hp = 1;
+		deathAnim->setSprite(sprite);
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
@@ -88,5 +90,13 @@ public:
 
 	void eggFollow() {
 		egg->getSprite()->setPosition(Vector2f(sprite->getPosition().x, sprite->getPosition().y + sprite->getSize().y));
+	}
+
+	void lowerHP(int h) {
+		if (h > 0) {
+			hitSound->play();
+		}
+		hp = hp - h;
+		egg->lowerHP(h);
 	}
 };

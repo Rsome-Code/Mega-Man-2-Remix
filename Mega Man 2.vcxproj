@@ -188,6 +188,7 @@
     <ClCompile Include="Animation Test.cpp" />
     <ClCompile Include="Animation Timer.cpp" />
     <ClCompile Include="Atomic Fire Bullet.cpp" />
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Atomic Fire.cpp" />
     <ClCompile Include="Big Ammo.cpp" />

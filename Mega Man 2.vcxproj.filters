@@ -532,5 +532,8 @@
     <ClCompile Include="Game Over Menu.cpp">
       <Filter>Source Files\Game Files\Menus</Filter>
     </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

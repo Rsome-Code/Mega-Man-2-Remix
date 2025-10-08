@@ -4,16 +4,16 @@
 
 class WolfFireBall : public EnemyBullet {
 
-	float turnSpeed = 200;
+	float turnSpeed = 600;
 	float maxAngle = 250;
 public:
 	WolfFireBall(Texture* t, Vector2f pos) {
 		mov = new movable("bull", t, IntRect(594, 758, 16, 16), pos, Vector2f(4, 4));
 		sprite = mov;
 		angle = 110;
-		speed = 2000;
+		speed = 3000;
 		hit = new objectHitbox(IntRect(0, 0, 16, 16), mov);
-		damage = 3;
+		damage = 5;
 	}
 
 	void eachFrame(float* deltaT) {

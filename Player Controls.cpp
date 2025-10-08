@@ -138,9 +138,9 @@ public:
 
 
 
-		if (!onLadder) {
+		//if (!onLadder) {
 			//jumpConditions(deltaT);
-		}
+		//}
 		//shoot(deltaT);
 
 		//ladderMove(deltaT);

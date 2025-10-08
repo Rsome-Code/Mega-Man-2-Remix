@@ -37,8 +37,8 @@ public:
 		deathAnim-> setSprite(sprite);
 		hit = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 23)), true, sprite);
 		hurt = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 23)), true, sprite);
-		hp = 1;
-		damage = 2;
+		hp = 2;
+		damage = 4;
 		awake = false;
 		flyToPlayer = false;
 		offSetList();
@@ -76,14 +76,17 @@ public:
 
 		if (!awake) {
 
-			if (flyFromRight) {
-				if (p->getPosition().x > sprite->getPosition().x - 600 && p->getPosition().x < sprite->getPosition().x) {
-					awake = true;
+			if (p->getPosition().y > sprite->getPosition().y) {
+
+				if (flyFromRight) {
+					if (p->getPosition().x > sprite->getPosition().x - 600 && p->getPosition().x < sprite->getPosition().x) {
+						awake = true;
+					}
 				}
-			}
-			else {
-				if (p->getPosition().x < sprite->getPosition().x + 500 && p->getPosition().x > sprite->getPosition().x) {
-					awake = true;
+				else {
+					if (p->getPosition().x < sprite->getPosition().x + 500 && p->getPosition().x > sprite->getPosition().x) {
+						awake = true;
+					}
 				}
 			}
 		}

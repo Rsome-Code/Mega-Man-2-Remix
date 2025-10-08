@@ -158,7 +158,7 @@ public:
 					ob->move(180, 50);
 				}
 			}
-			ob->move(0, deltaT, 500);
+			ob->move(0, deltaT, 800);
 			if (birds) {
 				animateBirds();
 			}

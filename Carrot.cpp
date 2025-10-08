@@ -8,7 +8,7 @@ class Carrot : public EnemyBullet {
 
 public:
 	Carrot(Texture* t, Vector2f position, float angle) {
-		damage = 2;
+		damage = 4;
 		mov = new movable("eBullet", t, IntRect(109, 574, 12, 13), position, Vector2f(4, 4));
 		sprite = mov;
 		this->angle = angle;

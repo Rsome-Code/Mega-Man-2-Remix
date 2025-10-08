@@ -48,8 +48,8 @@ class Rabbit : public PhysicsEnemy {
 		hit = new objectHitbox(IntRect(0, 0, 32, 37), phys);
 		hurt = new objectHitbox(IntRect(0, 0, 32, 37), phys);
 
-		hp = 4;
-		damage = 4;
+		hp = 6;
+		damage = 5;
 
 		setCode("rabbit");
 

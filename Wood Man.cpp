@@ -91,7 +91,7 @@ public:
 		setCode("wood man");
 		damage = 5;
 		
-		floatPos = phys->getPosition().x - 600;
+		floatPos = phys->getPosition().x - 400;
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {

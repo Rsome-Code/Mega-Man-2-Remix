@@ -132,9 +132,30 @@ public:
 		optionSound = new Sound();
 		optionSound->setBuffer(*optionB);
 
+		
+
 	}
 
-	void loop(renderer* instance, float targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, camera* cam) {
+	void defaultOption() {
+		for (Option* opt : page1Options) {
+			if (opt->getWeapon()->getName() == p->getActiveWeapon()->getName()) {
+				currentSelect = opt->getNum();
+				page1 = true;
+				break;
+			}
+		}
+		if (currentSelect == 0) {
+			for (Option* opt : page2Options) {
+				if (opt->getWeapon()->getName() == p->getActiveWeapon()->getName()) {
+					currentSelect = opt->getNum();
+					page1 = false;
+					break;
+				}
+			}
+		}
+	}
+
+	void loop(renderer* instance, float targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> backgroundObjects, camera* cam) {
 		bool startA = true;
 		bool end = false;
 		bool run = true;
@@ -143,7 +164,7 @@ public:
 		auto* startP = &start;
 		float deltaT = 0;
 
-		
+		defaultOption();
 
 		openSound->play();
 
@@ -159,7 +180,9 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-
+			for (object* ob : backgroundObjects) {
+				instance->objectAccess(ob, cam);
+			}
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);

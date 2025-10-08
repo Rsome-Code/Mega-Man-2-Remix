@@ -1,4 +1,5 @@
-gorilla,8183,768,1
-gorilla,9675,896,1
--spawn,8467,754,1
--spawn,10375,754,1
+gorilla,9941,783,1
+gorilla,11437,909,1
+background-15259903,0,0,1
+bird-spawn,10099,161,1
+bird-spawn,12142,161,1

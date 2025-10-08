@@ -507,7 +507,7 @@ public:
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			save();
-			l->loadFlags(levelName, &flagList, enemyT);
+
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !cPressed) {
@@ -601,6 +601,11 @@ public:
 			}
 		}
 		myfile->close();
+
+
+		flagList.clear();
+		l->loadFlags(levelName, &flagList, enemyT);
+		reload();
 	}
 
 	void checkFlagDuplicates(object* o) {

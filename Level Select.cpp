@@ -13,7 +13,7 @@ class LevelSelect {
 	UISprite* background;
 	timer* time;
 	camera* cam;
-	int selection = 0;
+	int selection = 4;
 	Vector2f backPos;
 	pController* control;
 	bool run = true;

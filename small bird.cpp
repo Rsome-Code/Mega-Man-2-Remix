@@ -42,6 +42,7 @@ public:
 		hp = 1;
 
 		deathAnim->setSprite(mov);
+		damage = 3;
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {

@@ -116,6 +116,16 @@ public:
 		w->draw(*s);
 	}
 
+	void bObjectDisplay(objectSprite* object, bool display, camera* cam) {
+		bObjectCalc(object, cam);
+
+		if (display) {
+			Sprite* s = object->getSprite();
+
+			w->draw(*s);
+		}
+	}
+
 	void bObjectCalc(objectSprite* object, camera* cam) {
 		float mult = object->getZ() - 1;
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult));

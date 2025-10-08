@@ -27,6 +27,7 @@ protected:
 	string levelName;
 
 	list<object*> objects;
+	list<object*> backgroundObjects;
 	list<enemy*> enemies;
 
 	SpawnArea* spawn = NULL;
@@ -130,6 +131,7 @@ public:
 		z3List.clear();
 		z4List.clear();
 		objects.clear();
+		backgroundObjects.clear();
 		//flags.clear();
 		load(name, section);
 	}
@@ -236,7 +238,7 @@ public:
 		
 		spawn = NULL;
 
-		l->loadObjects(name, section, &objects, &enemies, enemyTexture, &spawn);
+		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn);
 
 		if (flags.size() == 0) {
 			l->loadFlags(name, &flags, enemyTexture);
@@ -303,6 +305,10 @@ public:
 	}
 	list<tile*> getZ4List() {
 		return z4List;
+	}
+
+	list<object*> getBackgroundObjects() {
+		return backgroundObjects;
 	}
 
 	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {

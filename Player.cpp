@@ -399,8 +399,9 @@ public:
 
 				pAnim->shootDecide(deltaT);
 
-
-				sprite->eachFrame(deltaT);
+				if (!controls->getOnLadder()) {
+					sprite->eachFrame(deltaT);
+				}
 				
 
 				if (controls->checkTeleport()) {

@@ -8,7 +8,7 @@
 class Freeze {
 	
 public:
-	static void stop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> obList, list<enemy*> eList, list<EnemyBullet*> eBList, camera* cam, float timeLeft) {
+	static void stop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> obList, list<enemy*> eList, list<EnemyBullet*> eBList, list<object*> backgroundObjects, camera* cam, float timeLeft) {
 
 		timer* time = new timer();
 
@@ -33,6 +33,9 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
+			for (object* ob : backgroundObjects) {
+				instance->objectAccess(ob, cam);
+			}
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);

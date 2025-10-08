@@ -14,7 +14,7 @@ protected:
 	Texture* texture;
 
 	float toSpawn = 4;
-	float toSpawn_left = toSpawn;
+	float toSpawn_left = 0;
 
 public:
 
@@ -39,7 +39,7 @@ public:
 			spawnTime(deltaT, enemyList, cam);
 		}
 		else {
-			toSpawn_left = toSpawn;
+			toSpawn_left = 0.5;
 		}
 	}
 

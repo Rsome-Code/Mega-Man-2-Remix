@@ -34,7 +34,7 @@ class Wolf :public enemy {
 
 	float shootInterval = 0.1;
 	float shootInterval_left = shootInterval;
-	int shootAmount = 8;
+	int shootAmount = 5;
 	int shootAmount_left = shootAmount;
 
 	float wagTime = 0.3;
@@ -53,6 +53,8 @@ public:
 		mov->setSpeed(500);
 
 		teleportAnim = new animation(list<IntRect>{IntRect(646, 727, 14, 80), IntRect(662, 760, 64, 14), IntRect(727, 751, 48, 32)}, sprite);
+		teleportAnim->setOffsetList(list<Vector2f>{Vector2f(28 * 4, 0 * 4), Vector2f(4 * 4, 25 * 4), Vector2f(12 * 4, 20 * 4)});
+		teleportAnim->thisFrame();
 		idleAnim_down = list<IntRect>{IntRect(0, 728, 67, 59), IntRect(146, 728, 67, 59), IntRect(292, 728, 67, 59)};
 		idleAnim_up = list < IntRect>{ IntRect(73, 728, 67, 59), IntRect(219, 728, 67, 59), IntRect(365, 728, 67, 59) };
 		idleAnim = new animation(idleAnim_down, sprite);
@@ -66,7 +68,7 @@ public:
 
 		setCode("wolf");
 
-		hit = new objectHitbox(IntRect(30, 0, 1, 59), sprite);
+		hit = new objectHitbox(IntRect(30, 45, 1, 48), sprite);
 		hurt = new objectHitbox(IntRect(0, 0, 67, 59), sprite);
 		state = teleporting;
 
@@ -109,19 +111,24 @@ public:
 	}
 
 	void shoot(list<EnemyBullet*>* bList) {
-		WolfFireBall* bullet = new WolfFireBall(this->sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + 24 * 4));
+		WolfFireBall* bullet = new WolfFireBall(this->sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + 32 * 4));
 
 		bList->push_back(bullet);
 	}
 
 	void standLoop(float* deltaT) {
 		standTime_left -= *deltaT;
+		
 		if (standTime_left <= 0) {
 			standTime_left = standTime;
 			state = shooting;
 		}
-
-		idleTimer->run(deltaT);
+		if (standTime_left <= 0.25) {
+			shootAnim->thisFrame();
+		}
+		else {
+			idleTimer->run(deltaT);
+		}
 	}
 
 	void tailAnim(float* deltaT) {

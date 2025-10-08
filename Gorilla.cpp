@@ -45,6 +45,7 @@ class Gorilla : public PhysicsEnemy {
 		grounded = false;
 		hangTime_left = hangTime;
 		hanging = true;
+		deathAnim->reset();
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {

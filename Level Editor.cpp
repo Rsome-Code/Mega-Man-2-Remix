@@ -83,6 +83,8 @@ class levelEditor {
 	mouse* m;
 	Vector2f wSize = Vector2f(1920, 1080);
 
+	bool zoomed = false;
+
 public:
 	levelEditor(Texture* T, string levelN) {
 		this->levelName = levelN;
@@ -186,6 +188,11 @@ public:
 			}
 			keyBoardCheck();
 
+
+			if (zoomed) {
+				//cam->setPosition(Vector2f(cam->getPosition().x, ))
+			}
+
 			for (tile* t : tileList) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
@@ -241,67 +248,70 @@ public:
 				}
 			}
 			
+			if (!zoomed) {
+				instance->UIDisplay(list<UISprite*> {tab, typeTab});
+				for (menuSelect* t : tileSelect) {
+					instance->UIDisplay(t->getSprite());
+				}
 
-			instance->UIDisplay(list<UISprite*> {tab, typeTab});
-			for (menuSelect* t : tileSelect) {
-				instance->UIDisplay(t->getSprite());
+				for (menuSelect* t : typeSelect) {
+					instance->UIDisplay(t->getSprite());
+				}
+
+
+
+				if (selectedTile != NULL) {
+
+					Vector2f size = worldHighlight.getSize();
+
+					if (size.x < 0) {
+
+						worldHighlight.setPosition(Vector2f(worldHighlight.getPosition().x + (16 * 2), worldHighlight.getPosition().y));
+					}
+
+					if (size.y < 0) {
+						worldHighlight.setPosition(Vector2f(worldHighlight.getPosition().x, worldHighlight.getPosition().y + (16 * 2)));
+					}
+
+
+					if (created) {
+						worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition() * z);
+					}
+					else {
+						worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+					}
+
+					if (created) {
+						selectedTile = NULL;
+						tileList.remove(*prev(tileList.end()));
+						created = false;
+					}
+
+				}
+
+				instance->getWindow()->draw(worldHighlight);
+
+
+				instance->getWindow()->draw(textureHighlight);
+
+				for (tile* t : tileList) {
+					if (t->getCeiling() != NULL) {
+						instance->objectHitboxSetup(t->getCeiling(), cam);
+					}
+					if (t->getGround() != NULL) {
+						instance->objectHitboxSetup(t->getGround(), cam);
+					}
+					if (t->getLeft() != NULL) {
+						instance->objectHitboxSetup(t->getLeft(), cam);
+					}
+					if (t->getRight() != NULL) {
+						instance->objectHitboxSetup(t->getRight(), cam);
+					}
+				}
+
+				instance->UIDisplay(zSelect->getSprite());
 			}
 
-			for (menuSelect* t : typeSelect) {
-				instance->UIDisplay(t->getSprite());
-			}
-			
-
-			if (selectedTile != NULL) {
-
-				Vector2f size = worldHighlight.getSize();
-
-				if (size.x < 0) {
-					
-					worldHighlight.setPosition(Vector2f(worldHighlight.getPosition().x + (16 * 2), worldHighlight.getPosition().y));
-				}
-			
-				if (size.y < 0) {
-					worldHighlight.setPosition(Vector2f(worldHighlight.getPosition().x, worldHighlight.getPosition().y + (16 * 2)));
-				}
-
-
-				if (created) {
-					worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition() * z);
-				}
-				else {
-					worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
-				}
-
-				if (created) {
-					selectedTile = NULL;
-					tileList.remove(*prev(tileList.end()));
-					created = false;
-				}
-				
-			}
-
-			instance->getWindow()->draw(worldHighlight);
-
-			
-			instance->getWindow()->draw(textureHighlight);
-
-			for (tile* t : tileList) {
-				if (t->getCeiling() != NULL) {
-					instance->objectHitboxSetup(t->getCeiling(), cam);
-				}
-				if (t->getGround() != NULL) {
-					instance->objectHitboxSetup(t->getGround(), cam);
-				}
-				if (t->getLeft() != NULL) {
-					instance->objectHitboxSetup(t->getLeft(), cam);
-				}
-				if (t->getRight() != NULL) {
-					instance->objectHitboxSetup(t->getRight(), cam);
-				}
-			}
-
-			instance->UIDisplay(zSelect->getSprite());
 
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
@@ -417,7 +427,7 @@ public:
 			mouse3Pressed = true;
 			z = 1;
 			save();
-
+			changeZ();
 		}
 		else if (sf::Mouse::isButtonPressed(sf::Mouse::Middle)) {
 		}
@@ -460,6 +470,8 @@ public:
 			cam->setZoom(0.5);
 			cam->setPosition(Vector2f(cam->getPosition().x - 450, cam->getPosition().y));
 		}
+
+		zoomed = b;
 	}
 
 	Vector2i mouseWorld(Vector2i mousePos) {

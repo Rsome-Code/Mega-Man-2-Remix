@@ -126,7 +126,7 @@ public:
 		return true;
 	}
 
-	void lowerHP(int h) {
+	virtual void lowerHP(int h) {
 		if (h > 0) {
 			hitSound->play();
 		}
@@ -219,6 +219,8 @@ public:
 		else if (itemChance > 95) {
 			
 		}
+
+		//item = new BigAmmo(t, pos);
 
 		if (item != NULL) {
 			item->getSprite()->setPosition(Vector2f(item->getSprite()->getPosition().x + (item->getSprite()->getSize().x / 4), item->getSprite()->getPosition().y + (item->getSprite()->getSize().y / 4)));

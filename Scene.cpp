@@ -50,6 +50,8 @@ class scene {
 	list<tile*> newZ4List;
 
 	list<object*> objects;
+	list<object*> backgroundObjects;
+	list<object*> newBackgroundObjects;
 	list<enemy*> enemies;
 	list<EnemyBullet*> eBullets;
 	list<Item*> items;
@@ -130,6 +132,7 @@ public:
 		stageName = stage->getName();
 
 		objects = stage->getObjects();
+		backgroundObjects = stage->getBackgroundObjects();
 		enemies = stage->getEnemies();
 
 		//p->start(stg->getInitialPlayer().x);
@@ -215,7 +218,7 @@ public:
 		bool unPaused = false;
 		
 
-		section = 12;
+		section = 7;
 
 		p->enableControls(true);
 
@@ -234,6 +237,10 @@ public:
 		
 
 		while (instance->getWindow()->isOpen() && run) {
+
+			//p->enableControls(false);
+			//p->getSprite()->enableGravity(false);
+
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
 			{
@@ -248,19 +255,21 @@ public:
 				deltaT = time->checkTimer(startP);
 			}
 
-			
+
 
 			start = time->timerStart();
 			startP = &start;
 
+
 			pDeathCheck(instance, targetRate, music);
+
 
 			if (levelEnd) {
 				levelEndLoop(deltaT);
 			}
 
 			if (checkPause(instance, targetRate)) {
-				
+
 				paused = true;
 				p->getSprite()->setVVelocity(0);
 				if (p->getActiveWeapon()->getHoldTime() == NULL || !p->getController()->checkB()) {
@@ -347,7 +356,7 @@ public:
 				}
 
 			}
-			
+
 
 			cam->followX();
 
@@ -357,12 +366,15 @@ public:
 			enum transitionAngle ang = stage->getAngle();
 
 			//if (!p->isTeleporting()) {
-				
-				cameraFlagCheck(flagPos);
 
-				if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920) {
-					flagCorrectedCam();
-				}
+			cameraFlagCheck(flagPos);
+
+			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920 || ((((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920))) {
+
+				flagCorrectedCam();
+			}
+
+			else {
 
 				if (nextFlagActive && lastFlagActive) {
 					if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
@@ -374,6 +386,7 @@ public:
 						}
 					}
 				}
+			}
 			//}
 
 			enemyDistanceCheck(instance, enemies);
@@ -394,25 +407,41 @@ public:
 
 			enemyBullets(deltaT);
 
+
+
+			for (object* o : backgroundObjects) {
+				instance->objectAccess(o, cam);
+			}
+
+			
+			//allTileOn(tileList);
+			//allTileOn(z4List);
+			//allTileOn(z3List);
+			//allTileOn(z2List);
+			tileDistanceCheck(instance, tileList);
+
 			for (tile* t : z4List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 			}
 			for (tile* t : z3List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+				
+				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
+				
 			}
 			for (tile* t : z2List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+				
+				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
+				
 			}
-
-
-
-			tileDistanceCheck(instance, tileList);
+			
+			
 			for (tile* t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
+			
 
 			for (object* t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
@@ -455,6 +484,17 @@ public:
 			instance->objectAccess(door1, cam);
 			instance->objectAccess(door2, cam);
 
+			for (object* o : backgroundObjects) {
+				o->setCamera(cam);
+				o->eachFrame(&deltaT, p->getSprite());
+
+			}
+
+			for (object* o : objects) {
+				o->setCamera(cam);
+				o->eachFrame(&deltaT, p->getSprite());
+				
+			}
 
 			//p->updateLighting();
 			//lightingCheck();
@@ -497,6 +537,13 @@ public:
 		}
 
 		return levelEnd;
+	}
+
+	void allTileOn(list<tile*> tL) {
+		for (tile* t : tL) {
+			t->setAct(true);
+			t->setDisplay(true);
+		}
 	}
 
 	void nextFlagCam() {
@@ -651,7 +698,7 @@ public:
 			list<object*> tempL = objects;
 			tempL.push_back(door1);
 			tempL.push_back(door2);
-			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, cam, 0.75);
+			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
 
 			masterDeathSound->play();
 
@@ -675,6 +722,8 @@ public:
 				e->setAct(true);
 				e->setOffScreen(false);
 				e->setInitOffScreen(false);
+
+				e->setCamera(cam);
 			}
 		}
 	}
@@ -694,6 +743,7 @@ public:
 
 		forceLoadSection(section);
 		
+		
 		p->shootReset();
 
 		if (flag->getAngle() == RIGHT) {
@@ -712,20 +762,26 @@ public:
 
 		cameraFlagCheck(flagPos);
 
-		if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920) {
+		if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920 || ((((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920))) {
+
 			flagCorrectedCam();
 		}
 
-		if (nextFlagActive && lastFlagActive) {
-			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
-				if (currentFlag->getAngle() != UP && currentFlag->getAngle() != DOWN) {
-					centerCamera();
-				}
-				else {
-					nextFlagCam();
+		else {
+
+			if (nextFlagActive && lastFlagActive) {
+				if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
+					if (currentFlag->getAngle() != UP && currentFlag->getAngle() != DOWN) {
+						centerCamera();
+					}
+					else {
+						nextFlagCam();
+					}
 				}
 			}
 		}
+
+		
 
 		resetObjects();
 
@@ -760,6 +816,11 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
+			for (object* o : backgroundObjects) {
+				o->setCamera(cam);
+				o->eachFrame(&deltaT, p->getSprite());
+				instance->objectAccess(o, cam);
+			}
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
@@ -804,10 +865,9 @@ public:
 
 	void respawn() {
 		
-		p->setPosition(Vector2f(cam->getPosition().x + (1920/2), cam->getPosition().y));
+		p->setPosition(Vector2f(cam->getPosition().x + ((1920/2) - 8*4), cam->getPosition().y));
 		p->start(cam->getPosition().y + (16*4));
 		p->swapDirection();
-		
 	
 	}
 
@@ -861,7 +921,7 @@ public:
 									list<object*> tempL = objects;
 									tempL.push_back(door1);
 									tempL.push_back(door2);
-									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, cam, 0.75);
+									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects,  cam, 0.75);
 									paused = true;
 									levelEndCheck(enemy, music);
 								}
@@ -906,13 +966,14 @@ public:
 		if (p->getController()->checkSTART() && !startPressed && p->checkInControl()) {
 			p->getAtomicFire()->resetHold();
 			pause = new Pause(stageName, p);
-			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, cam);
-			for (object* o : objects) {
-				refreshMisc();
-				if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank" || o->getSprite()->getType() == "Extra Life") {
+			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, backgroundObjects, cam);
+			refreshMisc();
+			for (object* o : items) {
+				
+				//if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank" || o->getSprite()->getType() == "Extra Life") {
 
-					o->getSprite()->setTexture(miscT);
-				}
+				o->getSprite()->setTexture(miscT);
+				//}
 			}
 			startPressed = true;
 			return true;
@@ -1084,7 +1145,7 @@ public:
 		if (currentFlag->getSprite()->getPosition().x > lastFlagPos.x) {
 
 			//If the distance between both flags are less than the camera size...
-			if (fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) <= 1920) {
+			if ((fabs(currentFlag->getSprite()->getPosition().x - lastFlagPos.x) <= 1920) && !((lastFlag->getAngle() == UP || lastFlag->getAngle() == DOWN) && currentFlag->getAngle() == RIGHT)) {
 				cam->setPosition(Vector2f(lastFlagPos.x, cam->getPosition().y));
 				fallDeath = false;
 				nextFlagActive = true;
@@ -1158,7 +1219,18 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			
+			for (object* o : backgroundObjects) {
+				o->setCamera(cam);
+				o->eachFrame(&deltaT, p->getSprite());
+				instance->objectAccess(o, cam);
+
+			}
+			for (object* o : newBackgroundObjects) {
+				o->setCamera(cam);
+				o->eachFrame(&deltaT, p->getSprite());
+				instance->objectAccess(o, cam);
+
+			}
 
 			for (tile* t : newZ4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
@@ -1256,7 +1328,7 @@ public:
 				//Special rule needed when next transition is vertical and next position is within camera shot
 				//Needs to be tested
 				else if (otherAngle == UP || otherAngle == DOWN) {
-					if (cam->getPosition().x > otherFlagPos + 1920) {
+					if (cam->getPosition().x < otherFlagPos) {
 						run = false;
 					}
 				}
@@ -1273,6 +1345,7 @@ public:
 			//p->updateLighting();
 			//lightingCheck();
 			instance->objectDisplay(p->getSprite(), cam);
+			instance->UIDisplay(p->getUI());
 
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
@@ -1322,6 +1395,7 @@ public:
 		newZ3List = stage->getZ3List();
 		newZ4List = stage->getZ4List();
 		objects = stage->getObjects();
+		newBackgroundObjects = stage->getBackgroundObjects();
 		enemies = stage->getEnemies();
 		for (enemy* e : enemies) {
 			e->initial();
@@ -1369,6 +1443,8 @@ public:
 		z3List = newZ3List;
 		z4List = newZ4List;
 
+		backgroundObjects = newBackgroundObjects;
+		newBackgroundObjects.clear();
 		newTileList.clear();
 		newZ2List.clear();
 		newZ3List.clear();
@@ -1502,18 +1578,28 @@ public:
 
 
 
+			for (object* ob : backgroundObjects) {
+				instance->objectAccess(ob, cam);
+			}
 
+			tileDistanceCheck(instance, tileList);
 
 			for (tile* t : z4List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->bObjectDisplay(t->getSprite(), cam);
+				}
 			}
 			for (tile* t : z3List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->bObjectDisplay(t->getSprite(), cam);
+				}
 			}
 			for (tile* t : z2List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
+				if (t->getDisplay() && t->getSprite() != NULL) {
+					instance->bObjectDisplay(t->getSprite(), cam);
+				}
 			}
-			tileDistanceCheck(instance, tileList);
+			
 			for (tile* t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
@@ -1522,9 +1608,14 @@ public:
 			}
 			for (object* t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
-					instance->objectAccess(t, cam);
+					
 				}
 			}
+
+			for (object* item : items) {
+				instance->objectAccess(item, cam);
+			}
+
 			for (object* t : enemies) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
@@ -1575,7 +1666,46 @@ public:
 
 
 		}
+
+		backgroundTileDistanceCheck(z2List);
+		backgroundTileDistanceCheck(z3List);
+		backgroundTileDistanceCheck(z4List);
 	
+	}
+
+	/*void backgroundTileDistanceCheck(list<tile*> tiles) {
+		
+		for (tile* t : tiles) {
+			bool display = false;
+			if (t->getSprite()->getCameraPosition().x > -(16 * 4)) {
+				if (t->getSprite()->getCameraPosition().x < 1920) {
+					if (t->getSprite()->getCameraPosition().y > -(16 * 4)) {
+						if (t->getSprite()->getCameraPosition().y < 1080) {
+							{
+								//t->setAct(true);
+								display = true;
+							}
+						}
+					}
+				}
+				
+			}
+			t->setDisplay(display);
+		}
+	}*/
+
+	void backgroundTileDistanceCheck(list<tile*> tiles) {
+
+		for (tile* t : tiles) {
+			float x = t->getSprite()->getCameraPosition().x;
+			bool displayX = !(x < -(16*4)) && !(1920 < x);
+
+			float y = t->getSprite()->getCameraPosition().y;
+			bool displayY = !(y < -(16 * 4)) && !(1920 < y);
+			
+			t->setDisplay(displayX && displayY);
+		}
+
 	}
 
 
