@@ -28,6 +28,14 @@ protected:
 	Music* bossMusic;
 	bool noMusic = true;
 
+	float invincibleTime = 0.5;
+	float invincibleTime_left = 0;
+
+	float flashTime = 0.04;
+	float flashTime_left = flashTime;
+
+	objectSprite* damSprite;
+	Vector2f damPos = Vector2f(sprite->getMiddlePos().x - (12 * 4), sprite->getMiddlePos().y - (12 * 4));
 
 public:
 
@@ -50,6 +58,8 @@ public:
 		bossMusic = new Music();
 		bossMusic->openFromFile("assets\\sound\\music\\14 - Boss Battle.mp3");
 		bossMusic->setVolume(50);
+
+		damSprite = new objectSprite("effect", sprite->getTexture(), IntRect(433, 0, 24, 24), Vector2f(0,0), Vector2f(4, 4));
 	}
 
 	bool tauntLoop(float* deltaT, list<tile*>* tiles) {
@@ -74,8 +84,6 @@ public:
 	}
 
 	bool titleLoop(float* deltaT, UIHitbox* floor) {
-
-		
 			
 		if (!grounded) {
 			phys->eachFrame(deltaT);
@@ -114,6 +122,7 @@ public:
 	}
 
 	bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
+		damPos = Vector2f(sprite->getMiddlePos().x - (12 * 4), sprite->getMiddlePos().y - (12 * 4));
 		if (introDone) {
 			if (hp > 0) {
 				if (act) {
@@ -136,7 +145,29 @@ public:
 			}
 		}
 
+		invincibleLoop(deltaT);
+
 		return false;
+	}
+
+	void invincibleLoop(float* deltaT) {
+		invincibleTime_left -= *deltaT;
+		if (invincibleTime_left > 0) {
+			flashLoop(deltaT);
+			damSprite->setPosition(damPos);
+		}
+		else {
+			display = true;
+			damSprite->setPosition(Vector2f(0, 0));
+		}
+	}
+
+	void flashLoop(float* deltaT) {
+		flashTime_left -= *deltaT;
+		if (flashTime_left <= 0) {
+			flashTime_left = flashTime;
+			display = !display;
+		}
 	}
 
 	void introLoop(float* deltaT, list<tile*>* tileList) {
@@ -213,4 +244,26 @@ public:
 	void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos) {
 
 	}
+
+	bool checkInvincible() {
+		return invincibleTime_left > 0;
+	}
+
+	void lowerHP(int h) {
+		if (h > 0) {
+			hitSound->play();
+			damaged = true;
+			invincibleTime_left = invincibleTime;
+		}
+		hp = hp - h;
+	}
+
+	objectSprite* getDamSprite() {
+		return damSprite;
+	}
+
+	int genericDam() {
+		return 2;
+	}
+
 };

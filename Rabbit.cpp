@@ -45,8 +45,10 @@ class Rabbit : public PhysicsEnemy {
 		jumpAnim->setOffsetList(list<Vector2f>{ Vector2f(0, 0), Vector2f(0, 2 * 4), Vector2f(0, 0)});
 		landAnim->setOffsetList(list<Vector2f>{  Vector2f(0, 2 * 4), Vector2f(0, 0)});
 		deathAnim->setSprite(sprite);
-		hit = new objectHitbox(IntRect(0, 0, 32, 37), phys);
+		hit = new objectHitbox(IntRect(0, 0, 32, 37), true, phys);
 		hurt = new objectHitbox(IntRect(0, 0, 32, 37), phys);
+
+		
 
 		hp = 6;
 		damage = 5;

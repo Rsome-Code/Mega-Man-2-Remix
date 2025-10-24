@@ -13,6 +13,7 @@
 #include "Death Animation.cpp"
 #include "hitbox detector.cpp"
 #include "leaf Shield.cpp"
+#include "bubble lead.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -37,6 +38,7 @@ class player {
 
 	bool gotAtomicFire = false;
 	bool gotShield = false;
+	bool gotLead = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -58,6 +60,7 @@ class player {
 	MegaBuster* megaBuster;
 	AtomicFire* atomicFire;
 	LeafShield* leafShield;
+	BubbleLead* bubbleLead;
 
 	Weapon* active = megaBuster;
 
@@ -106,7 +109,7 @@ public:
 		
 
 		hit = new objectHitbox(IntRect(Vector2i(5 * sprite->getScale().x, 2 * sprite->getScale().y), Vector2i(11, 22)), true, sprite);
-		foot = new objectHitbox(IntRect(Vector2i(9 * sprite->getScale().x, 7 * sprite->getScale().y), Vector2i(4, 20)), true, sprite);
+		foot = new objectHitbox(IntRect(Vector2i(7 * sprite->getScale().x, 7 * sprite->getScale().y), Vector2i(7, 20)), true, sprite);
 		head = new objectHitbox(IntRect(Vector2i(7 * sprite->getScale().x, 1 * sprite->getScale().y), Vector2i(7, 2)), true, sprite);
 		ladderHit = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 24 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
 		ladderBelow = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
@@ -124,6 +127,7 @@ public:
 		megaBuster = new MegaBuster(sprite, t);
 		atomicFire = new AtomicFire(sprite, t);
 		leafShield = new LeafShield(sprite, t);
+		bubbleLead = new BubbleLead(sprite, t);
 
 		//Define ammo bars here
 		Texture* aB = new Texture();
@@ -150,6 +154,7 @@ public:
 		float* t = new float(0.000001);
 		megaBuster->eachFrame(t);
 		atomicFire->eachFrame(t);
+		bubbleLead->eachFrame(t);
 	}
 
 	Vector2f getPosition() {
@@ -158,14 +163,14 @@ public:
 
 	void ladderJumpExtend(list<tile*> tiles) {
 		if ((controls->isJumping() && ladderNotBelow(tiles) )|| (controls->getOnLadder() && ladderNotBelow(tiles))) {
-			ladderHit->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 0 * sprite->getScale().y));
-			ladderAbove->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, -3 * sprite->getScale().y));
-			ladderBelow->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 2 * sprite->getScale().y));
+			ladderHit->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 0 * sprite->getScale().y));
+			ladderAbove->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, -3 * sprite->getScale().y));
+			ladderBelow->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 2 * sprite->getScale().y));
 		 }
 		else {
-			ladderHit->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 24 * sprite->getScale().y));
-			ladderAbove->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 21 * sprite->getScale().y));
-			ladderBelow->setRelativePosition(Vector2f(ladderHit->getRelativePosition().x, 26 * sprite->getScale().y));
+			ladderHit->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 24 * sprite->getScale().y));
+			ladderAbove->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 21 * sprite->getScale().y));
+			ladderBelow->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 26 * sprite->getScale().y));
 		}
 	}
 
@@ -217,6 +222,11 @@ public:
 	void setAtomicFire(bool b) {
 		gotAtomicFire = b;
 	}
+
+	void setBubbleLead(bool b) {
+		gotLead = b;
+	}
+
 	void setETanks(int e) {
 		ETanks = e;
 	}
@@ -258,6 +268,9 @@ public:
 	AtomicFire* getAtomicFire() {
 		return atomicFire;
 	}
+	BubbleLead* getBubbleLead() {
+		return bubbleLead;
+	}
 
 	void setLives(int l) {
 		lives = l;
@@ -284,6 +297,7 @@ public:
 	}
 
 	bool setDead() {
+		
 		invincibilityTime_left = 0;
 		display = true;
 		if (deathAnim == NULL) {
@@ -395,7 +409,7 @@ public:
 				else {
 					controls->runWithoutControl(deltaT);
 				}
-				controls->shootEachFrame(deltaT);
+				controls->shootEachFrame(deltaT, tiles);
 
 				pAnim->shootDecide(deltaT);
 
@@ -420,7 +434,7 @@ public:
 		}
 		else {
 
-			controls->shootEachFrame(deltaT);
+			controls->shootEachFrame(deltaT, tiles);
 
 			if (tele == NULL) {
 				dam->flicker(deltaT);
@@ -428,7 +442,7 @@ public:
 			}
 			else {
 				sprite->setMovable(true);
-				tempDTime = 0;
+				tempDTime = damageTime;
 				damage = false;
 				sprite->setMovable(true);
 				dam->reset();
@@ -522,6 +536,10 @@ public:
 
 	int getHP() {
 		return health->getAmount();
+	}
+
+	void ammoReset() {
+		atomicFire->setAmmo(28);
 	}
 
 	void updateHitbox() {
@@ -712,7 +730,7 @@ private:
 		return false;
 	}
 	bool checkLead() {
-		return false;
+		return gotLead;
 	}
 	bool checkBoomerang() {
 		return false;

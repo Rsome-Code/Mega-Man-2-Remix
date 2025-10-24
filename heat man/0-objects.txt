@@ -1,0 +1,14 @@
+springer,8662,1244,1
+springer,8763,988,1
+telly-spawn,3648,961,1
+telly-spawn,3904,1085,1
+telly-spawn,4290,897,1
+telly-spawn,4544,1023,1
+telly-spawn,4867,1215,1
+telly-spawn,5185,895,1
+telly-spawn,5569,897,1
+telly-spawn,6338,895,1
+telly-spawn,6850,897,1
+fly guy-spawn,2384,636,1
+fly guy-spawn,2892,636,1
+fly guy-spawn,3530,634,1

@@ -1,0 +1,4 @@
+disappearing tile-0,8831,2063,1
+disappearing tile-1,8815,1907,1
+disappearing tile-2,8429,1891,1
+disappearing tile-3,8591,1901,1

@@ -1,9 +1,11 @@
 #include "enemy.cpp"
+#include "GObject.cpp"
 #include "temp enemy.cpp"
+#include "spawner.cpp"
 
 #pragma once
 
-class SpawnArea : object {
+class SpawnArea : Spawner {
 	
 protected:
 	float startX;

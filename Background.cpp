@@ -1,10 +1,10 @@
 #include <SFML/graphics.hpp>
 #include "camera.cpp"
-#include "object.cpp"
+#include "GObject.cpp"
 #pragma once
 
 
-class Background:public object {
+class Background:public GameObject {
 	camera* cam;
 
 public:

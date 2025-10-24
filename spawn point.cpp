@@ -5,7 +5,7 @@ enum SpawnType {
 	START, END
 };
 
-class SpawnPoint : public object{
+class SpawnPoint : public GameObject{
 protected:
 	
 	string obName;

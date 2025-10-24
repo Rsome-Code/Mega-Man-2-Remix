@@ -14,12 +14,12 @@
 #include "freeze.cpp"
 #include "door.cpp"
 #include "end flag.cpp"
-#include "item.cpp"
 #include <list>
 #include "temp enemy.cpp"
 #include "spawn area.cpp"
 #include "ammo bar.cpp"
 #include "teleport Out.cpp"
+#include "GObject.cpp"
 #include <sfml/audio.hpp>
 #pragma once
 
@@ -49,9 +49,9 @@ class scene {
 	list<tile*> newZ3List;
 	list<tile*> newZ4List;
 
-	list<object*> objects;
-	list<object*> backgroundObjects;
-	list<object*> newBackgroundObjects;
+	list<GameObject*> objects;
+	list<GameObject*> backgroundObjects;
+	list<GameObject*> newBackgroundObjects;
 	list<enemy*> enemies;
 	list<EnemyBullet*> eBullets;
 	list<Item*> items;
@@ -83,7 +83,8 @@ class scene {
 	Door* door1;
 	Door* door2;
 
-	list<enemy*> tempEnemies;
+	//list<enemy*> tempEnemies;
+	list<Spawner*> spawners;
 
 	SpawnArea* spawner;
 
@@ -111,7 +112,6 @@ class scene {
 	TeleportOut* teleExit;
 
 
-
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
 
@@ -124,16 +124,16 @@ public:
 		cam->setPosition(stg->getInitialCamera());
 		background = new grid();
 		stage = stg;
-		tileList = stage->getTiles();
-		z2List = stage->getZ2List();
-		z3List = stage->getZ3List();
-		z4List = stage->getZ4List();
+		//tileList = stage->getTiles();
+		//z2List = stage->getZ2List();
+		//z3List = stage->getZ3List();
+		//z4List = stage->getZ4List();
 
 		stageName = stage->getName();
 
-		objects = stage->getObjects();
-		backgroundObjects = stage->getBackgroundObjects();
-		enemies = stage->getEnemies();
+		//objects = stage->getObjects();
+		//backgroundObjects = stage->getBackgroundObjects();
+		//enemies = stage->getEnemies();
 
 		//p->start(stg->getInitialPlayer().x);
 		lastFlagPos = Vector2f(0, 0);
@@ -208,6 +208,13 @@ public:
 			run = false;
 		}
 	}
+
+
+
+
+
+
+
 	float deltaT = 0.00001;
 	bool loop(renderer* instance, double targetRate) {
 
@@ -227,7 +234,7 @@ public:
 		updateFlags();
 
 		Music* music = stage->getMusic();
-		music->setVolume(60);
+		music->setVolume(30);
 
 
 		startAnim(instance, targetRate, music);
@@ -318,15 +325,22 @@ public:
 
 			checkFall();
 
+			for (object* o : objects) {
+				o->setCamera(cam);
+				o->eachFrame(&deltaT, p->getSprite(), cam);
+				o->eachFrame(&deltaT, p->getSprite());
+			}
+
 			if (!p->isTeleporting()) {
 				ground = false;
 
 
 				if (!unPaused) {
+					tileCheck(instance, &deltaT);
 					if (!p->getControls()->getOnLadder()) {
 
 
-						tileCheck(tileList, instance);
+						
 
 						p->setGrounded(ground);
 
@@ -402,7 +416,9 @@ public:
 
 			enemyBullets(deltaT);
 
-
+			for (Spawner* spawn : spawners) {
+				spawn->eachFrame(&deltaT, p->getSprite(), &enemies, cam);
+			}
 
 			for (object* o : backgroundObjects) {
 				instance->objectAccess(o, cam);
@@ -419,22 +435,23 @@ public:
 			backgroundTileDistanceCheck(z4List);
 
 			for (tile* t : z4List) {
+				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 			}
 			for (tile* t : z3List) {
-
+				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 
 			}
 			for (tile* t : z2List) {
-
+				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 
 			}
 
-
+			
 			for (tile* t : tileList) {
-
+				t->animate(&deltaT);
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
@@ -448,8 +465,16 @@ public:
 			}
 
 			for (enemy* t : enemies) {
+				if (t->getDamSprite() != NULL) {
+					instance->objectDisplay(t->getDamSprite(), cam);
+				}
 				if (t->getDisplay() && t->getSprite() != NULL) {
+					
 					instance->objectAccess(t, cam);
+					//instance->objectHitboxSetup(t->getHitbox(), cam);
+					//instance->hitboxDisplay(t->getHitbox());
+
+					
 				}
 			}
 
@@ -478,9 +503,12 @@ public:
 				instance->objectAccess(p->getDamEffect(), cam);
 			}
 
-
-			instance->objectAccess(door1, cam);
-			instance->objectAccess(door2, cam);
+			if (door1 != NULL) {
+				instance->objectAccess(door1, cam);
+			}
+			if (door2 != NULL) {
+				instance->objectAccess(door2, cam);
+			}
 
 			for (object* o : backgroundObjects) {
 				o->setCamera(cam);
@@ -488,11 +516,7 @@ public:
 
 			}
 
-			for (object* o : objects) {
-				o->setCamera(cam);
-				o->eachFrame(&deltaT, p->getSprite());
 
-			}
 
 			//p->updateLighting();
 			//lightingCheck();
@@ -509,12 +533,12 @@ public:
 				AmmoBar* a = *masterHealth;
 				instance->UIDisplay(a->getSprites());
 			}
-			//transition* cur = *next(tIterator);
+
 			//instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
 			//instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
 
 
-
+			
 
 
 
@@ -528,7 +552,7 @@ public:
 
 
 		if (levelEnd) {
-			list<object*> temps = objects;
+			list<GameObject*> temps = objects;
 			temps.push_back(door1);
 			temps.push_back(door2);
 			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, cam);
@@ -586,7 +610,7 @@ public:
 		list<EnemyBullet*>::iterator it = eBullets.begin();
 		list<EnemyBullet*>::iterator toDelete = eBullets.end();
 		for (EnemyBullet* b : eBullets) {
-			b->eachFrame(&deltaT);
+			b->eachFrame(&deltaT, &tileList);
 			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible()) {
 				p->takeDamage(b->getDamage());
 			}
@@ -662,7 +686,6 @@ public:
 
 
 
-
 			if (death(instance, targetRate, cam)) {
 				if (p->getLives() > 0) {
 					startAnim(instance, targetRate, music);
@@ -693,7 +716,7 @@ public:
 	bool death(renderer* instance, float tRate, camera* cam) {
 		if (p->setDead()) {
 
-			list<object*> tempL = objects;
+			list<GameObject*> tempL = objects;
 			tempL.push_back(door1);
 			tempL.push_back(door2);
 			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
@@ -731,6 +754,8 @@ public:
 	}
 
 	void startAnim(renderer* instance, float targetRate, Music* music) {
+
+		
 		eBullets.clear();
 		p->setDeathNull();
 		music->play();
@@ -821,20 +846,28 @@ public:
 			}
 
 			for (tile* t : z4List) {
+				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 			for (tile* t : z3List) {
+				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 			for (tile* t : z2List) {
+				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
-
+			
 			for (tile* t : tileList) {
-
+				t->animate(&deltaT);
 				tileDistanceCheck(instance, t);
-
+			}
+			for (object* o : objects) {
+				float* f = new float(0);
+				o->eachFrame(f, p->getSprite());
+			}
+			for (tile* t : tileList) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
@@ -903,27 +936,34 @@ public:
 				for (bullet* bull : p->getControls()->getBulletObjects()) {
 					if (enemy->checkHurt(bull->getHitbox())) {
 
-						enemy->lowerHP(bull->checkDamage(enemy));
+						if (!enemy->checkInvincible()) {
+							enemy->lowerHP(bull->checkDamage(enemy));
 
 
-						if (bull->checkDamage(enemy) <= 0) {
-							bull->deflect();
-						}
-						else {
-							bull->onHit(enemy);
-							if (enemy->getHP() <= 0) {
-								spawnItemFromEnemy(enemy);
+							if (bull->checkDamage(enemy) <= 0) {
+								bull->deflect();
+							}
+							else {
+								bull->onHit(enemy);
+								if (enemy->getHP() <= 0) {
+									spawnItemFromEnemy(enemy);
 
-								if (enemy->getDeathAnims()[0] != NULL) {
-									music->stop();
-									list<object*> tempL = objects;
-									tempL.push_back(door1);
-									tempL.push_back(door2);
-									Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
-									paused = true;
-									levelEndCheck(enemy, music);
+									enemy->spawnEnemy(&enemies);
+
+									if (enemy->getDeathAnims()[0] != NULL) {
+										music->stop();
+										list<GameObject*> tempL = objects;
+										tempL.push_back(door1);
+										tempL.push_back(door2);
+										Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
+										paused = true;
+										levelEndCheck(enemy, music);
+									}
 								}
 							}
+						}
+						else {
+							bull->deflect();
 						}
 					}
 					else if (enemy->checkHit(bull->getHitbox())) {
@@ -952,6 +992,7 @@ public:
 
 	}
 
+	//Shouldn't this only apply to temp enemies???
 	bool enemyYCheck(enemy* e) {
 		if (e->getSprite()->getCameraPosition().y > 1080) {
 			return e->isDead(&enemies);
@@ -1018,7 +1059,7 @@ public:
 					return true;
 				}
 			}
-			else if (ang == UP) {
+			else if (ang == UP && p->getControls()->getOnLadder()) {
 				if (p->getSprite()->getPosition().y - 48 <= flagPos.y) {
 					startTransition(instance, targetRate, ang, flagPos, nextSection);
 					return true;
@@ -1038,11 +1079,11 @@ public:
 
 	bool doorCheck(renderer* instance, float targetRate) {
 		if (door1->getSection() == section) {
-			door1->loop(instance, cam, targetRate, p->getSprite(), door2->getSprite(), tileList, z2List, z3List, z4List, true);
+			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, true);
 			return true;
 		}
 		if (door2->getSection() == section) {
-			door2->loop(instance, cam, targetRate, p->getSprite(), door1->getSprite(), tileList, z2List, z3List, z4List, true);
+			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, true);
 			return true;
 		}
 		return false;
@@ -1050,11 +1091,11 @@ public:
 
 	void doorClose(renderer* instance, float targetRate) {
 		if (door1->getSection() == section - 1) {
-			door1->loop(instance, cam, targetRate, p->getSprite(), door2->getSprite(), tileList, z2List, z3List, z4List, false);
+			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, false);
 
 		}
 		if (door2->getSection() == section - 1) {
-			door2->loop(instance, cam, targetRate, p->getSprite(), door1->getSprite(), tileList, z2List, z3List, z4List, false);
+			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, false);
 
 		}
 	}
@@ -1395,10 +1436,11 @@ public:
 		objects = stage->getObjects();
 		newBackgroundObjects = stage->getBackgroundObjects();
 		enemies = stage->getEnemies();
+		spawners = stage->getSpawners();
 		for (enemy* e : enemies) {
 			e->initial();
 		}
-		spawner = stage->getSpawner();
+		spawner = stage->getAreaSpawner();
 
 		bossCheck();
 	}
@@ -1477,6 +1519,7 @@ public:
 					if (!p->isInvincible()) {
 
 						p->takeDamage(e->getDamage());
+						e->playerHit();
 
 					}
 					if (e->getIncrease() != NULL) {
@@ -1700,6 +1743,7 @@ public:
 			bool displayY = !(y < -(16 * 4)) && !(1920 < y);
 
 			t->setDisplay(displayX && displayY);
+
 		}
 
 	}
@@ -1827,7 +1871,7 @@ public:
 		bool getupAnim = false;
 
 		for (tile* t : tileList) {
-			tileDistanceCheck(instance, t);
+			
 
 			if (ladderBelowTileCheck(t)) {
 				p->getControls()->setLadderBelow(true);
@@ -1860,98 +1904,113 @@ public:
 		}
 	}
 
-	void tileCheck(list<tile*> t, renderer* instance) {
-		p->getControls()->setInfrontOfLadder(false);
-
+	void tileCheck(renderer* instance, float* deltaT) {
+		
 		bool lBelow = false;
 		bool lAbove = false;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		for (tile* t : tileList) {
+			if (!p->getControls()->getOnLadder()) {
 
-			bool thisGround = false;
-			bool thisC = false;
+				bool thisGround = false;
+				bool thisC = false;
 
-			if (t->getAct()) {
+				if (t->getAct()) {
 
-				float currentX = p->getSprite()->getPosition().x;
-				if (t->getGround() != NULL) {
-					if (hitboxCheck(p->getFoot(), t->getGround())) {
-						if (p->getSprite()->getAcceleration().y < 0 || p->getGrounded()) {
-							p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
-							//cam->follow();
+					float currentX = p->getSprite()->getPosition().x;
+					if (t->getGround() != NULL) {
+						if (hitboxCheck(p->getFoot(), t->getGround())) {
+							if (p->getSprite()->getAcceleration().y < 0 || p->getGrounded()) {
+								p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
+								//cam->follow();
 
-							ground = true;
-							thisGround = true;
-						}
-					}
-				}
-				if (!thisGround) {
-					if (t->getCeiling() != NULL) {
-						if (hitboxCheck(p->getHead(), t->getCeiling())) {
-							p->getControls()->jumpCancel();
-							thisC = true;
-						}
-					}
-					if (!thisC) {
-						if (t->getRight() != NULL) {
-							if (hitboxCheck(p->getHitbox(), t->getRight())) {
-								p->getSprite()->setPosition(Vector2f(t->getRight()->getPosition().x + t->getRight()->getSize().x - 20, p->getSprite()->getPosition().y));
-								p->updateHitbox();
-								//p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x - p->getSprite()->getHDistanceTraveled(), p->getSprite()->getPosition().y));
-							}
-						}
-						if (t->getLeft() != NULL) {
-							if (hitboxCheck(p->getHitbox(), t->getLeft())) {
-								//p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x - p->getSprite()->getHDistanceTraveled(), p->getSprite()->getPosition().y));
-								//p->getSprite()->setVVelocity(0);
-								p->getSprite()->setPosition(Vector2f(t->getLeft()->getPosition().x - t->getLeft()->getSize().x - p->getHitbox()->getSize().x - 16, p->getSprite()->getPosition().y));
-								p->updateHitbox();
+								ground = true;
+								thisGround = true;
 							}
 						}
 					}
+					if (!thisGround) {
+						if (t->getCeiling() != NULL) {
+							if (hitboxCheck(p->getHead(), t->getCeiling())) {
+								p->getControls()->jumpCancel();
+								thisC = true;
+							}
+						}
+						if (!thisC) {
+							if (t->getRight() != NULL) {
+								if (hitboxCheck(p->getHitbox(), t->getRight())) {
+									p->getSprite()->setPosition(Vector2f(t->getRight()->getPosition().x + t->getRight()->getSize().x - 20, p->getSprite()->getPosition().y));
+									p->updateHitbox();
+									//p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x - p->getSprite()->getHDistanceTraveled(), p->getSprite()->getPosition().y));
+								}
+							}
+							if (t->getLeft() != NULL) {
+								if (hitboxCheck(p->getHitbox(), t->getLeft())) {
+									//p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x - p->getSprite()->getHDistanceTraveled(), p->getSprite()->getPosition().y));
+									//p->getSprite()->setVVelocity(0);
+									p->getSprite()->setPosition(Vector2f(t->getLeft()->getPosition().x - t->getLeft()->getSize().x - p->getHitbox()->getSize().x - 16, p->getSprite()->getPosition().y));
+									p->updateHitbox();
+								}
+							}
+						}
+					}
+
+					if (t->getLadder() != NULL) {
+						if (hitboxCheck(p->getLadderHitbox(), t->getLadder())) {
+							onLadder = true;
+							p->getControls()->setInfrontOfLadder(true);
+						}
+					}
+
+					if (t->getDeathBox() != NULL) {
+						if (hitboxCheck(p->getHitbox(), t->getDeathBox())) {
+							p->takeDamage(100);
+						}
+					}
+
+
+
 				}
 
-				if (t->getLadder() != NULL) {
-					if (hitboxCheck(p->getLadderHitbox(), t->getLadder())) {
-						onLadder = true;
-						p->getControls()->setInfrontOfLadder(true);
+
+
+
+				if (ladderBelowTileCheck(t)) {
+					p->getControls()->setLadderBelow(true);
+					lBelow = true;
+				}
+				if (ladderAboveTileCheck(t)) {
+					p->getControls()->setLadderAbove(true);
+					lAbove = true;
+				}
+
+				if (p->getControls()->getOnLadder()) {
+					onLadder = ladderTileCheck(t);
+					p->getControls()->setInfrontOfLadder(true);
+					ladderAbove(t);
+					if (!headLadderTileCheck(t)) {
+						p->getAnimation()->ladderGetUp();
 					}
 				}
 
-			}
 
+				/*if (t->getDisplay()) {
+					instance->objectDisplay(t->getSprite(), cam);
+				}*/
 
-
-			tileDistanceCheck(instance, t);
-
-			if (ladderBelowTileCheck(t)) {
-				p->getControls()->setLadderBelow(true);
-				lBelow = true;
-			}
-			if (ladderAboveTileCheck(t)) {
-				p->getControls()->setLadderAbove(true);
-				lAbove = true;
-			}
-
-			if (p->getControls()->getOnLadder()) {
-				onLadder = ladderTileCheck(t);
-				p->getControls()->setInfrontOfLadder(true);
-				ladderAbove(t);
-				if (!headLadderTileCheck(t)) {
-					p->getAnimation()->ladderGetUp();
+				if (lBelow == false) {
+					p->getControls()->setLadderBelow(false);
+				}
+				if (lAbove == false) {
+					p->getControls()->setLadderAbove(false);
 				}
 			}
-
-
-
+			if (t->checkDist()) {
+				tileDistanceCheck(instance, t);
+			}
 		}
-		if (lBelow == false) {
-			p->getControls()->setLadderBelow(false);
-		}
-		if (lAbove == false) {
-			p->getControls()->setLadderAbove(false);
-		}
+		
 	}
 
 

@@ -20,9 +20,10 @@ public:
 		sprite = mov;
 		hit = new objectHitbox(IntRect(0, 0, 15, 15), mov);
 		speed = 300;
+		damage = 4;
 	}
 
-	void eachFrame(float* deltaT) {
+	void eachFrame(float* deltaT, list<tile*>* tileList) {
 		if (state == LEFT) {
 			floatLeft(deltaT);
 		}

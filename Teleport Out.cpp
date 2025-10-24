@@ -7,6 +7,7 @@
 #include "player.cpp"
 #include <SFML/audio.hpp>
 #include "time.cpp"
+#include "GObject.cpp"
 
 #pragma once
 
@@ -62,7 +63,7 @@ public:
 		}
 	}
 
-	void loop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> obList, camera* cam) {
+	void loop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, camera* cam) {
 
 		timer* time = new timer();
 

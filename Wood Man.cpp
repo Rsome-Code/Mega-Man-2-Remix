@@ -208,9 +208,9 @@ public:
 	bool jumpLoop(float* deltaT, list<tile*>* tileList) {
 
 			phys->eachFrame(deltaT);
-			if (phys->getVVelocity() < 0) {
-				tileCollision(tileList);
-			}
+
+			tileCollision(tileList);
+			
 			phys->move(moveAngle, deltaT, speed);
 			return grounded;
 		

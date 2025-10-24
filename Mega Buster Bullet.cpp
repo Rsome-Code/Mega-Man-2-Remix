@@ -24,9 +24,8 @@ public:
 	}
 
 	void start(bool r) {
+		deflected = false;
 		shooting = true;
-
-		
 
 		float offset;
 		if (r) {
@@ -47,19 +46,20 @@ public:
 	}
 
 	bool eachFrame(float* deltaT) {
+		if (shooting) {
 		shootTemp = shootTemp - *deltaT;
 		if (shootTemp <= 0) {
 			shootReset();
 			return true;
 		}
 
-		if (shooting) {
-
 			sprite->move(direction, deltaT, speed);
 
 			hitbox->updatePos();
 			return false;
 		}
+		return false;
+
 	}
 
 	

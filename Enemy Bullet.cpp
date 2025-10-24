@@ -1,6 +1,8 @@
 #include "object.cpp"
 #include "movable object.cpp"
 #include "camera.cpp"
+#include "hitbox detector.cpp"
+#include "tile.cpp"
 #pragma once
 
 class EnemyBullet : public object {
@@ -22,7 +24,7 @@ public:
 		setCode("eBullet");
 	}
 
-	virtual void eachFrame(float* deltaT) = 0;
+	virtual void eachFrame(float* deltaT, list<tile*>* tileList) = 0;
 
 	int getDamage() {
 		return damage;
@@ -35,5 +37,7 @@ public:
 	CollisionType getCollType() {
 		return collType;
 	}
-
+	bool checkHit(objectHitbox* pHit) {
+		return hitboxDetect::hitboxDetection(pHit, hit);
+	}
 };

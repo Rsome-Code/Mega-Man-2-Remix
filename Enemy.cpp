@@ -14,7 +14,7 @@
 #include <sfml/audio.hpp>
 
 #pragma once
-class enemy:public object{
+class enemy:public GameObject{
 protected:
 
 	objectHitbox* hit;
@@ -35,12 +35,18 @@ protected:
 	SoundBuffer* hitB;
 	Sound* hitSound;
 
+	bool damaged = false;
+	float flashTime = 0.04;
+	float flashTime_left = flashTime;
+
+	movable* mov;
 
 public:
 	enemy(){}
 	enemy(Texture* t, Vector2f i) {
 
-		sprite = new movable(t);
+		mov = new movable(t);
+		sprite = mov;
 		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
 		
 		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
@@ -52,14 +58,19 @@ public:
 		act = false;
 		display = false;
 		
-		hitB = new SoundBuffer();
-		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
-		hitSound = new Sound();
-		hitSound->setBuffer(*hitB);
+
 
 	}
 
 public:
+
+	virtual void playerHit(){}
+
+	void setHitB(SoundBuffer* sB) {
+		hitB = sB;
+		hitSound = new Sound();
+		hitSound->setBuffer(*hitB);
+	}
 
 	virtual void stopMusic() {};
 
@@ -111,7 +122,18 @@ public:
 	}
 
 	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
+		flashTime_left -= *deltaT;
 		if (hp > 0) {
+			if (damaged) {
+				display = false;
+				
+				if (flashTime_left <= 0) {
+					
+					damaged = false;
+					display = true;
+				}
+			}
+			
 			if (act) {
 				hit->updatePos();
 				hurt->updatePos();
@@ -129,8 +151,16 @@ public:
 	virtual void lowerHP(int h) {
 		if (h > 0) {
 			hitSound->play();
+			damaged = true;
+			flashTime_left = flashTime;
 		}
 		hp = hp - h;
+	}
+
+	virtual objectSprite* getDamSprite() { return NULL; };
+
+	virtual bool checkInvincible() {
+		return false;
 	}
 
 	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {};
@@ -186,6 +216,32 @@ public:
 		return genericDam();
 	}
 
+	virtual int meatalDam() {
+		return genericDam();
+	}
+	virtual int crashDam() {
+		return genericDam();
+	}
+
+	virtual int leafDam() {
+		return genericDam();
+	}
+
+	virtual int bubbleDam() {
+		return genericDam();
+	}
+	virtual int quickDam() {
+		return genericDam();
+	}
+
+	virtual int flashDam() {
+		return genericDam();
+	}
+
+	virtual int airDam() {
+		return genericDam();
+	}
+
 	
 
 	virtual int genericDam() { return 1; }
@@ -232,6 +288,7 @@ public:
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			return true;
 		}
+		return false;
 	}
 
 
@@ -241,6 +298,10 @@ public:
 
 	virtual vector<DeathAnim**> getDeathAnims() {
 		return vector<DeathAnim**>{NULL, NULL, NULL};
+	}
+
+	virtual void spawnEnemy(list<enemy*>* enemies) {
+
 	}
 
 };

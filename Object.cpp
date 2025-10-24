@@ -40,7 +40,7 @@ public:
 	bool getDisplay() {
 		return display;
 	}
-	void setDisplay(bool b) {
+	virtual void setDisplay(bool b) {
 		display = b;
 	}
 	bool getAct() {
@@ -58,6 +58,7 @@ public:
 		code = cod;
 	}
 
+	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam) {};
 	virtual void eachFrame(float* deltaT, objectSprite* player) {};
 	virtual void initial() {};
 	virtual bool getOffScreen() { return false; };
@@ -68,6 +69,14 @@ public:
 	virtual void lowerHP(int h) {};
 	virtual int busterDam() { return NULL; };
 	virtual int atomicDam() { return NULL; };
+	virtual int bubbleDam() { return NULL; };
+	virtual int metalDam() { return NULL; };
+	virtual int quickDam() { return NULL; };
+	virtual int airDam() { return NULL; };
+	virtual int leafDam() { return NULL; };
+	virtual int flashDam() { return NULL; };
+	virtual int crashDam() { return NULL; };
+
 	virtual bool checkHurt(objectHitbox* bullet) { return false; };
 	virtual bool checkHit(objectHitbox* pHit) { return false; };
 	virtual objectHitbox* getHitbox() { return NULL; };
@@ -75,6 +84,7 @@ public:
 	virtual int getDamage() { return NULL; };
 	virtual LightSource* getLightSource() { return NULL; };
 	virtual void setInitOffScreen(bool o) {};
+
 	virtual bool getInitOffScreen() {
 		return NULL;
 	}
@@ -98,4 +108,13 @@ public:
 	}
 	virtual bool getCheckpoint() { return false; };
 	virtual void setCamera(camera* camer) {};
+	void forceDisplay(bool b) {
+		display = true;
+	}
+
+	void setPallete(string levelName) {};
+
+	virtual void setPosition(Vector2f pos) {
+		sprite->setPosition(pos);
+	}
 };

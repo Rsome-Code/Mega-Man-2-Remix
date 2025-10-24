@@ -33,6 +33,14 @@
 #include "game over.cpp"
 #include "game over menu.cpp"
 #include "background.cpp"
+#include "GObject.cpp"
+#include "disappearing tile.cpp"
+#include "flyguy.cpp"
+#include "spawner.cpp"
+#include "springer.cpp"
+#include "break wall.cpp"
+#include "sniper armour.cpp"
+#include "heat man.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -62,6 +70,7 @@ Weapon* updatePlayer(player* p, string levelName) {
 		return p->getShield();
 	}
 	else if (levelName == "heat man") {
+		p->setAtomicFire(true);
 		return p->getAtomicFire();
 	}
 }
@@ -69,7 +78,7 @@ int main() {
 	bool run = true;
 
 	//Set the framerate here
-	double targetFPS = 1000;
+	double targetFPS = 120;
 
 	pController* p1 = new pController();
 
@@ -103,10 +112,8 @@ int main() {
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
-	string bossName = "wood man";
+	string bossName = "heat man";
 	
-	
-
 	
 
 	Texture* bossT;
@@ -115,7 +122,7 @@ int main() {
 
 	
 
-	wT->loadFromFile("assets\\" + bossName + "-stage.png");
+	wT->loadFromFile("assets\\stage\\" + bossName + ".png");
 	levelEditor* l = new levelEditor(wT, bossName);
 
 	Texture* misc = new Texture();
@@ -124,22 +131,28 @@ int main() {
 	Texture* woodBossT = new Texture();
 	woodBossT->loadFromFile("assets\\wood man.png");
 
+	Texture* heatBossT = new Texture();
+	heatBossT->loadFromFile("assets\\heat man.png");
+
 //Object Placer setup
-	list<object*> obList = { new Background(Color::Color(0, 232, 216)), new WoodMan(woodBossT, Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
-	for (object* o : obList) {
+	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(woodBossT, Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
+	list <GameObject*> heatManList = { new HeatMan(heatBossT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	
+	for (GameObject* o : heatManList) {
 		o->initial();
 	}
-	ObjectPlacer* o = new ObjectPlacer(wT, bossName, obList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, heatManList);
+	
 
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(646, 727, 14, 80), IntRect(662, 760, 64, 14), IntRect(727, 751, 48, 32), IntRect(0, 728, 67, 59), IntRect(146, 728, 67, 59), IntRect(292, 728, 67, 59) };
-	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(28 * 4,0 * 4),Vector2f(4 * 4, 25 * 4),Vector2f(12 * 4, 20 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(2, 28, 29, 25), IntRect(38, 33, 32, 20), IntRect(71, 27, 24, 26),IntRect(97, 28, 29, 25), IntRect(129, 22, 32, 31), IntRect(163, 21, 31, 32) };
+	list<Vector2f> testOffset =  list<Vector2f>{Vector2f(0,0), Vector2f(-2 * 4, 5 * 4), Vector2f(2 * 4, -1 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\enemy.png");
-	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, false);
+	testT->loadFromFile("Assets\\heat man.png");
+	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, true);
 
 	////////////////////////////////
 	//Uncomment this if you want to use the animation tester
@@ -168,13 +181,14 @@ int main() {
 			hold = levelMenu->checkA();
 
 			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-		//	intro->loop(instance, targetFPS);
+			//intro->loop(instance, targetFPS);
 		}
 		restart = false;
 		
 
 		col->setGrounded(true);
 		col->HPReset();
+		col->ammoReset();
 		
 		if (col->getLives() < 2) {
 			col->setLives(2);
@@ -187,7 +201,10 @@ int main() {
 		//stage->reload(string(bossName), string("0"));
 
 		scene* area = new scene(col, stage, enemyT);
+
 		if (area->loop(instance, targetFPS)) {
+
+		//if (true){
 		
 			Weapon* newW = updatePlayer(col, bossName);
 
@@ -232,6 +249,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

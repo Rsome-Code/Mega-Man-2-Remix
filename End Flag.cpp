@@ -1,11 +1,11 @@
-#include "object.cpp"
+#include "GObject.cpp"
 #include "transition angle.cpp"
 #pragma once
 
 using namespace sf;
 using namespace std;
 
-class EndFlag : public object {
+class EndFlag : public GameObject {
 
 	enum transitionAngle angle;
 	int section;

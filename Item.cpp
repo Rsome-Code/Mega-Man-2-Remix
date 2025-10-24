@@ -1,5 +1,5 @@
 #include "object sprite.cpp"
-#include "object.cpp"
+#include "GObject.cpp"
 #include "animate.cpp"
 #include "animation timer.cpp"
 #include "physics Object.cpp"
@@ -7,7 +7,7 @@
 #include "hitbox detector.cpp"
 #pragma once
 
-class Item :public object {
+class Item :public GameObject {
 protected:
 	objectHitbox* hit;
 	animation* anim;

@@ -32,7 +32,17 @@
 #include "spawn point.cpp"
 #include "wood man.cpp"
 #include "Background.cpp"
-
+#include "horizontal lava.cpp"
+#include "vertical lava.cpp"
+#include "pour lava.cpp"
+#include "disappearing tile.cpp"
+#include "flyguy.cpp"
+#include "fly guy spawn.cpp"
+#include "telly spawner.cpp"
+#include "springer.cpp"
+#include "break wall.cpp"
+#include "sniper armour.cpp"
+#include "heat man.cpp"
 #pragma once
 
 using namespace std;
@@ -292,12 +302,20 @@ public:
 					p->setAtomicFire(false);
 				}
 			}
+			else if (type == "Bubble Man") {
+				if (*valI == "y") {
+					p->setBubbleLead(true);
+				}
+				else {
+					p->setBubbleLead(false);
+				}
+			}
 
 		}
 
 
 	}
-	void loadObjects(string levelName, string section, list<object*>* objects, Texture* t, camera* cam) {
+	void loadObjects(string levelName, string section, list<GameObject*>* objects, Texture* t, camera* cam) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -330,11 +348,12 @@ public:
 				valI = next(valI);
 				z = stoi(*valI);
 			}
-			object* add = NULL;
-			object* backAdd = NULL;
+			GameObject* add = NULL;
+			GameObject* backAdd = NULL;
 			enemy* enem = NULL;
+			Spawner* spawnAdd;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd);
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
@@ -354,6 +373,9 @@ public:
 			else if (backAdd != NULL) {
 				objects->push_back(backAdd);
 			}
+			else if (spawnAdd != NULL) {
+				objects->push_back(spawnAdd);
+			}
 		}
 
 		if (sArea != NULL) {
@@ -361,7 +383,7 @@ public:
 		}
 	}
 
-	void spawnDeconstruction(SpawnArea* spawn, list<object*>* objects, camera* cam) {
+	void spawnDeconstruction(SpawnArea* spawn, list<GameObject*>* objects, camera* cam) {
 		float start = spawn->getStartPos();
 		float end = spawn->getEndPos();
 		enemy* en = spawn->getEnemy();
@@ -374,7 +396,7 @@ public:
 		objects->push_back(endP);
 	}
 	
-	void loadObjects(string levelName, string section, list<object*>* objects, list<object*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea) {
+	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -406,11 +428,12 @@ public:
 				valI = next(valI);
 				z = stoi(*valI);
 			}
-			object* add = NULL;
-			object* backAdd = NULL;
+			GameObject* add = NULL;
+			GameObject* backAdd = NULL;
 			enemy* enem = NULL;
+			Spawner* spawnAdd = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd);
 			
 
 			if (add != NULL) {
@@ -427,12 +450,47 @@ public:
 			if (backAdd != NULL) {
 				backgroundOb->push_back(backAdd);
 			}
+			else if (spawnAdd != NULL) {
+				spawners->push_back(spawnAdd);
+			}
+		}
+
+		setSounds(objects, backgroundOb, enemies);
+
+		
+	}
+
+	void setSounds(list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies) {
+		SoundBuffer* hitB = new SoundBuffer();
+		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
+
+		for (enemy* en : *enemies) {
+			en->setHitB(hitB);
+		}
+
+		SoundBuffer* yokuB = new SoundBuffer();
+		yokuB->loadFromFile("assets\\sound\\yoku.wav");
+
+		Sound* yoSound = new Sound();
+		yoSound->setBuffer(*yokuB);
+		
+
+		for (GameObject* ob : *objects) {
+			string code = ob->getCode();
+
+			if (false) {}
+			else {
+				vector<string> spl = splitString(code, char('-'));
+				string altType = spl[0];
+				if (altType == "disappearing tile") {
+					//ob->setSoundB(yokuB);
+					ob->setSoundPointer(yoSound);
+				}
+			}
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, object** add, object** backAdd, SpawnArea** spawn) {
-		
-
+	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd) {
 
 		if (type == "e1") {
 			*enem = new bat(t, Vector2f(worldX, worldY));
@@ -451,6 +509,26 @@ public:
 			woodBossT->loadFromFile("assets\\wood man.png");
 			*enem = new WoodMan(woodBossT, Vector2f(worldX, worldY));
 		}
+		else if (type == "heat man") {
+			Texture* heatBossT = new Texture();
+			heatBossT->loadFromFile("assets\\heat man.png");
+			*enem = new HeatMan(heatBossT, Vector2f(worldX, worldY));
+		}
+		else if (type == "fly guy") {
+			*enem = new FlyGuy(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "springer") {
+			*enem = new Springer(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "break wall") {
+			*enem = new BreakWall(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "sniper joe") {
+			*enem = new SniperJoe(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "sniper armour") {
+			*enem = new SniperArmour(t, Vector2f(worldX, worldY));
+		}
 		else if (type == "bird-spawn") {
 			if (*spawn == NULL) {
 				*spawn = new BirdSpawner(worldX);
@@ -461,6 +539,7 @@ public:
 				temp->initial();
 			}
 		}
+
 		else if (type == "chicken-spawn") {
 			if (*spawn == NULL) {
 				*spawn = new ChickenSpawner(worldX);
@@ -471,10 +550,17 @@ public:
 				temp->initial();
 			}
 		}
+		else if (type == "fly guy-spawn") {
+			*spawnAdd = new FlyGuySpawner(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "telly-spawn") {
+			*spawnAdd = new TellySpawner(t, Vector2f(worldX, worldY));
+		}
+		
+		
 		
 		else if (type == "trch-R") {
 			*add = new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210);
-
 		}
 		/*else if (type == "flag") {
 			add = new EndFlag(t, Vector2f(worldX, worldY));
@@ -517,6 +603,9 @@ public:
 			if (altType == "background") {
 				*backAdd = new Background(stoi(spl[1]));
 			}
+			if (altType == "disappearing tile") {
+				*add = new DisappearingTile(t, Vector2f(worldX, worldY), stoi(spl[1]));
+			}
 		}
 	}
 
@@ -547,6 +636,15 @@ public:
 		}
 		else if (selectedType == 9) {
 			return new topLadder(worldPos, tex);
+		}
+		else if (selectedType == 10) {
+			return new HorizontalLava(worldPos, tex, z);
+		}
+		else if (selectedType == 11) {
+			return new VerticalLava(worldPos, tex, z);
+		}
+		else if (selectedType == 12) {
+			return new PourLava(worldPos, tex, z);
 		}
 		else {
 			return new solidTile(worldPos, tex, selectedTexture);

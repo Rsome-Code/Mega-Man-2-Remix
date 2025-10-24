@@ -62,7 +62,7 @@ public:
 		music->setLoop(true);
 
 		music->setLoopPoints({ seconds(1.35), sf::seconds(180) });
-		music->setVolume(40);
+		music->setVolume(20);
 
 		optionB = new SoundBuffer();
 		optionB->loadFromFile("Assets\\sound\\cursor_move.wav");
@@ -162,6 +162,7 @@ public:
 		auto* startP = &start;
 		float deltaT = 0;
 
+
 		music->play();
 
 		while (instance->getWindow()->isOpen() && run) {
@@ -238,7 +239,10 @@ public:
 		}
 
 		string r;
-		if (selection == 5) {
+		if (selection == 3) {
+			r = "heat man";
+		}
+		else if (selection == 5) {
 			r = "wood man";
 		}
 		music->stop();

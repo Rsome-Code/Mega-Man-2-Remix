@@ -38,8 +38,8 @@ class timer {
 		}
 		double delta1 = since<std::chrono::nanoseconds>(*start).count();
 		int frame = 1 / (delta1 / 1000000000);
-		cout << frame;
-		cout << "\n";
+		//cout << frame;
+		//cout << "\n";
 		if (frame <= 1) {
 			return true;
 		}

@@ -1,0 +1,45 @@
+telly-spawn,8837,2942,1
+telly-spawn,9023,3068,1
+telly-spawn,9473,2878,1
+telly-spawn,10242,3134,1
+telly-spawn,10432,3070,1
+telly-spawn,10560,2880,1
+telly-spawn,11011,2881,1
+telly-spawn,11779,2879,1
+springer,13915,3358,1
+disappearing tile-0,9344,3198,1
+disappearing tile-0,9788,3200,1
+disappearing tile-1,9790,3010,1
+disappearing tile-0,10814,3202,1
+break wall,10882,3266,1
+break wall,11518,3136,1
+break wall,12096,3264,1
+disappearing tile-0,12028,3332,1
+disappearing tile-0,11449,3268,1
+springer,15707,3043,1
+springer,17267,3163,1
+springer,18658,3354,1
+disappearing tile-0,14193,3043,1
+disappearing tile-1,14427,3041,1
+disappearing tile-2,14691,2859,1
+disappearing tile-3,14431,2857,1
+disappearing tile-2,11452,3072,1
+disappearing tile-0,14920,2866,1
+disappearing tile-1,15130,2858,1
+disappearing tile-1,15322,2860,1
+disappearing tile-2,15554,2864,1
+disappearing tile-3,15719,2812,1
+disappearing tile-0,15951,2804,1
+disappearing tile-1,16187,2806,1
+disappearing tile-3,16415,2806,1
+disappearing tile-0,16657,2800,1
+disappearing tile-1,16917,2799,1
+disappearing tile-2,17088,2881,1
+disappearing tile-3,17257,2861,1
+disappearing tile-0,17452,2810,1
+disappearing tile-1,17657,2808,1
+disappearing tile-2,17849,2808,1
+disappearing tile-3,18051,2804,1
+disappearing tile-0,18237,2810,1
+disappearing tile-0,18425,2808,1
+disappearing tile-2,18667,2805,1

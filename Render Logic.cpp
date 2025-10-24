@@ -205,12 +205,12 @@ public:
 	void hitboxDisplay(UIHitbox* hit) {
 
 
-		if (hit->isVisible()) {
+		//if (hit->isVisible()) {
 			sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 			rectangle.setPosition(hit->getCameraPos());
 			rectangle.setFillColor(sf::Color(0, 255, 0, 255));
 			w->draw(rectangle);
-		}
+		//}
 		
 	}
 

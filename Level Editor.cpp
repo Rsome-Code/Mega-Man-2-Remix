@@ -20,6 +20,9 @@
 #include <fstream>
 #include "Mouse.cpp"
 #include "Load.cpp"
+#include "horizontal lava.cpp"
+#include "vertical lava.cpp"
+#include "pour lava.cpp"
 #pragma once
 
 class levelEditor {
@@ -63,7 +66,8 @@ class levelEditor {
 
 	int selectedTexture;
 	tile* selectedTile;
-	// 0 = backgorund, 1 = floor, 2 = Right wall, 3 = ceiling, 4 = left wall, 5 = floor and ceiling, 6 = left and right wall, 7 = full
+
+	// 0 = backgorund, 1 = floor, 2 = Right wall, 3 = ceiling, 4 = left wall, 5 = floor and ceiling, 6 = left and right wall, 7 = full, 8 = ladder, 9 = top ladder, 10 = hori lava, 11 = vert lava, 12 = pour lava
 	int selectedType;
 	int typeHover;
 
@@ -101,7 +105,7 @@ public:
 		}
 		Texture* typeT = new Texture();
 		typeT->loadFromFile("Assets\\Tile Select.png");
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 13; i++) {
 			typeSelect.push_back(new menuSelect(typeT, Vector2i((i* 16), 0), Vector2f((((i % 4) * 20) * 4) + 1600, (((i / 4) * 20) * 4) + 20)));
 		}
 
@@ -132,7 +136,7 @@ public:
 
 	void flagCheck() {
 		Load* load = new Load();
-		list<object*> objects;
+		list<GameObject*> objects;
 
 		load->loadObjects(levelName, to_string(section), &objects, new Texture(), cam);
 
@@ -651,7 +655,7 @@ public:
 
 	void drag(Vector2i mouse) {
 		Vector2f currentPos = cam->getPosition();
-		cam->setPosition(Vector2f(currentPos.x - (dragStart.x - mouse.x)/2, currentPos.y - (dragStart.y - mouse.y)/2));
+		cam->setPosition(Vector2f(currentPos.x - (dragStart.x - mouse.x) / 2, currentPos.y - (dragStart.y - mouse.y) / 2));
 	}
 
 
@@ -682,6 +686,9 @@ public:
 			else if (t->getLeft() != NULL) {
 				*myfile << "4,";
 			}
+			else if (t->getDeathBox() != NULL) {
+				*myfile << to_string(t->getType()) + ",";
+			}
 			else {
 				*myfile << "0,";
 			}
@@ -708,7 +715,7 @@ public:
 		myfile = new ofstream();
 
 		myfile->open(levelName + "\\" + to_string(section) + ".txt");
-		
+
 
 		miniSave(tileList, myfile);
 		miniSave(z2List, myfile);
@@ -719,7 +726,7 @@ public:
 	}
 
 
-	tile* tileCreation(Vector2f worldPos,int selectedType, int selectedTexture) {
+	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 
 		if (selectedType == 0) {
 			return new tile(worldPos, tex, selectedTexture, z);
@@ -741,6 +748,15 @@ public:
 		}
 		else if (selectedType == 9) {
 			return new topLadder(worldPos, tex);
+		}
+		else if (selectedType == 10) {
+			return new HorizontalLava(worldPos, tex, z);
+		}
+		else if (selectedType == 11){
+			return new VerticalLava(worldPos, tex, z);
+		}
+		else if (selectedType == 12) {
+			return new PourLava(worldPos, tex, z);
 		}
 		else {
 			return new solidTile(worldPos, tex, selectedTexture);

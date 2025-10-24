@@ -13,7 +13,7 @@ class objectHitbox:public UIHitbox {
 	//Size will be based on the sprite sheet the sprite is from, so it will also be relative.
 	public:objectHitbox(IntRect relative, bool vis, objectSprite* s) {
 		sprite = s;
-		relativePos = Vector2f(relative.getPosition());
+		relativePos = Vector2i(relative.getPosition());
 		worldPos = Vector2f(relativePos.x + sprite->getPosition().x, relativePos.y + sprite->getPosition().y);
 		visible = vis;
 		
@@ -23,7 +23,7 @@ class objectHitbox:public UIHitbox {
 
 	objectHitbox(IntRect relative, objectSprite* s) {
 		sprite = s;
-		relativePos = Vector2f(relative.getPosition());
+		relativePos = relative.getPosition();
 		worldPos = Vector2f(relativePos.x + sprite->getPosition().x, relativePos.y + sprite->getPosition().y);
 		visible = false;
 
@@ -32,12 +32,17 @@ class objectHitbox:public UIHitbox {
 	}
 
 	public:void updatePos() {
-		this->worldPos = sprite->getPosition() + relativePos;
+		this->worldPos = sprite->getPosition() + Vector2f(relativePos);
 	}
 
 	 IntRect getRelativeRect() {
 			  return relativeRect;
 	}
+
+	 void setRelativeRect(IntRect r) {
+		 relativeRect = r;
+	 }
+
 public:void setCameraPos(Vector2f pos) {
 	this->cameraPos = pos;
 }
@@ -50,10 +55,15 @@ public: objectSprite* getSprite() {
 	  void setPosition(Vector2f p) {
 		  this->worldPos = p;
 	  }
-	  void setRelativePosition(Vector2f p) {
+	  void setRelativePosition(Vector2i p) {
 		  this->relativePos = p;
+		  relativeRect = (IntRect(p, relativeRect.getSize()));
 	  }
 		Vector2f getRelativePosition() {
-		  return this->relativePos;
+		  return Vector2f(this->relativePos);
 	  }
+
+		void setSprite(objectSprite* s) {
+			sprite = s;
+		}
 };

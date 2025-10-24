@@ -233,4 +233,17 @@ public:void reset() {
 		  frameIndexes = newFrames;
 	  }
 
+	  void setCurrentFrame(int frameNum) {
+		  list<IntRect>::iterator count = frameIndexes.begin();
+		  list<Vector2f>::iterator other = offsetList.begin();
+
+		  for (int i = 0; i < frameNum; i++) {
+			  count = next(count);
+			  other = next(other);
+		  }
+		  current = count;
+		  offsetI = other;
+		  currentIndex = frameNum;
+	  }
+
 };

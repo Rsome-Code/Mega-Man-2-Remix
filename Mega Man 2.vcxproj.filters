@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\Sound">
       <UniqueIdentifier>{7b11881b-cc86-475c-a360-f473a3b09d27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine Files\Sprites">
+      <UniqueIdentifier>{de1f4b93-4c60-49d1-adf8-74b2b2d4d151}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Game Files">
       <UniqueIdentifier>{2c66bd1a-0956-4eb2-b9e5-bd3dc7eff33b}</UniqueIdentifier>
     </Filter>
@@ -28,26 +31,14 @@
     <Filter Include="Source Files\Game Files\Enemies">
       <UniqueIdentifier>{a0c2cfde-56fa-4a4a-9054-6f14c8695323}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game Files\Player">
-      <UniqueIdentifier>{eb7e1ae7-803e-4360-b1b1-f85c0d912733}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game Files\Tiles">
-      <UniqueIdentifier>{417b3dad-9f29-4254-8e30-002d43b3b896}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game Files\Debug">
-      <UniqueIdentifier>{03593cd6-7281-4a0f-879e-037715b79024}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Game Files\Menus">
-      <UniqueIdentifier>{15631779-6107-4d82-8f28-314f92f386b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine Files\Sprites">
-      <UniqueIdentifier>{de1f4b93-4c60-49d1-adf8-74b2b2d4d151}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Game Files\Enemies\Bosses">
       <UniqueIdentifier>{92a5ed46-e9c5-47f8-8921-6160e60127f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game Files\Objects">
-      <UniqueIdentifier>{e9b1eb26-e21b-4d45-8b68-738f3137f213}</UniqueIdentifier>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Wood man">
+      <UniqueIdentifier>{9f0d363c-d94c-4274-87b0-bdca42a9b1d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Player">
+      <UniqueIdentifier>{eb7e1ae7-803e-4360-b1b1-f85c0d912733}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Game Files\Player\Weapons">
       <UniqueIdentifier>{9120521c-ed1a-43e4-afb1-b0c09580f620}</UniqueIdentifier>
@@ -55,14 +46,32 @@
     <Filter Include="Source Files\Game Files\Player\Weapons\Bullets">
       <UniqueIdentifier>{1a31d3b8-337c-4e6c-b3c1-1557dc9f565b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Tiles">
+      <UniqueIdentifier>{417b3dad-9f29-4254-8e30-002d43b3b896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Tiles\Death Tiles">
+      <UniqueIdentifier>{8cca6380-05b2-4f50-a2c3-7e5bfe70a13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Debug">
+      <UniqueIdentifier>{03593cd6-7281-4a0f-879e-037715b79024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Menus">
+      <UniqueIdentifier>{15631779-6107-4d82-8f28-314f92f386b5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Game Files\Menus\Pause">
       <UniqueIdentifier>{f311a9a2-459b-4c54-93dd-a54acdacdb69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Objects">
+      <UniqueIdentifier>{e9b1eb26-e21b-4d45-8b68-738f3137f213}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Game Files\Objects\Items">
       <UniqueIdentifier>{3c619750-6305-440a-adda-71752a39d833}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Game Files\Enemies\Bosses\Wood man">
-      <UniqueIdentifier>{9f0d363c-d94c-4274-87b0-bdca42a9b1d9}</UniqueIdentifier>
+    <Filter Include="Source Files\Game Files\Enemies\Wood Man">
+      <UniqueIdentifier>{b40b2f64-c7d0-4df8-a59d-d2e91855d71a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Heat Man">
+      <UniqueIdentifier>{370a740e-44bd-4f80-a7c1-066e85c9ddab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -248,9 +257,6 @@
       <Filter>Source Files\Game Files\Stages</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Bat.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Hitbox detector.cpp">
@@ -439,28 +445,10 @@
     <ClCompile Include="Door.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Rabbit.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy Bullet.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Carrot.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Physics Enemy.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Gorilla.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Wolf.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="wolf_fireball.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Bird.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Temp Enemy.cpp">
@@ -469,13 +457,7 @@
     <ClCompile Include="spawn point.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="egg.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Temp Physics Enemy.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="small bird.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Spawn Area.cpp">
@@ -483,9 +465,6 @@
     </ClCompile>
     <ClCompile Include="Bird Spawner.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Chicken.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Chicken Spawner.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
@@ -534,6 +513,102 @@
     </ClCompile>
     <ClCompile Include="Background.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Death Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Death Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Horizontal Lava.cpp">
+      <Filter>Source Files\Game Files\Tiles\Death Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Lava Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Death Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertical Lava.cpp">
+      <Filter>Source Files\Game Files\Tiles\Death Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Pour Lava.cpp">
+      <Filter>Source Files\Game Files\Tiles\Death Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Disappearing Tile.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GObject.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dis tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Bat.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Bird.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Carrot.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Chicken.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="egg.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Gorilla.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Rabbit.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="small bird.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Wolf.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="wolf_fireball.cpp">
+      <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyGuy.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Fly guy spawn.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Telly.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Telly Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Springer.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Break Wall.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sniper Joe.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sniper Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Sniper Armour.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Heat Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Heat Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire Ball.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Heat Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Bubble Lead.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Bubble Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

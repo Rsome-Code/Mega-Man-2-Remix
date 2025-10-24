@@ -18,6 +18,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include "GObject.cpp"
 #include "Mouse.cpp"
 
 using namespace std;
@@ -25,14 +26,14 @@ using namespace sf;
 
 class Tab {
 	UISprite* background;
-	list<object*> objects;
+	list<GameObject*> objects;
 	list<UISprite*> obSprites;
-	list<object*>::iterator obIt;
+	list<GameObject*>::iterator obIt;
 	list<UISprite*> spriteIt;
-	object* selectedObject = NULL;
+	GameObject* selectedObject = NULL;
 
 public:
-	Tab(list<object*> o, Vector2f position) {
+	Tab(list<GameObject*> o, Vector2f position) {
 		objects = o;
 		Texture* t = new Texture();
 		t->loadFromFile("Assets/tab.png");
@@ -40,7 +41,7 @@ public:
 
 		int plusX = 0;
 		int plusY = 0;
-		list<object*>::iterator i = objects.begin();
+		list<GameObject*>::iterator i = objects.begin();
 		int greatestY = 0;
 		bool nextLine = false;
 		bool initial = true;
@@ -103,7 +104,7 @@ public:
 		}
 	}
 
-	object* getSelected() {
+	GameObject* getSelected() {
 		return selectedObject;
 	}
 

@@ -16,7 +16,7 @@ public:
 		damage = 5;
 	}
 
-	void eachFrame(float* deltaT) {
+	void eachFrame(float* deltaT, list<tile*>* tileList) {
 		hit->updatePos();
 		angle = angle + (*deltaT * turnSpeed);
 		if (angle >= maxAngle) {

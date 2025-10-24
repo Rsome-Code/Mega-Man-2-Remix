@@ -41,12 +41,11 @@ public:
 			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
 				thisGround = groundCheck(t);
 			}
-
-			if (thisGround) {
-				if (t->getCeiling() != NULL) {
-					checkCeiling(t);
-				}
-
+			if (t->getCeiling() != NULL) {
+				checkCeiling(t);
+			}
+			if (!thisGround) {
+				
 				if (t->getLeft() != NULL) {
 					checkLeft(t);
 				}

@@ -5,10 +5,12 @@
 #include "render logic.cpp"
 #include "camera.cpp"
 #include "time.cpp"
+#include "player.cpp"
+#include "GObject.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
-class Door : public object {
+class Door : public GameObject {
 
 	animation* anim;
 	animTimer* aTimer;
@@ -81,7 +83,7 @@ public:
 		return revTimer->isFinished();
 	}
 
-	void loop(renderer* instance, camera* cam, float targetRate, objectSprite* player, objectSprite* oDoor, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, bool open) {
+	void loop(renderer* instance, camera* cam, float targetRate, player* player, objectSprite* oDoor, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, bool open) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -136,7 +138,8 @@ public:
 			
 			instance->objectDisplay(oDoor, cam);
 			instance->objectDisplay(sprite, cam);
-			instance->objectDisplay(player, cam);
+			instance->objectDisplay(player->getSprite(), cam);
+			instance->UIDisplay(player->getUI());
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 

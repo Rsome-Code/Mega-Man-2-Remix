@@ -1,6 +1,8 @@
 #include "movable object.cpp"
 #include "object hitbox.cpp"
 #include "object.cpp"
+#include "tile.cpp"
+#include "hitbox detector.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -20,6 +22,8 @@ protected:
 	Sound* dink;
 	SoundBuffer* dinkB;
 
+	bool deflected = false;
+
 public:
 
 	void dinkSetup() {
@@ -30,7 +34,6 @@ public:
 		dink->setBuffer(*dinkB);
 	}
 
-public:
 	bullet() {}
 
 	virtual bool eachFrame(float* deltaT) = 0;
@@ -59,6 +62,7 @@ public:
 	virtual float getMaxHoldTime() { return NULL; };
 	
 	virtual void deflect() {
+		deflected = true;
 		dink->play();
 		if (!right) {
 			direction = 330;
@@ -80,5 +84,7 @@ public:
 	}
 
 	virtual void uniqueReset() {};
+
+	virtual void tileCollision(list<tile*> tileList) {};
 	
 };

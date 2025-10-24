@@ -57,6 +57,14 @@ public:
 	virtual objectHitbox* getLeft() { return NULL; };
 	virtual objectHitbox* getRight() { return NULL; };
 	virtual objectHitbox* getLadder() { return NULL; };
+	virtual objectHitbox* getDeathBox() { return NULL; };
+	virtual void animate(float* deltaT) {};
+
+	virtual int getType() { return NULL; };
 
 	virtual void update() {};
+
+	virtual bool checkDist() {
+		return true;
+	}
 };

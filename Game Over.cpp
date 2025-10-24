@@ -41,6 +41,8 @@ public:
 
 		music->play();
 
+		timeLeft = 5;
+
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
 			while (instance->getWindow()->pollEvent(event))

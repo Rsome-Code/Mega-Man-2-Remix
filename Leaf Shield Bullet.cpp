@@ -44,7 +44,7 @@ public:
 	}
 	
 
-	void eachFrame(float* deltaT) {
+	void eachFrame(float* deltaT, list<tile*>* tileList) {
 		
 		angle = angle + (angleSpeed * *deltaT);
 		mov->move(angle, deltaT, speed);

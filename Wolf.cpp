@@ -164,6 +164,7 @@ public:
 					state = standing;
 					hit->reset(IntRect(0, 0, 67, 59));
 					hit->updatePos();
+					
 				}
 			}
 		}

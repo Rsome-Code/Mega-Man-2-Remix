@@ -26,9 +26,10 @@ protected:
 
 	string levelName;
 
-	list<object*> objects;
-	list<object*> backgroundObjects;
+	list<GameObject*> objects;
+	list<GameObject*> backgroundObjects;
 	list<enemy*> enemies;
+	list<Spawner*> spawners;
 
 	SpawnArea* spawn = NULL;
 
@@ -62,7 +63,7 @@ public:
 		l = new Load();
 		levelName = name;
 		tileTexture = new Texture();
-		tileTexture->loadFromFile("Assets\\" + name + "-stage.png");
+		tileTexture->loadFromFile("Assets\\stage\\" + name + ".png");
 		setInitialPlayer(Vector2f((8 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12 * 4 * 16, (2 * 4) * 16));
 		bossTexture = new Texture();
@@ -79,9 +80,6 @@ public:
 
 		music->openFromFile("assets\\sound\\music\\" + name + ".mp3");
 
-		
-		music->setVolume(30);
-
 		setMusicLoop();
 		
 	}
@@ -90,6 +88,9 @@ public:
 		music->setLoop(true);
 		if (levelName == "wood man"){
 			music->setLoopPoints({ sf::seconds(6.5), seconds(100) });
+		}
+		else {
+			music->setLoopPoints({ sf::seconds(0), seconds(100) });
 		}
 	}
 
@@ -106,7 +107,7 @@ protected:
 	}*/
 
 	void addEnemy(enemy* e) {
-		objects.push_back(e);
+		enemies.push_back(e);
 	}
 
 	void addTransition(transition* t) {
@@ -132,6 +133,7 @@ public:
 		z4List.clear();
 		objects.clear();
 		backgroundObjects.clear();
+		spawners.clear();
 		//flags.clear();
 		load(name, section);
 	}
@@ -221,7 +223,7 @@ public:
 	list<tile*> getTiles() {
 		return tileList;
 	}
-	list<object*> getObjects() {
+	list<GameObject*> getObjects() {
 		return objects;
 	}
 	list<enemy*> getEnemies() {
@@ -238,7 +240,9 @@ public:
 		
 		spawn = NULL;
 
-		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn);
+		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn, &spawners);
+
+		checkTilesInObjects();
 
 		if (flags.size() == 0) {
 			l->loadFlags(name, &flags, enemyTexture);
@@ -250,6 +254,15 @@ public:
 
 	}
 
+	void checkTilesInObjects() {
+		for (GameObject* o : objects) {
+			for (tile* t : o->getTiles()) {
+				tileList.push_back(t);
+			}
+			
+		}
+	}
+
 	Door* getDoor1() {
 		return door1;
 	}
@@ -257,8 +270,11 @@ public:
 		return door2;
 	}
 
-	SpawnArea* getSpawner() {
+	SpawnArea* getAreaSpawner() {
 		return spawn;
+	}
+	list<Spawner*> getSpawners() {
+		return spawners;
 	}
 
 	EndFlag* getLastCheckpoint(int sect) {
@@ -307,7 +323,7 @@ public:
 		return z4List;
 	}
 
-	list<object*> getBackgroundObjects() {
+	list<GameObject*> getBackgroundObjects() {
 		return backgroundObjects;
 	}
 

@@ -6,7 +6,7 @@
 class UIHitbox {
 protected:IntRect relativeRect;
 protected:Vector2f cameraPos;
-protected:Vector2f relativePos;
+protected:Vector2i relativePos;
 private:UISprite* sprite;
 protected:bool visible;
 protected:Vector2f scale;
@@ -17,7 +17,7 @@ protected:Vector2f scale;
 public:
 	UIHitbox(IntRect rect, bool visible, UISprite* sprite) {
 		this->sprite = sprite;
-		relativePos = Vector2f(rect.getPosition());
+		relativePos = rect.getPosition();
 		cameraPos= Vector2f (sprite->getCameraPosition().x + relativePos.x, sprite->getCameraPosition().y + relativePos.y);
 		scale = sprite->getScale();
 		this->visible = visible;
@@ -26,7 +26,7 @@ public:
 
 	UIHitbox(IntRect rect, UISprite* sprite) {
 		this->sprite = sprite;
-		relativePos = Vector2f(rect.getPosition());
+		relativePos = rect.getPosition();
 		cameraPos = Vector2f(sprite->getCameraPosition().x + relativePos.x, sprite->getCameraPosition().y + relativePos.y);
 		scale = sprite->getScale();
 		this->visible = true;
@@ -38,11 +38,11 @@ public:
 	}
 
 public: void updatePos() {
-	this->cameraPos = relativePos + sprite->getCameraPosition();
+	this->cameraPos = Vector2f(relativePos) + sprite->getCameraPosition();
 }
 
 	  void reset(IntRect rect) {
-		  relativePos = Vector2f(rect.getPosition());
+		  relativePos = rect.getPosition();
 		  relativeRect = IntRect(Vector2i(relativePos), Vector2i(rect.getSize().x * scale.x, rect.getSize().y * scale.y));
 	  }
 

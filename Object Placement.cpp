@@ -32,8 +32,8 @@ class ObjectPlacer {
 	list<tile*> z2List;
 	list<tile*> z3List;
 	list<tile*> z4List;
-	list<object*> objects;
-	list<object*>::iterator objectIt;
+	list<GameObject*> objects;
+	list<GameObject*>::iterator objectIt;
 	Texture* tex;
 	string levelName;
 	string saveFile;
@@ -56,8 +56,8 @@ class ObjectPlacer {
 	bool worldSelect = false;
 	
 	Tab* tab;
-	object* selectedObject = NULL;
-	object* selectedPlaced = NULL;
+	GameObject* selectedObject = NULL;
+	GameObject* selectedPlaced = NULL;
 	Texture* enemyT;
 
 	list<EndFlag*> flagList;
@@ -71,7 +71,7 @@ class ObjectPlacer {
 
 
 public:
-	ObjectPlacer(Texture* T, string levelN, list<object*> obList) {
+	ObjectPlacer(Texture* T, string levelN, list<GameObject*> obList) {
 		this->levelName = levelN;
 		saveFile = levelN;
 		tex = T;
@@ -95,7 +95,7 @@ public:
 		l->loadFlags(levelName, &flagList, enemyT);
 		
 		
-		for (object* ob : flagList) {
+		for (GameObject* ob : flagList) {
 			if (ob->getSection() == section) {
 				objects.push_back(ob);
 			}
@@ -199,7 +199,8 @@ public:
 			}
 
 			for (object* o : objects) {
-				o->setDisplay(true);
+				
+				o->forceDisplay(true);
 				instance->objectAccess(o, cam);
 				
 			}
@@ -253,7 +254,7 @@ public:
 		
 
 
-		for (object* ob : flagList) {
+		for (GameObject* ob : flagList) {
 			if (ob->getSection() == section) {
 				objects.push_back(ob);
 			}
@@ -292,7 +293,7 @@ public:
 		selectedPlaced = checkPlaced(worldPos);
 		if (selectedObject != NULL && selectedPlaced == NULL) {
 			//object temp = *selectedObject;
-			object* tempLoc = new object(selectedObject);
+			GameObject* tempLoc = new GameObject(selectedObject);
 			//tempLoc = selectedObject;
 			tempLoc->getSprite()->setPosition(worldPos);
 			tempLoc->setDisplay(true);
@@ -310,7 +311,7 @@ public:
 
 	}
 
-	void addFlagList(object* object) {
+	void addFlagList(GameObject* object) {
 		EndFlag* temp;
 		if (selectedObject->getCode() == "flag-down" || selectedObject->getCode() == "flag-up" || selectedObject->getCode() == "flag") {
 
@@ -329,7 +330,7 @@ public:
 		}
 	}
 
-	void hFlagYPos(object* thisFlag) {
+	void hFlagYPos(GameObject* thisFlag) {
 		
 		int sectCheck = section - 1;
 		EndFlag* lastVFlag = getFlag(sectCheck);
@@ -349,7 +350,7 @@ public:
 		
 	}
 
-	void downFlagYPos(object* thisFlag) {
+	void downFlagYPos(GameObject* thisFlag) {
 
 		EndFlag* lastFlag = getFlag(section - 1);
 
@@ -403,10 +404,10 @@ public:
 		return NULL;
 	}
 
-	object* checkPlaced(Vector2f mousePos) {
+	GameObject* checkPlaced(Vector2f mousePos) {
 		if (!objects.empty()) {
 			objectIt = objects.begin();
-			for (object* ob : objects) {
+			for (GameObject* ob : objects) {
 				objectSprite* temp = ob->getSprite();
 				if (mousePos.x > temp->getPosition().x && mousePos.x < temp->getPosition().x + temp->getSize().x) {
 					if (mousePos.y > temp->getPosition().y && mousePos.y < temp->getPosition().y + temp->getSize().y) {

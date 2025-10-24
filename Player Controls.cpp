@@ -430,7 +430,8 @@ public:
 		return *weapon->getBullets().begin();
 	}
 
-	void shootEachFrame(float* deltaT) {
+	void shootEachFrame(float* deltaT, list<tile*> tileList) {
+		weapon->tileColl(tileList);
 		weapon->eachFrame(deltaT);
 	}
 

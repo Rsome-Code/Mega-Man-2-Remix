@@ -15,6 +15,7 @@
 #include "camera.cpp"
 #include "text.cpp"
 #include "E Tank Option.cpp"
+#include "GObject.cpp"
 #pragma once
 
 class Pause {
@@ -30,6 +31,8 @@ class Pause {
 
 	WeaponOption* megaBuster;
 	WeaponOption* atomicFire;
+	WeaponOption* bubbleLead;
+
 
 	PageOption* pageOpt;
 
@@ -90,23 +93,28 @@ public:
 		pageOpt->setNum(maxSelect1);
 		maxSelect1++;
 
-		megaBuster = new WeaponOption(p->getMegaBuster(), Vector2f(iconX, position.y + (18 * 4)*2));
+
+		int pos = 2;
+
+		megaBuster = new WeaponOption(p->getMegaBuster(), Vector2f(iconX, position.y + ((8*pos) * 4)*2));
 		megaBuster->getBar()->update(p->getHP());
 		megaBuster->setNum(maxSelect1);
 		maxSelect1++;
 		page1Options.push_back(megaBuster);
 
 		if (p->hasAtomicFire()) {
-			atomicFire = new WeaponOption(p->getAtomicFire(), Vector2f(iconX, position.y + (27 * 4) * 2));
-			atomicFire->setNum(maxSelect1);
-			maxSelect1++;
-			page1Options.push_back(atomicFire);
+			pos = 3;
+			addP1Option(&atomicFire, pos, p->getAtomicFire());
+		}
+		if (p->checkLead()) {
+			pos = 6;
+			addP1Option(&bubbleLead, pos, p->getBubbleLead());
 		}
 
 		controller = p->getControls()->getController();
 
-
-		eTanks = new ETankOption(miscT, Vector2f(iconX, position.y + (63 * 4) * 2), p->getETanks());
+		pos = 8;
+		eTanks = new ETankOption(miscT, Vector2f(iconX, position.y + ((pos*8) * 4) * 2), p->getETanks());
 		eTanks->setNum(maxSelect1);
 		maxSelect1++;
 		
@@ -136,6 +144,30 @@ public:
 
 	}
 
+	void addP1Option(WeaponOption** opt, int pos, Weapon* wep) {
+		addOption(opt, pos, wep);
+		WeaponOption* temp = *opt;
+		temp->setNum(maxSelect1);
+		maxSelect1++;
+
+		page1Options.push_back(*opt);
+	}
+
+	void addP2Option(WeaponOption** opt, int pos, Weapon* wep) {
+		addOption(opt, pos, wep);
+		
+		WeaponOption* temp = *opt;
+		temp->setNum(maxSelect2);
+		maxSelect2++;
+
+		page2Options.push_back(*opt);
+	}
+		
+	void addOption(WeaponOption** opt, int pos, Weapon* wep) {
+		*opt = new WeaponOption(wep, Vector2f(iconX, position.y + ((8 * pos) * 4) * 2));
+	}
+
+
 	void defaultOption() {
 		for (Option* opt : page1Options) {
 			if (opt->getWeapon()->getName() == p->getActiveWeapon()->getName()) {
@@ -155,7 +187,7 @@ public:
 		}
 	}
 
-	void loop(renderer* instance, float targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<object*> backgroundObjects, camera* cam) {
+	void loop(renderer* instance, float targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> backgroundObjects, camera* cam) {
 		bool startA = true;
 		bool end = false;
 		bool run = true;
@@ -291,6 +323,9 @@ public:
 		instance->UIDisplay(megaBuster->getSprites());
 		if (p->hasAtomicFire()) {
 			instance->UIDisplay(atomicFire->getSprites());
+		}
+		if (p->checkLead()) {
+			instance->UIDisplay(bubbleLead->getSprites());
 		}
 		instance->UIDisplay(eTanks->getSprites());
 		

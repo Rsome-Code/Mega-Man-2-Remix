@@ -16,13 +16,11 @@ public:
 		hit = new objectHitbox(IntRect(0, 0, 12, 13), mov);
 	}
 
-	void eachFrame(float* deltaT) {
+	void eachFrame(float* deltaT, list<tile*>* tileList) {
 		mov->move(angle, deltaT, speed);
 		hit->updatePos();
 	}
-	bool checkHit(objectHitbox* pHit) {
-		return hitboxDetect::hitboxDetection(pHit, hit);
-	}
+
 
 	int getDamage() {
 		return damage;

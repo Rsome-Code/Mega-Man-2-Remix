@@ -1,7 +1,7 @@
-#include "object.cpp"
+#include "GObject.cpp"
 #include "light source.cpp"
 
-class Torch : public object {
+class Torch : public GameObject {
 
 	LightSource* light;
 	Texture* t;

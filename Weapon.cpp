@@ -9,7 +9,7 @@ protected:
 	list<bullet*> bullets;
 	
 	bool fireReady = true;
-	float weaponCount = 0;
+	int weaponCount = 0;
 	int maxWeaponCount;
 
 	int ammo = 28;
@@ -24,6 +24,13 @@ protected:
 	SoundBuffer* shootB;
 
 public:
+
+
+	void tileColl(list<tile*> tileList) {
+		for (bullet* bull : bullets) {
+			bull->tileCollision(tileList);
+		}
+	}
 
 	int getMaxAmmo() {
 		return maxAmmo;
@@ -50,7 +57,7 @@ public:
 	virtual bool fire(bool right) {
 		bool fired = false;
 		if (fireReady && checkAmmo()) {
-			weaponCount++;
+			//weaponCount++;
 			ammo = ammo - ammoDecrease;
 			if (ammo < 0) {
 				ammo = 0;
@@ -60,15 +67,16 @@ public:
 				if (!b->getShooting()) {
 					b->start(right);
 					shootSound->play();
+					fired = true;
 					break;
 				}
 			}
-			fired = true;
 			
-			fired = uniqueFire();
-			if (weaponCount >= maxWeaponCount) {
-				fireReady = false;
-			}
+			
+			fired = uniqueFire(fired);
+			//if (weaponCount >= maxWeaponCount) {
+				//fireReady = false;
+			//}
 			
 		}
 		else {
@@ -81,7 +89,7 @@ public:
 		return bullets;
 	}
 
-	virtual bool uniqueFire() { return true; };
+	virtual bool uniqueFire(bool fired) { return fired; };
 	virtual void secondFire() {};
 	virtual bool hold(float* deltaT) { return NULL; };
 	virtual bool release(bool right) { return false; };
@@ -99,6 +107,10 @@ public:
 
 	void addAmmo(int a) {
 		ammo = ammo + a;
+	}
+
+	void setAmmo(int a) {
+		ammo = a;
 	}
 
 	int getAmmo() {
