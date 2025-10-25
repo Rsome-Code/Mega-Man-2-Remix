@@ -65,7 +65,7 @@ public:
 	virtual void reset() {};
 	virtual void setOffScreen(bool b) {};
 	virtual Vector2f getInitialPosition() { return Vector2f(0,0); };
-	virtual void offsetList() {};
+	//virtual void offsetList() {};
 	virtual void lowerHP(int h) {};
 	virtual int busterDam() { return NULL; };
 	virtual int atomicDam() { return NULL; };

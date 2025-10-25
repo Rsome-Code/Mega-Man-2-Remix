@@ -11,6 +11,7 @@
 #include "tile.cpp"
 #include "player.cpp"
 #include "enemy Bullet.cpp"
+#include "extra life.cpp"
 #include <sfml/audio.hpp>
 
 #pragma once
@@ -70,6 +71,9 @@ public:
 		hitB = sB;
 		hitSound = new Sound();
 		hitSound->setBuffer(*hitB);
+	}
+	void setHitSound(Sound** s) {
+		hitSound = *s;
 	}
 
 	virtual void stopMusic() {};
@@ -273,7 +277,13 @@ public:
 			item = new BigAmmo(t, pos);
 		}
 		else if (itemChance > 95) {
-			
+			item = new ExtraLife(t, pos);
+			SoundBuffer* colB = new SoundBuffer();
+			colB->loadFromFile("assets\\sound\\land.wav");
+
+			Sound* colSound = new Sound();
+			colSound->setBuffer(*colB);
+			item->setSoundPointer(colSound);
 		}
 
 		//item = new BigAmmo(t, pos);

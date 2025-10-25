@@ -61,6 +61,12 @@ public:
 		chargeAnim = new animation(list<IntRect>{IntRect(137, 214, 28, 38), IntRect(167, 214, 28, 38), IntRect(197, 214, 32, 38), IntRect(235, 214, 32, 38)}, sprite);
 		chargeTimer = new animTimer(chargeAnim, 12, true);
 		
+		soundB = new SoundBuffer();
+		soundB->loadFromFile("assets\\sound\\fly_boy.wav");
+		sound = new Sound();
+		sound->setBuffer(*soundB);
+		offSetList();
+		deathAnim->setSprite(sprite);
 	}
 
 	
@@ -87,6 +93,7 @@ public:
 			phys->eachFrame(deltaT);
 
 			if (grounded) {
+				sound->play();
 				first = false;
 				upStartPos = sprite->getPosition().y;
 				state = charging;

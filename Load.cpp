@@ -53,6 +53,9 @@ class Load {
 	Texture* tex;
 	Door* door1 = NULL;
 	Door* door2 = NULL;
+	Sound* colSound;
+	Sound* yoSound;
+	Sound* hitSound;
 
 
 public:
@@ -351,9 +354,10 @@ public:
 			GameObject* add = NULL;
 			GameObject* backAdd = NULL;
 			enemy* enem = NULL;
-			Spawner* spawnAdd;
+			Spawner* spawnAdd = NULL;
+			Item* item = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd, &item);
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
@@ -365,16 +369,19 @@ public:
 				add->initial();
 				objects->push_back(add);
 			}
-			else if (!(add ==NULL && enem == NULL)) {
+			if (add ==NULL && enem != NULL) {
 				objects->push_back(enem);
 				enem->initial();
 			}
 
-			else if (backAdd != NULL) {
+			if (backAdd != NULL) {
 				objects->push_back(backAdd);
 			}
-			else if (spawnAdd != NULL) {
+			if (spawnAdd != NULL) {
 				objects->push_back(spawnAdd);
+			}
+			if (item != NULL) {
+				objects->push_back(item);
 			}
 		}
 
@@ -396,7 +403,7 @@ public:
 		objects->push_back(endP);
 	}
 	
-	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners) {
+	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners, list<Item*>* items) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -432,8 +439,9 @@ public:
 			GameObject* backAdd = NULL;
 			enemy* enem = NULL;
 			Spawner* spawnAdd = NULL;
+			Item* item = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd, &item);
 			
 
 			if (add != NULL) {
@@ -453,44 +461,94 @@ public:
 			else if (spawnAdd != NULL) {
 				spawners->push_back(spawnAdd);
 			}
+			else if (item != NULL) {
+				items->push_back(item);
+			}
 		}
 
-		setSounds(objects, backgroundOb, enemies);
+		setSounds(objects, backgroundOb, enemies, items);
 
 		
 	}
 
-	void setSounds(list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies) {
+	void setSounds(list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, list<Item*>* items) {
 		SoundBuffer* hitB = new SoundBuffer();
 		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
-
-		for (enemy* en : *enemies) {
-			en->setHitB(hitB);
+		try {
+			// Code that might throw an exception
+			free(hitSound);
+		}
+		catch (int e) {
+			// exception handling code
 		}
 
+		hitSound = (Sound*)malloc(1);
+		hitSound = new Sound();
+		hitSound->setBuffer(*hitB);
+
+		for (enemy* en : *enemies) {
+			en->setHitSound(&hitSound);
+		}
+
+
+		
 		SoundBuffer* yokuB = new SoundBuffer();
 		yokuB->loadFromFile("assets\\sound\\yoku.wav");
 
-		Sound* yoSound = new Sound();
+		try {
+			// Code that might throw an exception
+			free(yoSound);
+		}
+		catch (int e) {
+			// exception handling code
+		}
+		yoSound = (Sound*)malloc(1);
+		yoSound = new Sound();
 		yoSound->setBuffer(*yokuB);
-		
 
 		for (GameObject* ob : *objects) {
-			string code = ob->getCode();
 
-			if (false) {}
-			else {
-				vector<string> spl = splitString(code, char('-'));
-				string altType = spl[0];
-				if (altType == "disappearing tile") {
-					//ob->setSoundB(yokuB);
-					ob->setSoundPointer(yoSound);
-				}
+			disappearCheck(ob, yoSound);
+			
+		}
+
+		SoundBuffer* colB = new SoundBuffer();
+		colB->loadFromFile("assets\\sound\\land.wav");
+
+		try {
+			// Code that might throw an exception
+			free(colSound);
+		}
+		catch (int e) {
+			// exception handling code
+		}
+		Sound* colSound = (Sound*)malloc(1);
+		colSound = new Sound();
+		colSound->setBuffer(*colB);
+
+		for (Item* item : *items) {
+			if (item->getCode() == "Extra Life" || item->getCode() == "E Tank") {
+				item->setSoundPointer(colSound);
+			}
+		}
+
+	}
+
+	void disappearCheck(GameObject* ob, Sound* yoSound) {
+		string code = ob->getCode();
+
+		if (false) {}
+		else {
+			vector<string> spl = splitString(code, char('-'));
+			string altType = spl[0];
+			if (altType == "disappearing tile") {
+				//ob->setSoundB(yokuB);
+				ob->setSoundPointer(yoSound);
 			}
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd) {
+	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item) {
 
 		if (type == "e1") {
 			*enem = new bat(t, Vector2f(worldX, worldY));
@@ -572,27 +630,27 @@ public:
 			add = new EndFlag(t, Vector2f(worldX, worldY), DOWN);
 		}*/
 		else if (type == "health-big") {
-			*add = new BigHealth(misc, Vector2f(worldX, worldY));
+			*item = new BigHealth(misc, Vector2f(worldX, worldY));
 
 		}
 		else if (type == "health-small") {
-			*add = new SmallHealth(misc, Vector2f(worldX, worldY));
+			*item = new SmallHealth(misc, Vector2f(worldX, worldY));
 
 		}
 		else if (type == "ammo-big") {
-			*add = new BigAmmo(misc, Vector2f(worldX, worldY));
+			*item = new BigAmmo(misc, Vector2f(worldX, worldY));
 
 		}
 		else if (type == "ammo-small") {
-			*add = new SmallAmmo(misc, Vector2f(worldX, worldY));
+			*item = new SmallAmmo(misc, Vector2f(worldX, worldY));
 
 		}
 		else if (type == "E Tank") {
-			*add = new ETank(misc, Vector2f(worldX, worldY));
+			*item = new ETank(misc, Vector2f(worldX, worldY));
 
 		}
 		else if (type == "Extra Life") {
-			*add = new ExtraLife(misc, Vector2f(worldX, worldY));
+			*item = new ExtraLife(misc, Vector2f(worldX, worldY));
 
 		}
 

@@ -1,5 +1,6 @@
 #include "physics enemy.cpp"
 #include "sniper bullet.cpp"
+#include <SFML/Audio.hpp>
 #pragma once
 
 class SniperJoe : public PhysicsEnemy {
@@ -7,6 +8,9 @@ class SniperJoe : public PhysicsEnemy {
 
 	animation* shootSprite;
 	animation* blockSprite;
+
+	SoundBuffer* shootB;
+	Sound* shootSound;
 
 	bool faceRight = false;
 
@@ -17,6 +21,7 @@ class SniperJoe : public PhysicsEnemy {
 	float shootDelay_left = shootDelay;
 	int shootNum = 3;
 	int shootLeft = 3;
+
 
 	enum State {
 		blocking, shooting
@@ -30,7 +35,6 @@ public:
 	void initial() {
 		ini();
 		rawSpawn = true;
-
 	}
 
 	void ini() {
@@ -44,12 +48,18 @@ public:
 		phys->enableGravity(true);
 		phys->setPosition(initialPos);
 
-		offsetList();
+		offSetList();
 
 
 		hp = 8;
 		damage = 3;
 		setCode("sniper joe");
+
+		shootB = new SoundBuffer ();
+		shootB->loadFromFile("assets\\sound\\enemy_shoot.wav");
+		shootSound = new Sound();
+		shootSound->setBuffer(*shootB);
+
 	}
 
 	void initial(bool b) {
@@ -94,6 +104,7 @@ public:
 	}
 
 	void shoot(list<EnemyBullet*>* bList) {
+		shootSound->play();
 		Vector2f sPos;
 		int angle;
 		if (faceRight) {

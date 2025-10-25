@@ -8,6 +8,7 @@
 #include <random>
 #include "physics object.cpp"
 #include "wood man.cpp"
+#include "heat man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -97,6 +98,10 @@ public:
 	void bossSetup(string name, Texture* bossT) {
 		if (name == "wood man") {
 			boss = new WoodMan(bossT, Vector2f(900, 0));
+			boss->initial();
+		}
+		else if (name == "heat man") {
+			boss = new HeatMan(bossT, Vector2f(900, 0));
 			boss->initial();
 		}
 	}

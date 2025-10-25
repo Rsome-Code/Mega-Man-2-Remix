@@ -56,8 +56,10 @@ public:
 		deathAnimation2 = new DeathAnim(sprite, weaponName);
 
 		bossMusic = new Music();
-		bossMusic->openFromFile("assets\\sound\\music\\14 - Boss Battle.mp3");
+		bossMusic->openFromFile("assets\\sound\\music\\14 - Boss Battle.wav");
 		bossMusic->setVolume(50);
+		bossMusic->setLoop(true);
+		bossMusic->setLoopPoints({ sf::seconds(6.4), seconds(100) });
 
 		damSprite = new objectSprite("effect", sprite->getTexture(), IntRect(433, 0, 24, 24), Vector2f(0,0), Vector2f(4, 4));
 	}

@@ -94,7 +94,7 @@ public:bool checkA() {
 }
 
 public:bool checkB() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B)
+    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B || controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
     {
         //controller0->vibrate(0, 65535);
         return true;

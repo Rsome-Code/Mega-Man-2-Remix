@@ -7,7 +7,7 @@ protected:
 	enemy* toSpawn;
 	Vector2f position;
 	float spawnTime = 4;
-	float spawnTime_left = spawnTime;
+	float spawnTime_left = 2.5;
 
 	enemy* spawned = NULL;
 

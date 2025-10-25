@@ -8,6 +8,7 @@ public:
 	bool isDead(list<enemy*>* tempEList) {
 		//tempEList->remove(this);
 		//delete this;
+		free(hitSound);
 		return true;
 	}
 

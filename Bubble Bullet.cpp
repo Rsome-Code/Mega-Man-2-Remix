@@ -15,11 +15,13 @@ class BubbleBullet : public bullet {
 
 	float forward;
 
+	float angleSpeed = 400;
+
 public:
 
 	BubbleBullet(objectSprite* o, Texture* t) {
 		
-		shootTime = 3;
+		shootTime = 2;
 		shootTemp = shootTime;
 		origin = o;
 
@@ -32,6 +34,7 @@ public:
 		speed = 700;
 
 		dinkSetup();
+		grounded = false;
 	}
 
 	void start(bool r) {
@@ -40,9 +43,11 @@ public:
 		right = r;
 		if (right) {
 			forward = 0;
+			direction = 300;
 		}
 		else {
 			forward = 180;
+			direction = 240;
 		}
 
 		shooting = true;
@@ -62,12 +67,29 @@ public:
 
 	bool eachFrame(float* deltaT) {
 		if (shooting) {
-		shootTemp = shootTemp - *deltaT;
-		if (shootTemp <= 0) {
-			shootReset();
-			shooting = false;
-			return true;
-		}
+			if (!grounded) {
+				if (right) {
+					if (direction != 90) {
+						direction = direction + (angleSpeed * *deltaT);
+						if (direction >= 450) {
+							direction = 450;
+						}
+					}
+				}
+				else {
+					direction = direction - (angleSpeed * *deltaT);
+					if (direction <= 90) {
+						direction = 90;
+					}
+				}
+			}
+
+			shootTemp = shootTemp - *deltaT;
+			if (shootTemp <= 0) {
+				shootReset();
+				shooting = false;
+				return true;
+			}
 
 		
 			timer->run(deltaT);
@@ -82,8 +104,10 @@ public:
 
 	void tileCollision(list<tile*> tileList) {
 		if (!deflected) {
-			grounded = false;
-			direction = 90;
+			if (grounded) {
+				grounded = false;
+				direction = 90;
+			}
 			for (tile* t : tileList) {
 				if (t->getGround() != NULL) {
 					if (hitboxDetect::hitboxDetection(hitbox, t->getGround())) {

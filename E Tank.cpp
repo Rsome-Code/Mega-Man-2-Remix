@@ -11,6 +11,7 @@ public:
 		hit = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
 		anim = new animation(list<IntRect>{IntRect(122, 1, 16, 16), IntRect(105, 1, 16, 16)}, sprite);
 		timer = new animTimer(anim, 10, true);
+		setCode();
 	}
 
 	void setCode() {

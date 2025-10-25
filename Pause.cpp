@@ -144,6 +144,19 @@ public:
 
 	}
 
+	void initial() {
+		megaBuster->getBar()->update(p->getHP());
+		if (p->hasAtomicFire()) {
+			atomicFire->getBar()->update(p->getAtomicFire()->getAmmo());
+		}
+		if (p->checkLead()) {
+			bubbleLead->getBar()->update(p->getBubbleLead()->getAmmo());
+		}
+		startAnim->reset();
+		startTime->reset();
+		startAnim->thisFrame();
+	}
+
 	void addP1Option(WeaponOption** opt, int pos, Weapon* wep) {
 		addOption(opt, pos, wep);
 		WeaponOption* temp = *opt;
@@ -188,6 +201,7 @@ public:
 	}
 
 	void loop(renderer* instance, float targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> backgroundObjects, camera* cam) {
+		initial();
 		bool startA = true;
 		bool end = false;
 		bool run = true;
@@ -244,6 +258,7 @@ public:
 			}
 			else if (end) {
 				if (runEnd(&deltaT)) {
+					
 					run = false;
 				}
 			}
@@ -284,6 +299,9 @@ public:
 		if (temp != NULL) {
 			p->setActiveWeapon(temp);
 		}
+
+
+
 	}
 
 	bool runHeal(float deltaT, renderer* instance) {
@@ -314,6 +332,9 @@ public:
 		return startTime->isFinished();
 	}
 	bool runEnd(float* deltaT) {
+
+		
+
 		endTime->run(deltaT);
 		return endTime->isFinished();
 	}

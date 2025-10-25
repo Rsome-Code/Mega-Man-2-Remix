@@ -19,6 +19,7 @@ protected:
 
 	bool hC = false;
 	
+	Sound* colSound = NULL;
 
 public:
 
@@ -28,6 +29,9 @@ public:
 	}
 
 	void used() {
+		if (colSound != NULL) {
+			colSound->play();
+		}
 		hit->setPosition(Vector2f(0, 0));
 		act = false;
 		display = false;
@@ -66,5 +70,9 @@ public:
 			phys->setVVelocity(0);
 			phys->setPosition(Vector2f(sprite->getPosition().x, t->getGround()->getPosition().y - sprite->getSize().y));
 		}
+	}
+
+	void setSoundPointer(Sound* sou) {
+		colSound = sou;
 	}
 };

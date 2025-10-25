@@ -6,19 +6,12 @@ telly-spawn,10432,3070,1
 telly-spawn,10560,2880,1
 telly-spawn,11011,2881,1
 telly-spawn,11779,2879,1
-springer,13915,3358,1
 disappearing tile-0,9344,3198,1
 disappearing tile-0,9788,3200,1
 disappearing tile-1,9790,3010,1
 disappearing tile-0,10814,3202,1
-break wall,10882,3266,1
-break wall,11518,3136,1
-break wall,12096,3264,1
 disappearing tile-0,12028,3332,1
 disappearing tile-0,11449,3268,1
-springer,15707,3043,1
-springer,17267,3163,1
-springer,18658,3354,1
 disappearing tile-0,14193,3043,1
 disappearing tile-1,14427,3041,1
 disappearing tile-2,14691,2859,1
@@ -43,3 +36,12 @@ disappearing tile-3,18051,2804,1
 disappearing tile-0,18237,2810,1
 disappearing tile-0,18425,2808,1
 disappearing tile-2,18667,2805,1
+telly-spawn,11779,2879,1
+springer,13989,3359,1
+springer,15680,3227,1
+springer,17273,3165,1
+springer,18035,3419,1
+break wall,10880,3267,1
+break wall,11522,3139,1
+break wall,12096,3265,1
+Extra Life,19072,2754,1

@@ -11,7 +11,7 @@ class Springer : public enemy {
 
 	IntRect moveS = IntRect(146, 648, 16, 11);
 
-	float slowSpeed = 300;
+	float slowSpeed = 200;
 	float fastSpeed = 600;
 	float speed = slowSpeed;
 	int angle = 180;
@@ -39,7 +39,7 @@ class Springer : public enemy {
 		hit = new objectHitbox(IntRect(0, 0, 16, 11), mov);
 		hurt = hit;
 		setCode("springer");
-		offsetList();
+		offSetList();
 		hp = 1;
 		damage = 3;
 		//faceRight = false;

@@ -241,7 +241,7 @@ public:
 		respawn();
 		//p->heal(-27);
 
-
+		pause = new Pause(stageName, p);
 
 		while (instance->getWindow()->isOpen() && run) {
 
@@ -417,7 +417,11 @@ public:
 			enemyBullets(deltaT);
 
 			for (Spawner* spawn : spawners) {
-				spawn->eachFrame(&deltaT, p->getSprite(), &enemies, cam);
+
+				spawn->getSprite()->setCameraPosition(Vector2f(spawn->getSprite()->getPosition().x - cam->getPosition().x, spawn->getSprite()->getPosition().y));
+				if (spawn->getSprite()->getCameraPosition().x > 0 && spawn->getSprite()->getCameraPosition().x < 1920) {
+					spawn->eachFrame(&deltaT, p->getSprite(), &enemies, cam);
+				}
 			}
 
 			for (object* o : backgroundObjects) {
@@ -988,6 +992,7 @@ public:
 		}
 		if (toDelete != NULL) {
 			enemies.remove(toDelete);
+			delete toDelete;
 		}
 
 	}
@@ -1004,7 +1009,7 @@ public:
 	bool  checkPause(renderer* instance, float targetRate) {
 		if (p->getController()->checkSTART() && !startPressed && p->checkInControl()) {
 			p->getAtomicFire()->resetHold();
-			pause = new Pause(stageName, p);
+
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, backgroundObjects, cam);
 			refreshMisc();
 			for (object* o : items) {
@@ -1229,15 +1234,15 @@ public:
 
 		float camSpeed = 700;
 		float playerSpeed = 120;
-		float otherFlagPos;
+		Vector2f otherFlagPos;
 		transitionAngle otherAngle;
 
 		if (forward) {
-			otherFlagPos = currentFlag->getPosition().x;
+			otherFlagPos = currentFlag->getPosition();
 			otherAngle = currentFlag->getAngle();
 		}
 		else {
-			otherFlagPos = lastFlag->getPosition().x;
+			otherFlagPos = lastFlag->getPosition();
 			otherAngle = lastFlag->getAngle();
 		}
 
@@ -1318,11 +1323,11 @@ public:
 
 				//Special rule needed when next transition is vertical and next position is within camera shot
 				else if (otherAngle == UP || otherAngle == DOWN) {
-					if (cam->getPosition().x > otherFlagPos - 1920) {
+					if (cam->getPosition().x > otherFlagPos.x - 1920) {
 						run = false;
 					}
 				}
-				else if (flagPos.x - cam->getPosition().x <= (cam->getPosition().x + 1920) - otherFlagPos) {
+				else if (flagPos.x - cam->getPosition().x <= (cam->getPosition().x + 1920) - otherFlagPos.x) {
 					run = false;
 				}
 			}
@@ -1330,8 +1335,22 @@ public:
 				cam->move(270, &deltaT, camSpeed);
 				p->getAnimation()->ladderAnim(&deltaT);
 				p->getSprite()->move(270, &deltaT, playerSpeed);
-				if (cam->getPosition().y + 1080 <= flagPos.y) {
-					run = false;
+				if (forward) {
+					if (cam->getPosition().y + 1080 <= flagPos.y) {
+						run = false;
+					}
+				}
+				else {
+					if (otherAngle == UP) {
+						if (cam->getPosition().y + 1080 <= otherFlagPos.y) {
+							run = false;
+						}
+					}
+					else {
+						if (cam->getPosition().y <= otherFlagPos.y) {
+							run = false;
+						}
+					}
 				}
 			}
 
@@ -1367,12 +1386,12 @@ public:
 				//Special rule needed when next transition is vertical and next position is within camera shot
 				//Needs to be tested
 				else if (otherAngle == UP || otherAngle == DOWN) {
-					if (cam->getPosition().x < otherFlagPos) {
+					if (cam->getPosition().x < otherFlagPos.x) {
 						run = false;
 					}
 				}
 
-				else if (flagPos.x - cam->getPosition().x >= (cam->getPosition().x + 1920) - otherFlagPos) {
+				else if (flagPos.x - cam->getPosition().x >= (cam->getPosition().x + 1920) - otherFlagPos.x) {
 					run = false;
 				}
 			}
@@ -1437,6 +1456,7 @@ public:
 		newBackgroundObjects = stage->getBackgroundObjects();
 		enemies = stage->getEnemies();
 		spawners = stage->getSpawners();
+		items = stage->getItems();
 		for (enemy* e : enemies) {
 			e->initial();
 		}

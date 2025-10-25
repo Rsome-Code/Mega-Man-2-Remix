@@ -136,7 +136,7 @@ int main() {
 
 //Object Placer setup
 	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(woodBossT, Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
-	list <GameObject*> heatManList = { new HeatMan(heatBossT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(heatBossT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	
 	for (GameObject* o : heatManList) {
 		o->initial();
@@ -181,7 +181,7 @@ int main() {
 			hold = levelMenu->checkA();
 
 			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-			//intro->loop(instance, targetFPS);
+			intro->loop(instance, targetFPS);
 		}
 		restart = false;
 		
@@ -249,6 +249,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+	//cout << "hi";
 
 }

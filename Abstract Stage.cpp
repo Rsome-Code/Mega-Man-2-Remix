@@ -14,6 +14,7 @@
 #include <fstream>
 #include "load.cpp"
 #include "door.cpp"
+#include "item.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -30,6 +31,7 @@ protected:
 	list<GameObject*> backgroundObjects;
 	list<enemy*> enemies;
 	list<Spawner*> spawners;
+	list<Item*> items;
 
 	SpawnArea* spawn = NULL;
 
@@ -90,7 +92,7 @@ public:
 			music->setLoopPoints({ sf::seconds(6.5), seconds(100) });
 		}
 		else {
-			music->setLoopPoints({ sf::seconds(0), seconds(100) });
+			music->setLoopPoints({ sf::seconds(0), seconds(1000) });
 		}
 	}
 
@@ -134,6 +136,7 @@ public:
 		objects.clear();
 		backgroundObjects.clear();
 		spawners.clear();
+		items.clear();
 		//flags.clear();
 		load(name, section);
 	}
@@ -233,6 +236,10 @@ public:
 		return tList;
 	}
 
+	list<Item*> getItems() {
+		return items;
+	}
+
 	void load(string name, string section) {
 		
 		l->load(name, section, tileTexture, &tileList, &z2List, &z3List, &z4List);
@@ -240,7 +247,7 @@ public:
 		
 		spawn = NULL;
 
-		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn, &spawners);
+		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn, &spawners, &items);
 
 		checkTilesInObjects();
 
