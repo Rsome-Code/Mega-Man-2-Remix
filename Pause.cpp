@@ -32,6 +32,7 @@ class Pause {
 	WeaponOption* megaBuster;
 	WeaponOption* atomicFire;
 	WeaponOption* bubbleLead;
+	WeaponOption* item1;
 
 
 	PageOption* pageOpt;
@@ -92,7 +93,7 @@ public:
 		pageOpt = new PageOption(t, Vector2f(iconX, position.y + ((9 * 4)) * 2));
 		pageOpt->setNum(maxSelect1);
 		maxSelect1++;
-
+		maxSelect2++;
 
 		int pos = 2;
 
@@ -105,6 +106,8 @@ public:
 		if (p->hasAtomicFire()) {
 			pos = 3;
 			addP1Option(&atomicFire, pos, p->getAtomicFire());
+			addP2Option(&item1, 5, p->getItem1());
+			
 		}
 		if (p->checkLead()) {
 			pos = 6;
@@ -121,6 +124,7 @@ public:
 		page1Options.push_back(eTanks);
 
 		page1Options.push_back(pageOpt);
+		page2Options.push_back(pageOpt);
 		
 
 		font.loadFromFile("Assets//font.otf");
@@ -353,6 +357,7 @@ public:
 	}
 
 	void displayPage2(renderer* instance) {
+		instance->UIDisplay(item1->getSprites());
 		instance->UIDisplay(lifeSprite);
 		instance->textDisplay(lifeText);
 	}
@@ -382,6 +387,16 @@ public:
 	void updateSelect() {
 		if (page1) {
 			for (Option* o : page1Options) {
+				if (o->getNum() == currentSelect) {
+					active = o;
+				}
+				else {
+					o->reset();
+				}
+			}
+		}
+		else {
+			for (Option* o : page2Options) {
 				if (o->getNum() == currentSelect) {
 					active = o;
 				}

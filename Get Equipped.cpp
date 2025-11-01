@@ -43,10 +43,12 @@ class EquipAnim {
 
 	Music* music;
 
+	bool playMusic = false;
+
 
 public:
 
-	EquipAnim(Weapon* weapon){
+	void init(Weapon* weapon){
 		symbol = new Text();
 		getEquip = new Text();
 
@@ -65,11 +67,11 @@ public:
 
 		Texture* mega = new Texture();
 		mega->loadFromFile("assets\\weapon get\\" + weapon->getName()+".png");
-		megaMan = new UISprite(mega, oldColour, Vector2f(600, 200), Vector2f(4,4));
+		megaMan = new UISprite("mega", mega, oldColour, Vector2f(600, 200), Vector2f(4, 4));
 
-		symbol->setPosition(Vector2f(900, 200));
+		symbol->setPosition(Vector2f(800, 200));
 		symbol->setCharacterSize(36);
-		getEquip->setPosition(900, 300);
+		getEquip->setPosition(800, 300);
 		getEquip->setCharacterSize(36);
 		getEquip->setLineSpacing(2);
 		
@@ -80,13 +82,22 @@ public:
 
 		state = Fading;
 
-		music = new Music();
-		music->openFromFile("assets\\sound\\music\\16 - Get Your Weapons Ready.wav");
-		music->setLoop(true);
-		music->setLoopPoints({ seconds(0), seconds(2.6720) });
 
 
 
+
+	}
+
+	EquipAnim(Weapon* weapon, bool musicOn) {
+		init(weapon);
+		playMusic = musicOn;
+		if (musicOn) {
+			
+			music = new Music();
+			music->openFromFile("assets\\sound\\music\\16 - Get Your Weapons Ready.wav");
+			music->setLoop(true);
+			music->setLoopPoints({ seconds(0), seconds(2.6720) });
+		}
 	}
 
 	bool fadeLoop(float* deltaT) {
@@ -149,6 +160,8 @@ public:
 		return false;
 	}
 
+	
+
 	bool flashLoop(float* deltaT) {
 		flashTime_left -= *deltaT;
 		flashFinishTime -= *deltaT;
@@ -185,7 +198,9 @@ public:
 
 		bool run = true;
 
-		music->play();
+		if (playMusic) {
+			music->play();
+		}
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;

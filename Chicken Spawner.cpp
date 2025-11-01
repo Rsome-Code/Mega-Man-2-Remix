@@ -12,11 +12,12 @@ public:
 		toSpawn = 2;
 	}
 
-	void spawn(list<enemy*>* enemyList, camera* cam) {
+	void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
 		Chicken* temp = new Chicken(texture, Vector2f(0, 0));
 
 		//temp->getSprite()->setPosition(Vector2f(cam->getPosition().x + 1930, cam->getPosition().y + 50));
 		temp->initial(Vector2f(cam->getPosition().x + 1919, cam->getPosition().y + 200));
+		temp->setHitSound(soundCol->getHit());
 		enemyList->push_back(temp);
 	}
 };

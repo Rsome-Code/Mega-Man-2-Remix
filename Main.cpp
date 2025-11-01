@@ -41,6 +41,13 @@
 #include "break wall.cpp"
 #include "sniper armour.cpp"
 #include "heat man.cpp"
+#include "sound collection.cpp"
+#include "falling platform.cpp"
+#include "crabbot.cpp"
+#include "croaker.cpp"
+#include "shrink.cpp"
+#include "anko.cpp"
+#include "DL Message.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -73,6 +80,15 @@ Weapon* updatePlayer(player* p, string levelName) {
 		p->setAtomicFire(true);
 		return p->getAtomicFire();
 	}
+	return NULL;
+}
+
+Weapon* checkItem(player* p, string levelName) {
+	if (levelName == "heat man") {
+		
+		return p->getItem1();
+	}
+	return NULL;
 }
 int main() {
 	bool run = true;
@@ -112,7 +128,7 @@ int main() {
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
-	string bossName = "heat man";
+	string bossName = "bubble man";
 	
 	
 
@@ -137,21 +153,24 @@ int main() {
 //Object Placer setup
 	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(woodBossT, Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
 	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(heatBossT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	
-	for (GameObject* o : heatManList) {
+	list <GameObject*> bubbleList = { new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+
+
+
+	for (GameObject* o : bubbleList) {
 		o->initial();
 	}
-	ObjectPlacer* o = new ObjectPlacer(wT, bossName, heatManList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, bubbleList);
 	
 
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(2, 28, 29, 25), IntRect(38, 33, 32, 20), IntRect(71, 27, 24, 26),IntRect(97, 28, 29, 25), IntRect(129, 22, 32, 31), IntRect(163, 21, 31, 32) };
-	list<Vector2f> testOffset =  list<Vector2f>{Vector2f(0,0), Vector2f(-2 * 4, 5 * 4), Vector2f(2 * 4, -1 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(473, 115, 22, 16), IntRect(497, 109, 27, 22) };
+	list<Vector2f> testOffset =  list<Vector2f>{Vector2f(0,0), Vector2f(-2 * 4, -7 * 4), Vector2f(0 * 4, 12 * 4), Vector2f(0 * 4, 11 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\heat man.png");
+	testT->loadFromFile("Assets\\enemy.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, true);
 
 	////////////////////////////////
@@ -160,9 +179,11 @@ int main() {
 
 
 	//Un-comment this if you want to use the level editor
-	//l->loop(instance, targetFPS);
+	//l ->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
+	// There must be a flag in the section that comes before the start
+	//
 	//o->loop(instance, targetFPS);
 
 
@@ -172,6 +193,9 @@ int main() {
 	LevelSelect* levelMenu;
 	
 	bool restart = false;
+
+	SoundCollection* soundCol = new SoundCollection();
+
 	while (run) {
 		levelMenu = new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb());
 		
@@ -181,7 +205,7 @@ int main() {
 			hold = levelMenu->checkA();
 
 			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-			intro->loop(instance, targetFPS);
+			//intro->loop(instance, targetFPS);
 		}
 		restart = false;
 		
@@ -196,28 +220,44 @@ int main() {
 		//col->heal(-27);
 		//col->setLives(0);
 
-		abstractStage* stage = new abstractStage(bossName);
+		abstractStage* stage = new abstractStage(bossName, soundCol);
 
 		//stage->reload(string(bossName), string("0"));
 
 		scene* area = new scene(col, stage, enemyT);
 
-		if (area->loop(instance, targetFPS)) {
+		//if (area->loop(instance, targetFPS, soundCol)) {
 
-		//if (true){
+		if (true){
 		
 			Weapon* newW = updatePlayer(col, bossName);
 
-			EquipAnim* equip = new EquipAnim(newW);
-			equip->loop(instance, targetFPS);
-			EquipMenu* eMenu = new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650));
-			
-			bool eLoop = true;
-			while (eLoop) {
-				eLoop = eMenu->loop(instance, targetFPS, equip->getMusic());
-				if (eLoop) {
-					//This is where the password screen will be run
+			if (newW != NULL) {
+				EquipAnim* equip = new EquipAnim(newW, true);
+				equip->loop(instance, targetFPS);
+
+				Weapon* newI = checkItem(col, bossName);
+				if (newI != NULL) {
+
+					DLMessage* mess = new DLMessage(equip->getTexture(), equip->getSprites(), newI);
+					mess->loop(instance, targetFPS);
+					delete equip;
+
+					equip = new EquipAnim(newI, false);
+					equip->loop(instance, targetFPS);
 				}
+
+				EquipMenu* eMenu = new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650));
+
+				bool eLoop = true;
+				while (eLoop) {
+					eLoop = eMenu->loop(instance, targetFPS, equip->getMusic());
+					if (eLoop) {
+						//This is where the password screen will be run
+					}
+				}
+				delete equip;
+				delete eMenu;
 			}
 		}
 		else {
@@ -249,6 +289,7 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
+	//
 	//cout << "hi";
 
 }

@@ -23,6 +23,9 @@
 #include "horizontal lava.cpp"
 #include "vertical lava.cpp"
 #include "pour lava.cpp"
+#include "anim Tile.cpp"
+#include "water anim.cpp"
+#include "water tile.cpp"
 #pragma once
 
 class levelEditor {
@@ -105,7 +108,7 @@ public:
 		}
 		Texture* typeT = new Texture();
 		typeT->loadFromFile("Assets\\Tile Select.png");
-		for (int i = 0; i < 13; i++) {
+		for (int i = 0; i < 22; i++) {
 			typeSelect.push_back(new menuSelect(typeT, Vector2i((i* 16), 0), Vector2f((((i % 4) * 20) * 4) + 1600, (((i / 4) * 20) * 4) + 20)));
 		}
 
@@ -253,6 +256,26 @@ public:
 			}
 			
 			if (!zoomed) {
+				for (tile* t : tileList) {
+					if (t->getCeiling() != NULL) {
+						instance->objectHitboxSetup(t->getCeiling(), cam);
+					}
+					if (t->getGround() != NULL) {
+						instance->objectHitboxSetup(t->getGround(), cam);
+					}
+					if (t->getLeft() != NULL) {
+						instance->objectHitboxSetup(t->getLeft(), cam);
+					}
+					if (t->getRight() != NULL) {
+						instance->objectHitboxSetup(t->getRight(), cam);
+					}
+					if (t->getWaterBox() != NULL) {
+						instance->objectHitboxSetup(t->getWaterBox(), cam, Color::Cyan);
+					}
+					if (t->getDeathBox() != NULL) {
+						instance->objectHitboxSetup(t->getDeathBox(), cam, Color::Red);
+					}
+				}
 				instance->UIDisplay(list<UISprite*> {tab, typeTab});
 				for (menuSelect* t : tileSelect) {
 					instance->UIDisplay(t->getSprite());
@@ -298,20 +321,7 @@ public:
 
 				instance->getWindow()->draw(textureHighlight);
 
-				for (tile* t : tileList) {
-					if (t->getCeiling() != NULL) {
-						instance->objectHitboxSetup(t->getCeiling(), cam);
-					}
-					if (t->getGround() != NULL) {
-						instance->objectHitboxSetup(t->getGround(), cam);
-					}
-					if (t->getLeft() != NULL) {
-						instance->objectHitboxSetup(t->getLeft(), cam);
-					}
-					if (t->getRight() != NULL) {
-						instance->objectHitboxSetup(t->getRight(), cam);
-					}
-				}
+				
 
 				instance->UIDisplay(zSelect->getSprite());
 			}
@@ -662,36 +672,9 @@ public:
 	void miniSave(list<tile*> tList, ofstream* myfile) {
 		for (tile* t : tList) {
 
-			if (t->getLadder() != NULL) {
-				if (t->getGround() != NULL) {
-					*myfile << "9,";
-				}
-				else {
-					*myfile << "8,";
-				}
-			}
-			else if (t->getCeiling() != NULL && t->getGround() != NULL && t->getLeft() != NULL && t->getRight() != NULL) {
-				*myfile << "5,";
-			}
 
-			else if (t->getGround() != NULL) {
-				*myfile << "1,";
-			}
-			else if (t->getCeiling() != NULL) {
-				*myfile << "3,";
-			}
-			else if (t->getRight() != NULL) {
-				*myfile << "2,";
-			}
-			else if (t->getLeft() != NULL) {
-				*myfile << "4,";
-			}
-			else if (t->getDeathBox() != NULL) {
-				*myfile << to_string(t->getType()) + ",";
-			}
-			else {
-				*myfile << "0,";
-			}
+			*myfile <<t->getType() + ",";
+
 
 			*myfile << t->getLocation().x;
 			*myfile << ",";
@@ -757,6 +740,33 @@ public:
 		}
 		else if (selectedType == 12) {
 			return new PourLava(worldPos, tex, z);
+		}
+		else if (selectedType == 13) {
+			return new AnimTile(worldPos, tex, 0, 3, z);
+		}
+		else if (selectedType == 14) {
+			return new AnimTile(worldPos, tex, 1, 3, z);
+		}
+		else if (selectedType == 15) {
+			return new AnimTile(worldPos, tex, 2, 3, z);
+		}
+		else if (selectedType == 16) {
+			return new WaterAnim(worldPos, tex, 3, 3, z);
+		}
+		else if (selectedType == 17) {
+			return new WaterAnim(worldPos, tex, 4, 3, z);
+		}
+		else if (selectedType == 18) {
+			return new WaterAnim(worldPos, tex, 5, 3, z);
+		}
+		else if (selectedType == 19) {
+			return new WaterAnim(worldPos, tex, 6, 3, z);
+		}
+		else if (selectedType == 20) {
+			return new WaterTile(worldPos, tex, selectedTexture);
+		}
+		else if (selectedType == 21) {
+			return new DeathTile(worldPos, tex, selectedTexture, z);
 		}
 		else {
 			return new solidTile(worldPos, tex, selectedTexture);

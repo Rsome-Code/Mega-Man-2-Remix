@@ -19,14 +19,19 @@ public:
 		soundB->loadFromFile("Assets\\sound\\enemy_hit.wav");
 
 		this->tex = tex;
+
+		soundB = new SoundBuffer();
+		soundB->loadFromFile("assets\\sound\\fly_boy.wav");
+		sound = new Sound();
+		sound->setBuffer(*soundB);
 	}
 
 	void spawn(list<enemy*>* enemyList) {
 		FlyGuy* temp = new FlyGuy(tex, position);
 		temp->initial();
+		temp->setSoundPoint(&sound);
 
 		spawned = temp;
-
 
 		enemyList->push_back(temp);
 

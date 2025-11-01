@@ -185,7 +185,7 @@ public:
 		
 	}
 
-	void checkControls(float* deltaT) {
+	void checkControls(float* deltaT, list<ItemBullet*>* IBullets) {
 		teleport = false;
 
 		shooting = pAnim->getShooting();
@@ -215,7 +215,7 @@ public:
 		if (!onLadder) {
 			jumpConditions(deltaT);
 		}
-		shoot(deltaT);
+		shoot(deltaT, IBullets);
 
 		ladderMove(deltaT);
 		
@@ -396,10 +396,10 @@ public:
 	}
 
 
-	void shoot(float* deltaT) {
+	void shoot(float* deltaT, list<ItemBullet*>* IBullets) {
 		if (p1->checkB() && !BPressed) {
 			BPressed = true;
-			if (weapon->fire(pAnim->getFacingRight())) {
+			if (weapon->fire(pAnim->getFacingRight()) || weapon->fire(pAnim->getFacingRight(), IBullets)) {
 				pAnim->shootStart();
 			}
 
@@ -430,9 +430,10 @@ public:
 		return *weapon->getBullets().begin();
 	}
 
-	void shootEachFrame(float* deltaT, list<tile*> tileList) {
+	void shootEachFrame(float* deltaT, list<tile*> tileList, list<ItemBullet*> ibuls) {
 		weapon->tileColl(tileList);
 		weapon->eachFrame(deltaT);
+		weapon->checkCount(ibuls);
 	}
 
 

@@ -239,6 +239,9 @@ public:
 		}
 
 		string r;
+		if (selection == 0) {
+			r = "bubble man";
+		}
 		if (selection == 3) {
 			r = "heat man";
 		}

@@ -1,5 +1,6 @@
 #include "object.cpp"
 #include "tile.cpp"
+#include "player.cpp"
 #include <SFML/Audio.hpp>
 #pragma once
 
@@ -62,6 +63,10 @@ public:
 	virtual void flashmanPallete() {}
 	virtual void quickmanPallete() {}
 	virtual void bubblemanPallete() {}
+
+	virtual void eachFrame(float* deltaT, player* player, camera* cam) {};
+	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam) {};
+	virtual void eachFrame(float* deltaT, objectSprite* player){};
 
 	virtual void setSoundPointer(Sound* sou) {
 

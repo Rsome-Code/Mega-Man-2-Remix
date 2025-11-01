@@ -47,6 +47,10 @@ public:
 		
 	}
 
+	float getGravity() {
+		return gravity;
+	}
+
 	void setGravity(float g) {
 		gravity = g;
 	}

@@ -15,6 +15,8 @@
 #include "leaf Shield.cpp"
 #include "bubble lead.cpp"
 #include <SFML/audio.hpp>
+#include "splash effect.cpp"
+#include "item1.cpp"
 #pragma once
 
 class player {
@@ -61,6 +63,7 @@ class player {
 	AtomicFire* atomicFire;
 	LeafShield* leafShield;
 	BubbleLead* bubbleLead;
+	Item1* item1;
 
 	Weapon* active = megaBuster;
 
@@ -84,6 +87,9 @@ class player {
 
 	SoundBuffer* damageB;
 	Sound* damageSound;
+
+	Splash* splash;
+	bool inWater = false;
 
 public:
 	player(pController* p1) {
@@ -128,6 +134,7 @@ public:
 		atomicFire = new AtomicFire(sprite, t);
 		leafShield = new LeafShield(sprite, t);
 		bubbleLead = new BubbleLead(sprite, t);
+		item1 = new Item1(sprite, t);
 
 		//Define ammo bars here
 		Texture* aB = new Texture();
@@ -148,6 +155,24 @@ public:
 		damageSound->setBuffer(*damageB);
 
 		
+	}
+
+	void resetGravity() {
+		if (inWater) {
+			splash->start(sprite);
+			inWater = false;
+		}
+		sprite->setGravity(-3000);
+	}
+	void setGravity(float grav) {
+		sprite->setGravity(grav);
+	}
+	void setWaterGravity() {
+		if (!inWater) {
+			splash->start(sprite);
+			inWater = true;
+		}
+		sprite->setGravity(-800);
 	}
 
 	void shootReset() {
@@ -256,6 +281,8 @@ public:
 		}
 
 		palette = active->getName();
+
+		pAnim->setThrow(active->checkThrow());
 	}
 
 	string getPalette() {
@@ -267,6 +294,9 @@ public:
 	}
 	AtomicFire* getAtomicFire() {
 		return atomicFire;
+	}
+	Item1* getItem1() {
+		return item1;
 	}
 	BubbleLead* getBubbleLead() {
 		return bubbleLead;
@@ -294,6 +324,10 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	void iniSplash(Texture* miscT) {
+		splash = new Splash(miscT);
 	}
 
 	bool setDead() {
@@ -355,10 +389,12 @@ public:
 	}
 
 
-	void eachFrame(float* deltaT, list<tile*> tiles) {
+	void eachFrame(float* deltaT, list<tile*> tiles, list<ItemBullet*>* IBullets) {
+
+		splash->eachFrame(deltaT);
 		
 			if (deathAnim == NULL) {
-				alive(deltaT, tiles);
+				alive(deltaT, tiles, IBullets);
 				ladderJumpExtend(tiles);
 			}
 			else {
@@ -397,19 +433,19 @@ public:
 
 
 
-	void alive(float* deltaT, list<tile*> tiles) {
+	void alive(float* deltaT, list<tile*> tiles, list<ItemBullet*>* IBullets) {
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
 
 			if (tele == NULL) {
 				if (inControl) {
-					controls->checkControls(deltaT);
+					controls->checkControls(deltaT, IBullets);
 				}
 				else {
 					controls->runWithoutControl(deltaT);
 				}
-				controls->shootEachFrame(deltaT, tiles);
+				controls->shootEachFrame(deltaT, tiles, *IBullets);
 
 				pAnim->shootDecide(deltaT);
 
@@ -434,7 +470,7 @@ public:
 		}
 		else {
 
-			controls->shootEachFrame(deltaT, tiles);
+			controls->shootEachFrame(deltaT, tiles, *IBullets);
 
 			if (tele == NULL) {
 				dam->flicker(deltaT);
@@ -583,19 +619,27 @@ public:
 	}
 
 	list<objectSprite*> getSprites() {
+
+		list<objectSprite*> temp;
+
 		if (deathAnim == NULL) {
-			return list<objectSprite*> {sprite};
+			temp = list<objectSprite*> {sprite};
 		}
 		else {
-			list<objectSprite*> temp = {deathAnim->getSprite()};
+			temp = {deathAnim->getSprite()};
 			if (deathAnim1 != NULL) {
 				temp.push_back(deathAnim1->getSprite());
 			}
 			if (deathAnim2 != NULL) {
 				temp.push_back(deathAnim2->getSprite());
 			}
-			return temp;
+			
 		}
+
+		if (splash->getSprite() != NULL) {
+			temp.push_back(splash->getSprite());
+		}
+		return temp;
 	}
 
 	object* getDamEffect() {

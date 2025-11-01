@@ -73,6 +73,27 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Heat Man">
       <UniqueIdentifier>{370a740e-44bd-4f80-a7c1-066e85c9ddab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Tiles\Anim Tiles">
+      <UniqueIdentifier>{9da98369-203f-4baf-8fa0-3cfaf31b0206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\General">
+      <UniqueIdentifier>{7cb9abbf-614b-4aca-882c-7765c3f2cd3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bubble man">
+      <UniqueIdentifier>{87832835-ae25-4afd-a084-0d36f9de40db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Objects\Spawners">
+      <UniqueIdentifier>{c37dab94-d7f7-4eef-8c5a-cd265e7143d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Bubble Man">
+      <UniqueIdentifier>{e5f0881b-e27f-478a-ac52-6eff77a3e9d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Player\Weapons\Items">
+      <UniqueIdentifier>{bb59e330-65ce-4f6b-b7d0-3071c88887a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Player\Weapons\Items\Bullets">
+      <UniqueIdentifier>{62ebbfce-ba06-4f25-8961-8cdcbfa27c24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -454,20 +475,8 @@
     <ClCompile Include="Temp Enemy.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="spawn point.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Temp Physics Enemy.cpp">
       <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Spawn Area.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Bird Spawner.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Chicken Spawner.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Wood Man.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses\Wood man</Filter>
@@ -538,9 +547,6 @@
     <ClCompile Include="dis tile.cpp">
       <Filter>Source Files\Game Files\Tiles</Filter>
     </ClCompile>
-    <ClCompile Include="Spawner.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Bat.cpp">
       <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
     </ClCompile>
@@ -571,33 +577,6 @@
     <ClCompile Include="wolf_fireball.cpp">
       <Filter>Source Files\Game Files\Enemies\Wood Man</Filter>
     </ClCompile>
-    <ClCompile Include="FlyGuy.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Fly guy spawn.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Telly.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Telly Spawner.cpp">
-      <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Springer.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Break Wall.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Sniper Joe.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Sniper Bullet.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="Sniper Armour.cpp">
-      <Filter>Source Files\Game Files\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Heat Man.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses\Heat Man</Filter>
     </ClCompile>
@@ -609,6 +588,126 @@
     </ClCompile>
     <ClCompile Include="Bubble Bullet.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound Collection.cpp">
+      <Filter>Source Files\Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Anim Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Anim Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Water Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Water Anim.cpp">
+      <Filter>Source Files\Game Files\Tiles\Anim Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Falling platform.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Ob Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Break Wall.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyGuy.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Sniper Armour.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Sniper Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Sniper Joe.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Springer.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Telly.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Grounded Enemy.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Crabbot.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Croaker.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Petit Croaker.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Bird Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Chicken Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Fly guy spawn.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawn on Top.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawn Area.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="spawn point.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Telly Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Jelly Fish.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="jelly spawner.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Snapper.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Snapper Spawn.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Anko.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Shrink.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bubble man</Filter>
+    </ClCompile>
+    <ClCompile Include="Splash Effect.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Bubble Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Bubble Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Item weapon.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item1 Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Item1.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item Bullets.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Arm Cannon.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="DL Message.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

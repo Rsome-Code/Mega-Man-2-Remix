@@ -20,6 +20,7 @@ protected:
 
 public:
 
+
 	SpawnArea(float start) {
 		startX = start;
 		
@@ -36,20 +37,20 @@ public:
 		//en->initial();
 	}
 
-	void eachFrame(player* p, float deltaT, list<enemy*>* enemyList, camera* cam) {
+	void eachFrame(player* p, float deltaT, list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
 		if (p->getPosition().x > startX && p->getPosition().x < endX) {
-			spawnTime(deltaT, enemyList, cam);
+			spawnTime(deltaT, enemyList, cam, soundCol);
 		}
 		else {
 			toSpawn_left = 0.5;
 		}
 	}
 
-	void spawnTime(float deltaT, list<enemy*>* enemyList, camera* cam) {
+	void spawnTime(float deltaT, list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
 		toSpawn_left -= deltaT;
 		if (toSpawn_left <= 0) {
 			toSpawn_left = toSpawn;
-			spawn(enemyList, cam);
+			spawn(enemyList, cam, soundCol);
 		}
 	}
 
@@ -58,7 +59,7 @@ public:
 		checkPoints();
 	}
 
-	virtual void spawn(list<enemy*>* enemyList, camera* cam) {
+	virtual void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
 
 	}
 

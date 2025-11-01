@@ -40,7 +40,9 @@ class objectHitbox:public UIHitbox {
 	}
 
 	 void setRelativeRect(IntRect r) {
-		 relativeRect = r;
+		 relativePos = Vector2i(r.getPosition().x + (sprite->getVisualOffset().x), r.getPosition().y + (sprite->getVisualOffset().y));
+		 worldPos = Vector2f(relativePos.x + sprite->getPosition().x, relativePos.y + sprite->getPosition().y);
+		 relativeRect = IntRect(relativePos, Vector2i(r.getSize().x * sprite->getScale().x, r.getSize().y * sprite->getScale().y));
 	 }
 
 public:void setCameraPos(Vector2f pos) {

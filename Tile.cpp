@@ -1,6 +1,7 @@
 #include "Object Sprite.cpp"
 #include "Object Hitbox.cpp"
 #include "Object.cpp"
+
 #pragma once
 
 class tile:public object {
@@ -11,10 +12,11 @@ protected:
 	float z;
 	int tileNumber;
 
+	string type;
 
 public:
 	tile() {
-
+		type = "0";
 	}
 	tile(Vector2f loc, Texture* t, int tileNum, float z) {
 		this->z = z;
@@ -26,6 +28,7 @@ public:
 
 		location = loc;
 		sprite = new objectSprite("Tile", t, Vector2i(tX * 16, tY * 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
+		type = "0";
 	}
 
 	objectSprite* getSprite(){
@@ -58,13 +61,18 @@ public:
 	virtual objectHitbox* getRight() { return NULL; };
 	virtual objectHitbox* getLadder() { return NULL; };
 	virtual objectHitbox* getDeathBox() { return NULL; };
+	virtual objectHitbox* getWaterBox() {return NULL;};
 	virtual void animate(float* deltaT) {};
 
-	virtual int getType() { return NULL; };
 
 	virtual void update() {};
 
 	virtual bool checkDist() {
 		return true;
+	}
+
+
+	string getType() {
+		return type;
 	}
 };

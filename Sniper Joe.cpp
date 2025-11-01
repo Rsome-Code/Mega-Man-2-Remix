@@ -9,7 +9,7 @@ class SniperJoe : public PhysicsEnemy {
 	animation* shootSprite;
 	animation* blockSprite;
 
-	SoundBuffer* shootB;
+
 	Sound* shootSound;
 
 	bool faceRight = false;
@@ -55,11 +55,11 @@ public:
 		damage = 3;
 		setCode("sniper joe");
 
-		shootB = new SoundBuffer ();
-		shootB->loadFromFile("assets\\sound\\enemy_shoot.wav");
-		shootSound = new Sound();
-		shootSound->setBuffer(*shootB);
 
+	}
+
+	void setSound(SoundCollection* soundCol) {
+		shootSound = soundCol->getShoot();
 	}
 
 	void initial(bool b) {

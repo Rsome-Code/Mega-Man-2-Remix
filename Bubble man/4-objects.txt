@@ -1,0 +1,7 @@
+background-7400703,0,0,1
+shrink,6767,5400,1
+shrink,6965,5184,1
+shrink,6491,5186,1
+jelly fish-spawn,8813,3375,1
+jelly fish-spawn,10627,3375,1
+anko,7054,5325,1

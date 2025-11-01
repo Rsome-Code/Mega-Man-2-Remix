@@ -1,5 +1,5 @@
 /*This entire class' responsibility is to handly the render logic.
-Essentially, it interpret's the current state of the game to figure out exactly what it should show the player.*/
+Essentially, it interprets the current state of the game to figure out exactly what it should show the player.*/
 
 #include <SFML/Graphics.hpp>
 #include <typeinfo>
@@ -206,12 +206,51 @@ public:
 
 
 		//if (hit->isVisible()) {
-			sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
-			rectangle.setPosition(hit->getCameraPos());
-			rectangle.setFillColor(sf::Color(0, 255, 0, 255));
-			w->draw(rectangle);
+		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
+		rectangle.setPosition(hit->getCameraPos());
+		rectangle.setFillColor(sf::Color(0, 255, 0, 255));
+		
+		w->draw(rectangle);
 		//}
 		
+	}
+
+	void hitboxDisplay(UIHitbox* hit, float zoom) {
+
+
+		//if (hit->isVisible()) {
+		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
+		rectangle.setPosition(hit->getCameraPos());
+		rectangle.setFillColor(sf::Color(0, 255, 0, 255));
+		rectangle.setScale(Vector2f(zoom, zoom));
+		w->draw(rectangle);
+		//}
+
+	}
+
+	void hitboxDisplay(UIHitbox* hit, Color col) {
+
+
+		//if (hit->isVisible()) {
+		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
+		rectangle.setPosition(hit->getCameraPos());
+		rectangle.setFillColor(col);
+		w->draw(rectangle);
+		//}
+
+	}
+
+	void hitboxDisplay(UIHitbox* hit, Color col, float zoom) {
+
+
+		//if (hit->isVisible()) {
+		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
+		rectangle.setPosition(hit->getCameraPos());
+		rectangle.setFillColor(col);
+		rectangle.setScale(Vector2f(zoom, zoom));
+		w->draw(rectangle);
+		//}
+
 	}
 
 	void objectHitboxSetup(list<objectHitbox*> hitList, camera* cam) {
@@ -229,10 +268,17 @@ public:
 		
 		hit->setCameraPos(Vector2f((hit->getPosition().x - camPosition.x) * cam->getZoom(), (hit->getPosition().y - camPosition.y) * cam->getZoom()));
 
-		hitboxDisplay(hit);
+		hitboxDisplay(hit, cam->getZoom());
 	}
 
+	void objectHitboxSetup(objectHitbox* hit, camera* cam, Color col) {
 
+		Vector2f camPosition = cam->getPosition();
+
+		hit->setCameraPos(Vector2f((hit->getPosition().x - camPosition.x) * cam->getZoom(), (hit->getPosition().y - camPosition.y) * cam->getZoom()));
+
+		hitboxDisplay(hit, col, cam->getZoom());
+	}
 
 
 	float getRatio() {

@@ -12,6 +12,7 @@
 #include "player.cpp"
 #include "enemy Bullet.cpp"
 #include "extra life.cpp"
+#include "sound Collection.cpp"
 #include <sfml/audio.hpp>
 
 #pragma once
@@ -52,18 +53,20 @@ public:
 		
 		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
 
-		//offSetList();
+		offSetList();
 
 		deathTimer = new animTimer(deathAnim, 16, false);
 		initialPos = i;
 		act = false;
 		display = false;
 		
-
+		mov->setScale(Vector2f(4, 4));
 
 	}
 
 public:
+
+	virtual void loadSound(SoundCollection* soundCol) {}
 
 	virtual void playerHit(){}
 
@@ -72,8 +75,8 @@ public:
 		hitSound = new Sound();
 		hitSound->setBuffer(*hitB);
 	}
-	void setHitSound(Sound** s) {
-		hitSound = *s;
+	void setHitSound(Sound* s) {
+		hitSound = s;
 	}
 
 	virtual void stopMusic() {};
@@ -125,7 +128,7 @@ public:
 		return hitboxDetect::hitboxDetection(bullet, hurt);
 	}
 
-	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
+	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
 		flashTime_left -= *deltaT;
 		if (hp > 0) {
 			if (damaged) {
@@ -142,6 +145,7 @@ public:
 				hit->updatePos();
 				hurt->updatePos();
 				alive(p, deltaT, tileList, enemyList, bList);
+				alive(p, deltaT, tileList, enemyList, bList, soundCol);
 			}
 		}
 		else { return death(deltaT, enemyList); }
@@ -152,8 +156,11 @@ public:
 		return true;
 	}
 
+	virtual void onDamage() {};
+
 	virtual void lowerHP(int h) {
 		if (h > 0) {
+			onDamage();
 			hitSound->play();
 			damaged = true;
 			flashTime_left = flashTime;
@@ -168,6 +175,8 @@ public:
 	}
 
 	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {};
+
+	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {};
 
 	void checkDirection(objectSprite* player) {
 		if (player->getPosition().x > sprite->getPosition().x) {
@@ -310,7 +319,7 @@ public:
 		return vector<DeathAnim**>{NULL, NULL, NULL};
 	}
 
-	virtual void spawnEnemy(list<enemy*>* enemies) {
+	virtual void spawnEnemy(list<enemy*>* enemies, SoundCollection* soundCol) {
 
 	}
 

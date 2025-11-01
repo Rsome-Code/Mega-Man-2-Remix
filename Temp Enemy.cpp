@@ -4,12 +4,15 @@
 class TempEnemy :public enemy {
 	using enemy::enemy;
 
+protected:
+	bool spawned = true;
+
 public:
 	bool isDead(list<enemy*>* tempEList) {
 		//tempEList->remove(this);
 		//delete this;
-		free(hitSound);
-		return true;
+		
+		return spawned;
 	}
 
 	virtual void initial(Vector2f pos) {};

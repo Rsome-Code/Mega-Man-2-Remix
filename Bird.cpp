@@ -40,7 +40,9 @@ public:
 		setCode("bird");
 		deathAnim->setSprite(sprite);
 	}
-	void initial(Vector2f pos) {
+	void initial(Vector2f pos, SoundCollection* soundCol) {
+
+		hitSound = soundCol->getHit();
 
 		initialPos = pos;
 
@@ -54,6 +56,7 @@ public:
 
 		egg = new Egg(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + sprite->getSize().y));
 		egg->initial();
+		egg->setHitSound(soundCol->getHit());
 		state = NotDropped;
 
 		hit = new objectHitbox(IntRect(0,0, 18, 16), sprite);

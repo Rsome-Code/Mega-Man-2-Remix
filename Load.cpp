@@ -43,6 +43,17 @@
 #include "break wall.cpp"
 #include "sniper armour.cpp"
 #include "heat man.cpp"
+#include "sound collection.cpp"
+#include "anim tile.cpp"
+#include "water anim.cpp"
+#include "water tile.cpp"
+#include "falling platform.cpp"
+#include "crabbot.cpp"
+#include "croaker.cpp"
+#include "jelly spawner.cpp"
+#include "shrink.cpp"
+#include "snapper spawn.cpp"
+#include "anko.cpp"
 #pragma once
 
 using namespace std;
@@ -59,6 +70,23 @@ class Load {
 
 
 public:
+
+	vector<string> sSplit(string str, char del) {
+		stringstream ss(str);
+
+		// Temporary object to store 
+		// the splitted string
+		string t;
+
+
+
+		vector<string> temp;
+		while (getline(ss, t, del)) {
+			temp.push_back(t);
+		}
+		return temp;
+	}
+
 	void load(string levelName, string section, Texture* texture,  list<tile*>* tileList, list<tile*>* z2List, list<tile*>* z3List, list<tile*>* z4List) {
 		// Open the input file
 		ifstream inputFile(levelName + "\\" + section + ".txt");
@@ -76,25 +104,25 @@ public:
 		while (getline(inputFile, line)) {
 
 			char sep = ',';
-			vector<int> values = split(line, sep);
-			list<int> val;
+			vector<string> values = sSplit(line, ',');
+			list<string> val;
 
 
 			for (auto& i : values) {
 				val.push_back(i);
 			}
-			list<int>::iterator valI = val.begin();
+			list<string>::iterator valI = val.begin();
 
-			int type = *valI;
+			string type = *valI;
 			valI = next(valI);
-			int worldX = *valI;
+			int worldX = stoi(*valI);
 			valI = next(valI);
-			int worldY = *valI;
+			int worldY = stoi(*valI);
 			valI = next(valI);
-			int tex = *valI;
+			int tex = stoi(*valI);
 			if (next(valI) != val.end()) {
 				valI = next(valI);
-				z = *valI;
+				z = stoi(*valI);
 			}
 			else {
 				z = 1;
@@ -403,7 +431,7 @@ public:
 		objects->push_back(endP);
 	}
 	
-	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners, list<Item*>* items) {
+	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners, list<Item*>* items, SoundCollection* soundCol) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -466,50 +494,24 @@ public:
 			}
 		}
 
-		setSounds(objects, backgroundOb, enemies, items);
+		setSounds(objects, backgroundOb, enemies, items, soundCol);
 
 		
 	}
 
-	void setSounds(list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, list<Item*>* items) {
-		SoundBuffer* hitB = new SoundBuffer();
-		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
-		try {
-			// Code that might throw an exception
-			free(hitSound);
-		}
-		catch (int e) {
-			// exception handling code
-		}
+	void setSounds(list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, list<Item*>* items, SoundCollection* soundCol) {
 
-		hitSound = (Sound*)malloc(1);
-		hitSound = new Sound();
-		hitSound->setBuffer(*hitB);
-
-		for (enemy* en : *enemies) {
-			en->setHitSound(&hitSound);
-		}
-
-
-		
-		SoundBuffer* yokuB = new SoundBuffer();
-		yokuB->loadFromFile("assets\\sound\\yoku.wav");
-
-		try {
-			// Code that might throw an exception
-			free(yoSound);
-		}
-		catch (int e) {
-			// exception handling code
-		}
-		yoSound = (Sound*)malloc(1);
-		yoSound = new Sound();
-		yoSound->setBuffer(*yokuB);
+		Sound* hitSound = soundCol->getHit();
 
 		for (GameObject* ob : *objects) {
 
-			disappearCheck(ob, yoSound);
+			disappearCheck(ob, soundCol->getYoku());
 			
+		}
+
+		for (enemy* e : *enemies) {
+			e->loadSound(soundCol);
+			e->setHitSound(soundCol->getHit());
 		}
 
 		SoundBuffer* colB = new SoundBuffer();
@@ -587,9 +589,43 @@ public:
 		else if (type == "sniper armour") {
 			*enem = new SniperArmour(t, Vector2f(worldX, worldY));
 		}
+		else if (type == "crabbot") {
+			*enem = new Crabbot(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "croaker") {
+			*enem = new Croaker(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "shrink") {
+			*enem = new Shrink(t, Vector2f(worldX, worldY));
+		}
+		else if (type == "anko") {
+			*enem = new Anko(t, Vector2f(worldX, worldY));
+		}
 		else if (type == "bird-spawn") {
 			if (*spawn == NULL) {
 				*spawn = new BirdSpawner(worldX);
+			}
+			else {
+				SpawnArea* temp = *spawn;
+				temp->setEnd(worldX);
+				temp->initial();
+			}
+		}
+
+		else if (type == "jelly fish-spawn") {
+			if (*spawn == NULL) {
+				*spawn = new JellyFishSpawner(worldX);
+			}
+			else {
+				SpawnArea* temp = *spawn;
+				temp->setEnd(worldX);
+				temp->initial();
+			}
+		}
+
+		else if (type == "snapper-spawn") {
+			if (*spawn == NULL) {
+				*spawn = new SnapperSpawn(worldX);
 			}
 			else {
 				SpawnArea* temp = *spawn;
@@ -608,6 +644,11 @@ public:
 				temp->initial();
 			}
 		}
+
+		else if (type == "fall platform") {
+			*add = new FallPlatform(t, Vector2f(worldX, worldY));
+		}
+
 		else if (type == "fly guy-spawn") {
 			*spawnAdd = new FlyGuySpawner(t, Vector2f(worldX, worldY));
 		}
@@ -668,51 +709,68 @@ public:
 	}
 
 
-	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
+	tile* tileCreation(Vector2f worldPos, string selectedType, int selectedTexture) {
 
 		//Instead of using sub-classes to store different types of collision,
 		//I should have just used one tile class and activated different collision using functions.
 		//That would have been a way to avoid the magic numbering you see below.
 
-		if (selectedType == 0) {
+		if (selectedType == "0") {
 			return new tile(worldPos, tex, selectedTexture, z);
 		}
-		else if (selectedType == 1) {
+		else if (selectedType == "1") {
 			return new topTile(worldPos, tex, selectedTexture);
 		}
-		else if (selectedType == 2) {
+		else if (selectedType == "2") {
 			return new rightTile(worldPos, tex, selectedTexture);
 		}
-		else if (selectedType == 3) {
+		else if (selectedType == "3") {
 			return new ceilingTile(worldPos, tex, selectedTexture);
 		}
-		else if (selectedType == 4) {
+		else if (selectedType == "4") {
 			return new leftTile(worldPos, tex, selectedTexture);
 		}
-		else if (selectedType == 8) {
+		else if (selectedType == "8") {
 			return new ladderTile(worldPos, tex);
 		}
-		else if (selectedType == 9) {
+		else if (selectedType == "9") {
 			return new topLadder(worldPos, tex);
 		}
-		else if (selectedType == 10) {
+		else if (selectedType == "10") {
 			return new HorizontalLava(worldPos, tex, z);
 		}
-		else if (selectedType == 11) {
+		else if (selectedType == "11") {
 			return new VerticalLava(worldPos, tex, z);
 		}
-		else if (selectedType == 12) {
+		else if (selectedType == "12") {
 			return new PourLava(worldPos, tex, z);
 		}
-		else {
+		else if (selectedType == "5" || selectedType == "6" || selectedType == "7") {
 			return new solidTile(worldPos, tex, selectedTexture);
 		}
-	}
-	vector<int> split(const string& str, char sep)
-	{
-		vector<int> tokens;
+		else if (selectedType == "water") {
+			return new WaterTile(worldPos, tex, selectedTexture);
+		}
+		else if (selectedType == "death") {
+			return new DeathTile(worldPos, tex, selectedTexture, z);
+		}
+		else {
+			vector<string> spl = splitString(selectedType, char('-'));
+			string altType = spl[0];
 
-		int i;
+			if (altType == "0"){
+				return new AnimTile(worldPos, tex, stoi(spl[1]), 3, z);
+			}
+			else if (altType == "water") {
+				return new WaterAnim(worldPos, tex, stoi(spl[1]), 3, z);
+			}
+		}
+	}
+	vector<string> split(const string& str, char sep)
+	{
+		vector<string> tokens;
+
+		string i;
 		stringstream ss(str);
 		while (ss >> i) {
 			tokens.push_back(i);

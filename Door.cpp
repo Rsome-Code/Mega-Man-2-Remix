@@ -83,7 +83,7 @@ public:
 		return revTimer->isFinished();
 	}
 
-	void loop(renderer* instance, camera* cam, float targetRate, player* player, objectSprite* oDoor, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, bool open) {
+	void loop(renderer* instance, camera* cam, float targetRate, player* player, objectSprite* oDoor, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> bObjects, bool open) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -114,6 +114,10 @@ public:
 					run = false;
 					firstOpen = true;
 				}
+			}
+
+			for (GameObject* bObject : bObjects) {
+				instance->bObjectDisplay(bObject->getSprite(), cam);
 			}
 
 			for (tile* t : z4List) {

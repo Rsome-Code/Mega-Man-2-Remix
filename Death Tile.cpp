@@ -5,7 +5,7 @@ class DeathTile : public tile {
 protected:
 	objectHitbox* deathBox;
 
-	int type;
+
 
 public:
 
@@ -23,6 +23,8 @@ public:
 		sprite = new objectSprite("Tile", t, Vector2i(tX * 16, tY * 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
 
 		deathBox = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
+
+		type = "death";
 	}
 
 
@@ -30,7 +32,4 @@ public:
 		return deathBox;
 	}
 
-	int getType() {
-		return type;
-	}
 };

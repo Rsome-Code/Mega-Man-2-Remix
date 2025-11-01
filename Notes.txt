@@ -1,0 +1,7 @@
+Rework hitboxes
+
+Rework Player - anims - hitboxes
+
+USE SMART POINTERS
+
+Each animation frame should be its own object

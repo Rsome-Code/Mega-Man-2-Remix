@@ -21,6 +21,8 @@
 #include "teleport Out.cpp"
 #include "GObject.cpp"
 #include <sfml/audio.hpp>
+#include "sound collection.cpp"
+#include "item bullets.cpp"
 #pragma once
 
 class scene {
@@ -111,6 +113,8 @@ class scene {
 
 	TeleportOut* teleExit;
 
+	list<ItemBullet*> itemBullets;
+
 
 public:
 	scene(player* pl, abstractStage* stg, Texture* en) {
@@ -165,6 +169,7 @@ public:
 		victoryMusic->openFromFile("assets\\sound\\music\\15 - Victory.mp3");
 
 		teleExit = new TeleportOut(p->getSprite());
+
 	}
 
 public:
@@ -216,7 +221,7 @@ public:
 
 
 	float deltaT = 0.00001;
-	bool loop(renderer* instance, double targetRate) {
+	bool loop(renderer* instance, double targetRate, SoundCollection* soundCol) {
 
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -225,7 +230,7 @@ public:
 		bool unPaused = false;
 
 
-		section = 0;
+		section = 2;
 
 		p->enableControls(true);
 
@@ -237,7 +242,7 @@ public:
 		music->setVolume(30);
 
 
-		startAnim(instance, targetRate, music);
+		startAnim(instance, targetRate, music, soundCol);
 		respawn();
 		//p->heal(-27);
 
@@ -268,7 +273,7 @@ public:
 			startP = &start;
 
 
-			pDeathCheck(instance, targetRate, music);
+			pDeathCheck(instance, targetRate, music, soundCol);
 
 
 			if (levelEnd) {
@@ -307,7 +312,7 @@ public:
 					afterT = false;
 				}
 
-				else if (flagCheck(instance, targetRate, currentFlag->getAngle(), currentFlag->getSprite()->getPosition(), true, nextFlagActive) || flagCheck(instance, targetRate, revLastAngle, lastFlag->getSprite()->getPosition(), false, lastFlagActive)) {
+				else if (flagCheck(instance, targetRate, currentFlag->getAngle(), currentFlag->getSprite()->getPosition(), true, nextFlagActive, soundCol) || flagCheck(instance, targetRate, revLastAngle, lastFlag->getSprite()->getPosition(), false, lastFlagActive, soundCol)) {
 					deltaT = 0;
 					p->getSprite()->setMove(false);
 
@@ -321,13 +326,14 @@ public:
 					justAfterT = false;
 				}
 			}
-			p->eachFrame(&deltaT, tileList);
+			p->eachFrame(&deltaT, tileList, &itemBullets);
 
 			checkFall();
 
-			for (object* o : objects) {
+			for (GameObject* o : objects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite(), cam);
+				o->eachFrame(&deltaT, p, cam);
 				o->eachFrame(&deltaT, p->getSprite());
 			}
 
@@ -342,7 +348,7 @@ public:
 
 						
 
-						p->setGrounded(ground);
+						//p->setGrounded(ground);
 
 
 					}
@@ -401,12 +407,12 @@ public:
 			enemyDistanceCheck(instance, enemies);
 
 			if (spawner != NULL) {
-				spawnLoop(deltaT);
+				spawnLoop(deltaT, soundCol);
 			}
 
 
 			if (!p->isTeleporting()) {
-				enemyCheck(deltaT, instance, targetRate, music);
+				enemyCheck(deltaT, instance, targetRate, music, soundCol);
 				if (paused) {
 					start = time->timerStart();
 					startP = &start;
@@ -437,6 +443,12 @@ public:
 			backgroundTileDistanceCheck(z2List);
 			backgroundTileDistanceCheck(z3List);
 			backgroundTileDistanceCheck(z4List);
+
+
+			itemBulletLoop(deltaT);
+			p->setGrounded(ground);
+
+
 
 			for (tile* t : z4List) {
 				t->animate(&deltaT);
@@ -472,7 +484,7 @@ public:
 				if (t->getDamSprite() != NULL) {
 					instance->objectDisplay(t->getDamSprite(), cam);
 				}
-				if (t->getDisplay() && t->getSprite() != NULL) {
+				if (t->getSprite() != NULL) {
 					
 					instance->objectAccess(t, cam);
 					//instance->objectHitboxSetup(t->getHitbox(), cam);
@@ -480,6 +492,10 @@ public:
 
 					
 				}
+			}
+
+			for (ItemBullet* i : itemBullets) {
+				instance->objectDisplay(i->getSprite(), cam);
 			}
 
 			if (bossDeath != NULL) {
@@ -538,9 +554,12 @@ public:
 				instance->UIDisplay(a->getSprites());
 			}
 
-			//instance->objectHitboxSetup(list<objectHitbox*> { p->getAbove()}, cam);
-			//instance->hitboxDisplay(list<UIHitbox*> { p->getAbove()});
 
+			/*for (enemy* e : enemies) {
+				instance->objectHitboxSetup(list<objectHitbox*> {e->getHitbox()}, cam);
+				instance->hitboxDisplay(list<UIHitbox*> { e->getHitbox()});
+			}
+			*/
 
 			
 
@@ -563,6 +582,32 @@ public:
 		}
 
 		return levelEnd;
+	}
+
+	void itemBulletLoop(float deltaT) {
+		ItemBullet* toDelete = NULL;
+
+		
+
+		for (ItemBullet* iBul : itemBullets) {
+			if (iBul->eachFrame(&deltaT)) {
+				toDelete = iBul;
+			}
+
+			if (p->getSprite()->getVVelocity() <= 0) {
+				if (hitboxCheck(iBul->getHit(), p->getFoot())) {
+					p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x, iBul->getHit()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
+					//cam->follow();
+					ground = true;
+				}
+			}
+		}
+
+
+
+		if (toDelete != NULL) {
+			itemBullets.remove(toDelete);
+		}
 	}
 
 	void allTileOn(list<tile*> tL) {
@@ -605,8 +650,8 @@ public:
 		}
 	}
 
-	void spawnLoop(float deltaT) {
-		spawner->eachFrame(p, deltaT, &enemies, cam);
+	void spawnLoop(float deltaT, SoundCollection* soundCol) {
+		spawner->eachFrame(p, deltaT, &enemies, cam, soundCol);
 	}
 
 	void enemyBullets(float deltaT) {
@@ -679,7 +724,7 @@ public:
 		return false;
 	}
 
-	void pDeathCheck(renderer* instance, float targetRate, Music* music) {
+	void pDeathCheck(renderer* instance, float targetRate, Music* music, SoundCollection* soundCol) {
 		if (p->getHP() <= 0) {
 
 			music->stop();
@@ -692,7 +737,7 @@ public:
 
 			if (death(instance, targetRate, cam)) {
 				if (p->getLives() > 0) {
-					startAnim(instance, targetRate, music);
+					startAnim(instance, targetRate, music, soundCol);
 					respawn();
 					//p->heal(p->getMaxHP());
 					p->HPReset();
@@ -757,7 +802,7 @@ public:
 		return stage->getLastCheckpoint(section);
 	}
 
-	void startAnim(renderer* instance, float targetRate, Music* music) {
+	void startAnim(renderer* instance, float targetRate, Music* music, SoundCollection* soundCol) {
 
 		
 		eBullets.clear();
@@ -768,7 +813,7 @@ public:
 
 		section = flag->getSection() + 1;
 
-		forceLoadSection(section);
+		forceLoadSection(section, soundCol);
 
 
 		p->shootReset();
@@ -834,12 +879,12 @@ public:
 			}
 
 			if (time->frameLimiter(targetRate, startP)) {
-				deltaT = 0.0333;
+				deltaT = 0.0333333333;
 			}
 			else {
 				deltaT = time->checkTimer(startP);
 			}
-			//	deltaT = time->checkTimer(startP);
+
 			start = time->timerStart();
 			startP = &start;
 
@@ -918,6 +963,7 @@ public:
 
 	void refreshMisc() {
 		miscT->loadFromFile("assets\\misc\\" + p->getActiveWeapon()->getName() + ".png");
+		p->iniSplash(miscT);
 	}
 
 	void levelEndCheck(enemy* e, Music* music) {
@@ -930,7 +976,7 @@ public:
 		}
 	}
 
-	void enemyCheck(float deltaT, renderer* instance, float tRate, Music* music) {
+	void enemyCheck(float deltaT, renderer* instance, float tRate, Music* music, SoundCollection* soundCol) {
 		enemy* toDelete = NULL;
 
 		for (enemy* enemy : enemies) {
@@ -952,7 +998,7 @@ public:
 								if (enemy->getHP() <= 0) {
 									spawnItemFromEnemy(enemy);
 
-									enemy->spawnEnemy(&enemies);
+									enemy->spawnEnemy(&enemies, soundCol);
 
 									if (enemy->getDeathAnims()[0] != NULL) {
 										music->stop();
@@ -977,7 +1023,7 @@ public:
 				}
 			}
 
-			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets) || enemyYCheck(enemy)) {
+			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets, soundCol) || enemyYCheck(enemy)) {
 				toDelete = enemy;
 			}
 
@@ -992,7 +1038,9 @@ public:
 		}
 		if (toDelete != NULL) {
 			enemies.remove(toDelete);
+			
 			delete toDelete;
+			
 		}
 
 	}
@@ -1040,7 +1088,7 @@ public:
 
 
 
-	bool flagCheck(renderer* instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection, bool active) {
+	bool flagCheck(renderer* instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection, bool active, SoundCollection* soundCol) {
 
 
 		if (active) {
@@ -1050,7 +1098,7 @@ public:
 
 					bool door = doorCheck(instance, targetRate);
 
-					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					startTransition(instance, targetRate, ang, flagPos, nextSection, soundCol);
 
 					if (door) {
 						doorClose(instance, targetRate);
@@ -1060,20 +1108,20 @@ public:
 			}
 			else if (ang == DOWN && !fallDeath) {
 				if (p->getSprite()->getPosition().y + 48 >= flagPos.y) {
-					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					startTransition(instance, targetRate, ang, flagPos, nextSection, soundCol);
 					return true;
 				}
 			}
 			else if (ang == UP && p->getControls()->getOnLadder()) {
 				if (p->getSprite()->getPosition().y - 48 <= flagPos.y) {
-					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					startTransition(instance, targetRate, ang, flagPos, nextSection, soundCol);
 					return true;
 				}
 			}
 			if (ang == LEFT) {
 				if (p->getSprite()->getPosition().x <= flagPos.x) {
 
-					startTransition(instance, targetRate, ang, flagPos, nextSection);
+					startTransition(instance, targetRate, ang, flagPos, nextSection, soundCol);
 					return true;
 				}
 			}
@@ -1084,11 +1132,11 @@ public:
 
 	bool doorCheck(renderer* instance, float targetRate) {
 		if (door1->getSection() == section) {
-			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, true);
+			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, true);
 			return true;
 		}
 		if (door2->getSection() == section) {
-			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, true);
+			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, true);
 			return true;
 		}
 		return false;
@@ -1096,25 +1144,25 @@ public:
 
 	void doorClose(renderer* instance, float targetRate) {
 		if (door1->getSection() == section - 1) {
-			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, false);
+			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, false);
 
 		}
 		if (door2->getSection() == section - 1) {
-			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, false);
+			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, false);
 
 		}
 	}
 
 
-	void startTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool nextSection) {
+	void startTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool nextSection, SoundCollection* soundCol) {
 		checkLastFlagRight();
 
 		if (nextSection) {
-			loadNextSection();
+			loadNextSection(soundCol);
 		}
 		else {
 			section--;
-			loadSection();
+			loadSection(soundCol);
 		}
 
 		updateFlags();
@@ -1232,8 +1280,8 @@ public:
 
 		bool run = true;
 
-		float camSpeed = 700;
-		float playerSpeed = 120;
+		float camSpeed = 1000;
+		float playerSpeed = 100;
 		Vector2f otherFlagPos;
 		transitionAngle otherAngle;
 
@@ -1432,19 +1480,19 @@ public:
 		}
 	}
 
-	void forceLoadSection(int i) {
+	void forceLoadSection(int i, SoundCollection* soundCol) {
 		section = i;
 
 		stage->updateSection(i);
 		checkLastFlagRight();
 		loadFlag();
-		loadSection();
+		loadSection(soundCol);
 		deletePrevSection();
 		updateFlags();
 	}
-	void loadSection() {
+	void loadSection(SoundCollection* soundCol) {
 
-		stage->reload(stageName, to_string(section));
+		stage->reload(stageName, to_string(section), soundCol);
 
 		loadFlag();
 
@@ -1491,10 +1539,10 @@ public:
 		}
 	}
 
-	void loadNextSection() {
+	void loadNextSection(SoundCollection* soundCol) {
 		section++;
 
-		loadSection();
+		loadSection(soundCol);
 	}
 
 	void deletePrevSection() {
@@ -1777,7 +1825,7 @@ public:
 
 		for (enemy* e : objects) {
 			//If object is still active
-			if (e->getAct() && e->getDisplay()) {
+			if (e->getAct()) {
 				e->setOffScreen(checkObOffScreen(e, camPos, camEdge));
 				//and has just left the screen
 				if (e->getOffScreen()) {
@@ -1928,6 +1976,8 @@ public:
 		
 		bool lBelow = false;
 		bool lAbove = false;
+		bool inWater = false;
+
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		for (tile* t : tileList) {
@@ -1989,6 +2039,13 @@ public:
 						}
 					}
 
+					if (t->getWaterBox() != NULL) {
+						
+						if (hitboxCheck(p->getFoot(), t->getWaterBox())) {
+							inWater = true;
+						}
+					}
+
 
 
 				}
@@ -2029,6 +2086,13 @@ public:
 			if (t->checkDist()) {
 				tileDistanceCheck(instance, t);
 			}
+		}
+
+		if (inWater) {
+			p->setWaterGravity();
+		}
+		else {
+			p->resetGravity();
 		}
 		
 	}

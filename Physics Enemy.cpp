@@ -11,6 +11,8 @@ protected:
 
 public:
 
+
+
 	PhysicsEnemy(Texture* t, Vector2f i) {
 		phys = new physicsObject("physEnemy", t, IntRect(0,0,0,0), i, Vector2f(4,4));
 		sprite = phys;
@@ -26,12 +28,10 @@ public:
 		display = false;
 		initial();
 
-		hitB = new SoundBuffer();
-		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
-		hitSound = new Sound();
-		hitSound->setBuffer(*hitB);
+
 
 	}
+
 
 
 	void tileCollision(list<tile*>* tileList) {

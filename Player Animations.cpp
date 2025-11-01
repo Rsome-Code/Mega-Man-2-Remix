@@ -90,6 +90,10 @@ public:
 	}
 public:
 
+	void setThrow(bool t) {
+		metalBlade = t;
+	}
+
 	void ladderAnim(float* deltaT) {
 		currentAnim = 4;
 		ladderTimer->run(deltaT);

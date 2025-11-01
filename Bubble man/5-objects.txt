@@ -1,0 +1,3 @@
+background-7400703,0,0,1
+snapper-spawn,14789,4029,1
+snapper-spawn,16707,4029,1

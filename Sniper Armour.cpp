@@ -11,6 +11,10 @@ class SniperArmour : public PhysicsEnemy {
 	list<IntRect> frames = { IntRect(682, 476, 42, 56), IntRect(726, 480, 46, 52), IntRect(778, 468, 39, 64)};
 	SoundBuffer* shootB;
 	Sound* shootSound;
+
+	SoundBuffer* landB;
+	Sound* landSound;
+
 	enum State {
 		jumping, shooting, idle
 	};
@@ -27,6 +31,14 @@ class SniperArmour : public PhysicsEnemy {
 
 	float idleTime = 1;
 	float idleTime_left = idleTime;
+
+
+	void loadSound(SoundCollection* soundCol) {
+
+		sound = soundCol->getLand();
+
+		shootSound = soundCol->getShoot();
+	}
 
 	void initial() {
 		phys->setPosition(initialPos);
@@ -49,10 +61,8 @@ class SniperArmour : public PhysicsEnemy {
 
 		jumpAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, 0 * 4), Vector2f(-4 * 4, 4 * 4), Vector2f(3 * 4, -8 * 4)});
 
-		shootB = new SoundBuffer();
-		shootB->loadFromFile("assets\\sound\\enemy_shoot.wav");
-		shootSound = new Sound();
-		shootSound->setBuffer(*shootB);
+
+
 	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
@@ -62,6 +72,7 @@ class SniperArmour : public PhysicsEnemy {
 		if (state == jumping) {
 			
 			if (grounded) {
+				sound->play();
 				jumpAnim->reset();
 				jumpAnim->thisFrame();
 				jumpTimer->reset();
@@ -124,10 +135,12 @@ class SniperArmour : public PhysicsEnemy {
 
 	}
 
-	void spawnEnemy(list<enemy*>* enemies) {
+	void spawnEnemy(list<enemy*>* enemies, SoundCollection* soundCol) {
+
 		SniperJoe* joe = new SniperJoe(sprite->getTexture(), sprite->getPosition());
 		joe->setHitB(hitB);
 		joe->initial(false);
+		joe->setSound(soundCol);
 		enemies->push_back(joe);
 	}
 

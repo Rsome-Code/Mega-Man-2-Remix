@@ -61,5 +61,12 @@ public: Vector2i getSize() {
 public: UISprite* getSprite() {
 	return sprite;
 }
+	  Vector2f getScale() {
+		  return scale;
+	  }
+	  void setScale(Vector2f s) {
+		  scale = s;
+		  relativeRect = IntRect(Vector2i(relativePos), Vector2i(relativeRect.getSize().x * scale.x, relativeRect.getSize().y * scale.y));
+	  }
 
 };

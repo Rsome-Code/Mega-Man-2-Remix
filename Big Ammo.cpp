@@ -3,7 +3,7 @@
 #pragma once
 
 class BigAmmo : public Item {
-	float increase = 6;
+	float increase = 8;
 
 public:
 

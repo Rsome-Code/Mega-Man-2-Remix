@@ -50,12 +50,12 @@ public:
 		sound->stop();
 	}
 
-	void update(int newVal) {
+	void update(float newVal) {
 		if (newVal == barVal+1) {
 			sound->play();
 		}
 		//barVal = Maths::map(0, ammoMax, 0, barMax, newVal);
-		barVal = newVal;
+		barVal = ceil(newVal);
 
 		int fullBars = barVal/ 4;
 		int left = barVal % 4;

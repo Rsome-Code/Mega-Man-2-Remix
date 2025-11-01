@@ -15,6 +15,7 @@
 #include "load.cpp"
 #include "door.cpp"
 #include "item.cpp"
+#include "sound collection.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -61,7 +62,7 @@ protected:
 	
 
 public:
-	abstractStage(string name) {
+	abstractStage(string name, SoundCollection* soundCol) {
 		l = new Load();
 		levelName = name;
 		tileTexture = new Texture();
@@ -74,7 +75,7 @@ public:
 		enemyTexture = new Texture();
 		enemyTexture->loadFromFile("Assets\\enemy.png");
 
-		load(name, "0");
+		load(name, "0", soundCol);
 		lastFlagPos = Vector2f(0,0);
 
 
@@ -128,7 +129,7 @@ public:
 		return music;
 	}
 
-	void reload(string name, string section) {
+	void reload(string name, string section, SoundCollection* soundCol) {
 		tileList.clear();
 		z2List.clear();
 		z3List.clear();
@@ -138,7 +139,7 @@ public:
 		spawners.clear();
 		items.clear();
 		//flags.clear();
-		load(name, section);
+		load(name, section, soundCol);
 	}
 
 	string getName() {
@@ -240,14 +241,14 @@ public:
 		return items;
 	}
 
-	void load(string name, string section) {
+	void load(string name, string section, SoundCollection* soundCol) {
 		
 		l->load(name, section, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();
 		
 		spawn = NULL;
 
-		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn, &spawners, &items);
+		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn, &spawners, &items, soundCol);
 
 		checkTilesInObjects();
 

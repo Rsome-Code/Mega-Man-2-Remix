@@ -1,6 +1,7 @@
 #include "movable object.cpp"
 #include "object hitbox.cpp"
 #include "bullet.cpp"
+#include "item bullets.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -12,9 +13,9 @@ protected:
 	int weaponCount = 0;
 	int maxWeaponCount;
 
-	int ammo = 28;
+	float ammo = 28;
 	int maxAmmo = 28;
-	int ammoDecrease = 1;
+	float ammoDecrease = 1;
 
 	Texture* colourP;
 
@@ -38,7 +39,7 @@ public:
 	string getName() {
 		return name;
 	}
-	void eachFrame(float* deltaT) {
+	virtual void eachFrame(float* deltaT) {
 		for (bullet* b : bullets) {
 			if (b->eachFrame(deltaT)) {
 				
@@ -55,34 +56,34 @@ public:
 	}
 
 	virtual bool fire(bool right) {
+
 		bool fired = false;
-		if (fireReady && checkAmmo()) {
-			//weaponCount++;
-			ammo = ammo - ammoDecrease;
-			if (ammo < 0) {
-				ammo = 0;
-			}
+
+		if (checkAmmo()) {
 
 			for (bullet* b : bullets) {
 				if (!b->getShooting()) {
 					b->start(right);
 					shootSound->play();
 					fired = true;
+					ammo = ammo - ammoDecrease;
+					if (ammo < 0) {
+						ammo = 0;
+					}
 					break;
 				}
 			}
 			
-			
-			fired = uniqueFire(fired);
-			//if (weaponCount >= maxWeaponCount) {
-				//fireReady = false;
-			//}
+			//I'm not sure why this is here
+			//fired = uniqueFire(fired);
+
 			
 		}
 		else {
 			secondFire();
 		}
 		return fired;
+	
 	}
 
 	list<bullet*> getBullets() {
@@ -113,7 +114,7 @@ public:
 		ammo = a;
 	}
 
-	int getAmmo() {
+	float getAmmo() {
 		return ammo;
 	}
 
@@ -135,5 +136,14 @@ public:
 
 	virtual String getSymbol() = 0;
 
+	virtual bool fire(bool right, list<ItemBullet*>* allItems) {
+		return false;
+	}
+
+	virtual void checkCount(list<ItemBullet*> allItems) {}
+
+	virtual bool checkThrow() {
+		return false;
+	}
 	
 };

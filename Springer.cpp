@@ -1,20 +1,20 @@
-#include "enemy.cpp"
+#include "grounded enemy.cpp"
 #include "hitbox detector.cpp"
 #pragma once
 
-class Springer : public enemy {
-	using enemy::enemy;
+class Springer : public GroundedEnemy {
+	using GroundedEnemy::GroundedEnemy;
 	animation* springAnim;
 	animTimer* springTimer;
 
-	animation* moveAnim;
+
 
 	IntRect moveS = IntRect(146, 648, 16, 11);
 
 	float slowSpeed = 200;
 	float fastSpeed = 600;
 	float speed = slowSpeed;
-	int angle = 180;
+
 
 	float springTime = 1.5;
 	float springTime_left = 0;
@@ -92,58 +92,7 @@ class Springer : public enemy {
 		}
 	}
 
-	void checkDirection(list<tile*>* tileList) {
-		bool onGround = false;
 
-		objectHitbox tempH = *hit;
-		objectHitbox* temp = &tempH;
-		//temp->setSprite(sprite);
-
-		temp->setSize(Vector2i(1, temp->getSize().y));
-		if (faceRight) {
-			temp->setRelativePosition(Vector2i(temp->getRelativePosition().x + (64), temp->getRelativePosition().y));
-			temp->updatePos();
-		}
-
-		for (tile* t : *tileList) {
-			if (t->getGround() != NULL) {
-		
-				if (faceRight) {
-					if (hitboxDetect::hitboxDetection(temp, t->getGround())) {
-						onGround = true;
-					}
-				}
-				else {
-					if (hitboxDetect::hitboxDetection(temp, t->getGround())) {
-						onGround = true;
-					}
-				}
-				
-			}
-		}
-
-		if (!onGround) {
-			setFacing(!faceRight);
-		}
-
-	}
-
-	void setFacing(bool right) {
-		
-		if (right != faceRight) {
-			//springAnim->swapAll();
-			//springAnim->thisFrame();
-
-			angle = angle + 180;
-			angle = angle % 360;
-
-			
-			moveAnim->swapAll();
-			
-		}
-
-		faceRight = right;
-	}
 
 	void playerHit(){
 		state = spring;

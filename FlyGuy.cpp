@@ -61,14 +61,14 @@ public:
 		chargeAnim = new animation(list<IntRect>{IntRect(137, 214, 28, 38), IntRect(167, 214, 28, 38), IntRect(197, 214, 32, 38), IntRect(235, 214, 32, 38)}, sprite);
 		chargeTimer = new animTimer(chargeAnim, 12, true);
 		
-		soundB = new SoundBuffer();
-		soundB->loadFromFile("assets\\sound\\fly_boy.wav");
-		sound = new Sound();
-		sound->setBuffer(*soundB);
+
 		offSetList();
 		deathAnim->setSprite(sprite);
 	}
 
+	void setSound(SoundCollection* soundCol) {
+		sound = soundCol->getLand();
+	}
 	
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
@@ -171,8 +171,12 @@ public:
 			}
 
 		}
-			faceRight = right;
+		faceRight = right;
 		
+	}
+
+	void setSoundPoint(Sound** s) {
+		sound = *s;
 	}
 
 	/*void arcSim(float* deltaT) {
