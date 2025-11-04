@@ -63,7 +63,7 @@ public:
 		}
 	}
 
-	void loop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, camera* cam) {
+	void loop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, list<GameObject*> bObjects, camera* cam) {
 
 		timer* time = new timer();
 
@@ -94,7 +94,9 @@ public:
 			eachFrame(&deltaT);
 
 
-		
+			for (GameObject* ob : bObjects) {
+				instance->bObjectDisplay(ob->getSprite(), cam);
+			}
 
 			for (tile* t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);

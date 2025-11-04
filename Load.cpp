@@ -54,6 +54,7 @@
 #include "shrink.cpp"
 #include "snapper spawn.cpp"
 #include "anko.cpp"
+#include "bubble man.cpp"
 #pragma once
 
 using namespace std;
@@ -341,6 +342,14 @@ public:
 					p->setBubbleLead(false);
 				}
 			}
+			else if (type == "Metal Man") {
+				if (*valI == "y") {
+					p->setMetalBlade(true);
+				}
+				else {
+					p->setMetalBlade(false);
+				}
+			}
 
 		}
 
@@ -565,14 +574,13 @@ public:
 			*enem = new Wolf(t, Vector2f(worldX, worldY));
 		}
 		else if (type == "wood man") {
-			Texture* woodBossT = new Texture();
-			woodBossT->loadFromFile("assets\\wood man.png");
-			*enem = new WoodMan(woodBossT, Vector2f(worldX, worldY));
+			*enem = new WoodMan(Vector2f(worldX, worldY));
 		}
 		else if (type == "heat man") {
-			Texture* heatBossT = new Texture();
-			heatBossT->loadFromFile("assets\\heat man.png");
-			*enem = new HeatMan(heatBossT, Vector2f(worldX, worldY));
+			*enem = new HeatMan(Vector2f(worldX, worldY));
+		}
+		else if (type == "bubble man") {
+			*enem = new BubbleMan(Vector2f(worldX, worldY));
 		}
 		else if (type == "fly guy") {
 			*enem = new FlyGuy(t, Vector2f(worldX, worldY));

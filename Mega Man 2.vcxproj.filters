@@ -703,11 +703,20 @@
     <ClCompile Include="Item Bullets.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Items\Bullets</Filter>
     </ClCompile>
-    <ClCompile Include="Arm Cannon.cpp">
-      <Filter>Source Files\Game Files\Player\Weapons</Filter>
-    </ClCompile>
     <ClCompile Include="DL Message.cpp">
       <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss Bubble.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Bubble Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Water Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Bubble Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Metal Blade.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Metal Blade Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

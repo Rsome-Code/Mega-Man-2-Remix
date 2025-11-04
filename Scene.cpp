@@ -230,7 +230,7 @@ public:
 		bool unPaused = false;
 
 
-		section = 2;
+		section = 0;
 
 		p->enableControls(true);
 
@@ -473,6 +473,12 @@ public:
 				}
 			}
 
+			if (door1 != NULL) {
+				instance->objectAccess(door1, cam);
+			}
+			if (door2 != NULL) {
+				instance->objectAccess(door2, cam);
+			}
 
 			for (object* t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
@@ -523,12 +529,7 @@ public:
 				instance->objectAccess(p->getDamEffect(), cam);
 			}
 
-			if (door1 != NULL) {
-				instance->objectAccess(door1, cam);
-			}
-			if (door2 != NULL) {
-				instance->objectAccess(door2, cam);
-			}
+			
 
 			for (object* o : backgroundObjects) {
 				o->setCamera(cam);
@@ -578,7 +579,7 @@ public:
 			list<GameObject*> temps = objects;
 			temps.push_back(door1);
 			temps.push_back(door2);
-			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, cam);
+			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, backgroundObjects, cam);
 		}
 
 		return levelEnd;
@@ -1728,8 +1729,11 @@ public:
 				instance->objectAccess(item, cam);
 			}
 
-			for (object* t : enemies) {
-				if (t->getDisplay() && t->getSprite() != NULL) {
+			for (enemy* t : enemies) {
+				if (t->getDamSprite() != NULL) {
+					instance->objectDisplay(t->getDamSprite(), cam);
+				}
+				if (t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}

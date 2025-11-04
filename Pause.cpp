@@ -32,6 +32,7 @@ class Pause {
 	WeaponOption* megaBuster;
 	WeaponOption* atomicFire;
 	WeaponOption* bubbleLead;
+	WeaponOption* metalBlade;
 	WeaponOption* item1;
 
 
@@ -113,6 +114,9 @@ public:
 			pos = 6;
 			addP1Option(&bubbleLead, pos, p->getBubbleLead());
 		}
+		if (p->checkBlade()) {
+			addP2Option(&metalBlade, 2, p->getMetalBlade());
+		}
 
 		controller = p->getControls()->getController();
 
@@ -187,10 +191,12 @@ public:
 
 	void defaultOption() {
 		for (Option* opt : page1Options) {
-			if (opt->getWeapon()->getName() == p->getActiveWeapon()->getName()) {
-				currentSelect = opt->getNum();
-				page1 = true;
-				break;
+			if (opt->getWeapon() != NULL) {
+				if (opt->getWeapon()->getName() == p->getActiveWeapon()->getName()) {
+					currentSelect = opt->getNum();
+					page1 = true;
+					break;
+				}
 			}
 		}
 		if (currentSelect == 0) {
@@ -357,7 +363,12 @@ public:
 	}
 
 	void displayPage2(renderer* instance) {
-		instance->UIDisplay(item1->getSprites());
+		if (p->hasAtomicFire()) {
+			instance->UIDisplay(item1->getSprites());
+		}
+		if (p->checkBlade()) {
+			instance->UIDisplay(metalBlade->getSprites());
+		}
 		instance->UIDisplay(lifeSprite);
 		instance->textDisplay(lifeText);
 	}

@@ -98,6 +98,10 @@ public:
 
 	}
 
+	void setThrow(bool t) {
+		metalBlade = t;
+	}
+
 	list<objectSprite*> getBullets() {
 		list<objectSprite*> bul;
 		for (bullet* b : weapon->getBullets()) {
@@ -268,6 +272,11 @@ public:
 			sprite->enableGravity(false);
 			
 		}
+
+
+
+		weapon->checkDirection(p1->checkUP(), p1->checkRIGHT(), p1->checkDOWN(), p1->checkLEFT());
+
 	}
 
 	void setLadder(bool b) {
@@ -339,26 +348,31 @@ public:
 	}
 
 	void move(float* deltaT) {
-		if (p1->checkLEFT()) {
-			sprite->addHorizontalForce(-(groundAccel), deltaT);
-			//pAnim->resetIdle();
-			if (grounded) {
-				pAnim->toeAnim(deltaT, false);
+		if (!(metalBlade && shooting && grounded)) {
+			if (p1->checkLEFT()) {
+				sprite->addHorizontalForce(-(groundAccel), deltaT);
+				//pAnim->resetIdle();
+				if (grounded) {
+					pAnim->toeAnim(deltaT, false);
+				}
+				pAnim->swapDirection(false);
+				standing = false;
+
+
 			}
-			pAnim->swapDirection(false);
-			standing = false;
+			else if (p1->checkRIGHT()) {
+				sprite->addHorizontalForce(groundAccel, deltaT);
+				//pAnim->resetIdle();
+				if (grounded) {
+					pAnim->toeAnim(deltaT, true);
+				}
+				pAnim->swapDirection(true);
+				standing = false;
 
-
-		}
-		else if (p1->checkRIGHT()) {
-			sprite->addHorizontalForce(groundAccel, deltaT);
-			//pAnim->resetIdle();
-			if (grounded) {
-				pAnim->toeAnim(deltaT, true);
 			}
-			pAnim->swapDirection(true);
-			standing = false;
-
+			else {
+				idle(deltaT);
+			}
 		}
 		else {
 			idle(deltaT);

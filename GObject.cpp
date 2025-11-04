@@ -71,4 +71,8 @@ public:
 	virtual void setSoundPointer(Sound* sou) {
 
 	}
+
+	virtual list<objectSprite*> getSprites() {
+		return list<objectSprite*> {sprite};
+	}
 };

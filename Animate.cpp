@@ -60,6 +60,10 @@ public:
 	void setOffsetList(list<Vector2f> l) {
 		offsetList = l;
 		offsetI = offsetList.begin();
+
+		for (int i = 1; i < currentIndex; i++) {
+			offsetI = next(offsetI);
+		}
 	}
 
 	int getCurrentIndex() {
@@ -89,6 +93,8 @@ public:
 				this->setFrame(*current, *offsetI);
 			}
 			else {
+				IntRect lastF = *prev(current);
+				Vector2f lastOff = *prev(offsetI);
 				this->setFrame(*prev(current), *prev(offsetI));
 			}
 		}
@@ -221,6 +227,11 @@ public:void reset() {
 	  list<IntRect>::iterator getCurrent() {
 		  return current;
 	  }
+
+	  IntRect getCurrentRect() {
+		  return *current;
+	  }
+
 	  list<Vector2f>::iterator getOffsetI(){
 		  return offsetI;
 	  }

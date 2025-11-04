@@ -17,6 +17,7 @@
 #include <SFML/audio.hpp>
 #include "splash effect.cpp"
 #include "item1.cpp"
+#include "metal blade.cpp"
 #pragma once
 
 class player {
@@ -41,6 +42,7 @@ class player {
 	bool gotAtomicFire = false;
 	bool gotShield = false;
 	bool gotLead = false;
+	bool gotBlade = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -63,6 +65,7 @@ class player {
 	AtomicFire* atomicFire;
 	LeafShield* leafShield;
 	BubbleLead* bubbleLead;
+	MetalBlade* metalBlade;
 	Item1* item1;
 
 	Weapon* active = megaBuster;
@@ -134,6 +137,7 @@ public:
 		atomicFire = new AtomicFire(sprite, t);
 		leafShield = new LeafShield(sprite, t);
 		bubbleLead = new BubbleLead(sprite, t);
+		metalBlade = new MetalBlade(sprite, t);
 		item1 = new Item1(sprite, t);
 
 		//Define ammo bars here
@@ -180,6 +184,7 @@ public:
 		megaBuster->eachFrame(t);
 		atomicFire->eachFrame(t);
 		bubbleLead->eachFrame(t);
+		metalBlade->eachFrame(t);
 	}
 
 	Vector2f getPosition() {
@@ -251,6 +256,9 @@ public:
 	void setBubbleLead(bool b) {
 		gotLead = b;
 	}
+	void setMetalBlade(bool b) {
+		gotBlade = b;
+	}
 
 	void setETanks(int e) {
 		ETanks = e;
@@ -282,6 +290,7 @@ public:
 
 		palette = active->getName();
 
+		controls->setThrow(active->checkThrow());
 		pAnim->setThrow(active->checkThrow());
 	}
 
@@ -300,6 +309,9 @@ public:
 	}
 	BubbleLead* getBubbleLead() {
 		return bubbleLead;
+	}
+	MetalBlade* getMetalBlade() {
+		return metalBlade;
 	}
 
 	void setLives(int l) {
@@ -765,7 +777,7 @@ private:
 		return false;
 	}
 	bool checkBlade() {
-		return false;
+		return gotBlade;
 	}
 	bool checkBomb() {
 		return false;

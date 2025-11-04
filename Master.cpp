@@ -41,7 +41,8 @@ public:
 
 	void masterInitial(string weaponName) {
 		hp = 28;
-
+		introDone = false;
+		tauntDone = false;
 		Texture* t = new Texture();
 		t->loadFromFile("assets\\bars\\" + weaponName + ".png");
 
@@ -64,20 +65,23 @@ public:
 		damSprite = new objectSprite("effect", sprite->getTexture(), IntRect(433, 0, 24, 24), Vector2f(0,0), Vector2f(4, 4));
 	}
 
-	bool tauntLoop(float* deltaT, list<tile*>* tiles) {
-		
-		if (grounded) {
+	bool tauntLoop(float* deltaT, list<tile*>* tiles, player* p) {
+
+
+		if (grounded && p->getGrounded()) {
 			introTimer->run(deltaT);
 			if (introTimer->isFinished()) {
 				return barIntro(deltaT);
 			}
 		}
+
 		else {
 			phys->eachFrame(deltaT);
 			hit->updatePos();
 			for (tile* t : *tiles) {
 				if (t->getGround() != NULL) {
 					groundCheck(t);
+					introAnim->thisFrame();
 				}
 			}
 		}
@@ -123,7 +127,7 @@ public:
 		return false;
 	}
 
-	bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList) {
+	bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
 		damPos = Vector2f(sprite->getMiddlePos().x - (12 * 4), sprite->getMiddlePos().y - (12 * 4));
 		if (introDone) {
 			if (hp > 0) {
@@ -142,9 +146,9 @@ public:
 				bossMusic->play();
 				noMusic = false;
 			}
-			if (p->getGrounded()) {
-				introLoop(deltaT, tileList);
-			}
+			
+			introLoop(deltaT, tileList, p);
+			
 		}
 
 		invincibleLoop(deltaT);
@@ -172,9 +176,9 @@ public:
 		}
 	}
 
-	void introLoop(float* deltaT, list<tile*>* tileList) {
+	void introLoop(float* deltaT, list<tile*>* tileList, player* p) {
 		if (!tauntDone) {
-			tauntDone = tauntLoop(deltaT, tileList);
+			tauntDone = tauntLoop(deltaT, tileList, p);
 		}
 		else {
 			introDone = barIntro(deltaT);

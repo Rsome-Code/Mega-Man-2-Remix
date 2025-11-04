@@ -34,7 +34,7 @@ public:
 		return code;
 	}
 
-	objectSprite* getSprite() {
+	virtual objectSprite* getSprite() {
 		return sprite;
 	}
 	bool getDisplay() {

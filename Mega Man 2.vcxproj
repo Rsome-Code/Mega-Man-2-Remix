@@ -189,7 +189,6 @@
     <ClCompile Include="Animation Test.cpp" />
     <ClCompile Include="Animation Timer.cpp" />
     <ClCompile Include="Anko.cpp" />
-    <ClCompile Include="Arm Cannon.cpp" />
     <ClCompile Include="Atomic Fire Bullet.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Bat.cpp" />
@@ -198,6 +197,7 @@
     <ClCompile Include="Big Health.cpp" />
     <ClCompile Include="Bird Spawner.cpp" />
     <ClCompile Include="Bird.cpp" />
+    <ClCompile Include="Boss Bubble.cpp" />
     <ClCompile Include="Break Wall.cpp" />
     <ClCompile Include="Bubble Bullet.cpp" />
     <ClCompile Include="Bubble Lead.cpp" />
@@ -209,6 +209,8 @@
     <ClCompile Include="Item weapon.cpp" />
     <ClCompile Include="Item1 Bullet.cpp" />
     <ClCompile Include="Item1.cpp" />
+    <ClCompile Include="Metal Blade Bullet.cpp" />
+    <ClCompile Include="Metal Blade.cpp" />
     <ClCompile Include="Shrink.cpp" />
     <ClCompile Include="Snapper Spawn.cpp" />
     <ClCompile Include="Snapper.cpp" />
@@ -332,6 +334,7 @@
     <ClCompile Include="Vertical Lava.cpp" />
     <ClCompile Include="Sniper Armour.cpp" />
     <ClCompile Include="Water Anim.cpp" />
+    <ClCompile Include="Water Bullet.cpp" />
     <ClCompile Include="Water Tile.cpp" />
     <ClCompile Include="Weapon Option.cpp" />
     <ClCompile Include="Weapon.cpp" />

@@ -67,6 +67,9 @@ public:
 
 		Sprite* s = object->getSprite();
 
+		Sprite sp = *s;
+		sp.setPosition(Vector2f(std::round(sp.getPosition().x), std::round(sp.getPosition().y)));
+
 		w->draw(*s);
 
 		lightingDisplay(object, cam);

@@ -3,7 +3,7 @@ E-tanks,4
 Heat Man,n
 Wood Man,n
 Bubble Man,n
-Metal Man,n
+Metal Man,y
 Quick Man,n
 Flash Man,n
 Crash Man,n

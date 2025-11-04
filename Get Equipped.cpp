@@ -63,16 +63,16 @@ public:
 		Texture* t = new Texture();
 		t->loadFromFile("assets\\NES - Mega Man 2 - Miscellaneous - Menus.png");
 
-		background = new UISprite(t, IntRect(1,552, 496, 304), Vector2f(0,0), Vector2f(4,4));
+		background = new UISprite("BackGround", t, IntRect(1, 552, 496, 304), Vector2f(0, 0), Vector2f(4, 4));
 
 		Texture* mega = new Texture();
 		mega->loadFromFile("assets\\weapon get\\" + weapon->getName()+".png");
 		megaMan = new UISprite("mega", mega, oldColour, Vector2f(600, 200), Vector2f(4, 4));
 
-		symbol->setPosition(Vector2f(800, 200));
-		symbol->setCharacterSize(36);
-		getEquip->setPosition(800, 300);
-		getEquip->setCharacterSize(36);
+		symbol->setPosition(Vector2f(766, 200));
+		symbol->setCharacterSize(34);
+		getEquip->setPosition(800, 260);
+		getEquip->setCharacterSize(34);
 		getEquip->setLineSpacing(2);
 		
 		rectangle = new RectangleShape();
@@ -206,8 +206,10 @@ public:
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
 			{
-				if (event.type == sf::Event::Closed)
+				if (event.type == sf::Event::Closed) {
 					instance->getWindow()->close();
+					run = false;
+				}
 			}
 			time->frameLimiter(targetRate, startP);
 			deltaT = time->checkTimer(startP);

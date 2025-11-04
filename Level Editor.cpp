@@ -256,6 +256,7 @@ public:
 			}
 			
 			if (!zoomed) {
+
 				for (tile* t : tileList) {
 					if (t->getCeiling() != NULL) {
 						instance->objectHitboxSetup(t->getCeiling(), cam);
@@ -269,11 +270,13 @@ public:
 					if (t->getRight() != NULL) {
 						instance->objectHitboxSetup(t->getRight(), cam);
 					}
-					if (t->getWaterBox() != NULL) {
-						instance->objectHitboxSetup(t->getWaterBox(), cam, Color::Cyan);
-					}
-					if (t->getDeathBox() != NULL) {
-						instance->objectHitboxSetup(t->getDeathBox(), cam, Color::Red);
+					if (z == 1) {
+						if (t->getWaterBox() != NULL) {
+							instance->objectHitboxSetup(t->getWaterBox(), cam, Color::Cyan);
+						}
+						if (t->getDeathBox() != NULL) {
+							instance->objectHitboxSetup(t->getDeathBox(), cam, Color::Red);
+						}
 					}
 				}
 				instance->UIDisplay(list<UISprite*> {tab, typeTab});

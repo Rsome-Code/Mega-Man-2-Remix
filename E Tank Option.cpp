@@ -13,6 +13,11 @@ public:
 		texture = t;
 		update(eTankNum);
 		icon = new UISprite("Ion", t, IntRect(73, 56, 8, 8), pos, Vector2f(4, 4));
+		
+	}
+
+	String getName() {
+		return "e tank";
 	}
 
 	void update(int eTankNum) {

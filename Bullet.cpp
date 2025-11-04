@@ -4,6 +4,7 @@
 #include "tile.cpp"
 #include "hitbox detector.cpp"
 #include <SFML/audio.hpp>
+
 #pragma once
 
 class bullet {
@@ -37,7 +38,7 @@ public:
 	bullet() {}
 
 	virtual bool eachFrame(float* deltaT) = 0;
-	virtual void start(bool r) = 0;
+	virtual void start(bool r) {};
 	virtual void secondFire() {};
 	virtual bool release(bool r) { return false; };
 
@@ -62,13 +63,17 @@ public:
 	virtual float getMaxHoldTime() { return NULL; };
 	
 	virtual void deflect() {
-		deflected = true;
-		dink->play();
-		if (!right) {
+		
+		/*if (!right) {
 			direction = 330;
 		}
 		else {
 			direction = 210;
+		}*/
+		if (!deflected) {
+			direction = direction - 135;
+			deflected = true;
+			dink->play();
 		}
 	}
 

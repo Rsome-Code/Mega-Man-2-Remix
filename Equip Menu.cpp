@@ -133,8 +133,10 @@ public:
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
 			{
-				if (event.type == sf::Event::Closed)
+				if (event.type == sf::Event::Closed) {
+					run = false;
 					instance->getWindow()->close();
+				}
 			}
 			time->frameLimiter(targetRate, startP);
 			deltaT = time->checkTimer(startP);
@@ -164,6 +166,7 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 		}
+		
 		music->stop();
 
 		return onPass;

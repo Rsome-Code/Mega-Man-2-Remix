@@ -9,6 +9,7 @@
 #include "physics object.cpp"
 #include "wood man.cpp"
 #include "heat man.cpp"
+#include "bubble man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -102,6 +103,10 @@ public:
 		}
 		else if (name == "heat man") {
 			boss = new HeatMan(bossT, Vector2f(900, 0));
+			boss->initial();
+		}
+		else if (name == "bubble man") {
+			boss = new BubbleMan(bossT, Vector2f(900, 0));
 			boss->initial();
 		}
 	}

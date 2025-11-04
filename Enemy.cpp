@@ -64,6 +64,25 @@ public:
 
 	}
 
+	enemy(Vector2f i) {
+
+		mov = new movable();
+		sprite = mov;
+		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
+
+		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
+
+		offSetList();
+
+		deathTimer = new animTimer(deathAnim, 16, false);
+		initialPos = i;
+		act = false;
+		display = false;
+
+		mov->setScale(Vector2f(4, 4));
+
+	}
+
 public:
 
 	virtual void loadSound(SoundCollection* soundCol) {}
@@ -229,7 +248,7 @@ public:
 		return genericDam();
 	}
 
-	virtual int meatalDam() {
+	virtual int metalDam() {
 		return genericDam();
 	}
 	virtual int crashDam() {

@@ -48,6 +48,7 @@
 #include "shrink.cpp"
 #include "anko.cpp"
 #include "DL Message.cpp"
+#include "bubble man.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -74,11 +75,20 @@ vector<int> split(const string& str, char sep)
 }
 Weapon* updatePlayer(player* p, string levelName) {
 	if (levelName == "wood man") {
+		
 		return p->getShield();
 	}
 	else if (levelName == "heat man") {
 		p->setAtomicFire(true);
 		return p->getAtomicFire();
+	}
+	else if (levelName == "bubble man") {
+		p->setBubbleLead(true);
+		return p->getBubbleLead();
+	}
+	else if (levelName == "metal man") {
+		p->setMetalBlade(true);
+		return p->getMetalBlade();
 	}
 	return NULL;
 }
@@ -150,10 +160,13 @@ int main() {
 	Texture* heatBossT = new Texture();
 	heatBossT->loadFromFile("assets\\heat man.png");
 
+	Texture* bubbleBossT = new Texture();
+	bubbleBossT->loadFromFile("assets\\bubble man.png");
+
 //Object Placer setup
-	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(woodBossT, Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
-	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(heatBossT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	list <GameObject*> bubbleList = { new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
+	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	list <GameObject*> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 
 
 
@@ -166,11 +179,11 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(473, 115, 22, 16), IntRect(497, 109, 27, 22) };
-	list<Vector2f> testOffset =  list<Vector2f>{Vector2f(0,0), Vector2f(-2 * 4, -7 * 4), Vector2f(0 * 4, 12 * 4), Vector2f(0 * 4, 11 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(39, 86, 16, 6), IntRect(56, 87, 11, 6), IntRect(73, 88, 12, 6) };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0, 0), Vector2f(5 * 4, 0 * 4), Vector2f(4 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(5 * 4, -1 * 4), Vector2f(0 * 4, 11 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\enemy.png");
+	testT->loadFromFile("Assets\\bubble man.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, true);
 
 	////////////////////////////////
@@ -205,7 +218,7 @@ int main() {
 			hold = levelMenu->checkA();
 
 			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-			//intro->loop(instance, targetFPS);
+			intro->loop(instance, targetFPS);
 		}
 		restart = false;
 		
@@ -226,9 +239,9 @@ int main() {
 
 		scene* area = new scene(col, stage, enemyT);
 
-		//if (area->loop(instance, targetFPS, soundCol)) {
+		if (area->loop(instance, targetFPS, soundCol)) {
 
-		if (true){
+		//if (true){
 		
 			Weapon* newW = updatePlayer(col, bossName);
 
@@ -237,18 +250,25 @@ int main() {
 				equip->loop(instance, targetFPS);
 
 				Weapon* newI = checkItem(col, bossName);
+				EquipAnim* equip1 = NULL;
 				if (newI != NULL) {
 
 					DLMessage* mess = new DLMessage(equip->getTexture(), equip->getSprites(), newI);
 					mess->loop(instance, targetFPS);
-					delete equip;
 
-					equip = new EquipAnim(newI, false);
-					equip->loop(instance, targetFPS);
+
+					equip1 = new EquipAnim(newI, false);
+					equip1->loop(instance, targetFPS);
+
+
 				}
-
-				EquipMenu* eMenu = new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650));
-
+				EquipMenu* eMenu;
+				if (equip1 == NULL) {
+					eMenu = new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650));
+				}
+				else {
+					eMenu = new EquipMenu(equip->getTexture(), equip1->getSprites(), equip1->getText(), Vector2f(500, 650));
+				}
 				bool eLoop = true;
 				while (eLoop) {
 					eLoop = eMenu->loop(instance, targetFPS, equip->getMusic());
@@ -258,6 +278,7 @@ int main() {
 				}
 				delete equip;
 				delete eMenu;
+				delete equip1;
 			}
 		}
 		else {

@@ -29,7 +29,7 @@ public:
 
 
 	String getSymbol() {
-		return "H";
+		return "B";
 	}
 
 };

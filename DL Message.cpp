@@ -14,7 +14,7 @@ class DLMessage {
 	list<UISprite*> sprites;
 	UISprite* light;
 
-	RectangleShape rectangle;
+
 	bool rectDisplay;
 
 	enum State {
@@ -39,14 +39,13 @@ class DLMessage {
 	bool delay = false;
 	float delayTime = 0.7;
 	float delayTime_left = delayTime;
+	UISprite* background;
 
 public:
 	DLMessage(Texture* t, list<UISprite*> sprites, Weapon* weap) {
 		this->sprites = sprites;
 
-		rectangle.setFillColor(Color(255, 0, 0, 200));
-		rectangle.setPosition(Vector2f(0, 0));
-		rectangle.setSize(Vector2f(2000, 2000));
+
 
 		Font* font = new Font();
 		font->loadFromFile("assets\\font.otf");
@@ -55,11 +54,11 @@ public:
 		alertT->setFont(*font);
 		messageT->setFont(*font);
 
-		alertT->setPosition(800, 300);
-		alertT->setCharacterSize(36);
+		alertT->setPosition(766, 300);
+		alertT->setCharacterSize(34);
 		alertT->setLineSpacing(2);
 
-		messageT->setPosition(800, 200);
+		messageT->setPosition(766, 200);
 		messageT->setCharacterSize(36);
 		messageT->setLineSpacing(2);
 
@@ -72,6 +71,11 @@ public:
 			if (s->getType() == "mega") {
 				toD = s;
 			}
+			
+			if (s->getType() == "BackGround") {
+				background = s;
+			}
+			
 		}
 		this->sprites.remove(toD);
 		light = new UISprite(t, IntRect(1733, 707, 32, 32), Vector2f(toD->getCameraPosition().x, 300) , Vector2f(4, 4));
@@ -97,8 +101,10 @@ public:
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
 			{
-				if (event.type == sf::Event::Closed)
+				if (event.type == sf::Event::Closed) {
+					run = false;
 					instance->getWindow()->close();
+				}
 			}
 			time->frameLimiter(targetRate, startP);
 			deltaT = time->checkTimer(startP);
@@ -135,9 +141,7 @@ public:
 				}
 
 				if (state == flash) {
-					if (rectDisplay) {
-						instance->getWindow()->draw(rectangle);
-					}
+
 				}
 				else {
 					instance->UIDisplay(light);
@@ -209,8 +213,18 @@ public:
 		if (flashTime_left <= 0) {
 			flashTime_left = flashTime;
 			rectDisplay = !rectDisplay;
+			flashSpr();
 			flashNum--;
 
+		}
+	}
+	void flashSpr() {
+
+		if (rectDisplay) {
+			background->setRect(IntRect(Vector2i(background->getRect().getPosition().x, background->getRect().getPosition().y + 272), Vector2i(background->getRect().getSize())));
+		}
+		else {
+			background->setRect(IntRect(Vector2i(background->getRect().getPosition().x, background->getRect().getPosition().y - 272), Vector2i(background->getRect().getSize())));
 		}
 	}
 };

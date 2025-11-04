@@ -40,4 +40,32 @@ public:
 		}
 		return false;
 	}
+
+	static bool hitboxYDetection(Vector2f point, objectHitbox* hit1) {
+
+		if (point.y > hit1->getPosition().y + hit1->getSize().y) {
+
+		}
+		else if (point.y < hit1->getPosition().y) {
+
+		}
+		else {
+			return true;
+		}
+		return false;
+	}
+
+	static bool hitboxXDetection(Vector2f point, objectHitbox* hit1) {
+		if (point.x > hit1->getPosition().x + hit1->getSize().x) {
+
+		}
+		else if (point.x < hit1->getPosition().x) {
+
+		}
+
+		else {
+			return true;
+		}
+		return false;
+	}
 };

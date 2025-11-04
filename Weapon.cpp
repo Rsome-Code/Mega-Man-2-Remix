@@ -86,7 +86,7 @@ public:
 	
 	}
 
-	list<bullet*> getBullets() {
+	virtual list<bullet*> getBullets() {
 		return bullets;
 	}
 
@@ -144,6 +144,10 @@ public:
 
 	virtual bool checkThrow() {
 		return false;
+	}
+
+	virtual void checkDirection(bool up, bool right, bool down, bool left) {
+
 	}
 	
 };
