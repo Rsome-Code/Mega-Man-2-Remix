@@ -1,0 +1,4 @@
+background-7400703,0,0,1
+snapper-spawn,14789,4522,1
+snapper-spawn,16707,4522,1
+croaker,13185,5377,1

@@ -27,6 +27,9 @@ public:
 		sound->setBuffer(*soundB);
 
 	}
+	void setSound(Sound* s) {
+		sound = s;
+	}
 
 	virtual void setPallete(string pal) {
 		if (pal == "wood man") {
@@ -66,11 +69,15 @@ public:
 
 	virtual void eachFrame(float* deltaT, player* player, camera* cam) {};
 	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam) {};
+	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam, list<tile*>* tileList) {};
+	virtual void eachFrame(float* deltaT, player* player, camera* cam, list<tile*>* tileList) {};
 	virtual void eachFrame(float* deltaT, objectSprite* player){};
 
 	virtual void setSoundPointer(Sound* sou) {
 
 	}
+
+	virtual void initial() {};
 
 	virtual list<objectSprite*> getSprites() {
 		return list<objectSprite*> {sprite};

@@ -94,6 +94,15 @@
     <Filter Include="Source Files\Game Files\Player\Weapons\Items\Bullets">
       <UniqueIdentifier>{62ebbfce-ba06-4f25-8961-8cdcbfa27c24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Tiles\With Objects">
+      <UniqueIdentifier>{bafa0508-9af5-433a-a63f-017e17799923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Metal Man">
+      <UniqueIdentifier>{b4dc7f98-4311-47f3-a6ed-98e0eeded9af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Metal Man">
+      <UniqueIdentifier>{9308fc99-d125-4425-ab0a-39187223f893}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -717,6 +726,48 @@
     </ClCompile>
     <ClCompile Include="Metal Blade Bullet.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile with object.cpp">
+      <Filter>Source Files\Game Files\Tiles\With Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Conveyor.cpp">
+      <Filter>Source Files\Game Files\Tiles\With Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Move Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\With Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Drill.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Press.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Drill Spawner.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawn top and below.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners</Filter>
+    </ClCompile>
+    <ClCompile Include="Blocky.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Blocky Block.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="physics bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Repair Block.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Pie Robot.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Gear Saw.cpp">
+      <Filter>Source Files\Game Files\Enemies\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Metal Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Metal Man</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

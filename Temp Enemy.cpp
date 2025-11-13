@@ -16,4 +16,8 @@ public:
 	}
 
 	virtual void initial(Vector2f pos) {};
+
+	bool yDeath(list<enemy*>* enemies) {
+		return isDead(enemies);
+	}
 };

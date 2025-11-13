@@ -215,17 +215,23 @@ public:
 	}
 
 
+	bool obBeforeTile = false;
+	vector<bool> beforeTileList;
 
-
-
+	void checkObBefore() {
+		obBeforeTile = beforeTileList[section];
+	}
 
 
 	float deltaT = 0.00001;
-	bool loop(renderer* instance, double targetRate, SoundCollection* soundCol) {
+	bool loop(renderer* instance, double targetRate, SoundCollection* soundCol, vector<bool> beforeTileList) {
 
 		auto start = time->timerStart();
 		auto* startP = &start;
 		deltaT = 0.00001;
+
+		this->beforeTileList = beforeTileList;
+
 
 		bool unPaused = false;
 
@@ -244,9 +250,12 @@ public:
 
 		startAnim(instance, targetRate, music, soundCol);
 		respawn();
+		deltaT = 0.00001;
 		//p->heal(-27);
 
 		pause = new Pause(stageName, p);
+
+		
 
 		while (instance->getWindow()->isOpen() && run) {
 
@@ -260,7 +269,10 @@ public:
 					instance->getWindow()->close();
 			}
 			if (time->frameLimiter(targetRate, startP)) {
-				deltaT = 0.0333;
+				deltaT = 0.0033;
+				//for (tile* t : tileList) {
+				//	t->reset();
+			//	}
 				//deltaT = time->checkTimer(startP);
 			}
 			else {
@@ -333,6 +345,7 @@ public:
 			for (GameObject* o : objects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite(), cam);
+				o->eachFrame(&deltaT, p, cam, &tileList);
 				o->eachFrame(&deltaT, p, cam);
 				o->eachFrame(&deltaT, p->getSprite());
 			}
@@ -426,7 +439,7 @@ public:
 
 				spawn->getSprite()->setCameraPosition(Vector2f(spawn->getSprite()->getPosition().x - cam->getPosition().x, spawn->getSprite()->getPosition().y));
 				if (spawn->getSprite()->getCameraPosition().x > 0 && spawn->getSprite()->getCameraPosition().x < 1920) {
-					spawn->eachFrame(&deltaT, p->getSprite(), &enemies, cam);
+					spawn->eachFrame(&deltaT, p->getSprite(), &enemies, cam, soundCol);
 				}
 			}
 
@@ -465,11 +478,30 @@ public:
 
 			}
 
-			
+			if (obBeforeTile) {
+				for (enemy* t : enemies) {
+					if (t->getDamSprite() != NULL) {
+						instance->objectDisplay(t->getDamSprite(), cam);
+					}
+					if (t->getSprite() != NULL) {
+
+						instance->objectAccess(t, cam);
+						//instance->objectHitboxSetup(t->getHitbox(), cam);
+						//instance->hitboxDisplay(t->getHitbox());
+
+
+					}
+				}
+			}
+
 			for (tile* t : tileList) {
 				t->animate(&deltaT);
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
+					for (objectSprite* sp : t->getInternalSprites()) {
+						instance->objectDisplay(sp, cam);
+					}
+					
 				}
 			}
 
@@ -486,22 +518,26 @@ public:
 				}
 			}
 
-			for (enemy* t : enemies) {
-				if (t->getDamSprite() != NULL) {
-					instance->objectDisplay(t->getDamSprite(), cam);
-				}
-				if (t->getSprite() != NULL) {
-					
-					instance->objectAccess(t, cam);
-					//instance->objectHitboxSetup(t->getHitbox(), cam);
-					//instance->hitboxDisplay(t->getHitbox());
+			if (!obBeforeTile) {
+				for (enemy* t : enemies) {
+					if (t->getDamSprite() != NULL) {
+						instance->objectDisplay(t->getDamSprite(), cam);
+					}
+					if (t->getSprite() != NULL) {
 
-					
+						instance->objectAccess(t, cam);
+						//instance->objectHitboxSetup(t->getHitbox(), cam);
+						//instance->hitboxDisplay(t->getHitbox());
+
+
+					}
 				}
 			}
 
 			for (ItemBullet* i : itemBullets) {
-				instance->objectDisplay(i->getSprite(), cam);
+				if (i->getSprite() != NULL) {
+					instance->objectDisplay(i->getSprite(), cam);
+				}
 			}
 
 			if (bossDeath != NULL) {
@@ -559,8 +595,8 @@ public:
 			/*for (enemy* e : enemies) {
 				instance->objectHitboxSetup(list<objectHitbox*> {e->getHitbox()}, cam);
 				instance->hitboxDisplay(list<UIHitbox*> { e->getHitbox()});
-			}
-			*/
+			}*/
+			
 
 			
 
@@ -814,8 +850,9 @@ public:
 
 		section = flag->getSection() + 1;
 
-		forceLoadSection(section, soundCol);
-
+		//for (int i = 0; i < 1000; i++) {
+			forceLoadSection(section, soundCol);
+		//}
 
 		p->shootReset();
 
@@ -920,6 +957,9 @@ public:
 			for (tile* t : tileList) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
+					for (objectSprite* sp : t->getInternalSprites()) {
+						instance->objectDisplay(sp, cam);
+					}
 				}
 			}
 
@@ -1046,9 +1086,11 @@ public:
 
 	}
 
-	//Shouldn't this only apply to temp enemies???
+	
+	
 	bool enemyYCheck(enemy* e) {
 		if (e->getSprite()->getCameraPosition().y > 1080) {
+			return e->yDeath(&enemies);
 			return e->isDead(&enemies);
 		}
 		return false;
@@ -1490,6 +1532,7 @@ public:
 		loadSection(soundCol);
 		deletePrevSection();
 		updateFlags();
+		checkObBefore();
 	}
 	void loadSection(SoundCollection* soundCol) {
 
@@ -1506,6 +1549,9 @@ public:
 		enemies = stage->getEnemies();
 		spawners = stage->getSpawners();
 		items = stage->getItems();
+		for (GameObject* ob : objects) {
+			ob->initial();
+		}
 		for (enemy* e : enemies) {
 			e->initial();
 		}
@@ -1830,7 +1876,7 @@ public:
 		for (enemy* e : objects) {
 			//If object is still active
 			if (e->getAct()) {
-				e->setOffScreen(checkObOffScreen(e, camPos, camEdge));
+				e->setOffScreen(checkObOffScreen(e, cam->getPosition(), Vector2f(cam->getPosition().x + instance->getWindow()->getSize().x, cam->getPosition().y + instance->getWindow()->getSize().y)));
 				//and has just left the screen
 				if (e->getOffScreen()) {
 					e->setAct(false);
@@ -1868,10 +1914,15 @@ public:
 		}
 	}
 
-	bool checkObOffScreen(enemy* e, float camPos, float camEdge) {
-		if (e->getPosition().x > camEdge || e->getPosition().x + e->getSprite()->getSize().x < camPos) {
+	bool checkObOffScreen(enemy* e, Vector2f camPos, Vector2f camEdge) {
+		if (e->getPosition().x > camEdge.x || e->getPosition().x + e->getSprite()->getSize().x < camPos.x) {
 			return true;
 		}
+		if (e->getPosition().y > camEdge.y || e->getPosition().y + e->getSprite()->getSize().y < camPos.y) {
+		
+			return true;
+		}
+
 		return false;
 	}
 
@@ -1981,7 +2032,7 @@ public:
 		bool lBelow = false;
 		bool lAbove = false;
 		bool inWater = false;
-
+		float movement = 0;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		for (tile* t : tileList) {
@@ -1994,13 +2045,16 @@ public:
 
 					float currentX = p->getSprite()->getPosition().x;
 					if (t->getGround() != NULL) {
-						if (hitboxCheck(p->getFoot(), t->getGround())) {
-							if (p->getSprite()->getAcceleration().y < 0 || p->getGrounded()) {
-								p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
-								//cam->follow();
+						if (!ground) {
+							if (hitboxCheck(p->getFoot(), t->getGround())) {
+								movement = t->getMovement();
+								if (p->getSprite()->getAcceleration().y < 0 || p->getGrounded()) {
+									p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
+									//cam->follow();
 
-								ground = true;
-								thisGround = true;
+									ground = true;
+									thisGround = true;
+								}
 							}
 						}
 					}
@@ -2055,7 +2109,7 @@ public:
 				}
 
 
-
+				
 
 				if (ladderBelowTileCheck(t)) {
 					p->getControls()->setLadderBelow(true);
@@ -2098,6 +2152,8 @@ public:
 		else {
 			p->resetGravity();
 		}
+
+		p->tileMovement(movement, deltaT);
 		
 	}
 

@@ -2,13 +2,14 @@
 #include "Object Hitbox.cpp"
 #pragma once
 class solidTile:public tile {
-	
+protected:
 	objectHitbox* groundHitbox;
 	objectHitbox* leftHitbox;
 	objectHitbox* rightHitbox;
 	objectHitbox* ceilingHitbox;
 
 public:
+	solidTile() {}
 	solidTile(Vector2f loc, Texture* t, int tileNum) {
 		location = loc;
 		int tY = tileNum / 4;

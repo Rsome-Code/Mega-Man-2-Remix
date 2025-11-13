@@ -9,7 +9,7 @@ protected:
 	objectHitbox* hitbox;
 	string code;
 
-	
+	bool display = true;
 
 
 public:
@@ -23,7 +23,10 @@ public:
 	}
 
 	physicsObject* getSprite() {
-		return phys;
+		if (display) {
+			return phys;
+		}
+		return NULL;
 	}
 
 	string getCode() {

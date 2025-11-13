@@ -70,6 +70,9 @@ public:
 		sound = soundCol->getLand();
 	}
 	
+	int metalDam() {
+		return 10;
+	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
 		checkDirection(p->getSprite());

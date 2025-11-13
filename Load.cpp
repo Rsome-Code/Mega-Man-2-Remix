@@ -54,7 +54,13 @@
 #include "shrink.cpp"
 #include "snapper spawn.cpp"
 #include "anko.cpp"
+#include "conveyor.cpp"
 #include "bubble man.cpp"
+#include "move tile.cpp"
+#include "press.cpp"
+#include "drill spawner.cpp"
+#include "blocky.cpp"
+#include "pie robot.cpp"
 #pragma once
 
 using namespace std;
@@ -65,9 +71,9 @@ class Load {
 	Texture* tex;
 	Door* door1 = NULL;
 	Door* door2 = NULL;
-	Sound* colSound;
-	Sound* yoSound;
-	Sound* hitSound;
+	//Sound* colSound;
+	//Sound* yoSound;
+	//Sound* hitSound;
 
 
 public:
@@ -394,7 +400,11 @@ public:
 			Spawner* spawnAdd = NULL;
 			Item* item = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd, &item);
+			SoundCollection* soundCol = new SoundCollection();
+
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd, &item, soundCol);
+
+			delete soundCol;
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
@@ -478,7 +488,7 @@ public:
 			Spawner* spawnAdd = NULL;
 			Item* item = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd, &item);
+			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd, &item, soundCol);
 			
 
 			if (add != NULL) {
@@ -510,7 +520,7 @@ public:
 
 	void setSounds(list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, list<Item*>* items, SoundCollection* soundCol) {
 
-		Sound* hitSound = soundCol->getHit();
+		//Sound* hitSound = soundCol->getHit();
 
 		for (GameObject* ob : *objects) {
 
@@ -521,9 +531,13 @@ public:
 		for (enemy* e : *enemies) {
 			e->loadSound(soundCol);
 			e->setHitSound(soundCol->getHit());
+
+			if (e->getCode() == "press") {
+				e->setSound(soundCol->getPress());
+			}
 		}
 
-		SoundBuffer* colB = new SoundBuffer();
+		/*SoundBuffer* colB = new SoundBuffer();
 		colB->loadFromFile("assets\\sound\\land.wav");
 
 		try {
@@ -533,13 +547,13 @@ public:
 		catch (int e) {
 			// exception handling code
 		}
-		Sound* colSound = (Sound*)malloc(1);
+		/*Sound* colSound = (Sound*)malloc(1);
 		colSound = new Sound();
 		colSound->setBuffer(*colB);
-
+		*/
 		for (Item* item : *items) {
 			if (item->getCode() == "Extra Life" || item->getCode() == "E Tank") {
-				item->setSoundPointer(colSound);
+				item->setSoundPointer(soundCol->getLifeGet());
 			}
 		}
 
@@ -559,7 +573,9 @@ public:
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item) {
+	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item, SoundCollection* soundCol) {
+
+		Vector2f worldPos = Vector2f(worldX, worldY);
 
 		if (type == "e1") {
 			*enem = new bat(t, Vector2f(worldX, worldY));
@@ -609,6 +625,20 @@ public:
 		else if (type == "anko") {
 			*enem = new Anko(t, Vector2f(worldX, worldY));
 		}
+		else if (type == "press") {
+			*enem = new Press(t, worldPos);
+			enemy* temp = *enem;
+			temp->setCode();
+		}
+
+		else if (type == "blocky") {
+			*enem = new Blocky(t, worldPos);
+		}
+
+		else if (type == "pie robot") {
+			*enem = new PieRobot(t, worldPos);
+		}
+
 		else if (type == "bird-spawn") {
 			if (*spawn == NULL) {
 				*spawn = new BirdSpawner(worldX);
@@ -645,6 +675,16 @@ public:
 		else if (type == "chicken-spawn") {
 			if (*spawn == NULL) {
 				*spawn = new ChickenSpawner(worldX);
+			}
+			else {
+				SpawnArea* temp = *spawn;
+				temp->setEnd(worldX);
+				temp->initial();
+			}
+		}
+		else if (type == "drill-spawn") {
+			if (*spawn == NULL) {
+				*spawn = new DrillSpawner(worldX);
 			}
 			else {
 				SpawnArea* temp = *spawn;
@@ -762,15 +802,24 @@ public:
 		else if (selectedType == "death") {
 			return new DeathTile(worldPos, tex, selectedTexture, z);
 		}
+		
 		else {
 			vector<string> spl = splitString(selectedType, char('-'));
 			string altType = spl[0];
 
 			if (altType == "0"){
-				return new AnimTile(worldPos, tex, stoi(spl[1]), 3, z);
+				return new AnimTile(worldPos, tex, stoi(spl[1]), stoi(spl[2]), z);
 			}
 			else if (altType == "water") {
 				return new WaterAnim(worldPos, tex, stoi(spl[1]), 3, z);
+			}
+			else if (altType == "conveyor anim") {
+				return new ConveyorTile(worldPos, tex, z, spl[1] == "right");
+			}
+			else if (altType == "move") {
+				MoveTile* temp = new MoveTile(worldPos, tex);
+				temp->setMoveRight(spl[1] == "right");
+				return temp;
 			}
 		}
 	}

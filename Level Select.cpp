@@ -248,6 +248,9 @@ public:
 		else if (selection == 5) {
 			r = "wood man";
 		}
+		else if (selection == 6) {
+			r = "metal man";
+		}
 		music->stop();
 		return r;
 	}

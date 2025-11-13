@@ -5,6 +5,7 @@
 class FlyGuySpawner:public Spawner {
 	using Spawner::Spawner;
 
+
 public:
 
 	FlyGuySpawner(Texture* tex, Vector2f pos) {
@@ -15,21 +16,21 @@ public:
 		setCode(toSpawn->getCode() + "-spawn");
 		sprite->setPosition(pos);
 
-		soundB = new SoundBuffer();
-		soundB->loadFromFile("Assets\\sound\\enemy_hit.wav");
-
 		this->tex = tex;
 
 		soundB = new SoundBuffer();
 		soundB->loadFromFile("assets\\sound\\fly_boy.wav");
 		sound = new Sound();
 		sound->setBuffer(*soundB);
+
 	}
 
-	void spawn(list<enemy*>* enemyList) {
+	void spawn(list<enemy*>* enemyList, SoundCollection* soundCol) {
 		FlyGuy* temp = new FlyGuy(tex, position);
 		temp->initial();
 		temp->setSoundPoint(&sound);
+
+		temp->setHitSound(soundCol->getHit());
 
 		spawned = temp;
 

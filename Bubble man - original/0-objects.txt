@@ -1,0 +1,8 @@
+fall platform,4569,1274,1
+fall platform,4873,1236,1
+fall platform,5143,1310,1
+fall platform,5371,1216,1
+background-7400703,0,0,1
+croaker,3381,1219,1
+croaker,4292,1218,1
+croaker,2878,1288,1

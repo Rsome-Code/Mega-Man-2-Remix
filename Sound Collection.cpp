@@ -19,6 +19,12 @@ class SoundCollection {
 	SoundBuffer* shootB;
 	Sound* shootSound;
 
+	SoundBuffer* pressB;
+	Sound* pressSound;
+
+	SoundBuffer* lifeGetB;
+	Sound* lifeGet;
+
 public:
 
 	SoundCollection() {
@@ -41,6 +47,16 @@ public:
 		shootB->loadFromFile("assets\\sound\\enemy_shoot.wav");
 		shootSound = new Sound();
 		shootSound->setBuffer(*shootB);
+
+		pressB = new SoundBuffer();
+		pressB->loadFromFile("assets\\sound\\time_stopper.wav");
+		pressSound = new Sound();
+		pressSound->setBuffer(*pressB);
+
+		lifeGetB = new SoundBuffer();
+		lifeGetB->loadFromFile("assets\\sound\\gaming voice.mp3");
+		lifeGet = new Sound();
+		lifeGet->setBuffer(*lifeGetB);
 	}
 
 	Sound* getYoku(){
@@ -56,4 +72,10 @@ public:
 		return shootSound;
 	}
 
+	Sound* getPress() {
+		return pressSound;
+	}
+	Sound* getLifeGet() {
+		return lifeGet;
+	}
 };

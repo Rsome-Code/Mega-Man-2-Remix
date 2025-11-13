@@ -29,7 +29,7 @@ public:
 		initial();
 
 
-
+		setCode();
 	}
 
 	PhysicsEnemy(Vector2f i) {
@@ -49,12 +49,12 @@ public:
 		display = false;
 		initial();
 
-
+		setCode();
 
 	}
 
 	void tileCollision(list<tile*>* tileList) {
-		
+		grounded = false;
 		for (tile* t : *tileList) {
 			bool thisGround = false;
 			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
@@ -80,15 +80,20 @@ public:
 			sprite->setPosition(Vector2f(t->getRight()->getPosition().x + t->getRight()->getSize().x, sprite->getPosition().y));
 			if (phys->getHVelocity() < 0) {
 				phys->setHVelocity(0);
+				hitRight();
 			}
 		}
 	}
+
+	virtual void hitRight(){}
+	virtual void hitLeft(){}
 
 	void checkLeft(tile* t) {
 		if (hitboxDetect::hitboxDetection(t->getLeft(), hit)) {
 			sprite->setPosition(Vector2f( t->getLeft()->getPosition().x - hit->getSize().x, sprite->getPosition().y));
 			if (phys->getHVelocity() < 0) {
 				phys->setHVelocity(0);
+				hitLeft();
 			}
 		}
 	}

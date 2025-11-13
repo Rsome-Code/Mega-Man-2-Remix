@@ -1,7 +1,14 @@
-Rework hitboxes
+Rework hitboxes on the engine level to be more intuitive
 
 Rework Player - anims - hitboxes
+	Physics feel perfect, though
 
 USE SMART POINTERS
 
 Each animation frame should be its own object
+	This is to ensure consistency with the visual offset
+Anim frames should be stored in Vector
+
+All collision should take place in the same for loop
+
+Setup robust system for certain objects to go behind tiles

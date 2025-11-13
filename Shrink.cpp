@@ -72,6 +72,9 @@ public:
 		moveTimer = new animTimer(moveAnim, 8, false);
 	}
 
+	int metalDam() {
+		return 10;
+	}
 
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
 		spawned = true;

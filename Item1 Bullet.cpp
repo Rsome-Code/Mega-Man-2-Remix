@@ -7,11 +7,12 @@ class Item1Bullet : public ItemBullet {
 	animation* flyAnim;
 	animTimer* flyTimer;
 
-	float time = 4;
+	float time = 5;
 
 	int moveSpeed = 50;
 
-
+	float flashTime = 0.1;
+	float flashTime_left = 0;
 
 public:
 
@@ -33,9 +34,22 @@ public:
 		flyTimer->run(deltaT);
 
 		time -= *deltaT;
+
+		if (time <= 2) {
+			flash(deltaT);
+		}
+
 		if (time <= 0) {
 			return true;
 		}
 		return false;
+	}
+
+	void flash(float* deltaT) {
+		flashTime_left -= *deltaT;
+		if (flashTime_left <= 0) {
+			display = !display;
+			flashTime_left = flashTime;
+		}
 	}
 };

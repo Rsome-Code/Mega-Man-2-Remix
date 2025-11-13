@@ -23,7 +23,7 @@ public:
 		anim = new animation(animList, sprite);
 		timer = new animTimer(anim, 8, true);
 
-		type = "0-" + to_string(VNumber);
+		type = "0-" + to_string(VNumber) + "-" + to_string(animNumber);
 
 		this->z = z;
 	}

@@ -20,13 +20,14 @@ public:
 		soundB->loadFromFile("Assets\\sound\\enemy_hit.wav");
 
 		this->tex = tex;
+
+
 	}
 
-	void spawn(list<enemy*>* enemyList) {
+	void spawn(list<enemy*>* enemyList, SoundCollection* soundCol) {
 		Telly* temp = new Telly(tex, position);
-		temp->setHitB(soundB);
 		temp->initial(position);
-
+		temp->setHitSound(soundCol->getHit());
 		spawned = temp;
 		enemyList->push_back(temp);
 

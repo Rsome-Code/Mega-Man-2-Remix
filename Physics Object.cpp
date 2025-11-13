@@ -6,6 +6,7 @@ class physicsObject :public movable {
 	float horizontalAcc;
 	float verticalAcc;
 	float friction = 0;
+	float vertFriction = 0;
 	float gravity = -3000;
 	float maxSpeed = 3000;
 	bool grav = false;
@@ -58,14 +59,22 @@ public:
 		grav = b;
 	}
 
+	void setVerticalFriction(float f) {
+		vertFriction = f;
+	}
+
+	bool checkFirst() {
+		return firstFrame;
+	}
+
 	void eachFrame(float* deltaT) {
 
 		if (movable) {
 
 			float f = friction * *deltaT;
+			float vF = vertFriction * *deltaT;
 
-			//Early, must ammend for vertical friction
-			frictionCalc(Vector2f(f, 0));
+			
 			if (firstFrame) {
 				firstFrame = false;
 			}
@@ -74,6 +83,8 @@ public:
 					addVerticalForce(gravity, deltaT);
 				}
 			}
+
+			frictionCalc(Vector2f(f, vF));
 
 			if (horizontalAcc == 0 && verticalAcc == 0) {}
 			else {

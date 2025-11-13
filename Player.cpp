@@ -574,6 +574,10 @@ public:
 
 	}
 
+	void tileMovement(float m, float* deltaT) {
+		sprite->move(0, deltaT, m);
+	}
+
 	teleport* getTeleport() {
 		return tele;
 	}

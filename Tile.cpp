@@ -63,6 +63,11 @@ public:
 	virtual objectHitbox* getDeathBox() { return NULL; };
 	virtual objectHitbox* getWaterBox() {return NULL;};
 	virtual void animate(float* deltaT) {};
+	virtual void reset() {};
+
+	virtual list<objectSprite*> getInternalSprites() {
+		return list<objectSprite*> {};
+	}
 
 
 	virtual void update() {};
@@ -74,5 +79,13 @@ public:
 
 	string getType() {
 		return type;
+	}
+
+	virtual float getMovement() {
+		return 0;
+	}
+
+	virtual void setMoveRight(bool right) {
+
 	}
 };

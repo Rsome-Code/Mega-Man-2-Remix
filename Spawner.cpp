@@ -1,4 +1,5 @@
 #include "enemy.cpp"
+#include "sound collection.cpp"
 #pragma once
 
 class Spawner : public GameObject{
@@ -11,20 +12,21 @@ protected:
 
 	enemy* spawned = NULL;
 
-	SoundBuffer* soundB;
+
 
 public:
 
-	Spawner(){}
+
+	Spawner() {}
 
 
 
-	void eachFrame(float* deltaT, objectSprite* player, list<enemy*>* enemyList, camera* cam) {
+	void eachFrame(float* deltaT, objectSprite* player, list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
 		if (spawned == NULL) {
 			spawnTime_left -= *deltaT;
 			if (spawnTime_left <= 0) {
 				spawnTime_left = spawnTime;
-				spawn(enemyList);
+				spawn(enemyList, soundCol);
 			}
 		}
 		
@@ -41,7 +43,7 @@ public:
 		}
 
 	}
-	virtual void spawn(list<enemy*>* enemyList) {
+	virtual void spawn(list<enemy*>* enemyList, SoundCollection* soundCol) {
 
 
 	}

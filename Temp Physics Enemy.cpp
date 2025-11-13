@@ -26,6 +26,9 @@ public:
 
 	}
 
+	bool yDeath(list<enemy*>* enemies) {
+		return isDead(enemies);
+	}
 
 	void tileCollision(list<tile*>* tileList) {
 		for (tile* t : *tileList) {

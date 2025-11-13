@@ -26,6 +26,8 @@
 #include "anim Tile.cpp"
 #include "water anim.cpp"
 #include "water tile.cpp"
+#include "conveyor.cpp"
+#include "move tile.cpp"
 #pragma once
 
 class levelEditor {
@@ -107,8 +109,8 @@ public:
 			tileSelect.push_back(new menuSelect(T, Vector2i((i % 4) * 16, (i / 4) * 16), Vector2f((((i % 4) * 20) * 4) + 20, (((i / 4) * 20) * 4) + 20)));
 		}
 		Texture* typeT = new Texture();
-		typeT->loadFromFile("Assets\\Tile Select.png");
-		for (int i = 0; i < 22; i++) {
+		typeT->loadFromFile("Assets\\Tile Select\\" + levelN + ".png");
+		for (int i = 0; i < 30; i++) {
 			typeSelect.push_back(new menuSelect(typeT, Vector2i((i* 16), 0), Vector2f((((i % 4) * 20) * 4) + 1600, (((i / 4) * 20) * 4) + 20)));
 		}
 
@@ -735,10 +737,26 @@ public:
 		else if (selectedType == 9) {
 			return new topLadder(worldPos, tex);
 		}
-		else if (selectedType == 10) {
+		
+		else if (selectedType == 5 || selectedType == 6 ||selectedType == 7) {
+			return new solidTile(worldPos, tex, selectedTexture);
+		}
+		else if (levelName == "wood man" || levelName == "bubble name" || levelName == "heat man") {
+			return bubbleCheck(worldPos);
+		}
+		else if (levelName == "metal man") {
+			return metalCheck(worldPos);
+		}
+		else {
+			return new solidTile(worldPos, tex, selectedTexture);
+		}
+	}
+
+	tile* bubbleCheck(Vector2f worldPos) {
+		if (selectedType == 10) {
 			return new HorizontalLava(worldPos, tex, z);
 		}
-		else if (selectedType == 11){
+		else if (selectedType == 11) {
 			return new VerticalLava(worldPos, tex, z);
 		}
 		else if (selectedType == 12) {
@@ -758,7 +776,7 @@ public:
 		}
 		else if (selectedType == 17) {
 			return new WaterAnim(worldPos, tex, 4, 3, z);
-		}
+			}
 		else if (selectedType == 18) {
 			return new WaterAnim(worldPos, tex, 5, 3, z);
 		}
@@ -771,8 +789,57 @@ public:
 		else if (selectedType == 21) {
 			return new DeathTile(worldPos, tex, selectedTexture, z);
 		}
-		else {
-			return new solidTile(worldPos, tex, selectedTexture);
+	}
+
+	tile* metalCheck(Vector2f worldPos) {
+		if (selectedType == 10) {
+			return new AnimTile(worldPos, tex, 0, 2, z);
+		}
+		if (selectedType == 11) {
+			return new AnimTile(worldPos, tex, 1, 2, z);
+		}
+		if (selectedType == 12) {
+			return new AnimTile(worldPos, tex, 2, 2, z);
+		}
+		if (selectedType == 13) {
+			return new AnimTile(worldPos, tex, 3, 2, z);
+		}
+		if (selectedType == 14) {
+			return new AnimTile(worldPos, tex, 4, 2, z);
+		}
+		if (selectedType == 15) {
+			return new AnimTile(worldPos, tex, 5, 2, z);
+		}
+		if (selectedType == 16) {
+			return new AnimTile(worldPos, tex, 6, 2, z);
+		}
+		if (selectedType == 17) {
+			return new AnimTile(worldPos, tex, 7, 2, z);
+		}
+		if (selectedType == 18) {
+			return new AnimTile(worldPos, tex, 8, 2, z);
+		}
+		if (selectedType == 19) {
+			return new AnimTile(worldPos, tex, 9, 2, z);
+		}
+		if (selectedType == 20) {
+			return new AnimTile(worldPos, tex, 10, 2, z);
+		}
+		if (selectedType == 21) {
+			MoveTile* temp = new MoveTile(worldPos, tex);
+			temp->setMoveRight(false);
+			return temp;
+		}
+		if (selectedType == 22) {
+			MoveTile* temp = new MoveTile(worldPos, tex);
+			temp->setMoveRight(true);
+			return temp;
+		}
+		if (selectedType == 23) {
+			return new ConveyorTile(worldPos, tex, z, true);
+		}
+		if (selectedType == 24) {
+			return new ConveyorTile(worldPos, tex, z, false);
 		}
 	}
 

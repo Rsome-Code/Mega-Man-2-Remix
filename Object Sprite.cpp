@@ -157,6 +157,7 @@ public:
 		setScale(s->getScale());
 		cameraPosition = Vector2f(0, 0);
 		zAxis = s->getZ();;
+		setVisualOffset(s->getVisualOffset());
 		  
 	}
 
@@ -295,8 +296,13 @@ public: void setPosition(Vector2f position) {
 	}
 
 
-public: Vector2f getPosition() {
+public: 
+	Vector2f getPosition() {
 		return position;
+	}
+
+	 Vector2f getEndPosition() {
+		 return Vector2f(position.x + getSize().x, position.y + getSize().y);
 	}
 
 
@@ -319,7 +325,11 @@ public: Vector2f getPosition() {
 	  }
 
 
-
+	  void setMiddlePos(Vector2f nP) {
+		  float xPos = nP.x - (getSize().x / 2);
+		  float yPos = nP.y - (getSize().y / 2);
+		  setPosition(Vector2f(xPos, yPos));
+	  }
 
 
 

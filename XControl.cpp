@@ -82,6 +82,8 @@ public:
     }
 
 public:bool checkA() {
+    
+
     if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
     {
         //controller0->vibrate(65535, 0);

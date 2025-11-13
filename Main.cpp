@@ -49,6 +49,10 @@
 #include "anko.cpp"
 #include "DL Message.cpp"
 #include "bubble man.cpp"
+#include "press.cpp"
+#include "drill.cpp"
+#include "blocky.cpp"
+#include "pie robot.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -93,6 +97,16 @@ Weapon* updatePlayer(player* p, string levelName) {
 	return NULL;
 }
 
+vector<bool> beforeTileList;
+void beforeLevelCheck(string name) {
+	if (name == "metal man") {
+		beforeTileList = { true, true, true, false, false };
+	}
+	else {
+		beforeTileList = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	}
+}
+
 Weapon* checkItem(player* p, string levelName) {
 	if (levelName == "heat man") {
 		
@@ -100,7 +114,11 @@ Weapon* checkItem(player* p, string levelName) {
 	}
 	return NULL;
 }
+
+
+
 int main() {
+	SoundCollection* soundCol = new SoundCollection();
 	bool run = true;
 
 	//Set the framerate here
@@ -138,7 +156,7 @@ int main() {
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
-	string bossName = "bubble man";
+	string bossName = "metal man";
 	
 	
 
@@ -167,13 +185,13 @@ int main() {
 	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
 	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	list <GameObject*> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	list <GameObject*> metalList = { new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), new SpawnPoint(string("drill")),  new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0), new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
 
 
-
-	for (GameObject* o : bubbleList) {
+	for (GameObject* o : metalList) {
 		o->initial();
 	}
-	ObjectPlacer* o = new ObjectPlacer(wT, bossName, bubbleList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, metalList);
 	
 
 
@@ -207,7 +225,7 @@ int main() {
 	
 	bool restart = false;
 
-	SoundCollection* soundCol = new SoundCollection();
+
 
 	while (run) {
 		levelMenu = new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb());
@@ -218,7 +236,7 @@ int main() {
 			hold = levelMenu->checkA();
 
 			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
-			intro->loop(instance, targetFPS);
+			//intro->loop(instance, targetFPS);
 		}
 		restart = false;
 		
@@ -239,7 +257,9 @@ int main() {
 
 		scene* area = new scene(col, stage, enemyT);
 
-		if (area->loop(instance, targetFPS, soundCol)) {
+		beforeLevelCheck(bossName);
+
+		if (area->loop(instance, targetFPS, soundCol, beforeTileList)) {
 
 		//if (true){
 		
@@ -310,7 +330,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//
-	//cout << "hi";
+	cout << "hi";
 
 }

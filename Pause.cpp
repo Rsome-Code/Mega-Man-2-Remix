@@ -107,15 +107,21 @@ public:
 		if (p->hasAtomicFire()) {
 			pos = 3;
 			addP1Option(&atomicFire, pos, p->getAtomicFire());
-			addP2Option(&item1, 5, p->getItem1());
+			
 			
 		}
 		if (p->checkLead()) {
 			pos = 6;
 			addP1Option(&bubbleLead, pos, p->getBubbleLead());
 		}
+
+
 		if (p->checkBlade()) {
 			addP2Option(&metalBlade, 2, p->getMetalBlade());
+		}
+
+		if (p->checkAtomicFire()) {
+			addP2Option(&item1, 5, p->getItem1());
 		}
 
 		controller = p->getControls()->getController();
@@ -156,9 +162,13 @@ public:
 		megaBuster->getBar()->update(p->getHP());
 		if (p->hasAtomicFire()) {
 			atomicFire->getBar()->update(p->getAtomicFire()->getAmmo());
+			item1->getBar()->update(p->getItem1()->getAmmo());
 		}
 		if (p->checkLead()) {
 			bubbleLead->getBar()->update(p->getBubbleLead()->getAmmo());
+		}
+		if (p->checkBlade()) {
+			metalBlade->getBar()->update(p->getMetalBlade()->getAmmo());
 		}
 		startAnim->reset();
 		startTime->reset();

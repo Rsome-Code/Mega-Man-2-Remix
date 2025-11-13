@@ -62,6 +62,8 @@ public:
 		
 		mov->setScale(Vector2f(4, 4));
 
+		setCode();
+
 	}
 
 	enemy(Vector2f i) {
@@ -80,7 +82,7 @@ public:
 		display = false;
 
 		mov->setScale(Vector2f(4, 4));
-
+		setCode();
 	}
 
 public:
@@ -133,6 +135,10 @@ public:
 	}
 	objectHitbox* getHurtbox() {
 		return hurt;
+	}
+
+	void setHP(int h) {
+		hp = h;
 	}
 
 	void updateHitbox() {
@@ -233,6 +239,10 @@ public:
 		act = false;
 		display = false;
 		sprite->setPosition(Vector2f(-1100, -1000));
+		return false;
+	}
+
+	virtual bool yDeath(list<enemy*>* enemies) {
 		return false;
 	}
 
