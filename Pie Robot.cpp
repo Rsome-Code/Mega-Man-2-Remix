@@ -100,7 +100,11 @@ public:
 	}
 
 	bool checkSaw(list<enemy*>* objectList) {
-		return saw->getHP() > 0;
+		for (enemy* en : *objectList) {
+			if (en == saw) {
+				return en->getAct();
+			}
+		}
 	}
 
 

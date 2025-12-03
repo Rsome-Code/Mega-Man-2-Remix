@@ -697,7 +697,7 @@ public:
 		list<EnemyBullet*>::iterator toDelete = eBullets.end();
 		for (EnemyBullet* b : eBullets) {
 			b->eachFrame(&deltaT, &tileList);
-			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible()) {
+			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible() && p->checkInControl()) {
 				p->takeDamage(b->getDamage());
 			}
 
@@ -992,13 +992,13 @@ public:
 
 	}
 
-	void spawnItemFromEnemy(enemy* en) {
+	void spawnItemFromEnemy(enemy* en, SoundCollection* soundCol) {
 
 		Vector2f middle = Vector2f((en->getSprite()->getPosition().x + (en->getSprite()->getSize().x / 6)), (en->getSprite()->getPosition().y + (en->getSprite()->getSize().y / 2)));
 
 
 
-		en->spawnItem(&items, miscT, middle);
+		en->spawnItem(&items, miscT, middle, soundCol);
 
 	}
 
@@ -1009,8 +1009,12 @@ public:
 
 	void levelEndCheck(enemy* e, Music* music) {
 		if (e->getCode() == stage->getName()) {
+
 			p->enableControls(false);
 			levelEnd = true;
+			if (p->getHP() <= 0) {
+				p->setHP(1);
+			}
 			masterDeathSound->play();
 
 
@@ -1037,7 +1041,7 @@ public:
 							else {
 								bull->onHit(enemy);
 								if (enemy->getHP() <= 0) {
-									spawnItemFromEnemy(enemy);
+									spawnItemFromEnemy(enemy, soundCol);
 
 									enemy->spawnEnemy(&enemies, soundCol);
 
@@ -1209,6 +1213,7 @@ public:
 		}
 
 		updateFlags();
+		checkObBefore();
 
 		sectionTransition(instance, targetRate, ang, flagPos, nextSection);
 
@@ -1396,6 +1401,7 @@ public:
 			}
 
 
+
 			if (ang == RIGHT) {
 				cam->move(0, &deltaT, camSpeed);
 				if (p->getGrounded()) {
@@ -1449,12 +1455,13 @@ public:
 				cam->move(90, &deltaT, camSpeed);
 				if (p->getControls()->getOnLadder()) {
 					p->getAnimation()->ladderAnim(&deltaT);
+					p->getSprite()->move(90, &deltaT, playerSpeed);
 				}
 				else {
 					p->getAnimation()->runJump();
 				}
 
-				p->getSprite()->move(90, &deltaT, playerSpeed);
+				
 				if (cam->getPosition().y >= flagPos.y) {
 					run = false;
 				}
@@ -1631,12 +1638,14 @@ public:
 			//p->takeDamage(e->getDamage());
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
-					if (!p->isInvincible()) {
+					if (!p->isInvincible() && p->checkInControl()) {
 
 						p->takeDamage(e->getDamage());
 						e->playerHit();
 
 					}
+
+					//Does this need to be here?
 					if (e->getIncrease() != NULL) {
 
 						itemGet(instance, targetRate, e);

@@ -10,6 +10,7 @@
 #include "wood man.cpp"
 #include "heat man.cpp"
 #include "bubble man.cpp"
+#include "metal man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -107,6 +108,10 @@ public:
 		}
 		else if (name == "bubble man") {
 			boss = new BubbleMan(bossT, Vector2f(900, 0));
+			boss->initial();
+		}
+		else if (name == "metal man") {
+			boss = new MetalMan(bossT, Vector2f(900, 0));
 			boss->initial();
 		}
 	}
@@ -249,7 +254,9 @@ public:
 
 		run = true;
 
-		music->play();
+		if (instance->getWindow()->isOpen()) {
+			music->play();
+		}
 		
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;

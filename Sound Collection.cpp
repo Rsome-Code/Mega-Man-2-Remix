@@ -25,6 +25,9 @@ class SoundCollection {
 	SoundBuffer* lifeGetB;
 	Sound* lifeGet;
 
+	SoundBuffer* beamAttackB;
+	Sound* beamAttack;
+
 public:
 
 	SoundCollection() {
@@ -57,6 +60,11 @@ public:
 		lifeGetB->loadFromFile("assets\\sound\\gaming voice.mp3");
 		lifeGet = new Sound();
 		lifeGet->setBuffer(*lifeGetB);
+
+		beamAttackB = new SoundBuffer();
+		beamAttackB->loadFromFile("assets\\sound\\force_beam.wav");
+		beamAttack = new Sound();
+		beamAttack->setBuffer(*beamAttackB);
 	}
 
 	Sound* getYoku(){
@@ -77,5 +85,9 @@ public:
 	}
 	Sound* getLifeGet() {
 		return lifeGet;
+	}
+
+	Sound* getBeam() {
+		return beamAttack;
 	}
 };

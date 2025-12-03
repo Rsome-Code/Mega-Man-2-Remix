@@ -34,6 +34,7 @@ class Pause {
 	WeaponOption* bubbleLead;
 	WeaponOption* metalBlade;
 	WeaponOption* item1;
+	WeaponOption* quickBoomerang;
 
 
 	PageOption* pageOpt;
@@ -122,6 +123,10 @@ public:
 
 		if (p->checkAtomicFire()) {
 			addP2Option(&item1, 5, p->getItem1());
+		}
+
+		if (p->checkBoomerang()) {
+			addP1Option(&quickBoomerang, 7, p->getBoomerang());
 		}
 
 		controller = p->getControls()->getController();
@@ -367,6 +372,9 @@ public:
 		}
 		if (p->checkLead()) {
 			instance->UIDisplay(bubbleLead->getSprites());
+		}
+		if (p->checkBoomerang()) {
+			instance->UIDisplay(quickBoomerang->getSprites());
 		}
 		instance->UIDisplay(eTanks->getSprites());
 		

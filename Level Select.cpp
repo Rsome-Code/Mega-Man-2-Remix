@@ -198,7 +198,10 @@ public:
 
 		run = true;
 
-		selectSound->play();
+		if (instance->getWindow()->isOpen()) {
+			selectSound->play();
+		}
+		
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -250,6 +253,9 @@ public:
 		}
 		else if (selection == 6) {
 			r = "metal man";
+		}
+		else if (selection == 2) {
+			r = "quick man";
 		}
 		music->stop();
 		return r;

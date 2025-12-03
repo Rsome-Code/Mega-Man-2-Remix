@@ -6,6 +6,8 @@ class ConveyorTile : public TileWithObject {
 	list<movable*> yellows;
 	list<movable*> reds;
 
+	list<objectSprite*> copies;
+
 	int speed = 100;
 
 	int angle = 0;
@@ -27,6 +29,9 @@ protected:
 
 public:
 	void reset() {
+
+		copies.clear();
+
 		int i = 0;
 	
 		for (objectSprite* sp : yellows) {
@@ -34,13 +39,14 @@ public:
 
 			i++;
 
+			copies.push_back(new objectSprite(sp));
 		}
 		i = 0;
 		for (objectSprite* sp : reds) {
 			sp->setPosition(Vector2f(sprite->getPosition().x + ((((i * dist) + (dist / 2)) + startDist) * 4), sprite->getPosition().y + 3 * 4));
 
 			i++;
-
+			copies.push_back(new objectSprite(sp));
 		}
 		
 		/*else {
@@ -58,6 +64,8 @@ public:
 
 			}
 		}*/
+
+
 	}
 	ConveyorTile(Vector2f loc, Texture* t, float z, bool right) {
 		this->z = z;
@@ -82,6 +90,7 @@ public:
 			if (i == 2) {
 				reserveYellow = temp;
 			}
+			copies.push_back(new objectSprite(temp));
 		}
 		for (int i = 0; i < 3; i++) {
 			movable* temp = new movable(t, IntRect(133, 85, 3, 9), Vector2f(sprite->getPosition().x + ((((i * dist) + (dist/2)) + startDist) * 4), sprite->getPosition().y + 3 * 4), Vector2f(4, 4));
@@ -91,6 +100,7 @@ public:
 				reserveRed = temp;
 
 			}
+			copies.push_back(new objectSprite(temp));
 		}
 
 
@@ -283,26 +293,37 @@ public:
 	}
 
 
+	list<objectSprite*>::iterator spriteIt;
 
 	list<objectSprite*> getInternalSprites() {
 		if (moveRight) {
 			return objects;
 		}
 		
-		list<objectSprite*> tempList;
-		for (objectSprite* ob : objects) {
-			
-			objectSprite* temp = new objectSprite(ob);
-			temp->setVisualOffset(Vector2f(-temp->getVisualOffset().x, temp->getVisualOffset().y));
+		//list<objectSprite*> tempList;
 
-			float middleDif = temp->getMiddlePos().x - sprite->getMiddlePos().x;
-			float newPos = temp->getMiddlePos().x - (2 * middleDif);
+		spriteIt = objects.begin();
+
+		for (objectSprite* temp : copies) {
+			
+			objectSprite* trueOb = *spriteIt;
+
+			//objectSprite* temp = new objectSprite(ob);
+			temp->setVisualOffset(Vector2f(-trueOb->getVisualOffset().x, trueOb->getVisualOffset().y));
+
+
+			float middleDif = trueOb->getMiddlePos().x - sprite->getMiddlePos().x;
+			float newPos = trueOb->getMiddlePos().x - (2 * middleDif);
 
 			temp->setMiddlePos(Vector2f(newPos, temp->getMiddlePos().y));
 			//delete& temp;
-			tempList.push_back(temp);
+			//tempList.push_back(temp);
+
+			spriteIt = next(spriteIt);
+
+			
 		}
-		return tempList;
+		return copies;
 	}
 
 	float getMovement() {

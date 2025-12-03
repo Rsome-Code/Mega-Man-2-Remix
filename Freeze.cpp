@@ -59,7 +59,7 @@ public:
 			}
 
 			for (object* ob : obList) {
-				if (ob->getDisplay()) {
+				if (ob->getDisplay() && ob->getSprite() != NULL) {
 					instance->objectAccess(ob, cam);
 				}
 			}

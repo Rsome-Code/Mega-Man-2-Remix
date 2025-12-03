@@ -44,6 +44,11 @@ public:
 		}
 	}
 
+	void setAmount(int num) {
+		amount = num;
+		setAmount();
+	}
+
 	int getAmount() {
 		return amount;
 	}

@@ -61,6 +61,10 @@
 #include "drill spawner.cpp"
 #include "blocky.cpp"
 #include "pie robot.cpp"
+#include "metal man.cpp"
+#include "beam collection.cpp"
+#include "beam left.cpp"
+#include "beam right.cpp"
 #pragma once
 
 using namespace std;
@@ -136,6 +140,10 @@ public:
 			}
 			if (z == 1) {
 				tileList->push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
+
+				if (*prev(tileList->end()) == NULL) {
+					cout << "here";
+				}
 			}
 			else if (z == 2) {
 				z2List->push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
@@ -356,11 +364,21 @@ public:
 					p->setMetalBlade(false);
 				}
 			}
+			else if (type == "Quick Man") {
+				if (*valI == "y") {
+					p->setBoomerang(true);
+				}
+				else {
+					p->setBoomerang(false);
+				}
+			}
 
 		}
 
 
 	}
+
+	//This function is for loading objects into the object placer
 	void loadObjects(string levelName, string section, list<GameObject*>* objects, Texture* t, camera* cam) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
@@ -369,6 +387,9 @@ public:
 
 		Texture* misc = new Texture();
 		misc->loadFromFile("Assets\\misc\\mega buster.png");
+
+		Texture* beamT = new Texture();
+		beamT->loadFromFile("assets\\beam.png");
 
 		string line;
 
@@ -402,9 +423,14 @@ public:
 
 			SoundCollection* soundCol = new SoundCollection();
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd, &item, soundCol);
+			BeamCollection* beamCol = NULL;
+
+			checkCode(type, t, misc, beamT, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd, &item, soundCol, &beamCol, objects);
 
 			delete soundCol;
+
+			objects->remove(beamCol);
+			delete beamCol;
 
 			if (add != NULL) {
 				add->getSprite()->setPosition(Vector2f(worldX, worldY));
@@ -450,6 +476,8 @@ public:
 		objects->push_back(endP);
 	}
 	
+
+	//This function is for loading objects into the game
 	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners, list<Item*>* items, SoundCollection* soundCol) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
@@ -457,10 +485,15 @@ public:
 		Texture* misc = new Texture();
 		misc->loadFromFile("Assets\\misc\\mega buster.png");
 
+		Texture* beamT = new Texture();
+		beamT->loadFromFile("assets\\beam.png");
+
 		string line;
 
 		objects->clear();
 		enemies->clear();
+
+		BeamCollection* beamCol = NULL;
 		
 		while (getline(inputFile, line)) {
 
@@ -488,7 +521,7 @@ public:
 			Spawner* spawnAdd = NULL;
 			Item* item = NULL;
 
-			checkCode(type, t, misc, worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd, &item, soundCol);
+			checkCode(type, t, misc, beamT,  worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd, &item, soundCol, &beamCol, objects);
 			
 
 			if (add != NULL) {
@@ -515,6 +548,19 @@ public:
 
 		setSounds(objects, backgroundOb, enemies, items, soundCol);
 
+
+	}
+
+	void collectionCheck(Beam* en, list<GameObject*>* objects, BeamCollection** beamCol) {
+
+		//if (en->getCode() == "beam left" || en->getCode() == "beam right") {
+			if (*beamCol == NULL) {
+				*beamCol = new BeamCollection();
+				objects->push_back(*beamCol);
+			}
+			BeamCollection* temp = *beamCol;
+			temp->addBeam(en);
+		//}
 		
 	}
 
@@ -524,7 +570,7 @@ public:
 
 		for (GameObject* ob : *objects) {
 
-			disappearCheck(ob, soundCol->getYoku());
+			objectCheck(ob, soundCol);
 			
 		}
 
@@ -559,21 +605,25 @@ public:
 
 	}
 
-	void disappearCheck(GameObject* ob, Sound* yoSound) {
+	void objectCheck(GameObject* ob, SoundCollection* soundCol) {
 		string code = ob->getCode();
 
-		if (false) {}
+		if (code == "beam collection") {
+		
+			ob->setSoundPointer(soundCol->getBeam());
+
+		}
 		else {
 			vector<string> spl = splitString(code, char('-'));
 			string altType = spl[0];
 			if (altType == "disappearing tile") {
 				//ob->setSoundB(yokuB);
-				ob->setSoundPointer(yoSound);
+				ob->setSoundPointer(soundCol->getYoku());
 			}
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item, SoundCollection* soundCol) {
+	void checkCode(string type, Texture* t, Texture* misc, Texture* beamT, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item, SoundCollection* soundCol, BeamCollection** beamCol, list<GameObject*>* objects) {
 
 		Vector2f worldPos = Vector2f(worldX, worldY);
 
@@ -597,6 +647,9 @@ public:
 		}
 		else if (type == "bubble man") {
 			*enem = new BubbleMan(Vector2f(worldX, worldY));
+		}
+		else if (type == "metal man") {
+			*enem = new MetalMan(worldPos);
 		}
 		else if (type == "fly guy") {
 			*enem = new FlyGuy(t, Vector2f(worldX, worldY));
@@ -637,6 +690,17 @@ public:
 
 		else if (type == "pie robot") {
 			*enem = new PieRobot(t, worldPos);
+		}
+
+		else if (type == "beam left") {
+			BeamLeft* b = new BeamLeft(beamT, worldPos);
+			collectionCheck(b, objects, beamCol);
+			*enem = b;
+		}
+		else if (type == "beam right") {
+			BeamRight* b = new BeamRight(beamT, worldPos);
+			collectionCheck(b, objects, beamCol);
+			*enem = b;
 		}
 
 		else if (type == "bird-spawn") {

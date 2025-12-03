@@ -12,3 +12,9 @@ Anim frames should be stored in Vector
 All collision should take place in the same for loop
 
 Setup robust system for certain objects to go behind tiles
+
+Make adding weapons/abilities more streamlined
+
+Experiment with binary tree to store collision
+
+Store collision pointers in separate lists from tiles

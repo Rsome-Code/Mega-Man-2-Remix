@@ -53,7 +53,7 @@ public:
 		
 		if (firstFrame) {
 			checkDirection(p->getSprite());
-
+			firstFrame = false;
 		}
 		if (start) {
 			phys->eachFrame(deltaT);

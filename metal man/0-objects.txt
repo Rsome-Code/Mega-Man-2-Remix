@@ -3,6 +3,6 @@ press,4222,639,1
 press,4609,635,1
 press,4865,641,1
 press,5120,638,1
-drill-spawn,5510,0,1
-drill-spawn,7681,0,1
 E Tank,3342,1148,1
+drill-spawn,5510,701,1
+drill-spawn,7681,701,1

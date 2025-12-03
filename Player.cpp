@@ -18,6 +18,7 @@
 #include "splash effect.cpp"
 #include "item1.cpp"
 #include "metal blade.cpp"
+#include "quick boomerang.cpp"
 #pragma once
 
 class player {
@@ -43,6 +44,7 @@ class player {
 	bool gotShield = false;
 	bool gotLead = false;
 	bool gotBlade = false;
+	bool gotBoomerang = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -66,6 +68,7 @@ class player {
 	LeafShield* leafShield;
 	BubbleLead* bubbleLead;
 	MetalBlade* metalBlade;
+	QuickBoomerang* quickBoomerang;
 	Item1* item1;
 
 	Weapon* active = megaBuster;
@@ -138,6 +141,7 @@ public:
 		leafShield = new LeafShield(sprite, t);
 		bubbleLead = new BubbleLead(sprite, t);
 		metalBlade = new MetalBlade(sprite, t);
+		quickBoomerang = new QuickBoomerang(sprite, t);
 		item1 = new Item1(sprite, t);
 
 		//Define ammo bars here
@@ -185,6 +189,7 @@ public:
 		atomicFire->eachFrame(t);
 		bubbleLead->eachFrame(t);
 		metalBlade->eachFrame(t);
+		quickBoomerang->eachFrame(t);
 	}
 
 	Vector2f getPosition() {
@@ -259,6 +264,9 @@ public:
 	void setMetalBlade(bool b) {
 		gotBlade = b;
 	}
+	void setBoomerang(bool b) {
+		gotBoomerang = b;
+	}
 
 	void setETanks(int e) {
 		ETanks = e;
@@ -312,6 +320,9 @@ public:
 	}
 	MetalBlade* getMetalBlade() {
 		return metalBlade;
+	}
+	QuickBoomerang* getBoomerang() {
+		return quickBoomerang;
 	}
 
 	void setLives(int l) {
@@ -575,7 +586,9 @@ public:
 	}
 
 	void tileMovement(float m, float* deltaT) {
-		sprite->move(0, deltaT, m);
+		if (inControl) {
+			sprite->move(0, deltaT, m);
+		}
 	}
 
 	teleport* getTeleport() {
@@ -588,6 +601,9 @@ public:
 
 	int getHP() {
 		return health->getAmount();
+	}
+	void setHP(int num) {
+		health->setAmount(num);
 	}
 
 	void ammoReset() {
@@ -793,7 +809,7 @@ private:
 		return gotLead;
 	}
 	bool checkBoomerang() {
-		return false;
+		return gotBoomerang;
 	}
 
 	

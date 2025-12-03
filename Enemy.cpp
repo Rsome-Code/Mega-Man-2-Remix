@@ -296,7 +296,7 @@ public:
 		return offScreen;
 	}
 
-	virtual void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos) {
+	virtual void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos, SoundCollection* soundCol) {
 		int itemChance = rand();
 		itemChance = itemChance % 100;
 
@@ -316,12 +316,7 @@ public:
 		}
 		else if (itemChance > 95) {
 			item = new ExtraLife(t, pos);
-			SoundBuffer* colB = new SoundBuffer();
-			colB->loadFromFile("assets\\sound\\land.wav");
-
-			Sound* colSound = new Sound();
-			colSound->setBuffer(*colB);
-			item->setSoundPointer(colSound);
+			item->setSoundPointer(soundCol->getLifeGet());
 		}
 
 		//item = new BigAmmo(t, pos);

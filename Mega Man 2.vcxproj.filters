@@ -103,6 +103,9 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Metal Man">
       <UniqueIdentifier>{9308fc99-d125-4425-ab0a-39187223f893}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Quick Man">
+      <UniqueIdentifier>{2036b7db-f248-41e8-a56f-b270a4c9cddb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -768,6 +771,27 @@
     </ClCompile>
     <ClCompile Include="Metal Man.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss Blade.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Metal Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Quick Boomerang.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Boomerang Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Beam.cpp">
+      <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Beam Right.cpp">
+      <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Beam Left.cpp">
+      <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Beam Collection.cpp">
+      <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

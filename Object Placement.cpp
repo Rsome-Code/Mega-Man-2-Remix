@@ -201,8 +201,9 @@ public:
 			for (object* o : objects) {
 				
 				o->forceDisplay(true);
-				instance->objectAccess(o, cam);
-				
+				if (o->getSprite() != NULL) {
+					instance->objectAccess(o, cam);
+				}
 			}
 
 			//for (object* o : flagList) {

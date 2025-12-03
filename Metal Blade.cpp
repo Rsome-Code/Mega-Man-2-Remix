@@ -35,6 +35,9 @@ public:
 		name = "metal blade";
 	}
 
+	Sound* getSound() {
+		return shootSound;
+	}
 
 	bool fire(bool right) {
 

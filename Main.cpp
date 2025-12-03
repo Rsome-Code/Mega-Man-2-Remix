@@ -53,6 +53,9 @@
 #include "drill.cpp"
 #include "blocky.cpp"
 #include "pie robot.cpp"
+#include "metal man.cpp"
+#include "beam left.cpp"
+#include "beam right.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -94,13 +97,17 @@ Weapon* updatePlayer(player* p, string levelName) {
 		p->setMetalBlade(true);
 		return p->getMetalBlade();
 	}
+	else if (levelName == "quick man") {
+		p->setBoomerang(true);
+		return p->getBoomerang();
+	}
 	return NULL;
 }
 
 vector<bool> beforeTileList;
 void beforeLevelCheck(string name) {
 	if (name == "metal man") {
-		beforeTileList = { true, true, true, false, false };
+		beforeTileList = { true, true, false, false, false };
 	}
 	else {
 		beforeTileList = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
@@ -156,7 +163,7 @@ int main() {
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
-	string bossName = "metal man";
+	string bossName = "quick man";
 	
 	
 
@@ -176,33 +183,36 @@ int main() {
 	woodBossT->loadFromFile("assets\\wood man.png");
 
 	Texture* heatBossT = new Texture();
-	heatBossT->loadFromFile("assets\\heat man.png");
+	heatBossT->loadFromFile("assets\\heat man.png");;
 
 	Texture* bubbleBossT = new Texture();
 	bubbleBossT->loadFromFile("assets\\bubble man.png");
+	
+	Texture* beamT = new Texture();
+	beamT->loadFromFile("assets\\beam.png");
 
 //Object Placer setup
 	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
 	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	list <GameObject*> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	list <GameObject*> metalList = { new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), new SpawnPoint(string("drill")),  new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0), new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
+	list <GameObject*> metalList = {new MetalMan(Vector2f(0,0)),new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), new SpawnPoint(string("drill")),  new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0), new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
+	list <GameObject*> quickList = {new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 
-
-	for (GameObject* o : metalList) {
+	for (GameObject* o : quickList) {
 		o->initial();
 	}
-	ObjectPlacer* o = new ObjectPlacer(wT, bossName, metalList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, quickList);
 	
 
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(39, 86, 16, 6), IntRect(56, 87, 11, 6), IntRect(73, 88, 12, 6) };
-	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0, 0), Vector2f(5 * 4, 0 * 4), Vector2f(4 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(5 * 4, -1 * 4), Vector2f(0 * 4, 11 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(1, 27, 24, 24), IntRect(208, 11, 21, 36), IntRect(236, 20, 21, 27) };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0, 0), Vector2f(0 * 4, -8 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(3 * 4, 2 * 4), Vector2f(5 * 4, -1 * 4), Vector2f(0 * 4, 11 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\bubble man.png");
-	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, true);
+	testT->loadFromFile("Assets\\metal man.png");
+	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, false);
 
 	////////////////////////////////
 	//Uncomment this if you want to use the animation tester
@@ -210,10 +220,11 @@ int main() {
 
 
 	//Un-comment this if you want to use the level editor
-	//l ->loop(instance, targetFPS);
+	//l->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
 	// There must be a flag in the section that comes before the start
+	//
 	//
 	//o->loop(instance, targetFPS);
 
@@ -237,6 +248,7 @@ int main() {
 
 			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 			//intro->loop(instance, targetFPS);
+			delete intro;
 		}
 		restart = false;
 		
@@ -330,6 +342,7 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	cout << "hi";
+	
+	//cout << "hi";
 
 }

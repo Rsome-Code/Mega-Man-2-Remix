@@ -27,6 +27,8 @@ protected:
 
 public:
 
+
+	//FIX THISSSSSSSSSSS!!!!!!!!!!
 	void dinkSetup() {
 		dinkB = new SoundBuffer();
 		dinkB->loadFromFile("Assets\\sound\\dink.wav");

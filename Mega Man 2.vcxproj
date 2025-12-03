@@ -193,12 +193,18 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Atomic Fire.cpp" />
+    <ClCompile Include="Beam Collection.cpp" />
+    <ClCompile Include="Beam Left.cpp" />
+    <ClCompile Include="Beam Right.cpp" />
+    <ClCompile Include="Beam.cpp" />
     <ClCompile Include="Big Ammo.cpp" />
     <ClCompile Include="Big Health.cpp" />
     <ClCompile Include="Bird Spawner.cpp" />
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="Blocky Block.cpp" />
     <ClCompile Include="Blocky.cpp" />
+    <ClCompile Include="Boomerang Bullet.cpp" />
+    <ClCompile Include="Boss Blade.cpp" />
     <ClCompile Include="Boss Bubble.cpp" />
     <ClCompile Include="Break Wall.cpp" />
     <ClCompile Include="Bubble Bullet.cpp" />
@@ -222,6 +228,7 @@
     <ClCompile Include="physics bullet.cpp" />
     <ClCompile Include="Pie Robot.cpp" />
     <ClCompile Include="Press.cpp" />
+    <ClCompile Include="Quick Boomerang.cpp" />
     <ClCompile Include="Repair Block.cpp" />
     <ClCompile Include="Shrink.cpp" />
     <ClCompile Include="Snapper Spawn.cpp" />

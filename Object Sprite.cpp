@@ -290,6 +290,12 @@ public: void setPosition(Vector2f position) {
 		this->position = position;
 	}
 
+	  void setRightPosition(Vector2f position) {
+		  this->position = Vector2f(position.x - getSize().x, position.y);
+	}
+
+	
+
 	void setCameraPosition(Vector2f c) {
 		this->cameraPosition = c;
 		thisOne.setPosition(c);

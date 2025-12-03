@@ -19,7 +19,7 @@ public:
 		act = o->getAct();
 		code = o->getCode();
 	}
-	virtual list<tile*> getTiles() { return list<tile*> {NULL}; }
+	virtual list<tile*> getTiles() { return list<tile*> {}; }
 
 	void setSoundB(SoundBuffer* soundB) {
 		this->soundB = soundB;
