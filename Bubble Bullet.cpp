@@ -19,7 +19,7 @@ class BubbleBullet : public bullet {
 
 public:
 
-	BubbleBullet(objectSprite* o, Texture* t) {
+	BubbleBullet(objectSprite* o, Texture* t, SoundCollection* soundCol) {
 		
 		shootTime = 2;
 		shootTemp = shootTime;
@@ -33,7 +33,7 @@ public:
 
 		speed = 700;
 
-		dinkSetup();
+		dinkSetup(soundCol);
 		grounded = false;
 	}
 

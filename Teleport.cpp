@@ -67,6 +67,7 @@ public:
 	}
 
 	bool eachFrame(float* deltaT, list<tile*> tiles, objectHitbox* foot) {
+		teleportAnim->thisFrame();
 		//if (sprite->getPosition().y < targetLoc->y) {
 
 		if (looped) {

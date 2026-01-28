@@ -286,6 +286,10 @@ public:
 		}
 	}
 
+	void setColour(const Color c) {
+		thisOne.setColor(c);
+	}
+
 public: void setPosition(Vector2f position) {
 		this->position = position;
 	}

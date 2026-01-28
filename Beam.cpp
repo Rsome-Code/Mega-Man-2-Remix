@@ -9,7 +9,7 @@ class Beam :public enemy {
 
 	
 protected:
-	int speed = 200;
+	int speed = 350;
 
 	bool start = false;
 
@@ -41,6 +41,10 @@ public:
 
 	void moveStart() {
 		start = true;
-		//sound->play();
+		sound->play();
+	}
+
+	bool deleteOverX() {
+		return false;
 	}
 };

@@ -30,6 +30,7 @@ protected:
 
 	list<GameObject*> objects;
 	list<GameObject*> backgroundObjects;
+	list<GameObject*> foregroundObjects;
 	list<enemy*> enemies;
 	list<Spawner*> spawners;
 	list<Item*> items;
@@ -136,6 +137,7 @@ public:
 		z4List.clear();
 		objects.clear();
 		backgroundObjects.clear();
+		foregroundObjects.clear();
 		spawners.clear();
 		items.clear();
 		//flags.clear();
@@ -252,7 +254,7 @@ public:
 		
 		spawn = NULL;
 
-		l->loadObjects(name, section, &objects, &backgroundObjects, &enemies, enemyTexture, &spawn, &spawners, &items, soundCol);
+		l->loadObjects(name, section, &objects, &backgroundObjects, &foregroundObjects, &enemies, enemyTexture, &spawn, &spawners, &items, soundCol);
 
 		checkTilesInObjects();
 
@@ -337,6 +339,10 @@ public:
 
 	list<GameObject*> getBackgroundObjects() {
 		return backgroundObjects;
+	}
+
+	list<GameObject*> getForegroundObjects() {
+		return foregroundObjects;
 	}
 
 	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {

@@ -1,0 +1,3 @@
+beam right,548,5118,1
+beam right,556,5569,1
+beam left,2456,5313,1

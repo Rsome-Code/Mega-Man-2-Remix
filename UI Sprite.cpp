@@ -23,6 +23,8 @@ protected:Sprite thisOne;
 	list<UISprite*>::iterator i;
 	Vector2f cameraScale;
 
+	Vector2f visualOffset = Vector2f(0,0);
+
 
 
 public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
@@ -118,6 +120,12 @@ public: void applyRect(IntRect rectangle) {
 public: Sprite* getSprite() {
 	return &this->thisOne;
 }
+
+
+	  void setTransparency(int tra) {
+		  thisOne.setColor(sf::Color(thisOne.getColor().r, thisOne.getColor().g, thisOne.getColor().g, tra));
+	  }
+
 public: Vector2f getCameraPosition() {
 	return cameraPosition;
 }
@@ -137,7 +145,11 @@ public: string getType() {
 		  setRect(Vector2i((change - tRect.x) - sizeChange , tRect.y), Vector2i(rectSize));
 	  }
 	  virtual void setVisualOffset(Vector2f off) {
-		  
+		  visualOffset = off;
+	  }
+
+	  virtual Vector2f getVisualOffset() {
+		  return visualOffset;
 	  }
 
 	  IntRect getRect() {

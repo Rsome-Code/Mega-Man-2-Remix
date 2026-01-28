@@ -18,6 +18,19 @@ class BeamLeft : public Beam {
 			sprite->setRect(IntRect(sprite->getRect().left - thisFrame, 0, sprite->getRect().width + (thisFrame), 16));
 			sprite->setRightPosition(Vector2f(pos, sprite->getPosition().y));
 			hit->setRelativeRect(IntRect(0, 0, sprite->getRect().width, 16));
+
+			collCheck(tileList);
 		}
 	}
+
+	void collCheck(list<tile*>* tileList) {
+		for (tile* t : *tileList) {
+			if (t->getRight() != NULL) {
+				if (hitboxDetect::hitboxDetection(Vector2f(sprite->getPosition().x, sprite->getMiddlePos().y), t->getRight())) {
+					start = false;
+				}
+			}
+		}
+	}
+
 };

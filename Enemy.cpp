@@ -41,6 +41,8 @@ protected:
 	float flashTime = 0.04;
 	float flashTime_left = flashTime;
 
+	bool frozen = false;
+
 	movable* mov;
 
 public:
@@ -86,6 +88,14 @@ public:
 	}
 
 public:
+
+	virtual bool deleteOverY() {
+		return true;
+	}
+
+	virtual bool deleteOverX() {
+		return true;
+	}
 
 	virtual void loadSound(SoundCollection* soundCol) {}
 
@@ -153,6 +163,10 @@ public:
 		return hitboxDetect::hitboxDetection(bullet, hurt);
 	}
 
+	void setFrozen(bool b) {
+		frozen = b;
+	}
+
 	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
 		flashTime_left -= *deltaT;
 		if (hp > 0) {
@@ -166,7 +180,7 @@ public:
 				}
 			}
 			
-			if (act) {
+			if (act && !frozen) {
 				hit->updatePos();
 				hurt->updatePos();
 				alive(p, deltaT, tileList, enemyList, bList);
@@ -196,6 +210,10 @@ public:
 	virtual objectSprite* getDamSprite() { return NULL; };
 
 	virtual bool checkInvincible() {
+		return false;
+	}
+
+	virtual bool freezeDam(player* p) {
 		return false;
 	}
 
@@ -284,7 +302,8 @@ public:
 		return genericDam();
 	}
 
-	
+	virtual void forceDamSprite(){}
+	virtual void forceDamSpriteOff() {}
 
 	virtual int genericDam() { return 1; }
 

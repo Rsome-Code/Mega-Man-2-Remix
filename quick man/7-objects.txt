@@ -1,0 +1,4 @@
+torch guy,2302,8175,1
+torch guy,3271,8185,1
+torch guy,4153,8309,1
+lighting rect,0,0,1

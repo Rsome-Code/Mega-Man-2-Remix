@@ -3,6 +3,7 @@
 #include "camera.cpp"
 #include "hitbox detector.cpp"
 #include "tile.cpp"
+#include "player.cpp"
 #pragma once
 
 class EnemyBullet : public object {
@@ -24,7 +25,9 @@ public:
 		setCode("eBullet");
 	}
 
-	virtual void eachFrame(float* deltaT, list<tile*>* tileList) = 0;
+	virtual void eachFrame(float* deltaT, list<tile*>* tileList) {};
+
+	virtual void eachFrame(float* deltaT, list<tile*>* tileList, player* p) {};
 
 	int getDamage() {
 		return damage;

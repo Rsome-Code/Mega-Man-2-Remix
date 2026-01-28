@@ -35,6 +35,7 @@ class Pause {
 	WeaponOption* metalBlade;
 	WeaponOption* item1;
 	WeaponOption* quickBoomerang;
+	WeaponOption* timeStopper;
 
 
 	PageOption* pageOpt;
@@ -116,6 +117,9 @@ public:
 			addP1Option(&bubbleLead, pos, p->getBubbleLead());
 		}
 
+		if (p->checkStopper()) {
+			addP2Option(&timeStopper, 2, p->getTimeStopper());
+		}
 
 		if (p->checkBlade()) {
 			addP2Option(&metalBlade, 2, p->getMetalBlade());
@@ -128,6 +132,8 @@ public:
 		if (p->checkBoomerang()) {
 			addP1Option(&quickBoomerang, 7, p->getBoomerang());
 		}
+
+
 
 		controller = p->getControls()->getController();
 
@@ -174,6 +180,9 @@ public:
 		}
 		if (p->checkBlade()) {
 			metalBlade->getBar()->update(p->getMetalBlade()->getAmmo());
+		}
+		if (p->checkStopper()) {
+			timeStopper->getBar()->update(p->getTimeStopper()->getAmmo());
 		}
 		startAnim->reset();
 		startTime->reset();
@@ -386,6 +395,9 @@ public:
 		}
 		if (p->checkBlade()) {
 			instance->UIDisplay(metalBlade->getSprites());
+		}
+		if (p->checkStopper()) {
+			instance->UIDisplay(timeStopper->getSprites());
 		}
 		instance->UIDisplay(lifeSprite);
 		instance->textDisplay(lifeText);

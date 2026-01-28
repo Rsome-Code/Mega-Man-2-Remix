@@ -65,6 +65,10 @@
 #include "beam collection.cpp"
 #include "beam left.cpp"
 #include "beam right.cpp"
+#include "torch guy.cpp"
+#include "lighting rectangle.cpp"
+#include "scworm spawner.cpp"
+#include "quick man.cpp"
 #pragma once
 
 using namespace std;
@@ -258,7 +262,22 @@ public:
 							else {
 								flag->getSprite()->setPosition(Vector2f(lastFlag->getPosition().x - 1920, flag->getPosition().y));
 							}
+
+							
 						}
+					}
+
+					//Keeps distance of upwards and downwards sections consistent
+					if (flag->getAngle() == UP && lastFlag->getAngle() == UP) {
+						flag->getSprite()->setPosition(Vector2f(flag->getPosition().x, lastFlag->getPosition().y - 1030));
+					}
+					else if (flag->getAngle() == DOWN && lastFlag->getAngle() == DOWN) {
+						flag->getSprite()->setPosition(Vector2f(flag->getPosition().x, lastFlag->getPosition().y + 1030));
+					}
+
+
+					if (flag->getAngle() == RIGHT || flag->getAngle() == LEFT) {
+						flag->setPosition(Vector2f(flag->getPosition().x, lastFlag->getPosition().y));
 					}
 				}
 			}
@@ -373,6 +392,10 @@ public:
 				}
 			}
 
+			else if (type == "Flash Man") {
+				p->setTimeStopper(*valI == "y");
+			}
+
 		}
 
 
@@ -417,6 +440,7 @@ public:
 			}
 			GameObject* add = NULL;
 			GameObject* backAdd = NULL;
+			GameObject* foreAdd = NULL;
 			enemy* enem = NULL;
 			Spawner* spawnAdd = NULL;
 			Item* item = NULL;
@@ -425,7 +449,7 @@ public:
 
 			BeamCollection* beamCol = NULL;
 
-			checkCode(type, t, misc, beamT, worldX, worldY, &enem, &add, &backAdd, &sArea, &spawnAdd, &item, soundCol, &beamCol, objects);
+			checkCode(type, t, misc, beamT, worldX, worldY, &enem, &add, &backAdd, &foreAdd, &sArea, &spawnAdd, &item, soundCol, &beamCol, objects);
 
 			delete soundCol;
 
@@ -449,6 +473,9 @@ public:
 
 			if (backAdd != NULL) {
 				objects->push_back(backAdd);
+			}
+			if (foreAdd != NULL) {
+				objects->push_back(foreAdd);
 			}
 			if (spawnAdd != NULL) {
 				objects->push_back(spawnAdd);
@@ -478,7 +505,7 @@ public:
 	
 
 	//This function is for loading objects into the game
-	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners, list<Item*>* items, SoundCollection* soundCol) {
+	void loadObjects(string levelName, string section, list<GameObject*>* objects, list<GameObject*>* backgroundOb, list<GameObject*>* foregroundOb, list<enemy*>* enemies, Texture* t, SpawnArea** sArea, list<Spawner*>* spawners, list<Item*>* items, SoundCollection* soundCol) {
 
 		ifstream inputFile(levelName + "\\" + section + "-objects.txt");
 
@@ -517,11 +544,12 @@ public:
 			}
 			GameObject* add = NULL;
 			GameObject* backAdd = NULL;
+			GameObject* foreAdd = NULL;
 			enemy* enem = NULL;
 			Spawner* spawnAdd = NULL;
 			Item* item = NULL;
 
-			checkCode(type, t, misc, beamT,  worldX, worldY, &enem, &add, &backAdd, sArea, &spawnAdd, &item, soundCol, &beamCol, objects);
+			checkCode(type, t, misc, beamT,  worldX, worldY, &enem, &add, &backAdd, &foreAdd, sArea, &spawnAdd, &item, soundCol, &beamCol, objects);
 			
 
 			if (add != NULL) {
@@ -537,6 +565,9 @@ public:
 			
 			if (backAdd != NULL) {
 				backgroundOb->push_back(backAdd);
+			}
+			else if (foreAdd != NULL) {
+				foregroundOb->push_back(foreAdd);
 			}
 			else if (spawnAdd != NULL) {
 				spawners->push_back(spawnAdd);
@@ -623,7 +654,7 @@ public:
 		}
 	}
 
-	void checkCode(string type, Texture* t, Texture* misc, Texture* beamT, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item, SoundCollection* soundCol, BeamCollection** beamCol, list<GameObject*>* objects) {
+	void checkCode(string type, Texture* t, Texture* misc, Texture* beamT, float worldX, float worldY, enemy** enem, GameObject** add, GameObject** backAdd, GameObject** foreAdd, SpawnArea** spawn, Spawner** spawnAdd, Item** item, SoundCollection* soundCol, BeamCollection** beamCol, list<GameObject*>* objects) {
 
 		Vector2f worldPos = Vector2f(worldX, worldY);
 
@@ -650,6 +681,9 @@ public:
 		}
 		else if (type == "metal man") {
 			*enem = new MetalMan(worldPos);
+		}
+		else if (type == "quick man") {
+			*enem = new QuickMan(worldPos);
 		}
 		else if (type == "fly guy") {
 			*enem = new FlyGuy(t, Vector2f(worldX, worldY));
@@ -701,6 +735,14 @@ public:
 			BeamRight* b = new BeamRight(beamT, worldPos);
 			collectionCheck(b, objects, beamCol);
 			*enem = b;
+		}
+
+		else if (type == "scworm spawn") {
+			*enem = new ScwormSpawn(t, worldPos);
+		}
+
+		else if (type == "torch guy") {
+			*enem = new TorchGuy(t, worldPos);
 		}
 
 		else if (type == "bird-spawn") {
@@ -759,6 +801,10 @@ public:
 
 		else if (type == "fall platform") {
 			*add = new FallPlatform(t, Vector2f(worldX, worldY));
+		}
+
+		else if (type == "lighting rect") {
+			*add = new LightingRect();
 		}
 
 		else if (type == "fly guy-spawn") {

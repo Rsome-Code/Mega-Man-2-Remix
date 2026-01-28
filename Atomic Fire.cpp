@@ -8,8 +8,8 @@ class AtomicFire : public Weapon {
 
 
 public:
-	AtomicFire(objectSprite* player, Texture* t) {
-		bul = new AtomicFireB(player, t);
+	AtomicFire(objectSprite* player, Texture* t, SoundCollection* soundCol) {
+		bul = new AtomicFireB(player, t, soundCol);
 		bullets = {bul};
 		maxWeaponCount = 1;
 		colourP = new Texture();

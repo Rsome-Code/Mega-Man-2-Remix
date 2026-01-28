@@ -106,6 +106,9 @@
     <Filter Include="Source Files\Game Files\Enemies\Quick Man">
       <UniqueIdentifier>{2036b7db-f248-41e8-a56f-b270a4c9cddb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Quick Man">
+      <UniqueIdentifier>{adad2706-7b58-43c9-8356-39d06543fa8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -792,6 +795,36 @@
     </ClCompile>
     <ClCompile Include="Beam Collection.cpp">
       <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Torch Guy.cpp">
+      <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting Rectangle.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Scworm.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Scworm Spawner.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Quick Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss Boomerang.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Quick Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Angles.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Time Stopper.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Time Stopper Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

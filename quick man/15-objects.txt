@@ -1,0 +1,2 @@
+sniper armour,6012,16609,1
+sniper armour,6926,16612,1

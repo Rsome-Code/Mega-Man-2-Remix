@@ -110,6 +110,14 @@ public:
 		return bul;
 	}
 
+	list<UISprite*> getUIBullets() {
+		list<UISprite*> bul;
+		for (bullet* b : weapon->getBullets()) {
+			bul = b->getUISprites();
+		}
+		return bul;
+	}
+
 	void swapDirection() {
 		pAnim->swapDirection(true);
 	}

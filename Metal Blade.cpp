@@ -13,11 +13,11 @@ class MetalBlade : public Weapon {
 
 	Direction direct;
 public:
-	MetalBlade(objectSprite* p, Texture* tex) {
+	MetalBlade(objectSprite* p, Texture* tex, SoundCollection* soundCol) {
 		direct = neutral;
 
 		for (int i = 0; i < 3; i++) {
-			MetalBladeBullet* temp = new MetalBladeBullet(p, tex);
+			MetalBladeBullet* temp = new MetalBladeBullet(p, tex, soundCol);
 			bullets.push_back(temp);
 		}
 
@@ -34,6 +34,8 @@ public:
 
 		name = "metal blade";
 	}
+
+
 
 	Sound* getSound() {
 		return shootSound;

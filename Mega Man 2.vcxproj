@@ -184,6 +184,7 @@
   <ItemGroup>
     <ClCompile Include="Abstract Stage.cpp" />
     <ClCompile Include="Ammo Bar.cpp" />
+    <ClCompile Include="Angles.cpp" />
     <ClCompile Include="Anim Tile.cpp" />
     <ClCompile Include="Animate.cpp" />
     <ClCompile Include="Animation Test.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="Blocky.cpp" />
     <ClCompile Include="Boomerang Bullet.cpp" />
     <ClCompile Include="Boss Blade.cpp" />
+    <ClCompile Include="Boss Boomerang.cpp" />
     <ClCompile Include="Boss Bubble.cpp" />
     <ClCompile Include="Break Wall.cpp" />
     <ClCompile Include="Bubble Bullet.cpp" />
@@ -216,11 +218,13 @@
     <ClCompile Include="DL Message.cpp" />
     <ClCompile Include="Drill Spawner.cpp" />
     <ClCompile Include="Drill.cpp" />
+    <ClCompile Include="Fire Bullet.cpp" />
     <ClCompile Include="Gear Saw.cpp" />
     <ClCompile Include="Item Bullets.cpp" />
     <ClCompile Include="Item weapon.cpp" />
     <ClCompile Include="Item1 Bullet.cpp" />
     <ClCompile Include="Item1.cpp" />
+    <ClCompile Include="Lighting Rectangle.cpp" />
     <ClCompile Include="Metal Blade Bullet.cpp" />
     <ClCompile Include="Metal Blade.cpp" />
     <ClCompile Include="Metal Man.cpp" />
@@ -229,7 +233,10 @@
     <ClCompile Include="Pie Robot.cpp" />
     <ClCompile Include="Press.cpp" />
     <ClCompile Include="Quick Boomerang.cpp" />
+    <ClCompile Include="Quick Man.cpp" />
     <ClCompile Include="Repair Block.cpp" />
+    <ClCompile Include="Scworm Spawner.cpp" />
+    <ClCompile Include="Scworm.cpp" />
     <ClCompile Include="Shrink.cpp" />
     <ClCompile Include="Snapper Spawn.cpp" />
     <ClCompile Include="Snapper.cpp" />
@@ -300,6 +307,9 @@
     <ClCompile Include="Temp Enemy.cpp" />
     <ClCompile Include="Temp Physics Enemy.cpp" />
     <ClCompile Include="Tile with object.cpp" />
+    <ClCompile Include="Time Stopper Bullet.cpp" />
+    <ClCompile Include="Time Stopper.cpp" />
+    <ClCompile Include="Torch Guy.cpp" />
     <ClCompile Include="transition angle.cpp" />
     <ClCompile Include="Ceiling Tile.cpp" />
     <ClCompile Include="Bullet.cpp" />

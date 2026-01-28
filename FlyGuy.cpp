@@ -74,6 +74,10 @@ public:
 		return 10;
 	}
 
+	bool deleteOverY() {
+		return false;
+	}
+
 	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
 		checkDirection(p->getSprite());
 		//tileCollision(tileList);

@@ -8,14 +8,14 @@ class megaBuster : public bullet{
 	
 
 public:
-	megaBuster(objectSprite* o, Texture* t) {
+	megaBuster(objectSprite* o, Texture* t, SoundCollection* soundCol) {
 		origin = o;
 		sprite = new movable ("buster", t, Vector2i(220, 4), Vector2i(8, 6), Vector2f(0, 0), Vector2f(4, 4), 1);
 		
 		hitbox = new objectHitbox(IntRect(Vector2i(-2, -2), Vector2i(8, 10)), true, sprite);
 		shootTime = 0.5;
 		shootTemp = 0;
-		dinkSetup();
+		dinkSetup(soundCol);
 
 	}
 

@@ -19,7 +19,7 @@ class BoomerangBullet : public bullet {
 	int angle;
 
 public:
-	BoomerangBullet(Texture* tex, objectSprite* pl){
+	BoomerangBullet(Texture* tex, objectSprite* pl, SoundCollection* soundCol){
 		origin = pl;
 		mov = new movable(tex, IntRect(219, 284, 8, 6), Vector2f(0,0), Vector2f(4, 4));
 		sprite = mov;
@@ -31,7 +31,7 @@ public:
 
 		shootTime = 3;
 		speed = 1200;
-		dinkSetup();
+		dinkSetup(soundCol);
 	}
 
 	void start(bool r) {

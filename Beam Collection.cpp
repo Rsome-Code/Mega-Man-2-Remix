@@ -6,7 +6,7 @@ class BeamCollection : public GameObject{
 	list<Beam*> beamList = {};
 
 	float untilStart = 0.5;
-	float untilStart_left = 0;
+	float untilStart_left = untilStart/4;
 
 	list<Beam*>::iterator beamIt;
 
@@ -52,8 +52,8 @@ public:
 			list<Beam*>::iterator it = beamList.begin();
 			for (Beam* current : beamList) {
 
-				if (current->getPosition().y > b->getPosition().y) {
-					beamList.insert(prev(it), b);
+				if (current->getInitialPosition().y >= b->getInitialPosition().y) {
+					beamList.insert(it, b);
 					break;
 				}
 				it = next(it);

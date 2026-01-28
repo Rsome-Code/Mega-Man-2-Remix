@@ -19,6 +19,7 @@
 #include "item1.cpp"
 #include "metal blade.cpp"
 #include "quick boomerang.cpp"
+#include "time stopper.cpp"
 #pragma once
 
 class player {
@@ -45,6 +46,7 @@ class player {
 	bool gotLead = false;
 	bool gotBlade = false;
 	bool gotBoomerang = false;
+	bool gotTimeStopper = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -69,6 +71,7 @@ class player {
 	BubbleLead* bubbleLead;
 	MetalBlade* metalBlade;
 	QuickBoomerang* quickBoomerang;
+	TimeStopper* timeStopper;
 	Item1* item1;
 
 	Weapon* active = megaBuster;
@@ -98,7 +101,7 @@ class player {
 	bool inWater = false;
 
 public:
-	player(pController* p1) {
+	player(pController* p1, SoundCollection* soundCol) {
 		
 		texture = new Texture();
 		if (!texture->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png")) {
@@ -115,8 +118,8 @@ public:
 
 		pAnim = new playerAnimation(sprite);
 		controls = new pControls(p1, sprite, pAnim);
-		megaBuster = new MegaBuster(sprite, t);
-		setActiveWeapon(megaBuster);
+
+
 
 		
 
@@ -136,12 +139,14 @@ public:
 
 
 
-		megaBuster = new MegaBuster(sprite, t);
-		atomicFire = new AtomicFire(sprite, t);
-		leafShield = new LeafShield(sprite, t);
-		bubbleLead = new BubbleLead(sprite, t);
-		metalBlade = new MetalBlade(sprite, t);
-		quickBoomerang = new QuickBoomerang(sprite, t);
+		megaBuster = new MegaBuster(sprite, t, soundCol);
+		setActiveWeapon(megaBuster);
+		atomicFire = new AtomicFire(sprite, t, soundCol);
+		leafShield = new LeafShield(sprite, t, soundCol);
+		bubbleLead = new BubbleLead(sprite, t, soundCol);
+		metalBlade = new MetalBlade(sprite, t, soundCol);
+		quickBoomerang = new QuickBoomerang(sprite, t, soundCol);
+		timeStopper = new TimeStopper(t);
 		item1 = new Item1(sprite, t);
 
 		//Define ammo bars here
@@ -190,6 +195,7 @@ public:
 		bubbleLead->eachFrame(t);
 		metalBlade->eachFrame(t);
 		quickBoomerang->eachFrame(t);
+		timeStopper->eachFrame(t);
 	}
 
 	Vector2f getPosition() {
@@ -268,6 +274,10 @@ public:
 		gotBoomerang = b;
 	}
 
+	void setTimeStopper(bool b) {
+		gotTimeStopper = b;
+	}
+
 	void setETanks(int e) {
 		ETanks = e;
 	}
@@ -312,6 +322,9 @@ public:
 	AtomicFire* getAtomicFire() {
 		return atomicFire;
 	}
+	TimeStopper* getTimeStopper() {
+		return timeStopper;
+	}
 	Item1* getItem1() {
 		return item1;
 	}
@@ -336,6 +349,10 @@ public:
 
 	bool hasAtomicFire() {
 		return gotAtomicFire;
+	}
+
+	bool hasTimeStopper() {
+		return gotTimeStopper;
 	}
 
 	bool getGrounded() {
@@ -389,6 +406,7 @@ public:
 	}
 
 	void start(int startHeight) {
+		delete tele;
 		tele = new teleport(sprite, startHeight);
 		//setPosition(Vector2f(pos.x, pos.y));
 	}
@@ -454,6 +472,23 @@ public:
 
 	}
 
+	void resetBullets() {
+		for (bullet* b : megaBuster->getBullets()) {
+			b->shootReset();
+		}
+		for (bullet* b : atomicFire->getBullets()) {
+			b->shootReset();
+		}
+		for (bullet* b : metalBlade->getBullets()) {
+			b->shootReset();
+		}
+		for (bullet* b : quickBoomerang->getBullets()) {
+			b->shootReset();
+		}
+		for (bullet* b : timeStopper->getBullets()) {
+			b->uniqueReset();
+		}
+	}
 
 
 	void alive(float* deltaT, list<tile*> tiles, list<ItemBullet*>* IBullets) {
@@ -468,8 +503,9 @@ public:
 				else {
 					controls->runWithoutControl(deltaT);
 				}
-				controls->shootEachFrame(deltaT, tiles, *IBullets);
-
+				if (active != timeStopper) {
+					controls->shootEachFrame(deltaT, tiles, *IBullets);
+				}
 				pAnim->shootDecide(deltaT);
 
 				if (!controls->getOnLadder()) {
@@ -492,9 +528,9 @@ public:
 			}
 		}
 		else {
-
-			controls->shootEachFrame(deltaT, tiles, *IBullets);
-
+			if (active != timeStopper) {
+				controls->shootEachFrame(deltaT, tiles, *IBullets);
+			}
 			if (tele == NULL) {
 				dam->flicker(deltaT);
 				takingDamage(deltaT, tiles);
@@ -537,6 +573,9 @@ public:
 
 		//checkHold();
 
+		if (active == timeStopper) {
+			controls->shootEachFrame(deltaT, tiles, *IBullets);
+		}
 
 	}
 
@@ -608,6 +647,11 @@ public:
 
 	void ammoReset() {
 		atomicFire->setAmmo(28);
+		timeStopper->setAmmo(28);
+		item1->setAmmo(28);
+		quickBoomerang->setAmmo(28);
+		metalBlade->setAmmo(28);
+		bubbleLead->setAmmo(28);
 	}
 
 	void updateHitbox() {
@@ -696,6 +740,11 @@ public:
 	list<objectSprite*> getBullets() {
 		return controls->getBullets();
 	}
+
+	list<UISprite*> getUIBullets() {
+		return controls->getUIBullets();
+	};
+
 	list<objectHitbox*> getBulletHitboxes() {
 		return controls->getBulletHitboxes();
 	}
@@ -803,7 +852,7 @@ private:
 		return false;
 	}
 	bool checkStopper() {
-		return false;
+		return gotTimeStopper;
 	}
 	bool checkLead() {
 		return gotLead;

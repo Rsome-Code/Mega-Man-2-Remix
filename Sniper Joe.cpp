@@ -74,7 +74,9 @@ public:
 		checkDirection(p->getSprite());
 
 		if (state == blocking) {
-			phys->eachFrame(deltaT);
+			if (!grounded) {
+				phys->eachFrame(deltaT);
+			}
 			hurt = new objectHitbox(IntRect(4, 4, 0, 0), sprite);
 			blockSprite->thisFrame();
 			untilShoot_left -= *deltaT;

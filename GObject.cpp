@@ -31,6 +31,7 @@ public:
 		sound = s;
 	}
 
+
 	virtual void setPallete(string pal) {
 		if (pal == "wood man") {
 			woodmanPallete();
@@ -72,6 +73,7 @@ public:
 	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam, list<tile*>* tileList) {};
 	virtual void eachFrame(float* deltaT, player* player, camera* cam, list<tile*>* tileList) {};
 	virtual void eachFrame(float* deltaT, objectSprite* player){};
+	virtual void eachFrame(float* deltaT, objectSprite* player, list<GameObject*> enemies) {};
 
 	virtual void setSoundPointer(Sound* sou) {
 

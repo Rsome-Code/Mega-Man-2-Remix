@@ -8,7 +8,7 @@
 class Freeze {
 	
 public:
-	static void stop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, list<enemy*> eList, list<EnemyBullet*> eBList, list<GameObject*> backgroundObjects, camera* cam, float timeLeft) {
+	static void stop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, list<enemy*> eList, list<EnemyBullet*> eBList, list<GameObject*> backgroundObjects, list<GameObject*> foregroundObjects, camera* cam, float timeLeft) {
 
 		timer* time = new timer();
 
@@ -66,6 +66,9 @@ public:
 
 			for (enemy* e : eList) {
 				if (e->getDisplay()) {
+					if (e->getDamSprite() != NULL) {
+						instance->objectDisplay(e->getDamSprite(), cam);
+					}
 					instance->objectAccess(e, cam);
 					if (e->getBar() != NULL) {
 						AmmoBar* bar = *e->getBar();
@@ -80,12 +83,19 @@ public:
 				}
 			}
 
-			for (objectSprite* b : player->getBullets()) {
-				instance->objectDisplay(b, cam);
+			if (player->getActiveWeapon()->getName() != "Time Stopper") {
+				instance->objectDisplay(player->getBullets(), cam);
+			}
+			else {
+				instance->UIDisplay(player->getUIBullets());
 			}
 
 			instance->objectDisplay(player->getSprites(), cam);
 			instance->objectDisplay(player->getSprite(), cam);
+
+			for (GameObject* g : foregroundObjects) {
+				instance->bObjectDisplay(g->getSprite(), cam);
+			}
 
 			instance->UIDisplay(player->getUI());
 

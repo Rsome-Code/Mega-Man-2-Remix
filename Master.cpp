@@ -110,6 +110,8 @@ public:
 		return false;
 	}
 
+
+
 	bool barIntro(float* deltaT) {
 		healRate_left -= *deltaT;
 
@@ -127,7 +129,7 @@ public:
 		return false;
 	}
 
-	bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
+	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
 		damPos = Vector2f(sprite->getPosition().x + (1 * 4), sprite->getPosition().y + (1 * 4));
 		if (introDone) {
 			if (hp > 0) {
@@ -247,7 +249,9 @@ public:
 		return vector<DeathAnim**> {&deathAnimation, &deathAnimation1, &deathAnimation2};
 	}
 
-	void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos) {
+
+
+	void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos, SoundCollection* soundCol) {
 
 	}
 
@@ -266,6 +270,13 @@ public:
 
 	objectSprite* getDamSprite() {
 		return damSprite;
+	}
+
+	void forceDamSprite() {
+		damSprite->setPosition(damPos);
+	}
+	void forceDamSpriteOff() {
+		damSprite->setPosition(Vector2f(0,0));
 	}
 
 	int genericDam() {

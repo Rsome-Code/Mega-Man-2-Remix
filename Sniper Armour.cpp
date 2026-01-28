@@ -103,7 +103,9 @@ class SniperArmour : public PhysicsEnemy {
 		}
 
 		else if (state == idle) {
-			phys->eachFrame(deltaT);
+			if (!grounded) {
+				phys->eachFrame(deltaT);
+			}
 			idleTime_left -= *deltaT;
 			if (idleTime_left <= 0) {
 				idleTime_left = idleTime;
@@ -138,7 +140,7 @@ class SniperArmour : public PhysicsEnemy {
 	void spawnEnemy(list<enemy*>* enemies, SoundCollection* soundCol) {
 
 		SniperJoe* joe = new SniperJoe(sprite->getTexture(), sprite->getPosition());
-		joe->setHitB(hitB);
+		joe->setHitSound(soundCol->getHit());
 		joe->initial(false);
 		joe->setSound(soundCol);
 		enemies->push_back(joe);

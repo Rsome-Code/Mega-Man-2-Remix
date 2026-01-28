@@ -13,6 +13,7 @@ public:
 		anim = new animation(list<IntRect>{IntRect(71, 3, 16, 12), IntRect(88, 3, 16, 12)}, sprite);
 		timer = new animTimer(anim, 10, true);
 		hit = new objectHitbox(IntRect(0, 0, 16, 12), false, sprite);
+		setCode();
 	}
 
 	int getIncrease() {

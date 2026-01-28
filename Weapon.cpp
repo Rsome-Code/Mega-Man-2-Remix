@@ -39,6 +39,11 @@ public:
 	string getName() {
 		return name;
 	}
+
+	virtual string getTextName() {
+		return getName();
+	}
+
 	virtual void eachFrame(float* deltaT) {
 		for (bullet* b : bullets) {
 			if (b->eachFrame(deltaT)) {

@@ -28,9 +28,24 @@ class SoundCollection {
 	SoundBuffer* beamAttackB;
 	Sound* beamAttack;
 
+	SoundBuffer* dinkB;
+	Sound* dink;
+
 public:
 
+	SoundCollection(SoundCollection* sou) {
+		throw "Cannot copy Sound Collection object.";
+		delete this;
+	}
+
+
 	SoundCollection() {
+
+		dinkB = new SoundBuffer();
+		dinkB->loadFromFile("Assets\\sound\\dink.wav");
+		dink = new Sound();
+		dink->setBuffer(*dinkB);
+
 		landB = new SoundBuffer();
 		landB->loadFromFile("assets\\sound\\fly_boy.wav");
 		landSound = new Sound();
@@ -89,5 +104,9 @@ public:
 
 	Sound* getBeam() {
 		return beamAttack;
+	}
+
+	Sound* getDink() {
+		return dink;
 	}
 };

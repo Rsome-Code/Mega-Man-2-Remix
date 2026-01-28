@@ -50,10 +50,12 @@ class ObjectPlacer {
 	bool mouse1Pressed;
 	bool mouse2Pressed;
 	bool mouseX1Pressed;
+	bool xButton2Pressed = false;
 	bool leftPressed = false;
 	bool rightPressed = false;
 	Vector2f wSize = Vector2f(1920, 1080);
 	bool worldSelect = false;
+	bool zoomed = false;
 	
 	Tab* tab;
 	GameObject* selectedObject = NULL;
@@ -199,7 +201,7 @@ public:
 			}
 
 			for (object* o : objects) {
-				
+
 				o->forceDisplay(true);
 				if (o->getSprite() != NULL) {
 					instance->objectAccess(o, cam);
@@ -210,8 +212,9 @@ public:
 				//instance->objectAccess(o, cam);
 			//}
 
-			instance->UIDisplay(tab->getSprites());
-
+			if (!zoomed){
+				instance->UIDisplay(tab->getSprites());
+			}
 
 
 			instance->getWindow()->display();
@@ -446,6 +449,8 @@ public:
 		}
 	}
 
+
+
 	void mouseCheck(Vector2i mousePos) {
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouse1Pressed != true) //specifies
@@ -512,6 +517,16 @@ public:
 
 		}
 
+		if (sf::Mouse::isButtonPressed(sf::Mouse::XButton2) && !xButton2Pressed) {
+
+			xButton2Pressed = true;
+			zoom(true);
+		}
+		else if (!sf::Mouse::isButtonPressed(sf::Mouse::XButton2) && xButton2Pressed == true) {
+			zoom(false);
+			xButton2Pressed = false;
+		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !cPressed) {
 			checkpoint = !checkpoint;
 			cPressed = true;
@@ -533,7 +548,18 @@ public:
 		return tokens;
 	}
 
+	void zoom(bool b) {
+		if (b) {
+			cam->setZoom(1);
+			cam->setPosition(Vector2f(cam->getPosition().x + 450, cam->getPosition().y));
+		}
+		else {
+			cam->setZoom(0.5);
+			cam->setPosition(Vector2f(cam->getPosition().x - 450, cam->getPosition().y));
+		}
 
+		zoomed = b;
+	}
 
 	void save() {
 		ofstream* myfile;

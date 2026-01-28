@@ -14,13 +14,13 @@ class MetalBladeBullet : public bullet {
 
 public:
 
-	MetalBladeBullet(objectSprite* o, Texture* t) {
+	MetalBladeBullet(objectSprite* o, Texture* t, SoundCollection* soundCol) {
 		origin = o;
 
 		sprite = new movable(t, IntRect(521, 58, 16, 16), Vector2f(0, 0), Vector2f(4, 4));
 		anim = new animation(list<IntRect>{IntRect(521, 58, 16, 16), IntRect(538, 58, 16, 16)}, sprite);
 		timer = new animTimer(anim, 8, true);
-		dinkSetup();
+		dinkSetup(soundCol);
 
 		hitbox = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
 
@@ -71,6 +71,21 @@ public:
 
 	int checkDamage(object* en) {
 		return en->metalDam();
+	}
+
+	void deflect() {
+		if (!deflected) {
+			if (90 < direction <= 270) {
+				direction = direction + 135;
+				deflected = true;
+				dink->play();
+			}
+			else {
+				direction = direction - 135;
+				deflected = true;
+				dink->play();
+			}
+		}
 	}
 	
 };

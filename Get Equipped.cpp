@@ -53,7 +53,7 @@ public:
 		getEquip = new Text();
 
 		symbolText = ("-"+weapon->getSymbol()+"- ");
-		getEquipText = ("Get Equipped \nwith \n" + weapon->getName());
+		getEquipText = ("Get Equipped \nwith \n" + weapon->getTextName());
 
 		Font* font = new Font();
 		font->loadFromFile("assets\\font.otf");

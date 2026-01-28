@@ -54,54 +54,107 @@ public:
 	}
 
 	void tileCollision(list<tile*>* tileList) {
-		grounded = false;
+		//grounded = false;
+		bool groundCon;
+		bool alreadyGround = grounded;
+		if (grounded) {
+			groundCon = false;
+		}
 		for (tile* t : *tileList) {
+			bool thisSide = false;
 			bool thisGround = false;
-			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
+			if (t->getGround() != NULL && phys->getVVelocity() < 0 && !grounded) {
 				thisGround = groundCheck(t);
 			}
-			if (t->getCeiling() != NULL) {
-				checkCeiling(t);
+			else if (alreadyGround) {
+				if (t->getGround() != NULL){
+					//thisGround = groundConfirm(t);
+					if (groundConfirm(t)) {
+						groundCon = true;
+					}
+				}
 			}
+			
 			if (!thisGround) {
-				
-				if (t->getLeft() != NULL) {
-					checkLeft(t);
-				}
+
+
 				if (t->getRight() != NULL) {
-					checkRight(t);
+					if (checkRight(t)) {
+						thisSide = true;
+					}
+
 				}
+				if (t->getLeft() != NULL) {
+					if (checkLeft(t)) {
+						thisSide = true;
+					}
+				}
+				if (t->getCeiling() != NULL && !thisSide) {
+					checkCeiling(t);
+				}
+			}
+			
+			
+		}
+
+		if (alreadyGround) {
+			if (!groundCon) {
+				grounded = false;
 			}
 		}
 	}
 
-	void checkRight(tile* t) {
+	virtual bool checkRight(tile* t) {
 		if (hitboxDetect::hitboxDetection(t->getRight(), hit)) {
-			sprite->setPosition(Vector2f(t->getRight()->getPosition().x + t->getRight()->getSize().x, sprite->getPosition().y));
+			sprite->setPosition(Vector2f(t->getRight()->getPosition().x + t->getRight()->getSize().x + 1, sprite->getPosition().y));
+			hit->updatePos();
+			if (phys->getHVelocity() > 0) {
+				phys->setHVelocity(0);
+				
+			}
+			hitRight();
+			hitRight(t);
+
+			return true;
+		}
+		return false;
+	}
+
+	virtual bool checkLeft(tile* t) {
+		if (hitboxDetect::hitboxDetection(t->getLeft(), hit)) {
+			sprite->setPosition(Vector2f(t->getLeft()->getPosition().x - hit->getSize().x - 1, sprite->getPosition().y));
+			hit->updatePos();
 			if (phys->getHVelocity() < 0) {
 				phys->setHVelocity(0);
-				hitRight();
+
 			}
+			hitLeft();
+			hitLeft(t);
+			return true;
 		}
+		return false;
 	}
+
 
 	virtual void hitRight(){}
+	virtual void hitRight(tile* t) {}
 	virtual void hitLeft(){}
+	virtual void hitLeft(tile* t) {}
 
-	void checkLeft(tile* t) {
-		if (hitboxDetect::hitboxDetection(t->getLeft(), hit)) {
-			sprite->setPosition(Vector2f( t->getLeft()->getPosition().x - hit->getSize().x, sprite->getPosition().y));
-			if (phys->getHVelocity() < 0) {
-				phys->setHVelocity(0);
-				hitLeft();
-			}
+
+	bool groundConfirm(tile* t) {
+		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
+			//grounded = true;
+			return true;
 		}
+		
 	}
 
 	bool groundCheck(tile* t) {
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			grounded = true;
 			sprite->setPosition(Vector2f(sprite->getPosition().x, t->getGround()->getPosition().y - hit->getSize().y));
+			hit->updatePos();
 			phys->setVVelocity(0);
 			return true;
 		}
@@ -112,6 +165,7 @@ public:
 		if (hitboxDetect::hitboxDetection(t->getCeiling(), hit)) {
 			phys->setVVelocity(0);
 			sprite->setPosition(Vector2f(sprite->getPosition().x, t->getCeiling()->getPosition().y + t->getCeiling()->getSize().y +10));
+			hit->updatePos();
 		}
 	}
 

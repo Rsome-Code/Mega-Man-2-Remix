@@ -177,11 +177,7 @@ public:
 		for (UISprite* sprite : spriteList) {
 
 
-			string id = typeid(objectSprite).name();
-
-			Sprite* s = sprite->getSprite();
-
-			w->draw(*s);
+			UIDisplay(sprite);
 		}
 	}
 
@@ -192,6 +188,8 @@ public:
 		string id = typeid(objectSprite).name();
 
 		Sprite* s = sprite->getSprite();
+
+		s->setPosition(sprite->getCameraPosition() + sprite->getVisualOffset());
 
 		w->draw(*s);
 		

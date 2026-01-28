@@ -1,0 +1,5 @@
+beam right,4513,8895,1
+beam right,4517,9153,1
+beam left,6583,9278,1
+beam left,6581,9023,1
+beam right,4517,9471,1

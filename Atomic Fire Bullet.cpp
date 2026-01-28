@@ -35,7 +35,7 @@ public:
 	Sound* shootSound;
 
 	
-	AtomicFireB(objectSprite* o, Texture* t) {
+	AtomicFireB(objectSprite* o, Texture* t, SoundCollection* soundCol) {
 		shootTime = 1;
 		shootTemp = shootTime;
 
@@ -68,7 +68,7 @@ public:
 		shootSound = new Sound();
 		shootSound->setBuffer(*shootB);
 
-		dinkSetup();
+		dinkSetup(soundCol);
 		
 	}
 

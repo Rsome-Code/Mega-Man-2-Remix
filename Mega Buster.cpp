@@ -6,8 +6,8 @@
 class MegaBuster : public Weapon {
 
 public:
-	MegaBuster(objectSprite* player, Texture* t) {
-		bullets = { new megaBuster(player, t),  new megaBuster(player, t),  new megaBuster(player, t) };
+	MegaBuster(objectSprite* player, Texture* t, SoundCollection* soundCol) {
+		bullets = { new megaBuster(player, t, soundCol),  new megaBuster(player, t, soundCol),  new megaBuster(player, t, soundCol) };
 		maxWeaponCount = 3;
 		colourP = new Texture();
 		colourP->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png");

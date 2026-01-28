@@ -56,6 +56,8 @@
 #include "metal man.cpp"
 #include "beam left.cpp"
 #include "beam right.cpp"
+#include "torch guy.cpp"
+#include "quick man.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -125,6 +127,7 @@ Weapon* checkItem(player* p, string levelName) {
 
 
 int main() {
+
 	SoundCollection* soundCol = new SoundCollection();
 	bool run = true;
 
@@ -139,7 +142,7 @@ int main() {
 	Texture* miscT = new Texture();
 	miscT->loadFromFile("Assets\\misc\\mega buster.png");
 
-	player* col = new player(p1);
+	player* col = new player(p1, soundCol);
 	Load* load = new Load();
 	load->loadSaveFile(col);
 
@@ -196,7 +199,7 @@ int main() {
 	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	list <GameObject*> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	list <GameObject*> metalList = {new MetalMan(Vector2f(0,0)),new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), new SpawnPoint(string("drill")),  new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0), new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
-	list <GameObject*> quickList = {new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	list <GameObject*> quickList = {new ETank(misc, Vector2f(0,0)), new BigHealth(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new ExtraLife(misc, Vector2f(0,0)), new QuickMan(Vector2f(0,0)), new ScwormSpawn(enemyT, Vector2f(0,0)), new TorchGuy (enemyT, Vector2f(0,0)), new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 
 	for (GameObject* o : quickList) {
 		o->initial();
@@ -207,11 +210,11 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(1, 27, 24, 24), IntRect(208, 11, 21, 36), IntRect(236, 20, 21, 27) };
-	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0, 0), Vector2f(0 * 4, -8 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(3 * 4, 2 * 4), Vector2f(5 * 4, -1 * 4), Vector2f(0 * 4, 11 * 4), Vector2f(-2 * 4, -6 * 4), Vector2f(-2 * 4, -7 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(542, 12, 1, 6), IntRect(532, 14, 3, 3), IntRect(521, 11, 8, 8), IntRect(532, 14, 3, 3) };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0, 0), Vector2f(-1 * 4,2 * 4), Vector2f(-3 * 4, 0 * 4),Vector2f(-1 * 4, 2 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
 
 	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\metal man.png");
+	testT->loadFromFile("Assets\\weapon.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, false);
 
 	////////////////////////////////
@@ -228,6 +231,8 @@ int main() {
 	//
 	//o->loop(instance, targetFPS);
 
+	delete l;
+	delete o;
 
 	bg = new Texture();
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
@@ -335,14 +340,14 @@ int main() {
 				}
 			}
 		}
-		
+		delete area;
+		delete stage;
 		run = instance->getWindow()->isOpen();
 		
 	}
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	
 	//cout << "hi";
 
 }

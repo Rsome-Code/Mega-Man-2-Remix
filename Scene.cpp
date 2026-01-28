@@ -54,6 +54,9 @@ class scene {
 	list<GameObject*> objects;
 	list<GameObject*> backgroundObjects;
 	list<GameObject*> newBackgroundObjects;
+	list <GameObject*> foregroundObjects;
+	list <GameObject*> newForegroundObjects;
+
 	list<enemy*> enemies;
 	list<EnemyBullet*> eBullets;
 	list<Item*> items;
@@ -235,8 +238,8 @@ public:
 
 		bool unPaused = false;
 
-
-		section = 0;
+		//Change this to the section to be debugged.
+		section = 16;
 
 		p->enableControls(true);
 
@@ -295,6 +298,9 @@ public:
 			if (checkPause(instance, targetRate)) {
 
 				paused = true;
+
+				p->resetBullets();
+
 				p->getSprite()->setVVelocity(0);
 				if (p->getActiveWeapon()->getHoldTime() == NULL || !p->getController()->checkB()) {
 
@@ -348,6 +354,14 @@ public:
 				o->eachFrame(&deltaT, p, cam, &tileList);
 				o->eachFrame(&deltaT, p, cam);
 				o->eachFrame(&deltaT, p->getSprite());
+
+				list<GameObject*> temp;
+				for (GameObject* g : enemies) {
+					temp.push_back(g);
+				}
+				
+				o->eachFrame(&deltaT, p->getSprite(), temp);
+				//instance->bObjectDisplay(g->getSprite(), cam);
 			}
 
 			if (!p->isTeleporting()) {
@@ -559,15 +573,30 @@ public:
 				instance->objectAccess(o, cam);
 			}
 
+			for (GameObject* g : foregroundObjects) {
+				list<GameObject*> temp;
+				for (GameObject* g : enemies) {
+					temp.push_back(g);
+				}
+				g->setCamera(cam);
+				g->eachFrame(&deltaT, p->getSprite(), temp);
+				instance->bObjectDisplay(g->getSprite(), cam);
+			}
 
-			instance->objectDisplay(p->getBullets(), cam);
+			if (p->getActiveWeapon()->getName() != "Time Stopper") {
+				instance->objectDisplay(p->getBullets(), cam);
+			}
+			else {
+				instance->UIDisplay(p->getUIBullets());
+			}
+
 			if (p->getDamEffect() != NULL) {
 				instance->objectAccess(p->getDamEffect(), cam);
 			}
 
 			
 
-			for (object* o : backgroundObjects) {
+			for (GameObject* o : backgroundObjects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite());
 
@@ -595,10 +624,8 @@ public:
 			/*for (enemy* e : enemies) {
 				instance->objectHitboxSetup(list<objectHitbox*> {e->getHitbox()}, cam);
 				instance->hitboxDisplay(list<UIHitbox*> { e->getHitbox()});
-			}*/
-			
-
-			
+			}
+			*/
 
 
 
@@ -697,6 +724,7 @@ public:
 		list<EnemyBullet*>::iterator toDelete = eBullets.end();
 		for (EnemyBullet* b : eBullets) {
 			b->eachFrame(&deltaT, &tileList);
+			b->eachFrame(&deltaT, &tileList, p);
 			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible() && p->checkInControl()) {
 				p->takeDamage(b->getDamage());
 			}
@@ -805,7 +833,7 @@ public:
 			list<GameObject*> tempL = objects;
 			tempL.push_back(door1);
 			tempL.push_back(door2);
-			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
+			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
 
 			masterDeathSound->play();
 
@@ -963,6 +991,10 @@ public:
 				}
 			}
 
+			for (GameObject* g : foregroundObjects) {
+				instance->bObjectDisplay(g->getSprite(), cam);
+			}
+
 			flashTime_left -= deltaT;
 			timeLeft -= deltaT;
 			if (flashTime_left <= 0) {
@@ -1021,50 +1053,75 @@ public:
 		}
 	}
 
+	void levelEndSequence(Music* music, renderer* instance, float tRate, enemy* enemy) {
+		music->stop();
+		list<GameObject*> tempL = objects;
+		tempL.push_back(door1);
+		tempL.push_back(door2);
+		enemy->forceDamSprite();
+		Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
+		enemy->forceDamSpriteOff();
+		paused = true;
+		levelEndCheck(enemy, music);
+		p->resetBullets();
+	}
+
 	void enemyCheck(float deltaT, renderer* instance, float tRate, Music* music, SoundCollection* soundCol) {
 		enemy* toDelete = NULL;
 
 		for (enemy* enemy : enemies) {
 
+				
+
+			
+
 			if (enemy->getHP() > 0) {
+				if (p->getActiveWeapon()->getName() != "Time Stopper") {
 
-				for (bullet* bull : p->getControls()->getBulletObjects()) {
-					if (enemy->checkHurt(bull->getHitbox())) {
+					for (bullet* bull : p->getControls()->getBulletObjects()) {
+						if (enemy->checkHurt(bull->getHitbox())) {
 
-						if (!enemy->checkInvincible()) {
-							enemy->lowerHP(bull->checkDamage(enemy));
+							if (!enemy->checkInvincible()) {
+								enemy->lowerHP(bull->checkDamage(enemy));
 
 
-							if (bull->checkDamage(enemy) <= 0) {
-								bull->deflect();
-							}
-							else {
-								bull->onHit(enemy);
-								if (enemy->getHP() <= 0) {
-									spawnItemFromEnemy(enemy, soundCol);
+								if (bull->checkDamage(enemy) <= 0) {
+									bull->deflect();
+								}
+								else {
 
-									enemy->spawnEnemy(&enemies, soundCol);
+									if (enemy->getHP() <= 0) {
 
-									if (enemy->getDeathAnims()[0] != NULL) {
-										music->stop();
-										list<GameObject*> tempL = objects;
-										tempL.push_back(door1);
-										tempL.push_back(door2);
-										Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, cam, 0.75);
-										paused = true;
-										levelEndCheck(enemy, music);
+										if (enemy->getDeathAnims()[0] != NULL) {
+
+											levelEndSequence(music, instance, tRate, enemy);
+										}
+										bull->onHit(enemy);
+										spawnItemFromEnemy(enemy, soundCol);
+
+										enemy->spawnEnemy(&enemies, soundCol);
+									}
+
+									else {
+										bull->onHit(enemy);
 									}
 								}
 							}
+							else {
+								bull->deflect();
+							}
 						}
-						else {
+						else if (enemy->checkHit(bull->getHitbox())) {
 							bull->deflect();
 						}
-					}
-					else if (enemy->checkHit(bull->getHitbox())) {
-						bull->deflect();
-					}
 
+					}
+				}
+				else {
+					//Should only return true when enemy is Quick Man
+					if (enemy->freezeDam(p)) {
+						levelEndSequence(music, instance, tRate, enemy);
+					}
 				}
 			}
 
@@ -1215,6 +1272,7 @@ public:
 		updateFlags();
 		checkObBefore();
 
+		p->resetBullets();
 		sectionTransition(instance, targetRate, ang, flagPos, nextSection);
 
 		deletePrevSection();
@@ -1291,6 +1349,14 @@ public:
 				nextFlagActive = true;
 				lastFlagActive = true;
 			}
+
+			else if ((lastFlag->getAngle() == UP || lastFlag->getAngle() == DOWN) && lastFlag->getPosition().x > getFlag(section - 2)->getPosition().x) {
+
+					nextFlagActive = (isCameraRightOfFlag(currentFlag->getSprite()->getPosition()));
+
+					lastFlagActive = (isCameraLeftOfFlag(Vector2f(lastFlagPos.x - (1920), cam->getPosition().y)));
+			}
+			
 
 
 			else {
@@ -1400,7 +1466,12 @@ public:
 				instance->objectAccess(t, cam);
 			}
 
-
+			for (GameObject* g : foregroundObjects) {
+				instance->objectAccess(g, cam);
+			}
+			for (GameObject* g : newForegroundObjects) {
+				instance->objectAccess(g, cam);
+			}
 
 			if (ang == RIGHT) {
 				cam->move(0, &deltaT, camSpeed);
@@ -1530,6 +1601,17 @@ public:
 		}
 	}
 
+	EndFlag* getFlag(int section) {
+		EndFlag* thisOne = NULL;
+		for (EndFlag* flag : stage->getFlags()) {
+			if (flag->getSection() == section) {
+				thisOne = flag;
+			}
+		}
+
+		return thisOne;
+	}
+
 	void forceLoadSection(int i, SoundCollection* soundCol) {
 		section = i;
 
@@ -1553,6 +1635,8 @@ public:
 		newZ4List = stage->getZ4List();
 		objects = stage->getObjects();
 		newBackgroundObjects = stage->getBackgroundObjects();
+		newForegroundObjects = stage->getForegroundObjects();
+		deleteEnemies();
 		enemies = stage->getEnemies();
 		spawners = stage->getSpawners();
 		items = stage->getItems();
@@ -1600,17 +1684,50 @@ public:
 	}
 
 	void deletePrevSection() {
+		deleteObjects();
 		tileList = newTileList;
 		z2List = newZ2List;
 		z3List = newZ3List;
 		z4List = newZ4List;
 
+		
+
 		backgroundObjects = newBackgroundObjects;
+		foregroundObjects = newForegroundObjects;
+		newForegroundObjects.clear();
 		newBackgroundObjects.clear();
 		newTileList.clear();
 		newZ2List.clear();
 		newZ3List.clear();
 		newZ4List.clear();
+	}
+
+	void deleteObjects() {
+		for (GameObject* g : foregroundObjects) {
+			delete g;
+		}
+		for (GameObject* g : backgroundObjects) {
+			delete g;
+		}
+		
+		for (tile* g : tileList) {
+			delete g;
+		}
+		for (tile* g : z2List) {
+			delete g;
+		}
+		for (tile* g : z3List) {
+			delete g;
+		}
+		for (tile* g : z4List) {
+			delete g;
+		}
+	}
+
+	void deleteEnemies() {
+		for (enemy* e : enemies) {
+			delete e;
+		}
 	}
 
 	void lightingCheck() {
@@ -1776,7 +1893,7 @@ public:
 			}
 			for (object* t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
-
+					instance->objectAccess(t, cam);
 				}
 			}
 
@@ -1793,6 +1910,10 @@ public:
 				}
 			}
 			instance->objectDisplay(p->getSprite(), cam);
+
+			for (GameObject* g : foregroundObjects) {
+				instance->bObjectDisplay(g->getSprite(), cam);
+			}
 
 			healRate_left = healRate_left - deltaT;
 			if (healRate_left <= 0) {
@@ -1885,7 +2006,15 @@ public:
 		for (enemy* e : objects) {
 			//If object is still active
 			if (e->getAct()) {
-				e->setOffScreen(checkObOffScreen(e, cam->getPosition(), Vector2f(cam->getPosition().x + instance->getWindow()->getSize().x, cam->getPosition().y + instance->getWindow()->getSize().y)));
+				if (e->deleteOverY() && e->deleteOverX()) {
+					e->setOffScreen(checkObOffScreen(e, cam->getPosition(), Vector2f(cam->getPosition().x + instance->getWindow()->getSize().x, cam->getPosition().y + instance->getWindow()->getSize().y)));
+				}
+				else if (e->deleteOverX()) {
+					e->setOffScreen(checkObOffScreenX(e, cam->getPosition(), cam->getPosition().x + instance->getWindow()->getSize().x));
+				}
+				else if (e->deleteOverY()) {
+					e->setOffScreen(checkObOffScreenY(e, cam->getPosition(), cam->getPosition().y + instance->getWindow()->getSize().y));
+				}
 				//and has just left the screen
 				if (e->getOffScreen()) {
 					e->setAct(false);
@@ -1903,10 +2032,16 @@ public:
 				//initial position has not left the screen
 				if (!e->getInitOffScreen()) {
 					e->setInitOffScreen(checkInitInScreen(e, camPos, camEdge));
+					
 				}
 				//initial position has left the screen
 				else {
-					e->setInitOffScreen(checkInitInScreen(e, camPos, camEdge));
+					if (e->deleteOverX()) {
+						e->setInitOffScreen(checkInitInScreen(e, camPos, camEdge));
+					}
+					else {
+						e->setInitOffScreen(false);
+					}
 					//and initial position has just re-entered the screen
 					if (!e->getInitOffScreen()) {
 
@@ -1934,6 +2069,21 @@ public:
 
 		return false;
 	}
+	bool checkObOffScreenX(enemy* e, Vector2f camPos, float camEdge) {
+		if (e->getPosition().x > camEdge || e->getPosition().x + e->getSprite()->getSize().x < camPos.x) {
+			return true;
+		}
+
+		return false;
+	}
+
+	bool checkObOffScreenY(enemy* e, Vector2f camPos, float camEdge) {
+		if (e->getPosition().y > camEdge || e->getPosition().y + e->getSprite()->getSize().y < camPos.y) {
+			return true;
+		}
+
+		return false;
+	}
 
 	bool checkInitInScreen(enemy* e, float camPos, float camEdge) {
 		if (e->getInitialPosition().x > camEdge || e->getInitialPosition().x < camPos) {
@@ -1941,6 +2091,7 @@ public:
 		}
 		return false;
 	}
+
 
 	bool ladderTileCheck(tile* t) {
 

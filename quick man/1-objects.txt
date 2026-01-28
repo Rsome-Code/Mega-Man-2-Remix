@@ -1,0 +1,2 @@
+scworm spawn,1572,2342,1
+scworm spawn,1342,2468,1

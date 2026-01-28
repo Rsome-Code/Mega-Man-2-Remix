@@ -4,6 +4,7 @@
 #include "tile.cpp"
 #include "hitbox detector.cpp"
 #include <SFML/audio.hpp>
+#include "sound collection.cpp"
 
 #pragma once
 
@@ -28,13 +29,9 @@ protected:
 public:
 
 
-	//FIX THISSSSSSSSSSS!!!!!!!!!!
-	void dinkSetup() {
-		dinkB = new SoundBuffer();
-		dinkB->loadFromFile("Assets\\sound\\dink.wav");
 
-		dink = new Sound();
-		dink->setBuffer(*dinkB);
+	void dinkSetup(SoundCollection* soundCol) {
+		dink = soundCol->getDink();
 	}
 
 	bullet() {}
@@ -52,6 +49,10 @@ public:
 		return sprite;
 	}
 
+	virtual list<UISprite*> getUISprites() {
+		return list<UISprite*>{};
+	}
+
 
 	virtual objectHitbox* getHitbox() { return hitbox; };
 	virtual void onHit(object* e) {
@@ -66,17 +67,15 @@ public:
 	
 	virtual void deflect() {
 		
-		/*if (!right) {
+		if (!right) {
 			direction = 330;
 		}
 		else {
 			direction = 210;
-		}*/
-		if (!deflected) {
-			direction = direction - 135;
-			deflected = true;
-			dink->play();
 		}
+
+		dink->play();
+		
 	}
 
 	void setDirection(float num) {

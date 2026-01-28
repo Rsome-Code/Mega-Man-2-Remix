@@ -9,7 +9,7 @@ class DeathAnim {
 	animation* anim;
 	animTimer* timer;
 	float growRate = 0.5;
-	float growAccel = 1.03;
+	float growAccel = 64;
 
 	Vector2f originPos;
 	Vector2f originSize;
@@ -30,7 +30,8 @@ public:
 		timer->run(deltaT);
 
 		float growThisFrame = growRate * *deltaT;
-		growRate = growRate * growAccel;
+
+		growRate = growRate * (pow(growAccel, *deltaT));
 
 		sprite->setScale(Vector2f(sprite->getScale().x + growThisFrame, sprite->getScale().y + growThisFrame));
 

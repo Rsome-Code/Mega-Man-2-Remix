@@ -5,11 +5,11 @@
 class BubbleLead : public Weapon {
 
 public:
-	BubbleLead(objectSprite* player, Texture* t) {
+	BubbleLead(objectSprite* player, Texture* t, SoundCollection* soundCol) {
 		maxWeaponCount = 2;
 
 		for (int i = 0; i < maxWeaponCount; i++) {
-			BubbleBullet* bul = new BubbleBullet(player, t);
+			BubbleBullet* bul = new BubbleBullet(player, t, soundCol);
 			bullets.push_back(bul);
 		}
 

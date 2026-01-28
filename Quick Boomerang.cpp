@@ -5,11 +5,11 @@
 class QuickBoomerang : public Weapon {
 
 public:
-	QuickBoomerang(objectSprite* player, Texture* t) {
+	QuickBoomerang(objectSprite* player, Texture* t, SoundCollection* soundCol) {
 		maxWeaponCount = 6;
 
 		for (int i = 0; i < maxWeaponCount; i++) {
-			BoomerangBullet* bul = new BoomerangBullet(t, player);
+			BoomerangBullet* bul = new BoomerangBullet(t, player, soundCol);
 			bullets.push_back(bul);
 		}
 
@@ -23,6 +23,10 @@ public:
 		shootB->loadFromFile("assets\\sound\\buster.wav");
 		shootSound = new Sound();
 		shootSound->setBuffer(*shootB);
+	}
+
+	string getTextName() {
+		return "Quick\n-Boomerang";
 	}
 
 	String getSymbol() {

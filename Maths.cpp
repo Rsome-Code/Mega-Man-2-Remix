@@ -23,9 +23,8 @@ public:
 
 	static float getDistance(float pos1, float pos2) {
 		float distance = pos1 - pos2;
-		if (distance < 0) {
-			distance = distance * -1;
-		}
+
+		distance = fabs(distance);
 		return distance;
 	}
 

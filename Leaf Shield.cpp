@@ -4,7 +4,7 @@
 class LeafShield :public Weapon {
 
 public:
-	LeafShield(objectSprite* player, Texture* t) {
+	LeafShield(objectSprite* player, Texture* t, SoundCollection* soundCol) {
 		//bullets = { new megaBuster(player, t),  new megaBuster(player, t),  new megaBuster(player, t) };
 		//maxWeaponCount = 3;
 		colourP = new Texture();
