@@ -134,7 +134,14 @@ int main() {
 	//Set the framerate here
 	double targetFPS = 120;
 
-	pController* p1 = new pController();
+	//Set the resolution here
+	int verticalRes = 1080;
+
+
+	int horiRes = verticalRes * (float(1920) / float(1080));
+
+	RenderWindow window(VideoMode(horiRes, verticalRes), "Executable", Style::Default);
+	pController* p1 = new pController(&window);
 
 	Texture* enemyT = new Texture();
 	enemyT->loadFromFile("Assets\\enemy.png");
@@ -153,10 +160,10 @@ int main() {
 
 	
 	
-	RenderWindow window(VideoMode(1920, 1080), "Executable", Style::Default);
+
 
 	RenderWindow* w = &window;
-	renderer* instance = new renderer(w);
+	renderer* instance = new renderer(w, false);
 
 	Texture* wT = new Texture();
 
@@ -348,6 +355,6 @@ int main() {
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	//cout << "hi";
+	cout << "hi";
 
 }

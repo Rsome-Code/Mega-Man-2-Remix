@@ -35,7 +35,7 @@ public:
 	void run(renderer* instance, float targetRate) {
 		camera* cam = new camera();
 		cam->setZoom(2);
-		pController* p = new pController();
+		pController* p = new pController(instance->getWindow());
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;

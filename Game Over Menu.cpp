@@ -40,7 +40,7 @@ public:
 	Option option = Continue;
 
 	GameOverMenu() {
-		control = new pController();
+		//control = new pController();
 		Texture* t = new Texture();
 		t->loadFromFile("assets\\NES - Mega Man 2 - Miscellaneous - Menus.png");
 		background = new UISprite(t, IntRect(1045, 282, 520, 288), Vector2f(0, 0), Vector2f(4, 4));
@@ -127,6 +127,7 @@ public:
 	Option loop(renderer* instance, float targetRate) {
 		timer* time = new timer();
 
+		control = new pController(instance->getWindow());
 
 		auto start = time->timerStart();
 		auto* startP = &start;

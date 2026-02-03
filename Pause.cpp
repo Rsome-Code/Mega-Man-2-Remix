@@ -407,14 +407,18 @@ public:
 		instance->UIDisplay(pageOpt->getSprites());
 		if (page1) {
 			displayPage1(instance);
+			if (checkInput(maxSelect1)) {
+				return true;
+			}
 		}
 		else {
 			displayPage2(instance);
+			if (checkInput(maxSelect2)) {
+				return true;
+			}
 		}
 		
-		if (checkInput()) {
-			return true;
-		}
+		
 
 		updateSelect();
 
@@ -449,13 +453,13 @@ public:
 	}
 
 	//Returns true when start is pressed
-	bool checkInput() {
+	bool checkInput(int maxSelect) {
 		
 		if (controller->checkDOWN() && !downPressed) {
 			optionSound->play();
 			downPressed = true;
 			currentSelect++;
-			if (currentSelect == maxSelect1) {
+			if (currentSelect == maxSelect) {
 				currentSelect = 0;
 			}
 
@@ -468,7 +472,7 @@ public:
 			upPressed = true;
 			currentSelect--;
 			if (currentSelect == -1) {
-				currentSelect = maxSelect1-1;
+				currentSelect = maxSelect-1;
 			}
 
 		}

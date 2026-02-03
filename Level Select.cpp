@@ -52,7 +52,7 @@ public:
 		background = new UISprite("bg", bg, IntRect(0, 0, 771, 273), Vector2f(-150 * 4, 0), Vector2f(4, 4));
 		backPos = background->getCameraPosition();
 		cursor = new UISprite("pointer", bg, IntRect(204, 284, 42, 42), Vector2f(backPos.x + 300 *4, backPos.y + 32 *4), Vector2f(4, 4));
-		control = new pController();
+		//control = new pController();
 
 		winIconSetup(bubble, heat, metal, wood, air, quick, flash, crash);
 		music = new Music();
@@ -158,6 +158,8 @@ public:
 
 	string loop(renderer* instance, double targetRate, Texture* bg) {
 
+		control = new pController(instance->getWindow());
+
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -229,7 +231,7 @@ public:
 			instance->UIDisplay(cursor);
 			
 			if (rectDisplay) {
-				instance->getWindow()->draw(rectangle);
+				instance->rectDisplay(&rectangle);
 			}
 			instance->getWindow()->display();
 			instance->getWindow()->clear();

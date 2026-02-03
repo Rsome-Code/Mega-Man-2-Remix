@@ -247,7 +247,7 @@ public:
 
 			instance->textDisplay(symbol);
 			instance->textDisplay(getEquip);
-			instance->getWindow()->draw(*rectangle);
+			instance->rectDisplay(rectangle);
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 		}

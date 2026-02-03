@@ -123,7 +123,7 @@ public:
 
 			introHP += 1;
 			healRate_left = healRate;
-			healthBar->update(introHP);
+			healthBar->updateWithSound(introHP);
 			
 		}
 		return false;

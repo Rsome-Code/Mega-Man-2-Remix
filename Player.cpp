@@ -429,6 +429,10 @@ public:
 		ammoBar->update(active->getAmmo());
 	}
 
+	void updateAmmoWithSound() {
+		ammoBar->updateWithSound(active->getAmmo());
+	}
+
 
 	void eachFrame(float* deltaT, list<tile*> tiles, list<ItemBullet*>* IBullets) {
 
@@ -487,6 +491,9 @@ public:
 		}
 		for (bullet* b : timeStopper->getBullets()) {
 			b->uniqueReset();
+		}
+		for (bullet* b : bubbleLead->getBullets()) {
+			b->shootReset();
 		}
 	}
 

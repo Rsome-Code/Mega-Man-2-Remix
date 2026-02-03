@@ -9,7 +9,7 @@ class Beam :public enemy {
 
 	
 protected:
-	int speed = 350;
+	int speed = 420;
 
 	bool start = false;
 

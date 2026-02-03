@@ -38,7 +38,7 @@ public:
 	EquipMenu(Texture* t, list<UISprite*> sprites, list<Text*> texts, Vector2f menuPos) {
 		this->sprites = sprites;
 		this->texts = texts;
-		control = new pController();
+		//control = new pController();
 		passPos = Vector2f(menuPos.x + (45 * 4), menuPos.y + (14 * 4));
 		stagePos = Vector2f(menuPos.x + (45 * 4), menuPos.y + (30 * 4));
 		passwordS = new UISprite(t, IntRect(1125, 860, 63, 7), passPos, Vector2f(4, 4));
@@ -120,6 +120,7 @@ public:
 	}
 
 	bool loop(renderer* instance, float targetRate, Music* music) {
+		control = new pController(instance->getWindow());
 		timer* time = new timer();
 
 		auto start = time->timerStart();

@@ -54,8 +54,8 @@ public:
 	void start(bool r) {
 		shooting = true;
 		for (UISprite* sprite : spriteList) {
-			int randomX = rand() % 1920;
-			int randomY = rand() % 1080;
+			int randomX = rand() % (1920);
+			int randomY = rand() % (1080);
 			sprite->setCameraPosition(Vector2f(randomX, randomY));
 		}
 	}

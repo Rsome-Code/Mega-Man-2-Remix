@@ -25,33 +25,143 @@ class renderer{
 	RenderWindow* w;
 	float ratio;
 
+	float resolutionFactor;
+
+	int defaultResolution = 1080;
+
+	bool fullscreen;
+
 public: 
-	renderer(RenderWindow* wi) {
+	renderer(RenderWindow* wi, bool fullscreen) {
 		this->w = wi;
 		ratio = getRatio();
 
+		resolutionFactor = float(wi->getSize().y) / float(defaultResolution);
+		this->fullscreen = fullscreen;
 	}
 
+	bool getFullscreen() {
+		return fullscreen;
+	}
+
+	void setSize(Vector2u size) {
+		//delete w;
+		w->close();
+		
+		if (fullscreen) {
+			w = new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Fullscreen);
+		}
+		else {
+			w = new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Default);
+		}
+		resolutionFactor = float(w->getSize().y) / float(defaultResolution);
+	}
+
+	void setFullscreen(bool full) {
+		fullscreen = full;
+		setSize(w->getSize());
+	}
+
+private:
+
+
+	void resolutionFix(UISprite* sprite) {
+
+		int windowS = w->getSize().y;
+
+		//float resolutionFactor = float(windowS) / float(defaultResolution);
+
+
+		Sprite* s = sprite->getSprite();
+
+		s->setScale(sprite->getScale() * resolutionFactor);
+
+		s->setPosition(sprite->getCameraPosition() * resolutionFactor);
+
+	}
+
+	void resolutionFix(objectHitbox* hit) {
+	}
+	void resolutionFix(UIHitbox* hit) {
+	}
+
+	void resolutionFix(RectangleShape* rect) {
+		int windowS = w->getSize().y;
+
+		//float resolutionFactor = float(windowS) / float(defaultResolution);
+		rect->setScale(rect->getScale() * resolutionFactor);
+		rect->setPosition(rect->getPosition() * resolutionFactor);
+	}
+
+	void rectCorrection(RectangleShape* rect) {
+		int windowS = w->getSize().y;
+
+		//float resolutionFactor = float(windowS) / float(defaultResolution);
+		rect->setScale(rect->getScale() / resolutionFactor);
+		rect->setPosition(rect->getPosition() / resolutionFactor);
+	}
+
+	void resolutionFix(Text* t) {
+		
+		int windowS = w->getSize().y;
+
+		//float resolutionFactor = float(windowS) / float(defaultResolution);
+
+
+		t->setScale(t->getScale() * resolutionFactor);
+		t->setPosition(t->getPosition() * resolutionFactor);
+	}
+
+	void resolutionFix(text* te) {
+
+		int windowS = w->getSize().y;
+
+		//float resolutionFactor = float(windowS) / float(defaultResolution);
+
+		Text* t = te->getRender();
+
+		t->setScale(Vector2f(1 * resolutionFactor, 1 * resolutionFactor));
+		t->setPosition(te->getPosition() * resolutionFactor);
+	}
+
+	void textCorrection(Text* t) {
+		int windowS = w->getSize().y;
+
+		//float resolutionFactor = float(windowS) / float(defaultResolution);
+
+		t->setScale(t->getScale() / resolutionFactor);
+		t->setPosition(t->getPosition() / resolutionFactor);
+	}
 
 public:
+
 	void textDisplay(list<text*> textList){
 		//list<text*> temp = resolutionTextScale(textList);
 		for (text* text : textList) {
+			resolutionFix(text);
 			w->draw(*text->getRender());
 		}
 	}
 
 	void textDisplay(text* text) {
 		//list<text*> temp = resolutionTextScale(textList);
-
+		resolutionFix(text);
 		w->draw(*text->getRender());
+		
 		
 	}
 	void textDisplay(Text* text) {
 		//list<text*> temp = resolutionTextScale(textList);
-
+		resolutionFix(text);
 		w->draw(*text);
+		textCorrection(text);
+	}
 
+	void textDisplay(vector<Text*> text) {
+
+		for (Text* t : text) {
+			textDisplay(t);
+		}
 	}
 
 	void objectAccess(object* object, camera* cam) {
@@ -60,7 +170,11 @@ public:
 		}
 	}
 
-
+	void rectDisplay(RectangleShape* rect) {
+		resolutionFix(rect);
+		w->draw(*rect);
+		rectCorrection(rect);
+	}
 
 	void objectDisplay(objectSprite* object, camera* cam) {
 		objectSetup(object, cam);
@@ -69,6 +183,8 @@ public:
 
 		Sprite sp = *s;
 		sp.setPosition(Vector2f(std::round(sp.getPosition().x), std::round(sp.getPosition().y)));
+
+		resolutionFix(object);
 
 		w->draw(*s);
 
@@ -116,6 +232,7 @@ public:
 		bObjectCalc(object, cam);
 		Sprite* s = object->getSprite();
 
+		resolutionFix(object);
 		w->draw(*s);
 	}
 
@@ -125,6 +242,7 @@ public:
 		if (display) {
 			Sprite* s = object->getSprite();
 
+			resolutionFix(object);
 			w->draw(*s);
 		}
 	}
@@ -191,6 +309,7 @@ public:
 
 		s->setPosition(sprite->getCameraPosition() + sprite->getVisualOffset());
 
+		resolutionFix(sprite);
 		w->draw(*s);
 		
 	}
@@ -211,6 +330,7 @@ public:
 		rectangle.setPosition(hit->getCameraPos());
 		rectangle.setFillColor(sf::Color(0, 255, 0, 255));
 		
+		resolutionFix(hit);
 		w->draw(rectangle);
 		//}
 		
@@ -224,6 +344,7 @@ public:
 		rectangle.setPosition(hit->getCameraPos());
 		rectangle.setFillColor(sf::Color(0, 255, 0, 255));
 		rectangle.setScale(Vector2f(zoom, zoom));
+		resolutionFix(hit);
 		w->draw(rectangle);
 		//}
 
@@ -236,6 +357,7 @@ public:
 		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 		rectangle.setPosition(hit->getCameraPos());
 		rectangle.setFillColor(col);
+		resolutionFix(hit);
 		w->draw(rectangle);
 		//}
 
@@ -249,6 +371,7 @@ public:
 		rectangle.setPosition(hit->getCameraPos());
 		rectangle.setFillColor(col);
 		rectangle.setScale(Vector2f(zoom, zoom));
+		resolutionFix(hit);
 		w->draw(rectangle);
 		//}
 

@@ -109,6 +109,9 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Quick Man">
       <UniqueIdentifier>{adad2706-7b58-43c9-8356-39d06543fa8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Debug\Debug Options">
+      <UniqueIdentifier>{ac62d066-3cba-4a88-8dd7-0ca53983cdc3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -825,6 +828,21 @@
     </ClCompile>
     <ClCompile Include="Time Stopper Bullet.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug Menu.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug Option.cpp">
+      <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
+    </ClCompile>
+    <ClCompile Include="FPS Change.cpp">
+      <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
+    </ClCompile>
+    <ClCompile Include="Resolution Change.cpp">
+      <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
+    </ClCompile>
+    <ClCompile Include="Fullscreen.cpp">
+      <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -21,11 +21,15 @@ class pController {
     TController* controller0;
     //Deadzone effects x and y
     int stickDeadzone = 5000;
+
+    Window* window;
     
-public:pController(int n) {
+public:pController(int n, Window* win) {
+    window = win;
     controller0 = new TController(n);
 }
-public:pController() {
+public:pController(Window* win) {
+    window = win;
     controller0 = new TController(0);
 }
 
@@ -203,6 +207,11 @@ public:bool checkSELECT() {
     {
         return true;
     }
+
+    else if (Keyboard::isKeyPressed(Keyboard::Scan::Escape)) {
+        return true;
+    }
+
     return false;
 }
 public:bool checkSTART() {

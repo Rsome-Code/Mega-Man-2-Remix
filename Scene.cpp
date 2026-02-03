@@ -23,6 +23,8 @@
 #include <sfml/audio.hpp>
 #include "sound collection.cpp"
 #include "item bullets.cpp"
+
+#include "debug menu.cpp"
 #pragma once
 
 class scene {
@@ -75,6 +77,8 @@ class scene {
 
 	bool startPressed = true;
 	bool paused = false;
+
+	bool selectPressed = true;
 
 	text* readyText;
 	Font font;
@@ -225,9 +229,20 @@ public:
 		obBeforeTile = beforeTileList[section];
 	}
 
+	void debugCheck(DebugMenu* dMenu, player* p, renderer* instance, double* targetRate) {
+		if (p->getController()->checkSELECT() && !selectPressed) {
+			dMenu->loop(instance, targetRate, tileList, z2List, z3List, z4List, backgroundObjects, cam, p);
+			selectPressed = true;
+		}
+		else if (!p->getController()->checkSELECT()) {
+			selectPressed = false;
+		}
+	}
 
 	float deltaT = 0.00001;
 	bool loop(renderer* instance, double targetRate, SoundCollection* soundCol, vector<bool> beforeTileList) {
+
+		DebugMenu* dMenu = new DebugMenu(&font, instance, &targetRate);
 
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -239,7 +254,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 16;
+		section = 0;
 
 		p->enableControls(true);
 
@@ -261,6 +276,8 @@ public:
 		
 
 		while (instance->getWindow()->isOpen() && run) {
+
+			debugCheck(dMenu, p, instance, &targetRate);
 
 			//p->enableControls(false);
 			//p->getSprite()->enableGravity(false);
@@ -326,7 +343,8 @@ public:
 			if (!p->isTeleporting() && p->getHP() > 0) {
 				if (afterT) {
 					p->getSprite()->setMove(true);
-					p->getSprite()->setVVelocity(0);
+					//I don't remember why the player's vertical velocity is reset after a screen transition
+					//p->getSprite()->setVVelocity(0);
 					afterT = false;
 				}
 
@@ -1018,6 +1036,8 @@ public:
 
 	void respawn() {
 
+		bossDeath = NULL;
+
 		p->setPosition(Vector2f(cam->getPosition().x + ((1920 / 2) - 8 * 4), cam->getPosition().y));
 		p->start(cam->getPosition().y + (16 * 4));
 		p->swapDirection();
@@ -1076,53 +1096,53 @@ public:
 			
 
 			if (enemy->getHP() > 0) {
-				if (p->getActiveWeapon()->getName() != "Time Stopper") {
-
-					for (bullet* bull : p->getControls()->getBulletObjects()) {
-						if (enemy->checkHurt(bull->getHitbox())) {
-
-							if (!enemy->checkInvincible()) {
-								enemy->lowerHP(bull->checkDamage(enemy));
 
 
-								if (bull->checkDamage(enemy) <= 0) {
-									bull->deflect();
-								}
-								else {
+				for (bullet* bull : p->getControls()->getBulletObjects()) {
+					if (enemy->checkHurt(bull->getHitbox())) {
 
-									if (enemy->getHP() <= 0) {
+						if (!enemy->checkInvincible()) {
+							enemy->lowerHP(bull->checkDamage(enemy));
 
-										if (enemy->getDeathAnims()[0] != NULL) {
 
-											levelEndSequence(music, instance, tRate, enemy);
-										}
-										bull->onHit(enemy);
-										spawnItemFromEnemy(enemy, soundCol);
-
-										enemy->spawnEnemy(&enemies, soundCol);
-									}
-
-									else {
-										bull->onHit(enemy);
-									}
-								}
-							}
-							else {
+							if (bull->checkDamage(enemy) <= 0) {
 								bull->deflect();
 							}
+							else {
+
+								if (enemy->getHP() <= 0) {
+
+									if (enemy->getDeathAnims()[0] != NULL) {
+
+										levelEndSequence(music, instance, tRate, enemy);
+									}
+									bull->onHit(enemy);
+									spawnItemFromEnemy(enemy, soundCol);
+
+									enemy->spawnEnemy(&enemies, soundCol);
+								}
+
+								else {
+									bull->onHit(enemy);
+								}
+							}
 						}
-						else if (enemy->checkHit(bull->getHitbox())) {
+						else {
 							bull->deflect();
 						}
+					}
+					else if (enemy->checkHit(bull->getHitbox())) {
+						bull->deflect();
+					}
 
-					}
 				}
-				else {
-					//Should only return true when enemy is Quick Man
-					if (enemy->freezeDam(p)) {
-						levelEndSequence(music, instance, tRate, enemy);
-					}
+				
+				
+				//Should only return true when enemy is Quick Man
+				if (enemy->freezeDam(p)) {
+					levelEndSequence(music, instance, tRate, enemy);
 				}
+				
 			}
 
 			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets, soundCol) || enemyYCheck(enemy)) {
@@ -1237,10 +1257,12 @@ public:
 	bool doorCheck(renderer* instance, float targetRate) {
 		if (door1->getSection() == section) {
 			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, true);
+			p->resetBullets();
 			return true;
 		}
 		if (door2->getSection() == section) {
 			door2->loop(instance, cam, targetRate, p, door1->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, true);
+			p->resetBullets();
 			return true;
 		}
 		return false;
@@ -1272,7 +1294,7 @@ public:
 		updateFlags();
 		checkObBefore();
 
-		p->resetBullets();
+		
 		sectionTransition(instance, targetRate, ang, flagPos, nextSection);
 
 		deletePrevSection();
@@ -1395,7 +1417,7 @@ public:
 		bool run = true;
 
 		float camSpeed = 1000;
-		float playerSpeed = 100;
+		float playerSpeed = 150;
 		Vector2f otherFlagPos;
 		transitionAngle otherAngle;
 
@@ -1532,9 +1554,24 @@ public:
 					p->getAnimation()->runJump();
 				}
 
-				
-				if (cam->getPosition().y >= flagPos.y) {
-					run = false;
+				if (forward) {
+					if (cam->getPosition().y >= flagPos.y) {
+						run = false;
+					}
+				}
+				else {
+					if (otherAngle == UP) {
+						if (cam->getPosition().y + 1080 >= otherFlagPos.y) {
+							run = false;
+							cam->setPosition(Vector2f(cam->getPosition().x, otherFlagPos.y - 1080));
+						}
+					}
+					else {
+						if (cam->getPosition().y >= otherFlagPos.y) {
+							run = false;
+							cam->setPosition(Vector2f(cam->getPosition().x, otherFlagPos.y));
+						}
+					}
 				}
 
 			}
@@ -1930,7 +1967,7 @@ public:
 			if (healLeft <= 0) {
 				run = false;
 			}
-			p->updateAmmo();
+			p->updateAmmoWithSound();
 			instance->UIDisplay(p->getUI());
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
@@ -1941,7 +1978,7 @@ public:
 	void tileDistanceCheck(renderer* instance, tile* t) {
 
 		Vector2f camPos = Vector2f(cam->getPosition().x - (32 * 4), cam->getPosition().y - (32 * 4));
-		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x + (64 * 4)), instance->getWindow()->getSize().y + camPos.y + (64 * 4));
+		Vector2u dist = Vector2u((1920 + camPos.x + (64 * 4)), 1080 + camPos.y + (64 * 4));
 		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
 
 
@@ -1988,7 +2025,7 @@ public:
 			bool displayX = !(x < -(16 * 4)) && !(1920 < x);
 
 			float y = t->getSprite()->getCameraPosition().y;
-			bool displayY = !(y < -(16 * 4)) && !(1920 < y);
+			bool displayY = !(y < -(16 * 4)) && !(1080 < y);
 
 			t->setDisplay(displayX && displayY);
 
@@ -1999,7 +2036,7 @@ public:
 
 	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
 		float camPos = cam->getPosition().x;
-		float camEdge = cam->getPosition().x + instance->getWindow()->getSize().x;
+		float camEdge = cam->getPosition().x + 1920;
 
 		enemy* toDelete = NULL;
 
@@ -2007,13 +2044,13 @@ public:
 			//If object is still active
 			if (e->getAct()) {
 				if (e->deleteOverY() && e->deleteOverX()) {
-					e->setOffScreen(checkObOffScreen(e, cam->getPosition(), Vector2f(cam->getPosition().x + instance->getWindow()->getSize().x, cam->getPosition().y + instance->getWindow()->getSize().y)));
+					e->setOffScreen(checkObOffScreen(e, cam->getPosition(), Vector2f(cam->getPosition().x + 1920, cam->getPosition().y + 1080)));
 				}
 				else if (e->deleteOverX()) {
-					e->setOffScreen(checkObOffScreenX(e, cam->getPosition(), cam->getPosition().x + instance->getWindow()->getSize().x));
+					e->setOffScreen(checkObOffScreenX(e, cam->getPosition(), cam->getPosition().x + 1920));
 				}
 				else if (e->deleteOverY()) {
-					e->setOffScreen(checkObOffScreenY(e, cam->getPosition(), cam->getPosition().y + instance->getWindow()->getSize().y));
+					e->setOffScreen(checkObOffScreenY(e, cam->getPosition(), cam->getPosition().y + 1080));
 				}
 				//and has just left the screen
 				if (e->getOffScreen()) {

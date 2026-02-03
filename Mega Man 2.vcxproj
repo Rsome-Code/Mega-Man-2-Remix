@@ -215,10 +215,14 @@
     <ClCompile Include="Carrot.cpp" />
     <ClCompile Include="Chicken Spawner.cpp" />
     <ClCompile Include="Conveyor.cpp" />
+    <ClCompile Include="Debug Menu.cpp" />
+    <ClCompile Include="Debug Option.cpp" />
     <ClCompile Include="DL Message.cpp" />
     <ClCompile Include="Drill Spawner.cpp" />
     <ClCompile Include="Drill.cpp" />
     <ClCompile Include="Fire Bullet.cpp" />
+    <ClCompile Include="FPS Change.cpp" />
+    <ClCompile Include="Fullscreen.cpp" />
     <ClCompile Include="Gear Saw.cpp" />
     <ClCompile Include="Item Bullets.cpp" />
     <ClCompile Include="Item weapon.cpp" />
@@ -235,6 +239,7 @@
     <ClCompile Include="Quick Boomerang.cpp" />
     <ClCompile Include="Quick Man.cpp" />
     <ClCompile Include="Repair Block.cpp" />
+    <ClCompile Include="Resolution Change.cpp" />
     <ClCompile Include="Scworm Spawner.cpp" />
     <ClCompile Include="Scworm.cpp" />
     <ClCompile Include="Shrink.cpp" />
