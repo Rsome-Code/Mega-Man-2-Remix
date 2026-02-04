@@ -494,7 +494,7 @@ public:
 	void tileDistanceCheck(renderer* instance, list<tile*> tileList, camera* cam) {
 
 		Vector2f camPos = Vector2f(cam->getPosition().x, cam->getPosition().y);
-		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x), instance->getWindow()->getSize().y + camPos.y);
+		Vector2u dist = Vector2u((1920 + camPos.x), 1080 + camPos.y);
 		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
 
 		for (tile* t : tileList) {

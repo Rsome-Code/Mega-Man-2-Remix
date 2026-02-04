@@ -38,6 +38,8 @@ public:
 
 		resolutionFactor = float(wi->getSize().y) / float(defaultResolution);
 		this->fullscreen = fullscreen;
+
+		
 	}
 
 	bool getFullscreen() {
@@ -74,10 +76,18 @@ private:
 
 		Sprite* s = sprite->getSprite();
 
-		s->setScale(sprite->getScale() * resolutionFactor);
+		s->setScale(sprite->getSprite()->getScale() * resolutionFactor);
 
-		s->setPosition(sprite->getCameraPosition() * resolutionFactor);
+		s->setPosition(sprite->getSprite()->getPosition() * resolutionFactor);
 
+	}
+
+	void resolutionCorrection(UISprite* sprite) {
+		Sprite* s = sprite->getSprite();
+
+		s->setScale(sprite->getSprite()->getScale() / resolutionFactor);
+
+		s->setPosition(sprite->getSprite()->getPosition() / resolutionFactor);
 	}
 
 	void resolutionFix(objectHitbox* hit) {
@@ -177,16 +187,18 @@ public:
 	}
 
 	void objectDisplay(objectSprite* object, camera* cam) {
+	
 		objectSetup(object, cam);
-
+		resolutionFix(object);
 		Sprite* s = object->getSprite();
 
 		Sprite sp = *s;
 		sp.setPosition(Vector2f(std::round(sp.getPosition().x), std::round(sp.getPosition().y)));
 
-		resolutionFix(object);
+		
 
 		w->draw(*s);
+		resolutionCorrection(object);
 
 		lightingDisplay(object, cam);
 	}
@@ -229,21 +241,27 @@ public:
 
 	void bObjectDisplay(objectSprite* object, camera* cam) {
 
+		
+
 		bObjectCalc(object, cam);
 		Sprite* s = object->getSprite();
 
 		resolutionFix(object);
 		w->draw(*s);
+		resolutionCorrection(object);
 	}
 
 	void bObjectDisplay(objectSprite* object, bool display, camera* cam) {
+
 		bObjectCalc(object, cam);
 
 		if (display) {
+			
 			Sprite* s = object->getSprite();
 
 			resolutionFix(object);
 			w->draw(*s);
+			resolutionCorrection(object);
 		}
 	}
 
@@ -311,6 +329,7 @@ public:
 
 		resolutionFix(sprite);
 		w->draw(*s);
+		resolutionCorrection(sprite);
 		
 	}
 
