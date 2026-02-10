@@ -37,7 +37,7 @@ public:
 			woodmanPallete();
 		}
 		else if (pal == "heat man") {
-			woodmanPallete();
+			heatmanPallete();
 		}
 		else if(pal == "metal man") {
 			metalmanPallete();

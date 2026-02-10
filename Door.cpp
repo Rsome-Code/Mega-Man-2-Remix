@@ -12,6 +12,7 @@
 
 class Door : public GameObject {
 
+protected:
 	animation* anim;
 	animTimer* aTimer;
 	animation* revAnim;
@@ -26,6 +27,7 @@ class Door : public GameObject {
 	bool firstOpen = true;
 
 public:
+
 	Door(string levelName, Vector2f pos, int section) {
 		Texture* t = new Texture();
 		t->loadFromFile("assets\\Door\\" + levelName + ".png");
@@ -82,6 +84,8 @@ public:
 		}
 		return revTimer->isFinished();
 	}
+
+	virtual void animate(float* deltaT) {};
 
 	void loop(renderer* instance, camera* cam, float targetRate, player* player, objectSprite* oDoor, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> bObjects, bool open) {
 		auto start = time->timerStart();

@@ -174,6 +174,11 @@ public:
 	void setFriction(float f) {
 		friction = f;
 	}
+
+	float getFriction() {
+		return friction;
+	}
+
 	void setMovable(bool b) {
 		movable = b;
 	}

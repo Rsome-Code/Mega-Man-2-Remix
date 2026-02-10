@@ -254,7 +254,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 7;
+		section = 0;
 
 		p->enableControls(true);
 
@@ -537,6 +537,9 @@ public:
 				}
 			}
 
+
+			door1->animate(&deltaT);
+			door2->animate(&deltaT);
 			if (door1 != NULL) {
 				instance->objectAccess(door1, cam);
 			}
@@ -662,6 +665,37 @@ public:
 			temps.push_back(door2);
 			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, backgroundObjects, cam);
 		}
+
+		//delete music;
+		//delete teleExit;
+		//delete victoryMusic;
+		
+		for (GameObject* ob : objects) {
+			//ob->deleteSprite();
+			delete ob;
+		}
+		objects.clear();
+		for (tile* t : tileList) {
+			//t->deleteSprite();
+			delete t;
+		}
+		tileList.clear();
+		for (tile* t : z2List) {
+			//t->deleteSprite();
+			delete t;
+		}
+		z2List.clear();
+		for (tile* t : z3List) {
+			//t->deleteSprite();
+			delete t;
+		}
+		z3List.clear();
+		for (tile* t : z4List) {
+			//t->deleteSprite();
+			delete t;
+		}
+		z4List.clear();
+		
 
 		return levelEnd;
 	}
@@ -826,7 +860,7 @@ public:
 					p->HPReset();
 					p->setNotDead();
 
-					p->setLives(p->getLives() - 1);
+					//p->setLives(p->getLives() - 1);
 				}
 				else {
 					run = false;
@@ -1255,6 +1289,9 @@ public:
 	}
 
 	bool doorCheck(renderer* instance, float targetRate) {
+
+
+
 		if (door1->getSection() == section) {
 			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, true);
 			p->resetBullets();
@@ -1294,7 +1331,10 @@ public:
 		updateFlags();
 		checkObBefore();
 
-		
+		for (tile* t : tileList) {
+			t->resetBeat();
+		}
+
 		sectionTransition(instance, targetRate, ang, flagPos, nextSection);
 
 		deletePrevSection();
@@ -2231,6 +2271,8 @@ public:
 		bool inWater = false;
 		float movement = 0;
 
+		float frictionDecrease = 0;
+
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		for (tile* t : tileList) {
 			if (!p->getControls()->getOnLadder()) {
@@ -2245,6 +2287,7 @@ public:
 						if (!ground) {
 							if (hitboxCheck(p->getFoot(), t->getGround())) {
 								movement = t->getMovement();
+								frictionDecrease = t->getFrictionDecrease();
 								if (p->getSprite()->getAcceleration().y < 0 || p->getGrounded()) {
 									p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
 									//cam->follow();
@@ -2351,6 +2394,8 @@ public:
 		}
 
 		p->tileMovement(movement, deltaT);
+
+		p->decreaseFriction(frictionDecrease);
 		
 	}
 

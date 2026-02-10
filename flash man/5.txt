@@ -1,0 +1,90 @@
+top edge flash-0,121,85,0,1
+bottom edge flash-0,121,86,0,1
+square flash-1,120,86,0,1
+square flash-2,119,86,0,1
+top edge flash-1,118,85,0,1
+bottom edge flash-1,118,86,0,1
+top edge flash-1,121,87,0,1
+bottom edge flash-1,121,88,0,1
+top edge flash-2,115,85,0,1
+vertical flash-2,115,86,0,1
+vertical flash-2,115,87,0,1
+bottom edge flash-2,115,88,0,1
+top edge flash-2,112,82,0,1
+vertical flash-2,112,83,0,1
+vertical flash-2,112,84,0,1
+vertical flash-2,112,85,0,1
+bottom edge flash-2,112,86,0,1
+top edge flash-0,112,87,0,1
+bottom edge flash-0,112,88,0,1
+square flash-1,115,84,0,1
+square flash-0,124,85,0,1
+left edge flash-1,124,86,0,1
+horizontal flash-1,125,86,0,1
+right edge flash-1,126,86,0,1
+square flash-2,127,86,0,1
+top edge flash-1,127,87,0,1
+bottom edge flash-1,127,88,0,1
+square flash-0,127,89,0,1
+top edge flash-1,127,90,0,1
+vertical flash-1,127,91,0,1
+vertical flash-1,127,92,0,1
+bottom edge flash-1,127,93,0,1
+square flash-2,127,94,0,1
+square flash-0,121,89,0,1
+left edge flash-2,122,89,0,1
+right edge flash-2,123,89,0,1
+top edge flash-0,124,89,0,1
+vertical flash-0,124,90,0,1
+bottom edge flash-0,124,91,0,1
+square flash-1,124,92,0,1
+top edge flash-2,124,93,0,1
+vertical flash-2,124,94,0,1
+vertical flash-2,124,95,0,1
+bottom edge flash-2,124,96,0,1
+square flash-1,127,95,0,1
+top edge flash-2,127,96,0,1
+vertical flash-2,127,97,0,1
+vertical flash-2,127,98,0,1
+vertical flash-2,127,99,0,1
+vertical flash-2,127,100,0,1
+bottom edge flash-2,127,101,0,1
+square flash-0,127,102,0,1
+square flash-0,124,97,0,1
+top edge flash-1,124,98,0,1
+vertical flash-1,124,99,0,1
+vertical flash-1,124,100,0,1
+vertical flash-1,124,101,0,1
+bottom edge flash-1,124,102,0,1
+square flash-0,115,89,0,1
+left edge flash-1,116,89,0,1
+right edge flash-1,117,89,0,1
+square flash-0,118,89,0,1
+top edge flash-1,118,90,0,1
+vertical flash-1,118,91,0,1
+bottom edge flash-1,118,92,0,1
+square flash-2,119,92,0,1
+left edge flash-0,120,92,0,1
+right edge flash-0,121,92,0,1
+square flash-2,121,98,0,1
+square flash-1,121,99,0,1
+square flash-1,120,98,0,1
+left edge flash-0,117,98,0,1
+horizontal flash-0,118,98,0,1
+right edge flash-0,119,98,0,1
+square flash-2,116,98,0,1
+left edge flash-1,112,98,0,1
+horizontal flash-1,113,98,0,1
+horizontal flash-1,114,98,0,1
+right edge flash-1,115,98,0,1
+square flash-0,112,97,0,1
+top edge flash-1,112,95,0,1
+bottom edge flash-1,112,96,0,1
+square flash-0,112,94,0,1
+vertical flash-2,112,92,0,1
+bottom edge flash-2,112,93,0,1
+top edge flash-2,112,90,0,1
+vertical flash-2,112,91,0,1
+square flash-1,112,89,0,1
+top edge flash-0,121,101,0,1
+bottom edge flash-0,121,102,0,1

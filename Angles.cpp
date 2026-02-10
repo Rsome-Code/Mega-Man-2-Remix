@@ -1,4 +1,6 @@
-static struct Angle {
+#pragma once
+
+static class Angle {
 public:
 	const static int up = 270;
 	const static int right = 0;

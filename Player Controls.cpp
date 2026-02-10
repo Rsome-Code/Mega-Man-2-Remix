@@ -14,7 +14,9 @@ class pControls {
 	physicsObject* sprite;
 	playerAnimation* pAnim;
 	float maxSpeed = 450;
-	float groundAccel = 10000;
+	
+	float standardAccel = 10000;
+	float groundAccel = standardAccel;
 	float jumpForce = 1100;
 
 	bool grounded = true;
@@ -69,6 +71,14 @@ public:
 		landSound = new Sound();
 		landSound->setBuffer(*landB);
 		
+	}
+
+	float getStandardAccel() {
+		return standardAccel;
+	}
+
+	void setGroundAccel(float ac) {
+		groundAccel = ac;
 	}
 
 	Weapon* getWeapon() {
@@ -197,7 +207,7 @@ public:
 		
 	}
 
-	void checkControls(float* deltaT, list<ItemBullet*>* IBullets) {
+	void checkControls(float* deltaT, list<ItemBullet*>* IBullets, float frictD) {
 		teleport = false;
 
 		shooting = pAnim->getShooting();
@@ -210,7 +220,7 @@ public:
 		}
 		else if (grounded) {
 			sprite->enableGravity(false);
-			sprite->setFriction(4500);
+			sprite->setFriction(4500 - frictD);
 			sprite->setVVelocity(0);
 			jumping = false;
 		}
@@ -235,10 +245,10 @@ public:
 
 		if (!onLadder) {
 			if ((!shooting || !metalBlade || !grounded)) {
-				move(deltaT);
+				move(deltaT, frictD);
 			}
 			else {
-				idle(deltaT);
+				idle(deltaT, frictD);
 			}
 		}
 		else if (p1->checkA() && !APressed) {
@@ -251,6 +261,7 @@ public:
 			APressed = false;
 		}
 
+
 		////////////////////////////////
 		//Testing
 		if (p1->checkL() && LPressed == false) {
@@ -260,6 +271,9 @@ public:
 		else if (!p1->checkL()) {
 			LPressed = false;
 		}
+
+
+		
 		////////////////////////////////////
 
 		if (sprite->getAcceleration().x >= maxSpeed) {
@@ -355,7 +369,7 @@ public:
 		}
 	}
 
-	void move(float* deltaT) {
+	void move(float* deltaT, float frictD) {
 		if (!(metalBlade && shooting && grounded)) {
 			if (p1->checkLEFT()) {
 				sprite->addHorizontalForce(-(groundAccel), deltaT);
@@ -379,11 +393,11 @@ public:
 
 			}
 			else {
-				idle(deltaT);
+				idle(deltaT, frictD);
 			}
 		}
 		else {
-			idle(deltaT);
+			idle(deltaT, frictD);
 		}
 	}
 	
@@ -394,10 +408,10 @@ public:
 		holding = b;
 	}
 
-	void idle(float* deltaT) {
+	void idle(float* deltaT, float frictD) {
 		pAnim->resetRun();
 		pAnim->stopped();
-		sprite->setFriction(10000);
+		sprite->setFriction(10000 - (frictD * 1.35));
 		if (grounded) {
 			if (standing == false) {
 				pAnim->resetIdle();

@@ -22,7 +22,7 @@ class bat :public enemy {
 public:
 	void initial() {
 		Texture* t = sprite->getTexture();
-		delete sprite;
+		
 		
 		mover = new movable("enemy", t, Vector2i(3, 117), Vector2i(16, 23), initialPos, Vector2f(4, 4), 1);
 		anim = new animation(list<IntRect>{IntRect(3, 117, 16, 23), IntRect(41, 117, 17, 24), IntRect(71, 123, 24, 28), IntRect(134, 117, 30, 20)}, mover);

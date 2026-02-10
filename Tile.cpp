@@ -48,7 +48,7 @@ public:
 		tileNumber = i;
 
 
-		sprite ->setRect(Vector2i(tX * 16, tY * 16), Vector2i(16, 16));
+		sprite->setRect(Vector2i(tX * 16, tY * 16), Vector2i(16, 16));
 	}
 
 	float getZ() {
@@ -85,7 +85,22 @@ public:
 		return 0;
 	}
 
+	virtual float getFrictionDecrease() {
+		return 0;
+	}
+
 	virtual void setMoveRight(bool right) {
 
 	}
+
+	virtual Text* getText(Font* font) {
+		return NULL;
+	}
+
+	virtual int getTiming() {
+		return NULL;
+	}
+
+	virtual void resetBeat() {};
+
 };

@@ -1,4 +1,4 @@
-//This stores the rectangles in a sprite sheet to be used for the stored sprite.
+//This stores the rectangles in a sprite sheet to be used for the stored sprite->
 //This will not determine timing, only the frames themselves.
 //The animation must be present on the spritesheet loaded into the sprite being animated.
 
@@ -68,6 +68,10 @@ public:
 
 	int getCurrentIndex() {
 		return currentIndex;
+	}
+
+	int getSize() {
+		return frameIndexes.size();
 	}
 
 	bool checkStart() {

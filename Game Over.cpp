@@ -61,5 +61,11 @@ public:
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
 		}
+
+		delete music;
+		delete background->getTexture();
+		delete background;
+		delete time;
+
 	}
 };

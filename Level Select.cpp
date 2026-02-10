@@ -259,6 +259,9 @@ public:
 		else if (selection == 2) {
 			r = "quick man";
 		}
+		else if (selection == 7) {
+			r = "flash man";
+		}
 		music->stop();
 		return r;
 	}

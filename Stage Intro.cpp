@@ -11,6 +11,7 @@
 #include "heat man.cpp"
 #include "bubble man.cpp"
 #include "metal man.cpp"
+#include "quick man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -98,6 +99,7 @@ public:
 	}
 
 	void bossSetup(string name, Texture* bossT) {
+		Vector2f pos = Vector2f(900, 0);
 		if (name == "wood man") {
 			boss = new WoodMan(bossT, Vector2f(900, 0));
 			boss->initial();
@@ -112,6 +114,10 @@ public:
 		}
 		else if (name == "metal man") {
 			boss = new MetalMan(bossT, Vector2f(900, 0));
+			boss->initial();
+		}
+		else if (name == "quick man") {
+			boss = new QuickMan(bossT, pos);
 			boss->initial();
 		}
 	}
@@ -257,6 +263,8 @@ public:
 		if (instance->getWindow()->isOpen()) {
 			music->play();
 		}
+
+
 		
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;

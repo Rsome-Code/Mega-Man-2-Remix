@@ -100,6 +100,8 @@ class player {
 	Splash* splash;
 	bool inWater = false;
 
+	float frictionDecrease = 0;
+
 public:
 	player(pController* p1, SoundCollection* soundCol) {
 		
@@ -168,6 +170,11 @@ public:
 		damageSound->setBuffer(*damageB);
 
 		
+	}
+
+	void decreaseFriction(float frictD) {
+		frictionDecrease = frictD;
+		controls->setGroundAccel(controls->getStandardAccel() - (frictD));
 	}
 
 	void resetGravity() {
@@ -367,6 +374,7 @@ public:
 	}
 
 	void iniSplash(Texture* miscT) {
+		delete splash;
 		splash = new Splash(miscT);
 	}
 
@@ -387,12 +395,18 @@ public:
 		return false;
 	}
 	void setNotDead() {
+		delete deathAnim;
+		delete deathAnim2;
+		delete deathAnim1;
 		deathAnim = NULL;
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
 	}
 
 	void setDeathNull() {
+		delete deathAnim;
+		delete deathAnim2;
+		delete deathAnim1;
 		deathAnim = NULL;
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
@@ -445,7 +459,16 @@ public:
 			else {
 				dead(deltaT);
 			}
+
+			debugStuff();
 		
+	}
+
+	void debugStuff() {
+		if (controls->getController()->checkR()) {
+			takeDamage (100);
+			lives = 0;
+		}
 	}
 
 	bool checkInControl() {
@@ -505,7 +528,7 @@ public:
 
 			if (tele == NULL) {
 				if (inControl) {
-					controls->checkControls(deltaT, IBullets);
+					controls->checkControls(deltaT, IBullets, frictionDecrease);
 				}
 				else {
 					controls->runWithoutControl(deltaT);
@@ -516,6 +539,7 @@ public:
 				pAnim->shootDecide(deltaT);
 
 				if (!controls->getOnLadder()) {
+					//sprite->setFriction(sprite->getFriction() - frictionDecrease);
 					sprite->eachFrame(deltaT);
 				}
 				

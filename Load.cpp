@@ -69,6 +69,27 @@
 #include "lighting rectangle.cpp"
 #include "scworm spawner.cpp"
 #include "quick man.cpp"
+#include "right edge.cpp"
+#include "left edge.cpp"
+#include "top edge.cpp"
+#include "bottom edge.cpp"
+#include "top left corner.cpp"
+#include "top right corner.cpp"
+#include "bottom right corner.cpp"
+#include "bottom left corner.cpp"
+#include "square flash.cpp"
+#include "h tube tile.cpp"
+#include "v tube tile.cpp"
+#include "top left w.cpp"
+#include "top right w.cpp"
+#include "bottom left w.cpp"
+#include "bottom right w.cpp"
+#include "W Ceiling.cpp"
+#include "W Roof.cpp"
+#include "W wall.cpp"
+#include "bottom left corner w.cpp"
+#include "flash door.cpp"
+#include "crazy cannon.cpp"
 #pragma once
 
 using namespace std;
@@ -160,8 +181,10 @@ public:
 			}
 		}
 		z = 1;
-		// Close the file
+		
+
 		inputFile.close();
+
 
 	}
 
@@ -198,7 +221,7 @@ public:
 			else if (value == "flag-left") {
 				angle = LEFT;
 			}
-			else if (value == "door") {
+			else if (value == "door" || value == "flash door") {
 				angle = RIGHT;
 				
 			}
@@ -231,6 +254,17 @@ public:
 				}
 				else {
 					door2 = new Door(levelName, Vector2f(xPos, yPos), sect);
+				}
+			}
+
+			else if (value == "flash door") {
+				hFlagYPos(temp, flags);
+				if (door1 == NULL) {
+					door1 = new FlashDoor(levelName, Vector2f(xPos, yPos), sect);
+					door1->setCheckpoint();
+				}
+				else {
+					door2 = new FlashDoor(levelName, Vector2f(xPos, yPos), sect);
 				}
 			}
 
@@ -863,6 +897,15 @@ public:
 			if (altType == "disappearing tile") {
 				*add = new DisappearingTile(t, Vector2f(worldX, worldY), stoi(spl[1]));
 			}
+
+			if (altType == "crazy cannon") {
+				CrazyCannon* canon = new CrazyCannon(t, worldPos);
+				
+
+
+				canon->setRight(spl[1] == "y");
+				*enem = canon;
+			}
 		}
 	}
 
@@ -930,6 +973,109 @@ public:
 				MoveTile* temp = new MoveTile(worldPos, tex);
 				temp->setMoveRight(spl[1] == "right");
 				return temp;
+			}
+
+			else if (altType == "square flash") {
+				FlashTile* temp = new SquareFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "vertical flash") {
+				FlashTile* temp = new VTubeTile(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "horizontal flash") {
+				FlashTile* temp = new HTubeTile(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "top right corner flash") {
+				FlashTile* temp = new TopRightCornerFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "top left corner flash") {
+				FlashTile* temp = new TopLeftCornerFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "bottom right corner flash") {
+				FlashTile* temp = new BottomRightCornerFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "bottom left corner flash") {
+				FlashTile* temp = new BottomLeftCornerFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+
+			else if (altType == "bottom right w flash") {
+				FlashTile* temp = new BottomRightWFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "bottom left w flash") {
+				FlashTile* temp = new BottomLeftWFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "top left w flash") {
+				FlashTile* temp = new TopLeftWFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "top right w flash") {
+				FlashTile* temp = new TopRightWFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "w wall flash") {
+				FlashTile* temp = new WWallFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "w ceiling flash") {
+				FlashTile* temp = new WCeilingFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "w roof flash") {
+				FlashTile* temp = new WRoofFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "left edge flash") {
+				FlashTile* temp = new LeftEdgeFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "right edge flash") {
+				FlashTile* temp = new RightEdgeFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "top edge flash") {
+				FlashTile* temp = new TopEdgeFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "bottom edge flash") {
+				FlashTile* temp = new BottomEdgeFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+			else if (altType == "bottom left corner w flash") {
+				FlashTile* temp = new BottomLeftCornerWFlash(worldPos, tex);
+				temp->setTiming(stoi(spl[1]));
+				return temp;
+			}
+
+
+
+			else {
+					cout<<"Unrecognised tile type in file";
 			}
 		}
 	}

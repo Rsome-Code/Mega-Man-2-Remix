@@ -170,4 +170,18 @@ public: string getType() {
 		  loadTexture();
 	  }
 
+	  void deleteStuff() {
+		  delete &thisOne;
+		  
+		  delete &tRect;
+		  delete& rectSize;
+		  delete& scale;
+		  delete& cameraPosition;
+		  delete& type;
+		  delete& i;
+		  delete& cameraScale;
+
+		  delete& visualOffset;
+	  }
+
 };

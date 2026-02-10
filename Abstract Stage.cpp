@@ -28,6 +28,8 @@ protected:
 
 	string levelName;
 
+	//list<shared_ptr<GameObject>> objects;
+
 	list<GameObject*> objects;
 	list<GameObject*> backgroundObjects;
 	list<GameObject*> foregroundObjects;
@@ -92,6 +94,9 @@ public:
 		music->setLoop(true);
 		if (levelName == "wood man"){
 			music->setLoopPoints({ sf::seconds(6.5), seconds(100) });
+		}
+		else if (levelName == "flash man") {
+			music->setLoopPoints({ sf::seconds(25.5629), seconds(1000) });
 		}
 		else {
 			music->setLoopPoints({ sf::seconds(0), seconds(1000) });

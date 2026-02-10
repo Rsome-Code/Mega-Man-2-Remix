@@ -28,6 +28,25 @@
 #include "water tile.cpp"
 #include "conveyor.cpp"
 #include "move tile.cpp"
+#include "right edge.cpp"
+#include "left edge.cpp"
+#include "top edge.cpp"
+#include "bottom edge.cpp"
+#include "top left corner.cpp"
+#include "top right corner.cpp"
+#include "bottom right corner.cpp"
+#include "bottom left corner.cpp"
+#include "square flash.cpp"
+#include "h tube tile.cpp"
+#include "v tube tile.cpp"
+#include "top left w.cpp"
+#include "top right w.cpp"
+#include "bottom left w.cpp"
+#include "bottom right w.cpp"
+#include "W Ceiling.cpp"
+#include "W Roof.cpp"
+#include "W wall.cpp"
+#include "bottom left corner w.cpp"
 #pragma once
 
 class levelEditor {
@@ -94,8 +113,10 @@ class levelEditor {
 
 	bool zoomed = false;
 
+	Font* font;
+
 public:
-	levelEditor(Texture* T, string levelN) {
+	levelEditor(Texture* T, string levelN, Font* f) {
 		this->levelName = levelN;
 		Texture* tabT = new Texture;
 		tex = T;
@@ -136,6 +157,18 @@ public:
 		typeHighlight.setSize(Vector2f(16 * 4, 16 * 4));
 
 		m = new mouse();
+
+		beatSet = 0;
+		beatText = new Text();
+		beatText->setFont(*f);
+		beatText->setString("Beat: " + to_string(beatSet + 1));
+		beatText->setPosition(Vector2f(20, 900));
+		beatText->setFillColor(Color::Black);
+
+		font = new Font();
+		font->loadFromFile("assets\\font.otf");
+
+
 
 	}
 
@@ -260,17 +293,23 @@ public:
 			if (!zoomed) {
 
 				for (tile* t : tileList) {
-					if (t->getCeiling() != NULL) {
-						instance->objectHitboxSetup(t->getCeiling(), cam);
+
+					if (t->getText(font) != NULL) {
+						instance->textDisplay(t->getText(font));
 					}
-					if (t->getGround() != NULL) {
-						instance->objectHitboxSetup(t->getGround(), cam);
-					}
-					if (t->getLeft() != NULL) {
-						instance->objectHitboxSetup(t->getLeft(), cam);
-					}
-					if (t->getRight() != NULL) {
-						instance->objectHitboxSetup(t->getRight(), cam);
+					if (levelName != "flash man") {
+						if (t->getCeiling() != NULL) {
+							instance->objectHitboxSetup(t->getCeiling(), cam);
+						}
+						if (t->getGround() != NULL) {
+							instance->objectHitboxSetup(t->getGround(), cam);
+						}
+						if (t->getLeft() != NULL) {
+							instance->objectHitboxSetup(t->getLeft(), cam);
+						}
+						if (t->getRight() != NULL) {
+							instance->objectHitboxSetup(t->getRight(), cam);
+						}
 					}
 					if (z == 1) {
 						if (t->getWaterBox() != NULL) {
@@ -321,6 +360,10 @@ public:
 
 				}
 
+				if (levelName == "flash man") {
+					instance->textDisplay(beatText);
+				}
+
 				instance->getWindow()->draw(worldHighlight);
 
 
@@ -358,6 +401,19 @@ public:
 		}
 		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
 			leftPressed = false;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Num1) || Keyboard::isKeyPressed(Keyboard::Scan::Numpad1)) {
+			beatSet = 0;
+			beatText->setString("Beat: " + to_string(beatSet + 1));
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Num2) || Keyboard::isKeyPressed(Keyboard::Scan::Numpad2)) {
+			beatSet = 1;
+			beatText->setString("Beat: " + to_string(beatSet + 1));
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Scan::Num3) || Keyboard::isKeyPressed(Keyboard::Scan::Numpad3)) {
+			beatSet = 2;
+			beatText->setString("Beat: " + to_string(beatSet + 1));
 		}
 	}
 
@@ -512,11 +568,14 @@ public:
 		
 		list<tile*>::iterator tI = tileList->begin();
 
+		list<tile*> tempList;
+
 		for (int i = 0; i < (size.x); i++) {
 			for (int j = 0; j < (size.y ); j++) {
 				tI = tileList->begin();
 				bool check = false;
 
+				//Checks for tiles in the same location
 				if (tileList->size() > 0) {
 					for (tile* t : *tileList) {
 						check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
@@ -531,12 +590,23 @@ public:
 					}
 				}
 				tI = tileList->begin();
+
 				if (!del) {
 					tile* temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
 					//temp->getSprite()->setZ(z);
 					tileList->push_back(temp);
+
+					tempList.push_back(temp);
 				}
 				selectedTile = NULL;
+			}
+		}
+
+		if (levelName == "flash man" && selectedType == 20) {
+			for (tile* t : tempList) {
+				FlashTile temp = *flashTileCheck(t->getLocation());
+				temp.setTiming(beatSet);
+				*t = temp;
 			}
 		}
 		
@@ -553,7 +623,7 @@ public:
 		Vector2i currentPos = Vector2i(mousePos.x - (mousePos.x % (16 * 2)), mousePos.y - (mousePos.y % (16 * 2)));
 		Vector2f size = Vector2f((currentPos.x - highlightStart.x)+(16*2), (currentPos.y - highlightStart.y) + (16*2));
 
-		if (size.x >= 0) {
+		/*if (size.x >= 0) {
 			//size.x = size.x + (16 * 2);
 		}
 		else {
@@ -566,7 +636,7 @@ public:
 		else {
 			//size.y = size.y - (16 * 2);
 			//worldHighlight.setPosition(Vector2f(worldHighlight.getPosition().x, worldHighlight.getPosition().y + (16 * 2)));
-		}
+		}*/
 
 		worldHighlight.setSize(size);
 
@@ -716,7 +786,12 @@ public:
 
 	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 
-		if (selectedType == 0) {
+
+		if (levelName == "flash man") {
+			return flashCheck(worldPos);
+		}
+
+		else if (selectedType == 0) {
 			return new tile(worldPos, tex, selectedTexture, z);
 		}
 		else if (selectedType == 1) {
@@ -747,6 +822,7 @@ public:
 		else if (levelName == "metal man") {
 			return metalCheck(worldPos);
 		}
+		
 		else {
 			return new solidTile(worldPos, tex, selectedTexture);
 		}
@@ -841,6 +917,205 @@ public:
 		if (selectedType == 24) {
 			return new ConveyorTile(worldPos, tex, z, false);
 		}
+	}
+
+	//Do this next!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	int beatSet = 0;
+
+	Text* beatText;
+
+	tile* flashCheck(Vector2f worldPos) {
+		if (selectedType == 0) {
+			return new tile(worldPos, tex, selectedTexture, z);
+		}
+		if (selectedType == 1) {
+			FlashTile* t = new TopLeftCornerFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+
+		if (selectedType == 2) {
+			FlashTile* t = new HTubeTile(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 3) {
+			FlashTile* t = new VTubeTile(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 4) {
+			FlashTile* t = new TopRightCornerFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 5) {
+			FlashTile* t = new TopEdgeFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 6) {
+			FlashTile* t = new BottomRightCornerFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 7) {
+			FlashTile* t = new BottomLeftCornerFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 8) {
+			FlashTile* t = new BottomEdgeFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 9) {
+			FlashTile* t = new SquareFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 10) {
+			FlashTile* t = new LeftEdgeFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 11) {
+			FlashTile* t = new RightEdgeFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 12) {
+			FlashTile* t = new TopLeftWFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 13) {
+			FlashTile* t = new TopRightWFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 14) {
+			FlashTile* t = new WWallFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 15) {
+			FlashTile* t = new BottomLeftWFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 16) {
+			FlashTile* t = new BottomRightWFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 17) {
+			FlashTile* t = new BottomLeftCornerWFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 18) {
+			FlashTile* t = new WCeilingFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+		if (selectedType == 19) {
+			FlashTile* t = new WRoofFlash(worldPos, tex);
+			t->setTiming(beatSet);
+			return t;
+		}
+
+		if (selectedType == 20) {
+			FlashTile* t =flashTileCheck(worldPos);
+			t->setTiming(beatSet);
+			return t;
+		}
+
+		if (selectedType == 21) {
+			return new rightTile(worldPos, tex, selectedTexture);
+		}
+
+		
+	}
+
+	FlashTile* flashTileCheck(Vector2f pos) {
+
+		bool tileBelow = false;
+		bool tileAbove = false;
+
+		bool tileLeft = false;
+		bool tileRight = false;
+
+		for (tile* t : tileList) {
+			if (t->getLocation().x == pos.x) {
+				if (t->getLocation().y == pos.y + 1) {
+					if (t->getTiming() == beatSet) {
+						tileBelow = true;
+					}
+				}
+				if (t->getLocation().y == pos.y - 1) {
+					if (t->getTiming() == beatSet) {
+						tileAbove = true;
+					}
+				}
+			}
+
+			if (t->getLocation().y == pos.y) {
+				if (t->getLocation().x == pos.x + 1) {
+					if (t->getTiming() == beatSet) {
+						tileRight = true;
+					}
+				}
+				if (t->getLocation().x == pos.x - 1) {
+					if (t->getTiming() == beatSet) {
+						tileLeft = true;
+					}
+				}
+			}
+		}
+
+		if (tileRight && tileLeft) {
+			return new HTubeTile(pos, tex);
+		}
+
+		if (tileAbove && tileBelow) {
+			return new VTubeTile(pos, tex);
+		}
+
+		if (tileAbove && tileLeft) {
+			return new BottomRightCornerFlash(pos, tex);
+		}
+
+		if (tileAbove && tileRight) {
+			return new BottomLeftCornerFlash(pos, tex);
+		}
+
+		if (tileBelow && tileLeft) {
+			return new TopRightCornerFlash(pos, tex);
+		}
+
+		if (tileBelow && tileRight) {
+			return new TopLeftCornerFlash(pos, tex);
+		}
+
+		if (tileLeft) {
+			return new RightEdgeFlash(pos, tex);
+		}
+
+		if (tileRight) {
+			return new LeftEdgeFlash(pos, tex);
+		}
+
+		if (tileAbove) {
+			return new BottomEdgeFlash(pos, tex);
+		}
+
+		if (tileBelow) {
+			return new TopEdgeFlash(pos, tex);
+		}
+
+		return new SquareFlash(pos, tex);
 	}
 
 	void worldInteraction(Vector2i mousePos) {

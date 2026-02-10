@@ -51,7 +51,9 @@ public:
 	}
 
 	void deleteSprite() {
-		sprite = NULL;
+		sprite->deleteStuff();
+		delete sprite;
+		//sprite = NULL;
 	}
 
 	void setCode(string cod) {
@@ -112,7 +114,7 @@ public:
 		display = true;
 	}
 
-	void setPallete(string levelName) {};
+	virtual void setPallete(string levelName) {};
 
 	virtual void setPosition(Vector2f pos) {
 		sprite->setPosition(pos);

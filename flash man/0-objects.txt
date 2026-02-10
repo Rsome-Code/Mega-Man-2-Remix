@@ -1,0 +1,12 @@
+crazy cannon-n,3556,1067,1
+crazy cannon-n,4659,876,1
+crazy cannon-n,5203,490,1
+crazy cannon-n,5879,876,1
+break wall,5443,832,1
+Extra Life,6473,515,1
+break wall,7745,448,1
+break wall,7551,448,1
+break wall,7937,446,1
+crazy cannon-n,5871,489,1
+crazy cannon-y,4894,872,1
+crazy cannon-y,7378,876,1

@@ -44,4 +44,10 @@ public:
 	int crashDam() {
 		return 1;
 	}
+
+	void setPallete(string levelName) {
+		if (levelName == "heat man") {
+			sprite->setRect(IntRect(569, 627, 16, 32));
+		}
+	};
 };

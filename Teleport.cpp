@@ -70,8 +70,9 @@ public:
 		teleportAnim->thisFrame();
 		//if (sprite->getPosition().y < targetLoc->y) {
 
-		if (looped) {
+		if (looped && sprite->getCameraPosition().y > 300) {
 
+			
 			if (floorCheck(tiles, foot)) {
 
 				if (hitFloor == false) {

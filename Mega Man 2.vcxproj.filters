@@ -112,6 +112,9 @@
     <Filter Include="Source Files\Game Files\Debug\Debug Options">
       <UniqueIdentifier>{ac62d066-3cba-4a88-8dd7-0ca53983cdc3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Tiles\Flash Tiles">
+      <UniqueIdentifier>{9d6b9521-0acc-4429-a221-76eaf343faea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -843,6 +846,78 @@
     </ClCompile>
     <ClCompile Include="Fullscreen.cpp">
       <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
+    </ClCompile>
+    <ClCompile Include="Flash Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Square Flash.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="H Tube Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="V Tube Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Edge.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bottom Edge.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Left Corner.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Right Corner.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bottom Left Corner.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bottom Right Corner.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Left Edge.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Right Edge.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Left W.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Top Right W.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bottom right w.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bottom Left W.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="W wall.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="W Ceiling.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="W Roof.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bottom Left Corner w.cpp">
+      <Filter>Source Files\Game Files\Tiles\Flash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Flash Door.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Crazy Cannon.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Cannon Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Cannon Right.cpp">
+      <Filter>Source Files\Game Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

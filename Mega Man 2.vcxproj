@@ -182,6 +182,20 @@
     <Media Include="Assets\Sound\yoku.wav" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bottom Edge.cpp" />
+    <ClCompile Include="Bottom Left Corner w.cpp" />
+    <ClCompile Include="Bottom Left Corner.cpp" />
+    <ClCompile Include="Bottom Left W.cpp" />
+    <ClCompile Include="Bottom Right Corner.cpp" />
+    <ClCompile Include="Bottom right w.cpp" />
+    <ClCompile Include="Cannon Bullet.cpp" />
+    <ClCompile Include="Cannon Right.cpp" />
+    <ClCompile Include="Crazy Cannon.cpp" />
+    <ClCompile Include="Flash Door.cpp" />
+    <ClCompile Include="H Tube Tile.cpp" />
+    <ClCompile Include="Left Edge.cpp" />
+    <ClCompile Include="Right Edge.cpp" />
+    <ClCompile Include="Square Flash.cpp" />
     <ClCompile Include="Abstract Stage.cpp" />
     <ClCompile Include="Ammo Bar.cpp" />
     <ClCompile Include="Angles.cpp" />
@@ -221,6 +235,7 @@
     <ClCompile Include="Drill Spawner.cpp" />
     <ClCompile Include="Drill.cpp" />
     <ClCompile Include="Fire Bullet.cpp" />
+    <ClCompile Include="Flash Tile.cpp" />
     <ClCompile Include="FPS Change.cpp" />
     <ClCompile Include="Fullscreen.cpp" />
     <ClCompile Include="Gear Saw.cpp" />
@@ -314,6 +329,11 @@
     <ClCompile Include="Tile with object.cpp" />
     <ClCompile Include="Time Stopper Bullet.cpp" />
     <ClCompile Include="Time Stopper.cpp" />
+    <ClCompile Include="Top Edge.cpp" />
+    <ClCompile Include="Top Left Corner.cpp" />
+    <ClCompile Include="Top Left W.cpp" />
+    <ClCompile Include="Top Right Corner.cpp" />
+    <ClCompile Include="Top Right W.cpp" />
     <ClCompile Include="Torch Guy.cpp" />
     <ClCompile Include="transition angle.cpp" />
     <ClCompile Include="Ceiling Tile.cpp" />
@@ -367,8 +387,12 @@
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="UI Hitbox.cpp" />
     <ClCompile Include="UI Sprite.cpp" />
+    <ClCompile Include="V Tube Tile.cpp" />
     <ClCompile Include="Vertical Lava.cpp" />
     <ClCompile Include="Sniper Armour.cpp" />
+    <ClCompile Include="W Ceiling.cpp" />
+    <ClCompile Include="W Roof.cpp" />
+    <ClCompile Include="W wall.cpp" />
     <ClCompile Include="Water Anim.cpp" />
     <ClCompile Include="Water Bullet.cpp" />
     <ClCompile Include="Water Tile.cpp" />

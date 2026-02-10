@@ -69,6 +69,8 @@ class QuickMan : public Master {
 
 		damage = 4;
 
+		
+
 	}
 
 

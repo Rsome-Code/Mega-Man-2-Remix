@@ -1,0 +1,175 @@
+left edge flash-0,190,125,0,1
+right edge flash-0,191,125,0,1
+square flash-1,192,125,0,1
+left edge flash-2,193,125,0,1
+horizontal flash-2,194,125,0,1
+right edge flash-2,195,125,0,1
+square flash-0,196,125,0,1
+left edge flash-1,197,125,0,1
+right edge flash-1,198,125,0,1
+square flash-2,199,125,0,1
+left edge flash-0,200,125,0,1
+right edge flash-0,201,125,0,1
+square flash-1,202,125,0,1
+left edge flash-2,203,125,0,1
+horizontal flash-2,204,125,0,1
+right edge flash-2,205,125,0,1
+left edge flash-0,206,125,0,1
+right edge flash-0,207,125,0,1
+square flash-0,208,125,0,1
+top edge flash-1,208,126,0,1
+bottom edge flash-1,208,127,0,1
+square flash-2,208,128,0,1
+left edge flash-2,205,127,0,1
+horizontal flash-2,206,127,0,1
+right edge flash-2,207,127,0,1
+square flash-1,204,127,0,1
+left edge flash-0,202,127,0,1
+right edge flash-0,203,127,0,1
+square flash-1,201,127,0,1
+left edge flash-0,198,127,0,1
+horizontal flash-0,199,127,0,1
+right edge flash-0,200,127,0,1
+square flash-2,197,127,0,1
+right edge flash-1,196,127,0,1
+left edge flash-1,194,127,0,1
+horizontal flash-1,195,127,0,1
+left edge flash-0,192,127,0,1
+right edge flash-0,193,127,0,1
+square flash-1,191,127,0,1
+top edge flash-2,190,127,0,1
+bottom edge flash-2,190,128,0,1
+square flash-1,190,126,0,1
+left edge flash-0,190,129,0,1
+right edge flash-0,191,129,0,1
+square flash-2,192,129,0,1
+square flash-0,193,129,0,1
+square flash-1,194,129,0,1
+top edge flash-2,195,129,0,1
+bottom edge flash-2,195,130,0,1
+top edge flash-0,195,131,0,1
+vertical flash-0,195,132,0,1
+vertical flash-0,195,133,0,1
+bottom edge flash-0,195,134,0,1
+left edge flash-0,196,129,0,1
+right edge flash-0,197,129,0,1
+left edge flash-1,198,129,0,1
+right edge flash-1,199,129,0,1
+left edge flash-0,200,129,0,1
+right edge flash-0,201,129,0,1
+square flash-1,200,130,0,1
+top edge flash-2,200,131,0,1
+vertical flash-2,200,132,0,1
+vertical flash-2,200,133,0,1
+bottom edge flash-2,200,134,0,1
+square flash-2,202,129,0,1
+square flash-0,203,129,0,1
+top edge flash-2,204,129,0,1
+bottom edge flash-2,204,130,0,1
+top edge flash-0,204,131,0,1
+vertical flash-0,204,132,0,1
+vertical flash-0,204,133,0,1
+bottom edge flash-0,204,134,0,1
+square flash-1,205,129,0,1
+square flash-0,206,129,0,1
+square flash-1,207,129,0,1
+left edge flash-0,208,129,0,1
+right edge flash-0,209,129,0,1
+square flash-1,210,129,0,1
+top edge flash-2,211,129,0,1
+bottom edge flash-2,211,130,0,1
+top edge flash-0,211,131,0,1
+vertical flash-0,211,132,0,1
+vertical flash-0,211,133,0,1
+bottom edge flash-0,211,134,0,1
+left edge flash-1,211,128,0,1
+right edge flash-1,212,128,0,1
+square flash-0,213,128,0,1
+left edge flash-2,213,127,0,1
+right edge flash-2,214,127,0,1
+square flash-1,215,127,0,1
+left edge flash-0,215,126,0,1
+right edge flash-0,216,126,0,1
+top edge flash-2,216,127,0,1
+vertical flash-2,216,128,0,1
+vertical flash-2,216,129,0,1
+bottom edge flash-2,216,130,0,1
+left edge flash-0,217,130,0,1
+horizontal flash-0,218,130,0,1
+horizontal flash-0,219,130,0,1
+right edge flash-0,220,130,0,1
+left edge flash-1,217,128,0,1
+right edge flash-1,218,128,0,1
+square flash-0,219,128,0,1
+left edge flash-2,219,127,0,1
+right edge flash-2,220,127,0,1
+left edge flash-0,221,126,0,1
+horizontal flash-0,222,126,0,1
+right edge flash-0,223,126,0,1
+top edge flash-1,221,127,0,1
+bottom edge flash-1,221,128,0,1
+top edge flash-2,221,129,0,1
+vertical flash-2,221,130,0,1
+vertical flash-2,221,131,0,1
+vertical flash-2,221,132,0,1
+vertical flash-2,221,133,0,1
+bottom edge flash-2,221,134,0,1
+left edge flash-0,222,129,0,1
+right edge flash-0,223,129,0,1
+top edge flash-1,223,119,0,1
+bottom edge flash-1,223,120,0,1
+square flash-2,223,125,0,1
+square flash-1,223,124,0,1
+top edge flash-0,223,121,0,1
+vertical flash-0,223,122,0,1
+bottom edge flash-0,223,123,0,1
+square flash-2,223,118,0,1
+left edge flash-1,220,118,0,1
+horizontal flash-1,221,118,0,1
+right edge flash-1,222,118,0,1
+w ceiling flash-0,190,120,0,1
+w ceiling flash-0,191,120,0,1
+bottom left corner w flash-0,189,120,0,1
+w wall flash-0,189,117,0,1
+w wall flash-0,189,118,0,1
+w wall flash-0,189,119,0,1
+top left w flash-0,190,118,0,1
+bottom left w flash-0,190,119,0,1
+bottom right w flash-0,191,119,0,1
+top right w flash-0,191,118,0,1
+w roof flash-0,190,117,0,1
+w roof flash-0,191,117,0,1
+left edge flash-1,192,120,0,1
+horizontal flash-1,193,120,0,1
+right edge flash-1,194,120,0,1
+square flash-2,195,120,0,1
+left edge flash-0,196,120,0,1
+horizontal flash-0,197,120,0,1
+right edge flash-0,198,120,0,1
+square flash-1,199,120,0,1
+left edge flash-2,200,120,0,1
+right edge flash-2,201,120,0,1
+square flash-0,202,120,0,1
+left edge flash-1,203,120,0,1
+right edge flash-1,204,120,0,1
+square flash-2,205,120,0,1
+square flash-0,206,120,0,1
+square flash-1,207,120,0,1
+top edge flash-2,208,119,0,1
+bottom edge flash-2,208,120,0,1
+left edge flash-1,208,118,0,1
+horizontal flash-1,209,118,0,1
+right edge flash-1,210,118,0,1
+square flash-2,211,118,0,1
+left edge flash-0,213,118,0,1
+horizontal flash-0,214,118,0,1
+right edge flash-0,215,118,0,1
+square flash-2,212,118,0,1
+square flash-2,216,118,0,1
+square flash-2,217,118,0,1
+square flash-1,218,118,0,1
+square flash-2,219,118,0,1
+2,208,121,11,1
+2,208,122,11,1
+2,208,123,11,1
+2,208,124,11,1

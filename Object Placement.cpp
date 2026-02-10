@@ -22,6 +22,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "cannon right.cpp"
+
 #include "Load.cpp"
 #include "Object Tab.cpp"
 
@@ -94,6 +96,9 @@ public:
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
 		l->loadObjects(saveFile, to_string(section), &objects, enemyT, cam);
+
+		checkForDebugs();
+
 		l->loadFlags(levelName, &flagList, enemyT);
 		
 		
@@ -196,7 +201,7 @@ public:
 			keyBoardCheck();
 
 			Vector2i mousePos = m->getPosition(instance, wSize);
-			if (checkActive(mousePos)) {
+			if (m->checkActive()) {
 				mouseCheck(mousePos);
 			}
 
@@ -244,11 +249,48 @@ public:
 		}
 	}
 
+	void checkForDebugs() {
+		for (GameObject* obj : objects) {
+			if (obj->getCode() == "crazy cannon-y") {
+				GameObject* temp = obj;
+				obj = new CannonRight(obj->getSprite()->getTexture(), obj->getPosition());
+				//delete temp;
+				
+				cout << "hey";
+			}
+		}
+	}
+
+	void deleteTiles(list<tile*> lis) {
+		for (tile* obj : lis) {
+			delete obj;
+		}
+	}
+
+	void deleteObjects(list<GameObject*> lis) {
+		for (GameObject* obj : lis) {
+			if (obj->getCode() != "flag" && obj->getCode() != "flag-up" && obj->getCode() != "flag-down" && obj->getCode() != "flag-left" && obj->getCode() != "door" && obj->getCode() != "flash door") {
+				delete obj;
+			}
+		}
+	}
+
 	void reload() {
+
+		
+		deleteTiles(tileList);
 		tileList.clear();
+
+		deleteTiles(z2List);
 		z2List.clear();
+
+		deleteTiles(z3List);
 		z3List.clear();
+
+		deleteTiles(z4List);
 		z4List.clear();
+
+		deleteObjects(objects);
 		objects.clear();
 		Load* load = new Load();
 
@@ -256,7 +298,7 @@ public:
 
 		load->loadObjects(levelName, to_string(section), &objects, enemyT, cam);
 		
-
+		checkForDebugs();
 
 		for (GameObject* ob : flagList) {
 			if (ob->getSection() == section) {
@@ -279,6 +321,8 @@ public:
 				objects.push_back(door2);
 			}
 		}
+
+		delete load;
 
 	}
 
@@ -488,7 +532,10 @@ public:
 		if ((sf::Mouse::isButtonPressed(sf::Mouse::XButton1) && mouseX1Pressed != true )|| sf::Keyboard::isKeyPressed(sf::Keyboard::D)) //specifies
 		{
 			if (objectIt != objects.end()) {
+				GameObject* ob = *objectIt;
 				objects.erase(objectIt);
+				delete ob;
+				selectedPlaced = NULL;
 				objectIt = objects.end();
 			}
 		}
@@ -568,7 +615,7 @@ public:
 		myfile->open(saveFile + "\\" + to_string(section) + "-objects.txt");
 		
 
-		int cameraHeight = 0;
+		//int cameraHeight = 0;
 
 		if (door1 != NULL) {
 			door1->setCheckpoint();
@@ -613,6 +660,8 @@ public:
 					*flagfile << "\n";
 
 					flagfile->close();
+
+					delete flagfile;
 				}
 
 			}
@@ -630,11 +679,31 @@ public:
 		}
 		myfile->close();
 
+		delete myfile;
 
+		GameObject* thisF;
+		for (GameObject* obj : objects) {
+			if (obj->getCode() == "flag-down" || obj->getCode() == "flag-up" || obj->getCode() == "flag-right" || obj->getCode() == "flag-left") {
+				thisF = obj;
+			}
+		}
+		objects.remove(thisF);
+
+		for (EndFlag* flag : flagList) {
+			//delete flag;
+		}
 		flagList.clear();
 		l->loadFlags(levelName, &flagList, enemyT);
+
+		for (EndFlag* f : flagList) {
+			if (f->getSection() == section) {
+				objects.push_back(f);
+			}
+		}
+
 		reload();
 	}
+
 
 	void checkFlagDuplicates(object* o) {
 
@@ -661,6 +730,7 @@ public:
 				}
 			}
 			flagfile->close();
+			delete flagfile;
 		}
 		//flagfile->close();
 
