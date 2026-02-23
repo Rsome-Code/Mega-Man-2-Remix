@@ -5,12 +5,12 @@ class ResolutionChange : public DebugOption {
 
 
 public:
-	ResolutionChange(renderer* instance) {
+	ResolutionChange(shared_ptr<renderer> instance) {
 
 		update(instance);
 	}
 
-	void action(player* p, renderer* instance, double* targetFPS) {
+	void action(shared_ptr<player> p, shared_ptr<renderer> instance, double* targetFPS) {
 
 		int verticalRes = instance->getWindow()->getSize().y;
 
@@ -35,7 +35,7 @@ public:
 		
 	}
 
-	void update(renderer* instance) {
+	void update(shared_ptr<renderer> instance) {
 		name = string("Change Resolution: " + to_string(instance->getWindow()->getSize().x) + "/" + to_string(instance->getWindow()->getSize().y));
 	}
 };

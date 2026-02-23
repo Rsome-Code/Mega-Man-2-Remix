@@ -3,36 +3,36 @@
 
 class SquareFlash : public FlashTile {
 
-	objectHitbox* groundHitbox;
-	objectHitbox* leftHitbox;
-	objectHitbox* rightHitbox;
-	objectHitbox* ceilingHitbox;
+	shared_ptr<objectHitbox> groundHitbox;
+	shared_ptr<objectHitbox> leftHitbox;
+	shared_ptr<objectHitbox> rightHitbox;
+	shared_ptr<objectHitbox> ceilingHitbox;
 
 public:
 
-	SquareFlash(Vector2f loc, Texture* t) {
+	SquareFlash(Vector2f loc, shared_ptr<Texture> t) {
 		location = loc;
 
-		sprite = new objectSprite("Tile", t, Vector2i(64, 128), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("Tile", t, Vector2i(64, 128), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1));
 
-		groundHitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite);
-		ceilingHitbox = new objectHitbox(IntRect(Vector2i(0, size), Vector2i(16, 1)), true, sprite);
-		leftHitbox = new objectHitbox(IntRect(Vector2i(0, 4), Vector2i(1, 16)), true, sprite);
-		rightHitbox = new objectHitbox(IntRect(Vector2i(size, 4), Vector2i(1, 16)), true, sprite);
+		groundHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite));
+		ceilingHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, size), Vector2i(16, 1)), true, sprite));
+		leftHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 4), Vector2i(1, 16)), true, sprite));
+		rightHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(size, 4), Vector2i(1, 16)), true, sprite));
 
 		type = "square flash";
 	}
 
-	objectHitbox* getGround() {
+	shared_ptr<objectHitbox> getGround() {
 		return groundHitbox;
 	}
-	objectHitbox* getCeiling() {
+	shared_ptr<objectHitbox> getCeiling() {
 		return ceilingHitbox;
 	}
-	objectHitbox* getLeft() {
+	shared_ptr<objectHitbox> getLeft() {
 		return leftHitbox;
 	}
-	objectHitbox* getRight() {
+	shared_ptr<objectHitbox> getRight() {
 		return rightHitbox;
 	}
 
@@ -41,5 +41,9 @@ public:
 		leftHitbox->updatePos();
 		rightHitbox->updatePos();
 		ceilingHitbox->updatePos();
+	}
+
+	virtual void deleteHits() {
+
 	}
 };

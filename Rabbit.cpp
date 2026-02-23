@@ -6,10 +6,10 @@
 
 class Rabbit : public PhysicsEnemy {
 	using PhysicsEnemy::PhysicsEnemy;
-	animation* jumpAnim;
-	animation* landAnim;
-	animTimer* jumpTimer;
-	animTimer* landTimer;
+	shared_ptr<animation> jumpAnim;
+	shared_ptr<animation> landAnim;
+	shared_ptr<animTimer> jumpTimer;
+	shared_ptr<animTimer> landTimer;
 	bool faceRight = false;
 
 	float untilJump = 3;
@@ -27,26 +27,30 @@ class Rabbit : public PhysicsEnemy {
 	int maxShoot = 3;
 	int shootLeft = maxShoot;
 
-	
+
+public:
+	virtual ~Rabbit() {
+
+	}
 
 	void initial() {
-		//Texture* t = sprite->getTexture();
+		//shared_ptr<Texture> t = sprite->getTexture();
 		//delete sprite;
-		//phys = new physicsObject("enemy", t, IntRect(124, 574, 32, 37), initialPos, Vector2f(4, 4), 1);
+		//phys = shared_ptr<physicsObject> new physicsObject("enemy", t, IntRect(124, 574, 32, 37), initialPos, Vector2f(4, 4), 1);
 		phys->setRect(IntRect(124, 574, 32, 37));
 		phys->setPosition(initialPos);
 		sprite = phys;
 
-		jumpAnim = new animation(list<IntRect>{IntRect(124, 574, 32, 37), IntRect(157, 576, 32, 35), IntRect(190, 571, 29, 40)}, phys);
-		landAnim = new animation(list<IntRect>{ IntRect(157, 576, 32, 35), IntRect(124, 574, 32, 37)}, phys);
-		jumpTimer = new animTimer(jumpAnim, 20, false);
-		landTimer = new animTimer(landAnim, 20, false);
+		jumpAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(124, 574, 32, 37), IntRect(157, 576, 32, 35), IntRect(190, 571, 29, 40)}, phys));
+		landAnim = shared_ptr<animation>(new animation(list<IntRect>{ IntRect(157, 576, 32, 35), IntRect(124, 574, 32, 37)}, phys));
+		jumpTimer = shared_ptr<animTimer> (new animTimer(jumpAnim, 20, false));
+		landTimer = shared_ptr<animTimer> (new animTimer(landAnim, 20, false));
 
 		jumpAnim->setOffsetList(list<Vector2f>{ Vector2f(0, 0), Vector2f(0, 2 * 4), Vector2f(0, 0)});
 		landAnim->setOffsetList(list<Vector2f>{  Vector2f(0, 2 * 4), Vector2f(0, 0)});
 		deathAnim->setSprite(sprite);
-		hit = new objectHitbox(IntRect(0, 0, 32, 37), true, phys);
-		hurt = new objectHitbox(IntRect(0, 0, 32, 37), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 32, 37), true, phys));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 32, 37), phys));
 
 		
 
@@ -62,7 +66,7 @@ class Rabbit : public PhysicsEnemy {
 	}
 
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		checkDirection(p->getSprite());
 
 		if (grounded) {
@@ -86,7 +90,7 @@ class Rabbit : public PhysicsEnemy {
 
 	}
 
-	void runShoot(objectSprite* player, list<EnemyBullet*>* bList, float* deltaT){
+	void runShoot(shared_ptr<objectSprite> player, list<shared_ptr<EnemyBullet>>* bList, float* deltaT){
 		untilShoot_left -= *deltaT;
 
 		if (untilShoot_left <= 0) {
@@ -100,22 +104,22 @@ class Rabbit : public PhysicsEnemy {
 		}
 	}
 
-	void shoot(objectSprite* player, list<EnemyBullet*>* bList) {
+	void shoot(shared_ptr<objectSprite> player, list<shared_ptr<EnemyBullet>>* bList) {
 		float angle = getShootAngle(player);
-		Carrot* carrot = new Carrot(sprite->getTexture(), Vector2f(sprite->getPosition().x + (sprite->getSize().x/2), sprite->getPosition().y + (sprite->getSize().y / 2) ), angle);
+		shared_ptr<Carrot> carrot = shared_ptr<Carrot>(new Carrot(sprite->getTexture(), Vector2f(sprite->getPosition().x + (sprite->getSize().x/2), sprite->getPosition().y + (sprite->getSize().y / 2) ), angle));
 		//cList.push_back(carrot);
 		//objectList->push_back(carrot);
 		bList->push_back(carrot);
 	}
 
-	float getShootAngle(objectSprite* player) {
+	float getShootAngle(shared_ptr<objectSprite> player) {
 		Vector2f pos = sprite->getMiddlePos();
 		Vector2f pos1 = player->getMiddlePos();
 		return Maths::getAngle(pos, pos1);
 	}
 
 
-	void runJumping(player* p, float* deltaT, list<tile*>* tileList) {
+	void runJumping(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList) {
 		jumpTimer->run(deltaT);
 		phys->eachFrame(deltaT);
 		
@@ -126,7 +130,7 @@ class Rabbit : public PhysicsEnemy {
 		}
 	}
 
-	void checkShoot(player* p) {
+	void checkShoot(shared_ptr<player> p) {
 		gonnaShoot = true;
 	}
 

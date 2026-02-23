@@ -1,17 +1,18 @@
 #include "UI Hitbox.cpp"
 #include "Object Sprite.cpp"
+#include "physics object.cpp"
 #pragma once
 
 class objectHitbox:public UIHitbox {
-	using UIHitbox::UIHitbox;
+	//using UIHitbox::UIHitbox;
 
-	objectSprite* sprite;
+	shared_ptr<objectSprite> sprite;
 	Vector2f worldPos;
 
 
 	//Rectangle to be inputted will be relative to the top-left corner of the sprite it's attached too.
 	//Size will be based on the sprite sheet the sprite is from, so it will also be relative.
-	public:objectHitbox(IntRect relative, bool vis, objectSprite* s) {
+public:objectHitbox(IntRect relative, bool vis, shared_ptr<objectSprite> s) {
 		sprite = s;
 		relativePos = Vector2i(relative.getPosition());
 		worldPos = Vector2f(relativePos.x + sprite->getPosition().x, relativePos.y + sprite->getPosition().y);
@@ -21,7 +22,7 @@ class objectHitbox:public UIHitbox {
 		relativeRect = IntRect(Vector2i(relativePos), Vector2i(relative.getSize().x * scale.x, relative.getSize().y * scale.y));
 	}
 
-	objectHitbox(IntRect relative, objectSprite* s) {
+	objectHitbox(IntRect relative, shared_ptr<objectSprite> s) {
 		sprite = s;
 		relativePos = relative.getPosition();
 		worldPos = Vector2f(relativePos.x + sprite->getPosition().x, relativePos.y + sprite->getPosition().y);
@@ -30,6 +31,15 @@ class objectHitbox:public UIHitbox {
 		scale = sprite->getScale();
 		relativeRect = IntRect(Vector2i(relativePos), Vector2i(relative.getSize().x * scale.x, relative.getSize().y * scale.y));
 	}
+
+
+
+
+	objectHitbox() {
+		relativePos = Vector2i(0, 0);
+		relativeRect = IntRect(Vector2i(0,0), Vector2i(0,0));
+	}
+
 
 	public:void updatePos() {
 		this->worldPos = sprite->getPosition() + Vector2f(relativePos);
@@ -51,7 +61,7 @@ public:void setCameraPos(Vector2f pos) {
 public: Vector2f getPosition() {
 	return worldPos;
 }
-public: objectSprite* getSprite() {
+public: shared_ptr<objectSprite> getSprite() {
 	return sprite;
 }
 	  void setPosition(Vector2f p) {
@@ -61,11 +71,16 @@ public: objectSprite* getSprite() {
 		  this->relativePos = p;
 		  relativeRect = (IntRect(p, relativeRect.getSize()));
 	  }
+
+	  void setRelativeSize(Vector2i s) {
+		  this->relativeRect = IntRect(relativePos, s);
+	  }
+
 		Vector2f getRelativePosition() {
 		  return Vector2f(this->relativePos);
 	  }
 
-		void setSprite(objectSprite* s) {
+		void setSprite(shared_ptr<objectSprite> s) {
 			sprite = s;
 		}
 };

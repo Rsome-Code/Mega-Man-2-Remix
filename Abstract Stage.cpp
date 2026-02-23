@@ -21,68 +21,84 @@
 
 class abstractStage {
 protected:
-	list<tile*> tileList;
-	list<tile*> z2List;
-	list<tile*> z3List;
-	list<tile*> z4List;
+	list<shared_ptr<tile>> tileList;
+	list<shared_ptr<tile>> z2List;
+	list<shared_ptr<tile>> z3List;
+	list<shared_ptr<tile>> z4List;
 
 	string levelName;
 
 	//list<shared_ptr<GameObject>> objects;
 
-	list<GameObject*> objects;
-	list<GameObject*> backgroundObjects;
-	list<GameObject*> foregroundObjects;
-	list<enemy*> enemies;
-	list<Spawner*> spawners;
-	list<Item*> items;
+	list<shared_ptr<GameObject>> objects;
+	list<shared_ptr<GameObject>> backgroundObjects;
+	list<shared_ptr<GameObject>> foregroundObjects;
+	list<shared_ptr<enemy>> enemies;
+	list<shared_ptr<Spawner>> spawners;
+	list<shared_ptr<Item>> items;
 
-	SpawnArea* spawn = NULL;
+	shared_ptr<SpawnArea> spawn = NULL;
 
 
 	//This should have been a vector
 	list<transition*> tList;
-	Texture* tileTexture;
-	Texture* enemyTexture;
+	shared_ptr<Texture> tileTexture;
+	shared_ptr<Texture> enemyTexture;
 	Vector2f initialCamera;
 	Vector2f initalPlayer;
-	Texture* bossTexture;
+	shared_ptr<Texture> bossTexture;
 	
 	Vector2f flagPos;
 	Vector2f lastFlagPos;
 	enum transitionAngle transAngle;
 	enum transitionAngle lastAngle;
 
-	list<EndFlag*> flags;
+	list<shared_ptr<EndFlag>> flags;
 	
 	float z = 1;
 
-	Door* door1;
-	Door* door2;
+	shared_ptr<Door> door1;
+	shared_ptr<Door> door2;
 
-	Load* l;
-	Music* music;
+	shared_ptr<Load> l;
+	shared_ptr<Music> music;
 	
 
 public:
-	abstractStage(string name, SoundCollection* soundCol) {
-		l = new Load();
+
+	virtual ~abstractStage() {
+
+
+		tList.clear();
+
+		
+
+		//delete door1;
+		//delete door2;
+
+
+		
+		//delete music;
+	}
+
+	abstractStage(string name, shared_ptr<SoundCollection> soundCol) {
+		l = shared_ptr<Load>(new Load());
 		levelName = name;
-		tileTexture = new Texture();
+		tileTexture = shared_ptr<Texture> (new Texture());
 		tileTexture->loadFromFile("Assets\\stage\\" + name + ".png");
 		setInitialPlayer(Vector2f((8 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12 * 4 * 16, (2 * 4) * 16));
-		bossTexture = new Texture();
+		bossTexture = shared_ptr<Texture> (new Texture());
 		bossTexture->loadFromFile("Assets\\" + name + ".png");
 
-		enemyTexture = new Texture();
+		enemyTexture = shared_ptr<Texture> (new Texture());
 		enemyTexture->loadFromFile("Assets\\enemy.png");
 
-		load(name, "0", soundCol);
+		loadFlags(name);
 		lastFlagPos = Vector2f(0,0);
 
 
-		music = new Music();
+		music = shared_ptr<Music>(new Music());
 
 		music->openFromFile("assets\\sound\\music\\" + name + ".mp3");
 
@@ -105,7 +121,7 @@ public:
 
 protected:
 	/*void addMultiTile(multiTile* t) {
-		for (tile* tile : *t->getTiles()) {
+		for (shared_ptr<tile> tile : *t->getTiles()) {
 			tileList.push_back(tile);
 		}
 	}
@@ -115,7 +131,7 @@ protected:
 		tileList.push_back(l->getTop());
 	}*/
 
-	void addEnemy(enemy* e) {
+	void addEnemy(shared_ptr<enemy> e) {
 		enemies.push_back(e);
 	}
 
@@ -131,12 +147,14 @@ protected:
 
 public:
 
-	Music* getMusic() {
+	shared_ptr<Music> getMusic() {
 		return music;
 	}
 
-	void reload(string name, string section, SoundCollection* soundCol) {
+	void reload(string name, string section, shared_ptr<SoundCollection> soundCol) {
+		
 		tileList.clear();
+
 		z2List.clear();
 		z3List.clear();
 		z4List.clear();
@@ -154,7 +172,7 @@ public:
 	}
 
 	Vector2f getFlagPos(int section) {
-		for (EndFlag* flag : flags) {
+		for (shared_ptr<EndFlag> flag : flags) {
 			if (flag->getSection() == section) {
 				return flag->getSprite()->getPosition();
 			}
@@ -162,7 +180,7 @@ public:
 	}
 
 	//Only last placed flag is counted for each section
-	void addEndFlag(EndFlag* flag) {
+	void addEndFlag(shared_ptr<EndFlag> flag) {
 		
 		//lastFlagPos = flagPos;
 		
@@ -176,7 +194,7 @@ public:
 	}
 
 	void updateSection(int section) {
-		for (EndFlag* flag : flags) {
+		for (shared_ptr<EndFlag> flag : flags) {
 			if (flag->getSection() == section - 1) {
 				lastFlagPos = flag->getSprite()->getPosition();
 			}
@@ -188,8 +206,8 @@ public:
 		
 	}
 
-	EndFlag* getLastFlag(int section) {
-		for (EndFlag* flag : flags) {
+	shared_ptr<EndFlag> getLastFlag(int section) {
+		for (shared_ptr<EndFlag> flag : flags) {
 			if (flag->getSection() == section - 1) {
 				
 				return flag;
@@ -197,8 +215,8 @@ public:
 		}
 		return NULL;
 	}
-	EndFlag* getCurrentFlag(int section) {
-		for (EndFlag* flag : flags) {
+	shared_ptr<EndFlag> getCurrentFlag(int section) {
+		for (shared_ptr<EndFlag> flag : flags) {
 			if (flag->getSection() == section) {
 				return flag;
 			}
@@ -211,7 +229,7 @@ public:
 	}
 
 	Vector2f getLastFlagPos(int section) {
-		for (EndFlag* flag : flags) {
+		for (shared_ptr<EndFlag> flag : flags) {
 			if (flag->getSection() == section - 1) {
 
 				return flag->getSprite()->getPosition();
@@ -231,24 +249,24 @@ public:
 		return initalPlayer;
 	}
 
-	list<tile*> getTiles() {
+	list<shared_ptr<tile>> getTiles() {
 		return tileList;
 	}
-	list<GameObject*> getObjects() {
+	list<shared_ptr<GameObject>> getObjects() {
 		return objects;
 	}
-	list<enemy*> getEnemies() {
+	list<shared_ptr<enemy>> getEnemies() {
 		return enemies;
 	}
 	list<transition*> getTList() {
 		return tList;
 	}
 
-	list<Item*> getItems() {
+	list<shared_ptr<Item>> getItems() {
 		return items;
 	}
 
-	void load(string name, string section, SoundCollection* soundCol) {
+	void load(string name, string section, shared_ptr<SoundCollection> soundCol) {
 
 		if (section == "3") {
 			cout << "here";
@@ -273,107 +291,120 @@ public:
 
 	}
 
+	void loadFlags(string name) {
+		l->loadFlags(name, &flags, enemyTexture);
+		door1 = l->getDoor1();
+		door2 = l->getDoor2();
+	}
+
+
 	void checkTilesInObjects() {
-		for (GameObject* o : objects) {
-			for (tile* t : o->getTiles()) {
+		for (shared_ptr<GameObject> o : objects) {
+			for (shared_ptr<tile> t : o->getTiles()) {
 				tileList.push_back(t);
 			}
 			
 		}
 	}
 
-	Door* getDoor1() {
+	shared_ptr<Door> getDoor1() {
 		return door1;
 	}
-	Door* getDoor2() {
+	shared_ptr<Door> getDoor2() {
 		return door2;
 	}
 
-	SpawnArea* getAreaSpawner() {
+	shared_ptr<SpawnArea> getAreaSpawner() {
 		return spawn;
 	}
-	list<Spawner*> getSpawners() {
+	list<shared_ptr<Spawner>> getSpawners() {
 		return spawners;
 	}
 
-	EndFlag* getLastCheckpoint(int sect) {
+	shared_ptr<EndFlag> getLastCheckpoint(int sect) {
 		bool found = true;
-		int current = sect - 1;
-		while (found) {
-			found = false;
-			for (EndFlag* flag : flags) {
-				if (flag->getSection() == current) {
-					found = true;
-					if (flag->getCheckpoint()) {
-						return flag;
+		int current = sect;
+		shared_ptr<EndFlag> thisFlag = NULL;
+		while (thisFlag == NULL) {
+			current -= 1;
+			found = true;
+			while (found) {
+				found = false;
+				for (shared_ptr<EndFlag> flag : flags) {
+					if (flag->getSection() == current) {
+						found = true;
+						if (flag->getCheckpoint()) {
+							return flag;
+						}
 					}
 				}
+				current -= 1;
+
 			}
-			current -= 1;
 		}
 		return NULL;
 
 	}
 
-	list<EndFlag*> getFlags() {
+	list<shared_ptr<EndFlag>> getFlags() {
 		return flags;
 	}
 
 	void zCorrection() {
-		for (tile* t : z2List) {
+		for (shared_ptr<tile> t : z2List) {
 			t->getSprite()->setZ(1.25);
 		}
-		for (tile* t : z3List) {
+		for (shared_ptr<tile> t : z3List) {
 			t->getSprite()->setZ(1.5);
 		}
-		for (tile* t : z4List) {
+		for (shared_ptr<tile> t : z4List) {
 			t->getSprite()->setZ(1.75);
 		}
 
 	}
 
-	list<tile*> getZ2List() {
+	list<shared_ptr<tile>> getZ2List() {
 		return z2List;
 	}
-	list<tile*> getZ3List() {
+	list<shared_ptr<tile>> getZ3List() {
 		return z3List;
 	}
-	list<tile*> getZ4List() {
+	list<shared_ptr<tile>> getZ4List() {
 		return z4List;
 	}
 
-	list<GameObject*> getBackgroundObjects() {
+	list<shared_ptr<GameObject>> getBackgroundObjects() {
 		return backgroundObjects;
 	}
 
-	list<GameObject*> getForegroundObjects() {
+	list<shared_ptr<GameObject>> getForegroundObjects() {
 		return foregroundObjects;
 	}
 
-	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
+	shared_ptr<tile> tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 		if (selectedType == 0) {
-			return new tile(worldPos, tileTexture, selectedTexture, z);
+			return shared_ptr<tile>(new tile(worldPos, tileTexture, selectedTexture, z));
 		}
 		else if (selectedType == 1) {
-			return new topTile(worldPos, tileTexture, selectedTexture);
+			return shared_ptr<tile>(new topTile(worldPos, tileTexture, selectedTexture));
 		}
 		else if (selectedType == 2) {
-			return new rightTile(worldPos, tileTexture, selectedTexture);
+			return shared_ptr<tile>(new rightTile(worldPos, tileTexture, selectedTexture));
 		}
 		else if (selectedType == 3) {
-			return new ceilingTile(worldPos, tileTexture, selectedTexture);
+			return shared_ptr<tile>(new ceilingTile(worldPos, tileTexture, selectedTexture));
 		}
 		else if (selectedType == 4) {
-			return new leftTile(worldPos, tileTexture, selectedTexture);
+			return shared_ptr<tile>(new leftTile(worldPos, tileTexture, selectedTexture));
 		}
 		else if (selectedType == 8) {
-			return new ladderTile(worldPos, tileTexture);
+			return shared_ptr<tile>(new ladderTile(worldPos, tileTexture));
 		}
 		else if (selectedType == 9) {
-			return new topLadder(worldPos, tileTexture);
+			return shared_ptr<tile>(new topLadder(worldPos, tileTexture));
 		}
 		else {
-			return new solidTile(worldPos, tileTexture, selectedTexture);
+			return shared_ptr<tile>(new solidTile(worldPos, tileTexture, selectedTexture));
 		}
 	}
 	vector<int> split(const string& str, char sep)

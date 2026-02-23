@@ -5,23 +5,23 @@
 class BubbleLead : public Weapon {
 
 public:
-	BubbleLead(objectSprite* player, Texture* t, SoundCollection* soundCol) {
+	BubbleLead(shared_ptr<objectSprite> player, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		maxWeaponCount = 2;
 
 		for (int i = 0; i < maxWeaponCount; i++) {
-			BubbleBullet* bul = new BubbleBullet(player, t, soundCol);
+			shared_ptr<BubbleBullet> bul = shared_ptr<BubbleBullet>(new BubbleBullet(player, t, soundCol));
 			bullets.push_back(bul);
 		}
 
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\bubble lead.png");
 
 		ammoDecrease = 0.5;
 		name = "Bubble Lead";
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		shootB->loadFromFile("assets\\sound\\buster.wav");
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound>(new Sound());
 		shootSound->setBuffer(*shootB);
 	}
 

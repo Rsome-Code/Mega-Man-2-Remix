@@ -4,9 +4,9 @@
 
 class ItemBullet {
 protected:
-	physicsObject* phys;
+	shared_ptr<physicsObject> phys;
 
-	objectHitbox* hitbox;
+	shared_ptr<objectHitbox> hitbox;
 	string code;
 
 	bool display = true;
@@ -18,11 +18,11 @@ public:
 		return false;
 	}
 
-	objectHitbox* getHit() {
+	shared_ptr<objectHitbox> getHit() {
 		return hitbox;
 	}
 
-	physicsObject* getSprite() {
+	shared_ptr<physicsObject> getSprite() {
 		if (display) {
 			return phys;
 		}

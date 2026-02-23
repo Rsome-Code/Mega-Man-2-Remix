@@ -8,18 +8,18 @@ class megaBuster : public bullet{
 	
 
 public:
-	megaBuster(objectSprite* o, Texture* t, SoundCollection* soundCol) {
+	megaBuster(shared_ptr<objectSprite> o, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		origin = o;
-		sprite = new movable ("buster", t, Vector2i(220, 4), Vector2i(8, 6), Vector2f(0, 0), Vector2f(4, 4), 1);
+		sprite = shared_ptr<movable>(new movable ("buster", t, Vector2i(220, 4), Vector2i(8, 6), Vector2f(0, 0), Vector2f(4, 4), 1));
 		
-		hitbox = new objectHitbox(IntRect(Vector2i(-2, -2), Vector2i(8, 10)), true, sprite);
+		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(-2, -2), Vector2i(8, 10)), sprite));
 		shootTime = 0.5;
 		shootTemp = 0;
 		dinkSetup(soundCol);
 
 	}
 
-	int checkDamage(object* en) {
+	int checkDamage(shared_ptr<object> en) {
 		return en->busterDam();
 	}
 
@@ -64,11 +64,11 @@ public:
 
 	
 
-	objectHitbox* getHitbox() {
+	shared_ptr<objectHitbox> getHitbox() {
 		return hitbox;
 	}
 
-	void onHit(object* e){
+	void onHit(shared_ptr<object> e){
 		shootReset();
 	}
 

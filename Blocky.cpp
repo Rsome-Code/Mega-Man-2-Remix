@@ -9,8 +9,8 @@ class Blocky : public PhysicsEnemy {
 
 	int angle = 180;
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	enum State {
 		moving, stunned, restoring
@@ -33,18 +33,30 @@ class Blocky : public PhysicsEnemy {
 
 	float yTarget = 0;
 
+public:
+
+	void flashmanPallete() {
+		phys->setRect(IntRect(398, 11, 16, 64));
+		openLoop = { IntRect(398, 11, 16, 64), IntRect(415, 11, 20, 64), IntRect(436, 11, 20, 64) };
+		closeLoop = { IntRect(457, 11, 16, 64), IntRect(474, 11, 20, 64), IntRect(495, 11, 20, 64) };
+
+	}
+
+	virtual ~Blocky() {
+
+	}
 
 	void initial() {
 		phys->setPosition(initialPos);
 		phys->setRect(IntRect(516, 11, 16, 64));
 
-		hit = new objectHitbox(IntRect(0, 0, 16, 64), phys);
-		hurt = new objectHitbox(IntRect(0, 16 * 4, 16, 16), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 64), phys));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 16 * 4, 16, 16), phys));
 		hp = 2;
 		state = moving;
 
-		anim = new animation(openLoop, phys);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(openLoop, phys));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 		setCode("blocky");
 		phys->enableGravity(true);
 		offSetList();
@@ -55,7 +67,7 @@ class Blocky : public PhysicsEnemy {
 	}
 
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		if (state == moving) {
 			blinkLoop(deltaT);
 			timer->run(deltaT);
@@ -74,8 +86,8 @@ class Blocky : public PhysicsEnemy {
 				shoot(bList);
 
 				phys->setRect(IntRect(533, 76, 16, 16));
-				hit = new objectHitbox(IntRect(0, 0, 16, 16), phys);
-				hurt = new objectHitbox(IntRect(-9999, -9999, 0, 0), phys);
+				hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), phys));
+				hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(-9999, -9999, 0, 0), phys));
 				dam = false;
 			}
 		}
@@ -96,8 +108,8 @@ class Blocky : public PhysicsEnemy {
 		else {
 			if (replaceLoop(deltaT, bList)) {
 				state = moving;
-				hit = new objectHitbox(IntRect(0, 0, 16, 64), phys);
-				hurt = new objectHitbox(IntRect(0, 16 * 4, 16, 16), phys);
+				hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 64), phys));
+				hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 16 * 4, 16, 16), phys));
 				phys->setPosition(Vector2f(phys->getPosition().x, yTarget));
 			}
 		}
@@ -124,30 +136,30 @@ class Blocky : public PhysicsEnemy {
 		}
 	}
 
-	void shoot(list<EnemyBullet*>* bList) {
+	void shoot(list<shared_ptr<EnemyBullet>>* bList) {
 
 
-		BlockyBlock* block1 = new BlockyBlock(sprite->getTexture(), Vector2f(phys->getPosition().x, yTarget), 900, faceRight);
-		BlockyBlock* block2 = new BlockyBlock(sprite->getTexture(), Vector2f(phys->getPosition().x, yTarget + (32*4)), 600, faceRight);
-		BlockyBlock* block3 = new BlockyBlock(sprite->getTexture(), Vector2f(phys->getPosition().x, yTarget + (48 * 4)), 400, faceRight);
+		shared_ptr<BlockyBlock> block1 = shared_ptr<BlockyBlock>(new BlockyBlock(sprite->getTexture(), Vector2f(phys->getPosition().x, yTarget), 900, faceRight));
+		shared_ptr<BlockyBlock> block2 = shared_ptr<BlockyBlock>(new BlockyBlock(sprite->getTexture(), Vector2f(phys->getPosition().x, yTarget + (32*4)), 600, faceRight));
+		shared_ptr<BlockyBlock> block3 = shared_ptr<BlockyBlock>(new BlockyBlock(sprite->getTexture(), Vector2f(phys->getPosition().x, yTarget + (48 * 4)), 400, faceRight));
 		bList->push_back(block1);
 		bList->push_back(block2);
 		bList->push_back(block3);
 	}
 
-	void replaceStart(list<EnemyBullet*>* bList) {
+	void replaceStart(list<shared_ptr<EnemyBullet>>* bList) {
 		int startPos = 40 * 4;
-		RepairBlock* rep = new RepairBlock(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + (startPos)), yTarget);
-		RepairBlock* rep1 = new RepairBlock(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + ((startPos) + 32*4)), yTarget + (32*4));
-		RepairBlock* rep2 = new RepairBlock(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + ((startPos)) + 48 * 4), yTarget + (48*4));
+		shared_ptr<RepairBlock> rep = shared_ptr<RepairBlock> (new RepairBlock(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + (startPos)), yTarget));
+		shared_ptr<RepairBlock> rep1 = shared_ptr<RepairBlock> (new RepairBlock(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + ((startPos) + 32*4)), yTarget + (32*4)));
+		shared_ptr<RepairBlock> rep2 = shared_ptr<RepairBlock> (new RepairBlock(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + ((startPos)) + 48 * 4), yTarget + (48*4)));
 		bList->push_back(rep);
 		bList->push_back(rep1);
 		bList->push_back(rep2);
 	}
 
-	bool replaceLoop(float* deltaT, list<EnemyBullet*>* bList) {
+	bool replaceLoop(float* deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 		bool done = true;
-		for (EnemyBullet* bul : *bList) {
+		for (shared_ptr<EnemyBullet> bul : *bList) {
 			if (bul->getCode() == "repair block") {
 				done = false;
 			}

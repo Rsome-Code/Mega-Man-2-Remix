@@ -8,8 +8,8 @@
 
 class BubbleBullet : public bullet {
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	bool grounded = false;
 
@@ -19,17 +19,17 @@ class BubbleBullet : public bullet {
 
 public:
 
-	BubbleBullet(objectSprite* o, Texture* t, SoundCollection* soundCol) {
+	BubbleBullet(shared_ptr<objectSprite> o, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		
 		shootTime = 2;
 		shootTemp = shootTime;
 		origin = o;
 
-		sprite = new movable("buster", t, Vector2i(220, 233), Vector2i(16, 16), Vector2f(0, 0), Vector2f(4, 4));
-		hitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 16)), sprite);
+		sprite = shared_ptr<movable>(new movable("buster", t, Vector2i(220, 233), Vector2i(16, 16), Vector2f(0, 0), Vector2f(4, 4)));
+		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 16)), sprite));
 
-		anim = new animation(list<IntRect>{IntRect(220, 230, 16, 16), IntRect(238, 231, 14, 14), IntRect(256, 232, 12, 12)}, sprite);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(220, 230, 16, 16), IntRect(238, 231, 14, 14), IntRect(256, 232, 12, 12)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 
 		speed = 700;
 
@@ -102,13 +102,13 @@ public:
 		return false;
 	}
 
-	void tileCollision(list<tile*> tileList) {
+	void tileCollision(list<shared_ptr<tile>> tileList) {
 		if (!deflected) {
 			if (grounded) {
 				grounded = false;
 				direction = 90;
 			}
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				if (t->getGround() != NULL) {
 					if (hitboxDetect::hitboxDetection(hitbox, t->getGround())) {
 						grounded = true;
@@ -119,7 +119,7 @@ public:
 			}
 		}
 	}
-	int checkDamage(object* en) {
+	int checkDamage(shared_ptr<object> en) {
 		return en->bubbleDam();
 	}
 

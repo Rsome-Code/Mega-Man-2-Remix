@@ -8,7 +8,7 @@ class BeamRight : public Beam {
 		code = "beam right";
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		
 		if (start) {
 			float thisFrame = speed * *deltaT;
@@ -19,8 +19,8 @@ class BeamRight : public Beam {
 		}
 	}
 
-	void collCheck(list<tile*>* tileList) {
-		for (tile* t : *tileList) {
+	void collCheck(list<shared_ptr<tile>>* tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getLeft() != NULL) {
 				if (hitboxDetect::hitboxDetection(Vector2f(sprite->getEndPosition().x, sprite->getMiddlePos().y), t->getLeft())) {
 					start = false;

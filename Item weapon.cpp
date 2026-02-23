@@ -6,13 +6,13 @@ class ItemWeapon : public Weapon {
 	using Weapon::Weapon;
 protected:
 	string bulCode;
-	objectSprite* origin;
+	shared_ptr<objectSprite> origin;
 public:
 
 
-	void checkCount(list<ItemBullet*> allItems) {
+	void checkCount(list<shared_ptr<ItemBullet>> allItems) {
 		int ammount = 0;
-		for (ItemBullet* bul : allItems) {
+		for (shared_ptr<ItemBullet> bul : allItems) {
 			if (bul->getCode() == bulCode) {
 				ammount++;
 			}

@@ -11,7 +11,7 @@ class SmallBird :public TempEnemy {
 	};
 	using TempEnemy::TempEnemy;
 
-	movable* mov;
+	shared_ptr<movable> mov;
 
 	State state;
 
@@ -20,22 +20,26 @@ class SmallBird :public TempEnemy {
 	float movAngle;
 	float speed = 200;
 
-	animation* flapAnim;
-	animTimer* flapTime;
+	shared_ptr<animation> flapAnim;
+	shared_ptr<animTimer> flapTime;
 
 public:
 
+	virtual ~SmallBird() {
+
+	}
+
 	void initial() {
-		mov = new movable("eh", sprite->getTexture(), IntRect(504, 437, 8, 8), initialPos, Vector2f(4, 4));
+		mov = shared_ptr<movable>(new movable("eh", sprite->getTexture(), IntRect(504, 437, 8, 8), initialPos, Vector2f(4, 4)));
 		sprite = mov;
-		hit = new objectHitbox(IntRect(0, 0, 8, 8), mov);
-		hurt = new objectHitbox(IntRect(0, 0, 8, 8), mov);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), mov));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), mov));
 		state = SCATTER;
 
 		movAngle = rand() % 360;
 
-		flapAnim = new animation(list<IntRect>{IntRect(504, 437, 8, 8), IntRect(513, 437, 8, 8)}, sprite);
-		flapTime = new animTimer(flapAnim, 15, true);
+		flapAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(504, 437, 8, 8), IntRect(513, 437, 8, 8)}, sprite));
+		flapTime = shared_ptr<animTimer> (new animTimer(flapAnim, 15, true));
 
 		offSetList();
 
@@ -45,7 +49,7 @@ public:
 		damage = 3;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		if (state == SCATTER || state == TRACKING) {
 			if (state == SCATTER) {
 				scatterLoop(deltaT);
@@ -64,7 +68,7 @@ public:
 		mov->move(movAngle, deltaT, 800);
 	}
 
-	void trackStart(player* p) {
+	void trackStart(shared_ptr<player> p) {
 		movAngle = Maths::getAngle(mov->getPosition(), p->getPosition());
 		state = TRACKING;
 	}

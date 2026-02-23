@@ -1,0 +1,4 @@
+sniper armour,8046,8101,1
+sniper armour,9402,8096,1
+sniper armour,11368,7907,1
+break wall,11845,7619,1

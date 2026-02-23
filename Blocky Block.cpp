@@ -11,17 +11,22 @@ class BlockyBlock : public PhysicsBullet {
 	int angle = 180;
 	int moveSpeed;
 
-	animation* deathAnim;
-	animTimer* deathTimer;
+	shared_ptr<animation> deathAnim;
+	shared_ptr<animTimer> deathTimer;
 
 public:
-	BlockyBlock(Texture* t, Vector2f pos, int speed, bool right) {
-		phys = new physicsObject(t, IntRect(567, 76, 16, 16), pos, Vector2f(4, 4));
-		sprite = phys;
-		hit = new objectHitbox(IntRect(0, 0, 16, 16), phys);
 
-		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
-		deathTimer = new animTimer(deathAnim, 8, false);
+	virtual ~BlockyBlock() {
+
+	}
+
+	BlockyBlock(shared_ptr<Texture> t, Vector2f pos, int speed, bool right) {
+		phys = shared_ptr<physicsObject> (new physicsObject(t, IntRect(567, 76, 16, 16), pos, Vector2f(4, 4)));
+		sprite = phys;
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), phys));
+
+		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite));
+		deathTimer = shared_ptr<animTimer> (new animTimer(deathAnim, 8, false));
 		list<Vector2f> temp = list<Vector2f>{ Vector2f(0, 0), Vector2f(4 * 4, 4 * 4), Vector2f(6 * 4, 6 * 4), Vector2f(7 * 4, 7 * 4), Vector2f(10 * 4, 10 * 4) };
 		deathAnim->setOffsetList(temp);
 
@@ -42,7 +47,7 @@ public:
 	};
 	State state = launch;
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 
 		tileCollision(tileList);
 		
@@ -63,7 +68,7 @@ public:
 			hit->updatePos();
 			if (grounded) {
 				state = die;
-				hit = new objectHitbox(IntRect(-99999, -999999, 0, 0), sprite);
+				hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(-99999, -999999, 0, 0), sprite));
 			}
 		}
 

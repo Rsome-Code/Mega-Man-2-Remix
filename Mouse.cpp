@@ -15,7 +15,7 @@ class mouse {
 	bool active;
 
 public:
-	Vector2i getPosition(renderer* instance, Vector2f wSize) {
+	Vector2i getPosition(shared_ptr<renderer> instance, Vector2f wSize) {
 		Vector2i temp = Mouse::getPosition(*instance->getWindow());
 		float xScale = 1920 / wSize.x;
 		float yScale = 1080 / wSize.y;

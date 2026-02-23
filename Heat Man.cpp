@@ -26,22 +26,22 @@ class HeatMan : public Master {
 
 	float moveSpeed = 800;
 
-	animation* ignitionAnim;
-	animTimer* ignitionTimer;
+	shared_ptr<animation> ignitionAnim;
+	shared_ptr<animTimer> ignitionTimer;
 	
-	animation* flameAnim;
-	animTimer* flameTimer;
+	shared_ptr<animation> flameAnim;
+	shared_ptr<animTimer> flameTimer;
 
-	animation* throwAnim;
-	animTimer* throwTimer;
+	shared_ptr<animation> throwAnim;
+	shared_ptr<animTimer> throwTimer;
 
-	animation* moveStartAnim;
-	animTimer* moveStartTimer;
+	shared_ptr<animation> moveStartAnim;
+	shared_ptr<animTimer> moveStartTimer;
 
-	animation* moveAnim;
-	animTimer* moveTimer;
+	shared_ptr<animation> moveAnim;
+	shared_ptr<animTimer> moveTimer;
 
-	animation* idleAnim;
+	shared_ptr<animation> idleAnim;
 	
 	float untilIdle = 0.5;
 	float untilIdle_left = 0;
@@ -65,9 +65,9 @@ public:
 			}
 		}
 
-		introAnim = new animation(introList, sprite);
+		introAnim = shared_ptr<animation>(new animation(introList, sprite));
 		introAnim->setOffsetList(list<Vector2f>{Vector2f(-1 * 4, 5 * 4), Vector2f(3 * 4, -1 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4), Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4), Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4), Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4), Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4), Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4)});
-		introTimer = new animTimer(introAnim, 6, false);
+		introTimer = shared_ptr<animTimer> (new animTimer(introAnim, 6, false));
 		
 	}
 
@@ -75,9 +75,9 @@ public:
 
 		introSetup();
 
-		deathAnimation = new DeathAnim(sprite, "Atomic Fire");
+		deathAnimation = shared_ptr<DeathAnim>(new DeathAnim(sprite, "Atomic Fire"));
 
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\heat man.png");
 		phys->setTexture(t);
 
@@ -85,39 +85,39 @@ public:
 		phys->setScale(Vector2f(4, 4));
 		mov = phys;
 
-		ignitionAnim = new animation(igList, sprite);
+		ignitionAnim = shared_ptr<animation>(new animation(igList, sprite));
 		ignitionAnim->setOffsetList(list<Vector2f>{Vector2f(-1 * 4, 5 * 4), Vector2f(3 * 4, -1 * 4), Vector2f(0 * 4, 0 * 4)});
-		ignitionTimer = new animTimer(ignitionAnim, 6, false);
+		ignitionTimer = shared_ptr<animTimer> (new animTimer(ignitionAnim, 6, false));
 		
-		flameAnim = new animation(flameList, sprite);
+		flameAnim = shared_ptr<animation>(new animation(flameList, sprite));
 		flameAnim->setOffsetList(list<Vector2f>{Vector2f(-1 * 4, -6 * 4), Vector2f(0 * 4, -7 * 4)});
-		flameTimer = new animTimer(flameAnim, 6, true);
+		flameTimer = shared_ptr<animTimer> (new animTimer(flameAnim, 6, true));
 
-		throwAnim = new animation(list<IntRect>{IntRect(258, 28, 27, 25), IntRect(286, 25, 38, 28)}, sprite);
+		throwAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(258, 28, 27, 25), IntRect(286, 25, 38, 28)}, sprite));
 		throwAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, 0 * 4), Vector2f(-4 * 4, -3 * 4)});
-		throwTimer = new animTimer(throwAnim, 6, false);
+		throwTimer = shared_ptr<animTimer> (new animTimer(throwAnim, 6, false));
 
 
 		masterInitial(string("heat man"));
 
 		setCode("heat man");
-		hit = new objectHitbox(IntRect(0, 0, 24, 24), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 24, 24), sprite));
 		hurt = hit;
 
-		moveAnim = new animation(list<IntRect>{IntRect(97, 142, 48, 16), IntRect(146, 146, 48, 8), IntRect(195, 145, 48, 10)}, sprite);
+		moveAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(97, 142, 48, 16), IntRect(146, 146, 48, 8), IntRect(195, 145, 48, 10)}, sprite));
 		moveAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 4 * 4), Vector2f(0 * 4, 3 * 4), Vector2f(0 * 4, 0 * 4) });
-		moveTimer = new animTimer(moveAnim, 12, true);
+		moveTimer = shared_ptr<animTimer> (new animTimer(moveAnim, 12, true));
 
-		moveStartAnim = new animation(list<IntRect>{IntRect(22, 125, 16, 48), IntRect(39, 133, 24, 32)}, sprite);
+		moveStartAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(22, 125, 16, 48), IntRect(39, 133, 24, 32)}, sprite));
 		moveStartAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, -16 * 4), Vector2f(0 * 4, -8 * 4)});
-		moveStartTimer = new animTimer(moveStartAnim, 6, false);
+		moveStartTimer = shared_ptr<animTimer> (new animTimer(moveStartAnim, 6, false));
 
-		idleAnim = new animation(list<IntRect>{IntRect(2, 28, 29, 25)}, sprite);
+		idleAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(2, 28, 29, 25)}, sprite));
 		isMoving = false;
 		flaming = false;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		//updateHitSize();
 
@@ -160,7 +160,7 @@ public:
 		}
 
 		if (invincible) {
-			hurt = new objectHitbox(IntRect(4, 4, 0, 0), sprite);
+			hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(4, 4, 0, 0), sprite));
 		}
 		else {
 			hurt = hit;
@@ -215,7 +215,7 @@ public:
 		
 
 
-	void chargeLoop(float* deltaT, player* p) {
+	void chargeLoop(float* deltaT, shared_ptr<player> p) {
 		if (!ignitionTimer->isFinished()) {
 			ignitionTimer->run(deltaT);
 			flameAnim->reset();
@@ -237,7 +237,7 @@ public:
 		}
 	}
 
-	void shoot(player* p, list<EnemyBullet*>* bList) {
+	void shoot(shared_ptr<player> p, list<shared_ptr<EnemyBullet>>* bList) {
 		vector<float> angles = { 30, 45, 60 };
 		Vector2f pos;
 		if (!faceRight) {
@@ -256,13 +256,13 @@ public:
 			int angle = angles[i];
 			
 			for (int j = 0; j < 5; j++) {
-				FireBall* newBall = new FireBall(angle, speed, phys->getTexture(), pos, float(j * 20));
+				shared_ptr<FireBall> newBall = shared_ptr<FireBall>(new FireBall(angle, speed, phys->getTexture(), pos, float(j * 20)));
 				bList->push_back(newBall);
 			}
 		}
 	}
 
-	float speedCalc(player* p, float angle) {
+	float speedCalc(shared_ptr<player> p, float angle) {
 		
 		float dist = (fabs(p->getPosition().x - sprite->getPosition().x)) / cos(double(angle));
 		float time = 1.1;

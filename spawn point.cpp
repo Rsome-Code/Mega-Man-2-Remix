@@ -16,10 +16,10 @@ public:
 
 		
 
-		Texture* tex = new Texture();
+		shared_ptr<Texture> tex = shared_ptr<Texture> (new Texture());
 		tex->loadFromFile("assets\\" + objectName + " spawn icon.png");
 
-		sprite = new objectSprite(tex);
+		sprite = shared_ptr<objectSprite>(new objectSprite(tex));
 		
 		obName = objectName;
 

@@ -6,12 +6,12 @@ class SmallHealth : public Item {
 
 public:
 
-	SmallHealth(Texture* t, Vector2f pos) {
-		phys = new physicsObject("health", t, IntRect(1, 5, 8,8), pos, Vector2f(4, 4), 1);
+	SmallHealth(shared_ptr<Texture> t, Vector2f pos) {
+		phys = shared_ptr<physicsObject> (new physicsObject("health", t, IntRect(1, 5, 8,8), pos, Vector2f(4, 4), 1));
 		sprite = phys;
-		anim = new animation(list<IntRect>{IntRect(1, 5, 8,8), IntRect(10, 5, 8,8)}, sprite);
-		timer = new animTimer(anim, 10, true);
-		hit = new objectHitbox(IntRect(0, 0, 8, 8), false, sprite);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(1, 5, 8,8), IntRect(10, 5, 8,8)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 10, true));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), false, sprite));
 	}
 
 	int getIncrease() {

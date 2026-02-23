@@ -11,9 +11,9 @@ protected:
 	float startX;
 	float endX;
 
-	TempEnemy* en;
+	shared_ptr<TempEnemy> en;
 
-	Texture* texture;
+	shared_ptr<Texture> texture;
 
 	float toSpawn = 4;
 	float toSpawn_left = 0;
@@ -24,7 +24,7 @@ public:
 	SpawnArea(float start) {
 		startX = start;
 		
-		texture = new Texture();
+		texture = shared_ptr<Texture> (new Texture());
 		texture->loadFromFile("assets\\enemy.png");
 		
 	}
@@ -37,7 +37,7 @@ public:
 		//en->initial();
 	}
 
-	void eachFrame(player* p, float deltaT, list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	void eachFrame(shared_ptr<player> p, float deltaT, list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		if (p->getPosition().x > startX && p->getPosition().x < endX) {
 			spawnTime(deltaT, enemyList, cam, soundCol);
 		}
@@ -46,7 +46,7 @@ public:
 		}
 	}
 
-	void spawnTime(float deltaT, list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	void spawnTime(float deltaT, list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		toSpawn_left -= deltaT;
 		if (toSpawn_left <= 0) {
 			toSpawn_left = toSpawn;
@@ -59,7 +59,7 @@ public:
 		checkPoints();
 	}
 
-	virtual void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	virtual void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 
 	}
 
@@ -70,7 +70,7 @@ public:
 		return endX;
 	}
 
-	enemy* getEnemy() {
+	shared_ptr<enemy> getEnemy() {
 		return en;
 	}
 

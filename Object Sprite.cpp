@@ -15,20 +15,29 @@ class objectSprite:public UISprite{
 
 	//textureControl textureList[64];
 
+	
+
 
 protected:
 	Vector2f position;
 	float zAxis;
-	Image image;
+	//Image image;
 	bool flipped = false;
 	bool flipPos = false;
 	Vector2f visualOffset = Vector2f(0, 0);
 
 	float defaultTransparency;
-	list<RectangleShape*> pixels;
+	list<shared_ptr<RectangleShape>> pixels;
 
 public: 
-	objectSprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float z) {
+
+
+
+	virtual ~objectSprite() {
+
+	}
+	
+	objectSprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float z) {
 		this->type = type;
 		this->texture = texture;
 
@@ -40,7 +49,7 @@ public:
 		zAxis = z;
 	}
  
-	objectSprite(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale, float z) {
+	objectSprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale, float z) {
 		this->type = type;
 		this->texture = texture;
 
@@ -51,7 +60,7 @@ public:
 		cameraPosition = Vector2f(0, 0);
 		zAxis = z;
 	}
-	objectSprite(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+	objectSprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 		this->type = type;
 		this->texture = texture;
 
@@ -63,7 +72,7 @@ public:
 		zAxis = 1;
 	}
 
-	objectSprite(Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+	objectSprite(shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 		this->type = "";
 		this->texture = texture;
 
@@ -75,7 +84,7 @@ public:
 		zAxis = 1;
 	}
 
-	objectSprite(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, float z, float defaultTransparency) {
+	objectSprite(string type, shared_ptr<Texture> texture, Image im, IntRect rect, Vector2f position, Vector2f scale, float z, float defaultTransparency) {
 		this->type = type;
 		this->texture = texture;
 
@@ -86,11 +95,11 @@ public:
 		cameraPosition = Vector2f(0, 0);
 		zAxis = z;
 		this->defaultTransparency = defaultTransparency;
-		image = im;
+		//image = im;
 	}
 
 	//Must also load an image of the texture for lighting to work
-	objectSprite(string type, Texture* texture, Image im, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float z) {
+	objectSprite(string type, shared_ptr<Texture> texture, Image im, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, float z) {
 		this->type = type;
 		this->texture = texture;
 
@@ -100,11 +109,11 @@ public:
 		setScale(scale);
 		cameraPosition = Vector2f(0, 0);
 		zAxis = z;
-		image = im;
-		pixelSetup();
+		//image = im;
+		//pixelSetup();
 	}
 
-	objectSprite(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, float z) {
+	objectSprite(string type, shared_ptr<Texture> texture, Image im, IntRect rect, Vector2f position, Vector2f scale, float z) {
 		this->type = type;
 		this->texture = texture;
 
@@ -114,11 +123,11 @@ public:
 		setScale(scale);
 		cameraPosition = Vector2f(0, 0);
 		zAxis = z;
-		image = im;
-		pixelSetup();
+		//image = im;
+		//pixelSetup();
 	}
 
-	objectSprite(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale) {
+	objectSprite(string type, shared_ptr<Texture> texture, Image im, IntRect rect, Vector2f position, Vector2f scale) {
 		this->type = type;
 		this->texture = texture;
 
@@ -128,11 +137,11 @@ public:
 		setScale(scale);
 		cameraPosition = Vector2f(0, 0);
 		zAxis = 1;
-		image = im;
-		pixelSetup();
+		//image = im;
+		//pixelSetup();
 	}
 
-	objectSprite(Texture* texture) {
+	objectSprite(shared_ptr<Texture> texture) {
 		this->texture = texture;
 		this->type = "eh";
 		loadTexture();
@@ -147,7 +156,7 @@ public:
 
 	}
 
-	objectSprite(objectSprite* s) {
+	objectSprite(shared_ptr<objectSprite> s) {
 		this->type = s->getType();
 		this->texture = s->getTexture();
 
@@ -161,7 +170,23 @@ public:
 		  
 	}
 
-public: objectSprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
+
+
+	objectSprite(shared_ptr<UISprite> s) {
+		this->type = s->getType();
+		this->texture = s->getTexture();
+
+		loadTexture();
+		setRect(s->getRect().getPosition(), s->getRect().getSize());
+		setPosition(s->getCameraPosition());
+		setScale(s->getScale());
+		cameraPosition = Vector2f(0, 0);
+		zAxis = 1;
+		setVisualOffset(s->getVisualOffset());
+
+	}
+
+public: objectSprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
 	this->type = type;
 	this->texture = texture;
 
@@ -182,14 +207,14 @@ public:
 	objectSprite(Vector2f f) {
 		this->zAxis = 1;
 		setPosition(f);
-		texture = new Texture();
+		texture = shared_ptr<Texture> (new Texture());
 		loadTexture();
 		setScale(Vector2f(1, 1));
 		cameraPosition = Vector2f(0, 0);
 
 	}
 
-	void pixelSetup() {
+	/*void pixelSetup() {
 
 		pixels.clear();
 
@@ -204,7 +229,7 @@ public:
 				Color col = image.getPixel(x, y);
 				auto alpha = col.a;
 				if (alpha == 255) {
-					RectangleShape* r = new RectangleShape();
+					shared_ptr<RectangleShape> r = shared_ptr<RectangleShape>(new RectangleShape());
 					r->setPosition(Vector2f((x - tRect.x) * 4, (y - tRect.y) * 4));
 					r->setSize(Vector2f(4, 4));
 					pixels.push_back(r);
@@ -213,7 +238,7 @@ public:
 				
 			}
 		}
-	}
+	}*/
 
 	void setDefaultTransparency(float t) {
 		defaultTransparency = t;
@@ -222,7 +247,7 @@ public:
 		return defaultTransparency;
 	}
 
-	list<RectangleShape*> getPixels() {
+	list<shared_ptr<RectangleShape>> getPixels() {
 		return pixels;
 	}
 
@@ -231,13 +256,13 @@ public:
 	}
 
 	void updateLighting() {
-		pixelSetup();
+		//pixelSetup();
 		setFullColour(new Color(0, 0, 0, defaultTransparency));
 	}
 
 	void lightingCheck(LightSource* light) {
 		bool done = false;
-		for (RectangleShape* pixel : pixels) {
+		for (shared_ptr<RectangleShape> pixel : pixels) {
 			Vector2f check = pixelPosition(pixel);
 			float distance = Maths::getDistance(pixelPosition(pixel), light->getPosition());
 			if (!done) {
@@ -268,20 +293,20 @@ public:
 		}
 	}
 
-	Vector2f pixelPosition(RectangleShape* pixel) {
+	Vector2f pixelPosition(shared_ptr<RectangleShape> pixel) {
 		Vector2f relPosition = pixel->getPosition();
 		Vector2f camPos = relPosition + cameraPosition;
 		return (camPos);
 	}
 
 	/*void updatepixels() {
-		for (RectangleShape* r : pixels) {
+		for (shared_ptr<RectangleShape> r : pixels) {
 			r->setPosition(Vector2f(r->getPosition().x + cameraPosition.x, r->getPosition().y + cameraPosition.y));
 		}
 	}*/
 
 	void setFullColour(const Color* c) {
-		for (RectangleShape* r : pixels) {
+		for (shared_ptr<RectangleShape> r : pixels) {
 			r->setFillColor(*c);
 		}
 	}
@@ -300,10 +325,10 @@ public: void setPosition(Vector2f position) {
 
 	
 
-	void setCameraPosition(Vector2f c) {
-		this->cameraPosition = c;
-		thisOne.setPosition(c);
-	}
+	//void setCameraPosition(Vector2f c) {
+	//	this->cameraPosition = c;
+	//	thisOne.setPosition(c);
+//	}
 
 
 public: 
@@ -331,6 +356,7 @@ public:
 		  zAxis = z;
 	  }
 	  float getZ() {
+
 		  return zAxis;
 	  }
 

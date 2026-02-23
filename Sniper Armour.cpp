@@ -5,15 +5,15 @@
 
 class SniperArmour : public PhysicsEnemy {
 	using PhysicsEnemy::PhysicsEnemy;
-	animation* jumpAnim;
-	animTimer* jumpTimer;
+	shared_ptr<animation> jumpAnim;
+	shared_ptr<animTimer> jumpTimer;
 
 	list<IntRect> frames = { IntRect(682, 476, 42, 56), IntRect(726, 480, 46, 52), IntRect(778, 468, 39, 64)};
-	SoundBuffer* shootB;
-	Sound* shootSound;
+	shared_ptr<SoundBuffer> shootB;
+	shared_ptr<Sound> shootSound;
 
-	SoundBuffer* landB;
-	Sound* landSound;
+	shared_ptr<SoundBuffer> landB;
+	shared_ptr<Sound> landSound;
 
 	enum State {
 		jumping, shooting, idle
@@ -32,8 +32,12 @@ class SniperArmour : public PhysicsEnemy {
 	float idleTime = 1;
 	float idleTime_left = idleTime;
 
+public:
 
-	void loadSound(SoundCollection* soundCol) {
+	virtual ~SniperArmour() {
+	}
+
+	void loadSound(shared_ptr<SoundCollection> soundCol) {
 
 		sound = soundCol->getLand();
 
@@ -51,11 +55,11 @@ class SniperArmour : public PhysicsEnemy {
 		shootDelay_left = shootDelay;
 		state = idle;
 		offSetList();
-		jumpAnim = new animation(frames, sprite);
-		jumpTimer = new animTimer(jumpAnim, 6, false);
+		jumpAnim = shared_ptr<animation>(new animation(frames, sprite));
+		jumpTimer = shared_ptr<animTimer> (new animTimer(jumpAnim, 6, false));
 		setCode("sniper armour");
 
-		hit = new objectHitbox(IntRect(0, 0, 42, 56), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 42, 56), sprite));
 		hurt = hit;
 		phys->enableGravity(true);
 
@@ -65,7 +69,7 @@ class SniperArmour : public PhysicsEnemy {
 
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		
 		checkDirection(p->getSprite());
 		tileCollision(tileList);
@@ -137,16 +141,16 @@ class SniperArmour : public PhysicsEnemy {
 
 	}
 
-	void spawnEnemy(list<enemy*>* enemies, SoundCollection* soundCol) {
+	void spawnEnemy(list<shared_ptr<enemy>>* enemies, shared_ptr<SoundCollection> soundCol) {
 
-		SniperJoe* joe = new SniperJoe(sprite->getTexture(), sprite->getPosition());
+		shared_ptr<SniperJoe> joe = shared_ptr<SniperJoe>(new SniperJoe(sprite->getTexture(), sprite->getPosition()));
 		joe->setHitSound(soundCol->getHit());
 		joe->initial(false);
 		joe->setSound(soundCol);
 		enemies->push_back(joe);
 	}
 
-	void shoot(list<EnemyBullet*>* bList, player* p) {
+	void shoot(list<shared_ptr<EnemyBullet>>* bList, shared_ptr<player> p) {
 		shootSound->play();
 		Vector2f sPos;
 		
@@ -161,7 +165,7 @@ class SniperArmour : public PhysicsEnemy {
 
 		int angle = Maths::getAngle(sPos, p->getSprite()->getMiddlePos());
 
-		SniperBullet* newB = new SniperBullet(sprite->getTexture(), sPos, angle);
+		shared_ptr<SniperBullet> newB = shared_ptr<SniperBullet> (new SniperBullet(sprite->getTexture(), sPos, angle));
 		bList->push_back(newB);
 	}
 

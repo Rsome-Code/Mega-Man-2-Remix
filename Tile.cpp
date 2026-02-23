@@ -1,6 +1,7 @@
 #include "Object Sprite.cpp"
 #include "Object Hitbox.cpp"
 #include "Object.cpp"
+#include "movable object.cpp"
 
 #pragma once
 
@@ -18,7 +19,7 @@ public:
 	tile() {
 		type = "0";
 	}
-	tile(Vector2f loc, Texture* t, int tileNum, float z) {
+	tile(Vector2f loc, shared_ptr<Texture> t, int tileNum, float z) {
 		this->z = z;
 		tileNumber = tileNum;
 		location = loc;
@@ -27,11 +28,12 @@ public:
 		
 
 		location = loc;
-		sprite = new objectSprite("Tile", t, Vector2i(tX * 16, tY * 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("Tile", t, Vector2i(tX * (16 + 1), tY * (16)), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1));
+		setTileNum(tileNum);
 		type = "0";
 	}
 
-	objectSprite* getSprite(){
+	shared_ptr<objectSprite> getSprite(){
 		return sprite;
 	}
 
@@ -48,25 +50,25 @@ public:
 		tileNumber = i;
 
 
-		sprite->setRect(Vector2i(tX * 16, tY * 16), Vector2i(16, 16));
+		sprite->setRect(Vector2i(tX * (16), tY * (16)), Vector2i(16, 16));
 	}
 
 	float getZ() {
 		return z;
 	}
 
-	virtual objectHitbox* getGround() { return NULL; };
-	virtual objectHitbox* getCeiling() { return NULL; };
-	virtual objectHitbox* getLeft() { return NULL; };
-	virtual objectHitbox* getRight() { return NULL; };
-	virtual objectHitbox* getLadder() { return NULL; };
-	virtual objectHitbox* getDeathBox() { return NULL; };
-	virtual objectHitbox* getWaterBox() {return NULL;};
+	virtual shared_ptr<objectHitbox> getGround() { return NULL; };
+	virtual shared_ptr<objectHitbox> getCeiling() { return NULL; };
+	virtual shared_ptr<objectHitbox> getLeft() { return NULL; };
+	virtual shared_ptr<objectHitbox> getRight() { return NULL; };
+	virtual shared_ptr<objectHitbox> getLadder() { return NULL; };
+	virtual shared_ptr<objectHitbox> getDeathBox() { return NULL; };
+	virtual shared_ptr<objectHitbox> getWaterBox() {return NULL;};
 	virtual void animate(float* deltaT) {};
 	virtual void reset() {};
 
-	virtual list<objectSprite*> getInternalSprites() {
-		return list<objectSprite*> {};
+	virtual list<shared_ptr<objectSprite>> getInternalSprites() {
+		return list<shared_ptr<objectSprite>> {};
 	}
 
 
@@ -93,7 +95,7 @@ public:
 
 	}
 
-	virtual Text* getText(Font* font) {
+	virtual shared_ptr<Text> getText(shared_ptr<Font> font) {
 		return NULL;
 	}
 
@@ -102,5 +104,9 @@ public:
 	}
 
 	virtual void resetBeat() {};
+
+	virtual void deleteInt() {
+		
+	}
 
 };

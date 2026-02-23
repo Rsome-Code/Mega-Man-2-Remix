@@ -30,13 +30,13 @@
 #pragma once
 
 class ObjectPlacer {
-	list<tile*> tileList;
-	list<tile*> z2List;
-	list<tile*> z3List;
-	list<tile*> z4List;
-	list<GameObject*> objects;
-	list<GameObject*>::iterator objectIt;
-	Texture* tex;
+	list<shared_ptr<tile>> tileList;
+	list<shared_ptr<tile>> z2List;
+	list<shared_ptr<tile>> z3List;
+	list<shared_ptr<tile>> z4List;
+	list<shared_ptr<GameObject>> objects;
+	list<shared_ptr<GameObject>>::iterator objectIt;
+	shared_ptr<Texture> tex;
 	string levelName;
 	string saveFile;
 	bool run;
@@ -45,8 +45,8 @@ class ObjectPlacer {
 
 	int section = 0;
 
-	timer* time;
-	camera* cam;
+	shared_ptr<timer> time;
+	shared_ptr<camera> cam;
 	Vector2i mousePos;
 	Vector2i dragStart;
 	bool mouse1Pressed;
@@ -60,36 +60,41 @@ class ObjectPlacer {
 	bool zoomed = false;
 	
 	Tab* tab;
-	GameObject* selectedObject = NULL;
-	GameObject* selectedPlaced = NULL;
-	Texture* enemyT;
+	shared_ptr<GameObject> selectedObject = NULL;
+	shared_ptr<GameObject> selectedPlaced = NULL;
+	shared_ptr<Texture> enemyT;
 
-	list<EndFlag*> flagList;
+	list<shared_ptr<EndFlag>> flagList;
 
-	Door* door1;
-	Door* door2;
-	Load* l;
+	shared_ptr<Door> door1;
+	shared_ptr<Door> door2;
+	shared_ptr<Load> l;
 
 	bool checkpoint = false;
 	bool cPressed = false;
 
 
 public:
-	ObjectPlacer(Texture* T, string levelN, list<GameObject*> obList) {
+
+	virtual ~ObjectPlacer() {
+
+	}
+
+	ObjectPlacer(shared_ptr<Texture> T, string levelN, list<shared_ptr<GameObject>> obList) {
 		this->levelName = levelN;
 		saveFile = levelN;
 		tex = T;
-		l = new Load();
+		l = shared_ptr<Load>(new Load());
 		l->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 
 		changeZ();
-		cam = new camera();
+		cam = shared_ptr<camera>(new camera());
 		cam->setZoom(0.5);
 
-		enemyT = new Texture();
+		enemyT = shared_ptr<Texture> (new Texture());
 		enemyT->loadFromFile("Assets\\enemy.png");
 		
-		for (object* o : obList) {
+		for (shared_ptr<object> o : obList) {
 			o->setCode();
 			o->setDisplay(true);
 		}
@@ -102,7 +107,7 @@ public:
 		l->loadFlags(levelName, &flagList, enemyT);
 		
 		
-		for (GameObject* ob : flagList) {
+		for (shared_ptr<GameObject> ob : flagList) {
 			if (ob->getSection() == section) {
 				objects.push_back(ob);
 			}
@@ -114,8 +119,8 @@ public:
 		
 	}
 	
-	void loop(renderer* instance, double targetRate) {
-		time = new timer();
+	void loop(shared_ptr<renderer> instance, double targetRate) {
+		time = shared_ptr<timer>(new timer());
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -143,34 +148,34 @@ public:
 
 
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
 			if (z != 4) {
-				for (tile* t : z4List) {
+				for (shared_ptr<tile> t : z4List) {
 					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
 			else {
-				for (tile* t : z4List) {
+				for (shared_ptr<tile> t : z4List) {
 					instance->objectAccess(t, cam);
 				}
 			}
 
 			if (z <= 3) {
 				if (z != 3) {
-					for (tile* t : z3List) {
+					for (shared_ptr<tile> t : z3List) {
 						instance->bObjectDisplay(t->getSprite(), cam);
 					}
 				}
 				else {
-					for (tile* t : z3List) {
+					for (shared_ptr<tile> t : z3List) {
 						instance->objectAccess(t, cam);
 					}
 				}
@@ -180,12 +185,12 @@ public:
 
 			if (z <= 2) {
 				if (z != 2) {
-					for (tile* t : z2List) {
+					for (shared_ptr<tile> t : z2List) {
 						instance->bObjectDisplay(t->getSprite(), cam);
 					}
 				}
 				else {
-					for (tile* t : z2List) {
+					for (shared_ptr<tile> t : z2List) {
 						instance->objectAccess(t, cam);
 					}
 				}
@@ -193,7 +198,7 @@ public:
 			}
 
 			if (z == 1) {
-				for (tile* t : tileList) {
+				for (shared_ptr<tile> t : tileList) {
 					instance->objectAccess(t, cam);
 				}
 			}
@@ -205,7 +210,7 @@ public:
 				mouseCheck(mousePos);
 			}
 
-			for (object* o : objects) {
+			for (shared_ptr<object> o : objects) {
 
 				o->forceDisplay(true);
 				if (o->getSprite() != NULL) {
@@ -213,7 +218,7 @@ public:
 				}
 			}
 
-			//for (object* o : flagList) {
+			//for (shared_ptr<object> o : flagList) {
 				//instance->objectAccess(o, cam);
 			//}
 
@@ -250,10 +255,10 @@ public:
 	}
 
 	void checkForDebugs() {
-		for (GameObject* obj : objects) {
+		for (shared_ptr<GameObject> obj : objects) {
 			if (obj->getCode() == "crazy cannon-y") {
-				GameObject* temp = obj;
-				obj = new CannonRight(obj->getSprite()->getTexture(), obj->getPosition());
+				shared_ptr<GameObject> temp = obj;
+				obj = shared_ptr<CannonRight> (new CannonRight(obj->getSprite()->getTexture(), obj->getPosition()));
 				//delete temp;
 				
 				cout << "hey";
@@ -261,18 +266,12 @@ public:
 		}
 	}
 
-	void deleteTiles(list<tile*> lis) {
-		for (tile* obj : lis) {
-			delete obj;
-		}
+	void deleteTiles(list<shared_ptr<tile>> lis) {
+
 	}
 
-	void deleteObjects(list<GameObject*> lis) {
-		for (GameObject* obj : lis) {
-			if (obj->getCode() != "flag" && obj->getCode() != "flag-up" && obj->getCode() != "flag-down" && obj->getCode() != "flag-left" && obj->getCode() != "door" && obj->getCode() != "flash door") {
-				delete obj;
-			}
-		}
+	void deleteObjects(list<shared_ptr<GameObject>> lis) {
+
 	}
 
 	void reload() {
@@ -292,7 +291,7 @@ public:
 
 		deleteObjects(objects);
 		objects.clear();
-		Load* load = new Load();
+		shared_ptr<Load> load = shared_ptr<Load>(new Load());
 
 		load->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 
@@ -300,7 +299,7 @@ public:
 		
 		checkForDebugs();
 
-		for (GameObject* ob : flagList) {
+		for (shared_ptr<GameObject> ob : flagList) {
 			if (ob->getSection() == section) {
 				objects.push_back(ob);
 			}
@@ -322,7 +321,7 @@ public:
 			}
 		}
 
-		delete load;
+
 
 	}
 
@@ -341,7 +340,7 @@ public:
 		selectedPlaced = checkPlaced(worldPos);
 		if (selectedObject != NULL && selectedPlaced == NULL) {
 			//object temp = *selectedObject;
-			GameObject* tempLoc = new GameObject(selectedObject);
+			shared_ptr<GameObject> tempLoc = shared_ptr<GameObject>(new GameObject(selectedObject));
 			//tempLoc = selectedObject;
 			tempLoc->getSprite()->setPosition(worldPos);
 			tempLoc->setDisplay(true);
@@ -359,18 +358,18 @@ public:
 
 	}
 
-	void addFlagList(GameObject* object) {
-		EndFlag* temp;
+	void addFlagList(shared_ptr<GameObject> object) {
+		shared_ptr<EndFlag> temp;
 		if (selectedObject->getCode() == "flag-down" || selectedObject->getCode() == "flag-up" || selectedObject->getCode() == "flag") {
 
-			for (EndFlag* flag : flagList) {
+			for (shared_ptr<EndFlag> flag : flagList) {
 				if (flag->getSection() == section) {
 					flagList.remove(flag);
 					break;
 				}
 			}
 
-			temp = new EndFlag(selectedObject->getSprite()->getTexture(), selectedObject->getSprite()->getPosition(), selectedObject->getAngle(), section);
+			temp = shared_ptr<EndFlag> (new EndFlag(selectedObject->getSprite()->getTexture(), selectedObject->getSprite()->getPosition(), selectedObject->getAngle(), section));
 			flagList.push_back(temp);
 
 
@@ -378,10 +377,10 @@ public:
 		}
 	}
 
-	void hFlagYPos(GameObject* thisFlag) {
+	void hFlagYPos(shared_ptr<GameObject> thisFlag) {
 		
 		int sectCheck = section - 1;
-		EndFlag* lastVFlag = getFlag(sectCheck);
+		shared_ptr<EndFlag> lastVFlag = getFlag(sectCheck);
 		while (lastVFlag != NULL && lastVFlag->getAngle() != UP && lastVFlag->getAngle() != DOWN) {
 			sectCheck -= 1;
 			lastVFlag = getFlag(sectCheck);
@@ -398,13 +397,13 @@ public:
 		
 	}
 
-	void downFlagYPos(GameObject* thisFlag) {
+	void downFlagYPos(shared_ptr<GameObject> thisFlag) {
 
-		EndFlag* lastFlag = getFlag(section - 1);
+		shared_ptr<EndFlag> lastFlag = getFlag(section - 1);
 
 		if (lastFlag->getCode() == "flag-up") {
 			if (thisFlag->getSprite()->getPosition().y < lastFlag->getSprite()->getPosition().y) {
-				EndFlag* lastVFlag = getLastFlagOfAngle(thisFlag, UP);
+				shared_ptr<EndFlag> lastVFlag = getLastFlagOfAngle(thisFlag, UP);
 
 				if (lastVFlag != NULL) {
 					thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y));
@@ -414,12 +413,12 @@ public:
 		
 	}
 
-	void upFlagYPos(object* thisFlag) {
-		EndFlag* lastFlag = getFlag(section - 1);
+	void upFlagYPos(shared_ptr<object> thisFlag) {
+		shared_ptr<EndFlag> lastFlag = getFlag(section - 1);
 
 		if (lastFlag->getCode() == "flag-down") {
 			if (thisFlag->getSprite()->getPosition().y > lastFlag->getSprite()->getPosition().y) {
-				EndFlag* lastVFlag = getLastFlagOfAngle(thisFlag, DOWN);
+				shared_ptr<EndFlag> lastVFlag = getLastFlagOfAngle(thisFlag, DOWN);
 
 
 
@@ -430,9 +429,9 @@ public:
 		}
 	}
 
-	EndFlag* getLastFlagOfAngle(object* thisFlag, enum transitionAngle ang) {
+	shared_ptr<EndFlag> getLastFlagOfAngle(shared_ptr<object> thisFlag, enum transitionAngle ang) {
 		int sectCheck = section - 1;
-		EndFlag* lastFlag = getFlag(sectCheck);
+		shared_ptr<EndFlag> lastFlag = getFlag(sectCheck);
 		while (lastFlag != NULL && lastFlag->getAngle() != ang) {
 			sectCheck -= 1;
 			lastFlag = getFlag(sectCheck);
@@ -443,8 +442,8 @@ public:
 		
 	}
 
-	EndFlag* getFlag(int sect) {
-		for (EndFlag* flag : flagList) {
+	shared_ptr<EndFlag> getFlag(int sect) {
+		for (shared_ptr<EndFlag> flag : flagList) {
 			if (flag->getSection() == sect) {
 				return flag;
 			}
@@ -452,11 +451,11 @@ public:
 		return NULL;
 	}
 
-	GameObject* checkPlaced(Vector2f mousePos) {
+	shared_ptr<GameObject> checkPlaced(Vector2f mousePos) {
 		if (!objects.empty()) {
 			objectIt = objects.begin();
-			for (GameObject* ob : objects) {
-				objectSprite* temp = ob->getSprite();
+			for (shared_ptr<GameObject> ob : objects) {
+				shared_ptr<objectSprite> temp = ob->getSprite();
 				if (mousePos.x > temp->getPosition().x && mousePos.x < temp->getPosition().x + temp->getSize().x) {
 					if (mousePos.y > temp->getPosition().y && mousePos.y < temp->getPosition().y + temp->getSize().y) {
 						return ob;
@@ -532,9 +531,9 @@ public:
 		if ((sf::Mouse::isButtonPressed(sf::Mouse::XButton1) && mouseX1Pressed != true )|| sf::Keyboard::isKeyPressed(sf::Keyboard::D)) //specifies
 		{
 			if (objectIt != objects.end()) {
-				GameObject* ob = *objectIt;
+				shared_ptr<GameObject> ob = *objectIt;
 				objects.erase(objectIt);
-				delete ob;
+
 				selectedPlaced = NULL;
 				objectIt = objects.end();
 			}
@@ -609,8 +608,8 @@ public:
 	}
 
 	void save() {
-		ofstream* myfile;
-		myfile = new ofstream();
+		shared_ptr<ofstream> myfile;
+		myfile = shared_ptr<ofstream>(new ofstream());
 
 		myfile->open(saveFile + "\\" + to_string(section) + "-objects.txt");
 		
@@ -621,7 +620,7 @@ public:
 			door1->setCheckpoint();
 		}
 
-		for (object* o : objects) {
+		for (shared_ptr<object> o : objects) {
 			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up" || o->getCode() == "flag-left" || o->getCode() == "door") {
 				bool skip = false;
 				if (o->getCode() == "flag") {
@@ -640,8 +639,8 @@ public:
 
 					checkFlagDuplicates(o);
 
-					ofstream* flagfile;
-					flagfile = new ofstream();
+					shared_ptr<ofstream> flagfile;
+					flagfile = shared_ptr<ofstream>(new ofstream());
 					flagfile->open(saveFile + "\\flags.txt", std::ios::app);
 
 					*flagfile << section;
@@ -661,7 +660,7 @@ public:
 
 					flagfile->close();
 
-					delete flagfile;
+
 				}
 
 			}
@@ -679,23 +678,22 @@ public:
 		}
 		myfile->close();
 
-		delete myfile;
 
-		GameObject* thisF;
-		for (GameObject* obj : objects) {
+		shared_ptr<GameObject> thisF;
+		for (shared_ptr<GameObject> obj : objects) {
 			if (obj->getCode() == "flag-down" || obj->getCode() == "flag-up" || obj->getCode() == "flag-right" || obj->getCode() == "flag-left") {
 				thisF = obj;
 			}
 		}
 		objects.remove(thisF);
 
-		for (EndFlag* flag : flagList) {
+		for (shared_ptr<EndFlag> flag : flagList) {
 			//delete flag;
 		}
 		flagList.clear();
 		l->loadFlags(levelName, &flagList, enemyT);
 
-		for (EndFlag* f : flagList) {
+		for (shared_ptr<EndFlag> f : flagList) {
 			if (f->getSection() == section) {
 				objects.push_back(f);
 			}
@@ -705,7 +703,7 @@ public:
 	}
 
 
-	void checkFlagDuplicates(object* o) {
+	void checkFlagDuplicates(shared_ptr<object> o) {
 
 
 		string line;
@@ -716,8 +714,8 @@ public:
 
 		while (run) {
 			run = false;
-			ifstream* flagfile;
-			flagfile = new ifstream();
+			shared_ptr<ifstream> flagfile;
+			flagfile = shared_ptr<ifstream>(new ifstream());
 			flagfile->open(levelName + "\\flags.txt");
 			while (getline(*flagfile, line)) {
 				vector<string> values = splitString(line, sep);
@@ -730,7 +728,7 @@ public:
 				}
 			}
 			flagfile->close();
-			delete flagfile;
+
 		}
 		//flagfile->close();
 
@@ -769,7 +767,7 @@ public:
 
 	void changeZ() {
 
-		for (tile* t : z2List) {
+		for (shared_ptr<tile> t : z2List) {
 			if (z == 1) {
 				t->getSprite()->setZ(1.25);
 			}
@@ -777,7 +775,7 @@ public:
 				t->getSprite()->setZ(1);
 			}
 		}
-		for (tile* t : z3List) {
+		for (shared_ptr<tile> t : z3List) {
 			if (z == 1) {
 				t->getSprite()->setZ(1.5);
 			}
@@ -788,7 +786,7 @@ public:
 				t->getSprite()->setZ(1);
 			}
 		}
-		for (tile* t : z4List) {
+		for (shared_ptr<tile> t : z4List) {
 			if (z == 1) {
 				t->getSprite()->setZ(1.75);
 			}

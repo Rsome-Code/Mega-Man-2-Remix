@@ -6,23 +6,23 @@ class TimeStopper: public Weapon {
 
 	float decreaseTime = 0.5;
 	float timeLeft = decreaseTime;
-	TimeStopBullet* tBullet;
+	shared_ptr<TimeStopBullet> tBullet;
 
 public:
-	TimeStopper(Texture* t) {
+	TimeStopper(shared_ptr<Texture> t) {
 		
-		tBullet = new TimeStopBullet(t);
+		tBullet = shared_ptr<TimeStopBullet>(new TimeStopBullet(t));
 		maxWeaponCount = 1;
 		ammoDecrease = 1;
 
 		name = "Time Stopper";
 
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\" + name + ".png");
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (shared_ptr<SoundBuffer> (new SoundBuffer()));
 		shootB->loadFromFile("Assets\\sound\\time_stopper.wav");
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound> (new Sound());
 		shootSound->setBuffer(*shootB);
 	}
 
@@ -51,8 +51,8 @@ public:
 		
 	}
 
-	list<bullet*> getBullets() {
-		return list<bullet*> {tBullet};
+	list<shared_ptr<bullet>> getBullets() {
+		return list<shared_ptr<bullet>> {tBullet};
 	}
 
 	bool fire(bool right) {

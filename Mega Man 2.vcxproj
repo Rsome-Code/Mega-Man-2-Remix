@@ -190,8 +190,12 @@
     <ClCompile Include="Bottom right w.cpp" />
     <ClCompile Include="Cannon Bullet.cpp" />
     <ClCompile Include="Cannon Right.cpp" />
+    <ClCompile Include="Crash Bomb.cpp" />
+    <ClCompile Include="Crash Bullet.cpp" />
+    <ClCompile Include="Crash Explosion.cpp" />
     <ClCompile Include="Crazy Cannon.cpp" />
     <ClCompile Include="Flash Door.cpp" />
+    <ClCompile Include="Flash Man.cpp" />
     <ClCompile Include="H Tube Tile.cpp" />
     <ClCompile Include="Left Edge.cpp" />
     <ClCompile Include="Right Edge.cpp" />

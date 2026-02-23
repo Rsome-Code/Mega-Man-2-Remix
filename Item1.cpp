@@ -4,17 +4,17 @@
 
 class Item1 : public ItemWeapon {
 	using ItemWeapon::ItemWeapon;
-	Texture* t;
+	shared_ptr<Texture> t;
 
 
 public:
 
-	Item1(objectSprite* o, Texture* te) {
+	Item1(shared_ptr<objectSprite> o, shared_ptr<Texture> te) {
 		origin = o;
 		t = te;
 
 		name = "Item-1";
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\item.png");
 
 		ammoDecrease = 4;
@@ -22,7 +22,7 @@ public:
 		bulCode = "item 1";
 	}
 
-	bool fire(bool right, list<ItemBullet*>* allItems) {
+	bool fire(bool right, list<shared_ptr<Item1Bullet>>* allItems) {
 
 		if (ammo > 0 && weaponCount < maxWeaponCount) {
 			float offset;
@@ -32,7 +32,7 @@ public:
 			else {
 				offset = -24 - (22*4);
 			}
-			Item1Bullet* temp = new Item1Bullet(t, Vector2f(origin->getPosition().x + offset, origin->getPosition().y + 38));
+			shared_ptr<Item1Bullet> temp = shared_ptr<Item1Bullet>(new Item1Bullet(t, Vector2f(origin->getPosition().x + offset, origin->getPosition().y + 38)));
 			temp->getSprite()->setPosition(Vector2f(origin->getPosition().x + offset, origin->getPosition().y + 38));
 			allItems->push_back(temp);
 			ammo = ammo - ammoDecrease;

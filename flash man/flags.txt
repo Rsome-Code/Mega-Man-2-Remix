@@ -1,4 +1,11 @@
-7,flash door,12225,7745,1
-8,flash door,13312,7745,0
--1,flag,780,386,1
-0,flag-down,8413,1308,0
+-1,flag,643,296,1
+6,flag-down,8538,7511,1
+9,flag,14329,7511,0
+8,flash door,13309,7743,0
+7,flash door,12229,7746,1
+0,flag-down,8571,1345,0
+1,flag-down,6651,2375,0
+2,flag-down,8571,3405,0
+3,flag-down,6651,4435,0
+4,flag-down,8571,5465,0
+5,flag-down,6651,6495,0

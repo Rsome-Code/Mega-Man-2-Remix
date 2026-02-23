@@ -7,33 +7,42 @@ using namespace sf;
 
 class SoundCollection {
 
-	SoundBuffer* landB;
-	Sound* landSound;
+	shared_ptr<SoundBuffer> landB;
+	shared_ptr<Sound> landSound;
 
-	SoundBuffer* hitB;
-	Sound* hitSound;
+	shared_ptr<SoundBuffer> hitB;
+	shared_ptr<Sound> hitSound;
 
-	SoundBuffer* yokuB;
-	Sound* yoku;
+	shared_ptr<SoundBuffer> yokuB;
+	shared_ptr<Sound> yoku;
 
-	SoundBuffer* shootB;
-	Sound* shootSound;
+	shared_ptr<SoundBuffer> shootB;
+	shared_ptr<Sound> shootSound;
 
-	SoundBuffer* pressB;
-	Sound* pressSound;
+	shared_ptr<SoundBuffer> pshootB;
+	shared_ptr<Sound> pshootSound;
 
-	SoundBuffer* lifeGetB;
-	Sound* lifeGet;
+	shared_ptr<SoundBuffer> pressB;
+	shared_ptr<Sound> pressSound;
 
-	SoundBuffer* beamAttackB;
-	Sound* beamAttack;
+	shared_ptr<SoundBuffer> lifeGetB;
+	shared_ptr<Sound> lifeGet;
 
-	SoundBuffer* dinkB;
-	Sound* dink;
+	shared_ptr<SoundBuffer> beamAttackB;
+	shared_ptr<Sound> beamAttack;
+
+	shared_ptr<SoundBuffer> dinkB;
+	shared_ptr<Sound> dink;
+
+	shared_ptr<SoundBuffer>flashB;
+	shared_ptr<Sound> flash;
+
+	shared_ptr<SoundBuffer>crashB;
+	shared_ptr<Sound> crash;
 
 public:
 
-	SoundCollection(SoundCollection* sou) {
+	SoundCollection(shared_ptr<SoundCollection> sou) {
 		throw "Cannot copy Sound Collection object.";
 		delete this;
 	}
@@ -41,72 +50,101 @@ public:
 
 	SoundCollection() {
 
-		dinkB = new SoundBuffer();
+		dinkB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		dinkB->loadFromFile("Assets\\sound\\dink.wav");
-		dink = new Sound();
+		dink = shared_ptr<Sound>(new Sound());
 		dink->setBuffer(*dinkB);
 
-		landB = new SoundBuffer();
+		landB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		landB->loadFromFile("assets\\sound\\fly_boy.wav");
-		landSound = new Sound();
+		landSound = shared_ptr<Sound>(new Sound());
 		landSound->setBuffer(*landB);
 
-		hitB = new SoundBuffer();
+		hitB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		hitB->loadFromFile("assets\\sound\\enemy_hit.wav");
-		hitSound = new Sound();
+		hitSound = shared_ptr<Sound>(new Sound());
 		hitSound->setBuffer(*hitB);
 
-		yokuB = new SoundBuffer();
+		yokuB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		yokuB->loadFromFile("assets\\sound\\yoku.wav");
-		yoku = new Sound();
+		yoku = shared_ptr<Sound>(new Sound());
 		yoku->setBuffer(*yokuB);
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		shootB->loadFromFile("assets\\sound\\enemy_shoot.wav");
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound>(new Sound());
 		shootSound->setBuffer(*shootB);
 
-		pressB = new SoundBuffer();
+
+		pshootB = shared_ptr<SoundBuffer>(new SoundBuffer());
+		pshootB->loadFromFile("assets\\sound\\buster.wav");
+		pshootSound = shared_ptr<Sound>(new Sound());
+		pshootSound->setBuffer(*pshootB);
+
+		pressB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		pressB->loadFromFile("assets\\sound\\time_stopper.wav");
-		pressSound = new Sound();
+		pressSound = shared_ptr<Sound>(new Sound());
 		pressSound->setBuffer(*pressB);
 
-		lifeGetB = new SoundBuffer();
+		lifeGetB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		lifeGetB->loadFromFile("assets\\sound\\gaming voice.mp3");
-		lifeGet = new Sound();
+		lifeGet = shared_ptr<Sound>(new Sound());
 		lifeGet->setBuffer(*lifeGetB);
 
-		beamAttackB = new SoundBuffer();
+		beamAttackB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		beamAttackB->loadFromFile("assets\\sound\\force_beam.wav");
-		beamAttack = new Sound();
+		beamAttack = shared_ptr<Sound>(new Sound());
 		beamAttack->setBuffer(*beamAttackB);
+
+
+		flashB = shared_ptr<SoundBuffer>(new SoundBuffer());
+		flashB->loadFromFile("assets\\sound\\time_stopper.wav");
+		flash = shared_ptr<Sound>(new Sound());
+		flash->setBuffer(*flashB);
+
+		crashB = shared_ptr<SoundBuffer>(new SoundBuffer());
+		crashB->loadFromFile("assets\\sound\\crash_bomber.wav");
+		crash = shared_ptr<Sound>(new Sound());
+		crash->setBuffer(*crashB);
 	}
 
-	Sound* getYoku(){
+	shared_ptr<Sound> getCrash() {
+		return crash;
+	}
+
+	shared_ptr<Sound> getYoku(){
 		return yoku;
 	}
-	Sound* getHit() {
+	shared_ptr<Sound> getHit() {
 		return hitSound;
 	}
-	Sound* getLand() {
+	shared_ptr<Sound> getLand() {
 		return landSound;
 	}
-	Sound* getShoot() {
+	shared_ptr<Sound> getShoot() {
 		return shootSound;
 	}
 
-	Sound* getPress() {
+	shared_ptr<Sound> getFlash() {
+		return flash;
+	}
+
+	shared_ptr<Sound> getPress() {
 		return pressSound;
 	}
-	Sound* getLifeGet() {
+	shared_ptr<Sound> getLifeGet() {
 		return lifeGet;
 	}
 
-	Sound* getBeam() {
+	shared_ptr<Sound> getBeam() {
 		return beamAttack;
 	}
 
-	Sound* getDink() {
+	shared_ptr<Sound> getDink() {
 		return dink;
+	}
+
+	shared_ptr<Sound> getPlayerShoot() {
+		return pshootSound;
 	}
 };

@@ -4,7 +4,7 @@
 #pragma once;
 
 class AmmoBar {
-	list<UISprite*> sprites;
+	list<shared_ptr<UISprite>> sprites;
 	int barMax = 28;
 
 	int barVal;
@@ -16,31 +16,37 @@ class AmmoBar {
 	IntRect one = IntRect(27, 0, 8, 8);
 	IntRect zero = IntRect(36, 0, 8, 8);
 
-	SoundBuffer* soundB;
-	Sound* sound;
+	shared_ptr<SoundBuffer> soundB;
+	shared_ptr<Sound> sound;
 
 
 
 public:
 
-	AmmoBar(Texture* t, Vector2f pos) {
+	virtual ~AmmoBar() {
+
+
+		
+	}
+
+	AmmoBar(shared_ptr<Texture> t, Vector2f pos) {
 		position = pos;
 
 
 		for (int i = 0; i < 7; i++) {
-			UISprite* temp = new UISprite("option", t, four, Vector2f (position.x + (i*8) * 4, position.y), Vector2f(4,4));
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite("option", t, four, Vector2f (position.x + (i*8) * 4, position.y), Vector2f(4,4)));
 			sprites.push_back(temp);
 		}
 
-		soundB = new SoundBuffer();
+		soundB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		soundB->loadFromFile("assets\\sound\\refill.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound> (new Sound());
 		sound->setBuffer(*soundB);
 	}
 
 	void setVertical() {
 		int i = 6;
-		for (UISprite* sprite : sprites) {
+		for (shared_ptr<UISprite> sprite : sprites) {
 			sprite->setCameraPosition(Vector2f(position.x, position.y + (i * 8) * 4));
 			i--;
 		}
@@ -66,16 +72,16 @@ public:
 		int fullBars = barVal/ 4;
 		int left = barVal % 4;
 
-		list<UISprite*>::iterator listI;
+		list<shared_ptr<UISprite>>::iterator listI;
 		listI = sprites.begin();
 
 		for (int i = 0; i < fullBars; i++) {
-			UISprite* temp = *listI;
+			shared_ptr<UISprite> temp = *listI;
 			temp->setRect(four);
 			listI = next(listI);
 		}
 		if (listI != sprites.end()) {
-			UISprite* temp = *listI;
+			shared_ptr<UISprite> temp = *listI;
 			if (left == 0) {
 				temp->setRect(zero);
 			}
@@ -92,14 +98,14 @@ public:
 		}
 		if (listI != sprites.end()) {
 			while (listI != sprites.end()){
-				UISprite* temp = *listI;
+				shared_ptr<UISprite> temp = *listI;
 				temp->setRect(zero);
 				listI = next(listI);
 			}
 		}
 	}
 
-	list<UISprite*> getSprites() {
+	list<shared_ptr<UISprite>> getSprites() {
 		return sprites;
 	}
 };

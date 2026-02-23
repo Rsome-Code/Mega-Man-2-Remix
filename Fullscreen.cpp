@@ -7,12 +7,12 @@ class FullscreenOption : public DebugOption {
 
 public:
 
-	FullscreenOption(renderer* instance) {
+	FullscreenOption(shared_ptr<renderer> instance) {
 
 		update(instance);
 	}
 
-	void update(renderer* instance) {
+	void update(shared_ptr<renderer> instance) {
 		name = "Fullscreen: ";
 		if (instance->getFullscreen()) {
 			name = name + "on";
@@ -22,7 +22,7 @@ public:
 		}
 	}
 
-	void action(player* p, renderer* instance, double* targetFPS) {
+	void action(shared_ptr<player> p, shared_ptr<renderer> instance, double* targetFPS) {
 		
 		Vector2u size = instance->getWindow()->getSize();
 

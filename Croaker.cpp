@@ -7,16 +7,16 @@ class Croaker : public enemy {
 	float idleTime = 1;
 	float idleTime_left = idleTime;
 
-	list<TempEnemy*> petits = {};
+	list<shared_ptr<TempEnemy>> petits = {};
 
 	int startAmmount;
 	bool first;
 
-	animation* idleAnim;
-	animTimer* idleTimer;
+	shared_ptr<animation> idleAnim;
+	shared_ptr<animTimer> idleTimer;
 
-	animation* spawnAnim;
-	animTimer* spawnTimer;
+	shared_ptr<animation> spawnAnim;
+	shared_ptr<animTimer> spawnTimer;
 	bool playSpawn = false;
 
 	IntRect blink = IntRect(67, 354, 32, 32);
@@ -24,6 +24,10 @@ class Croaker : public enemy {
 	int loopsLeft = loopsTilBlink;
 
 public:
+
+	virtual ~Croaker() {
+
+	}
 
 	void initial() {
 		sprite->setRect(IntRect(1, 355, 32, 32));
@@ -33,21 +37,21 @@ public:
 		offSetList();
 		setCode("croaker");
 
-		hit = new objectHitbox(IntRect(0, 0, 32, 32), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 32, 32), sprite));
 		hurt = hit;
 		hp = 8;
 		damage = 3;
 
 		first = true;
 
-		idleAnim = new animation(list<IntRect>{IntRect(1, 355, 32, 32), IntRect(34, 354, 32, 32)}, sprite);
-		idleTimer = new animTimer(idleAnim, 8, true);
+		idleAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(1, 355, 32, 32), IntRect(34, 354, 32, 32)}, sprite));
+		idleTimer = shared_ptr<animTimer> (new animTimer(idleAnim, 8, true));
 
-		spawnAnim = new animation(list<IntRect>{IntRect(100, 354, 32, 32), IntRect(133, 355, 32, 32), IntRect(133, 355, 32, 32), IntRect(100, 354, 32, 32)}, sprite);
-		spawnTimer = new animTimer(spawnAnim, 8, false);
+		spawnAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(100, 354, 32, 32), IntRect(133, 355, 32, 32), IntRect(133, 355, 32, 32), IntRect(100, 354, 32, 32)}, sprite));
+		spawnTimer = shared_ptr<animTimer> (new animTimer(spawnAnim, 8, false));
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		if (first) {
 			startAmmount = objectList->size();
@@ -81,8 +85,8 @@ public:
 		}
 	}
 
-	bool checkList(list<enemy*>* objectList) {
-		for (enemy* e : *objectList) {
+	bool checkList(list<shared_ptr<enemy>>* objectList) {
+		for (shared_ptr<enemy> e : *objectList) {
 			if (e->getCode() == "petit croaker") {
 				return false;
 			}
@@ -102,9 +106,9 @@ public:
 		}
 	}
 
-	void spawn(list<enemy*>* objectList) {
+	void spawn(list<shared_ptr<enemy>>* objectList) {
 		for (int i = 1; i <= 3; i++) {
-			PCroaker* temp = new PCroaker(sprite->getTexture(), sprite->getMiddlePos());
+			shared_ptr<PCroaker> temp = shared_ptr<PCroaker>(new PCroaker(sprite->getTexture(), sprite->getMiddlePos()));
 			temp->initial();
 			temp->setNextSpeed(temp->getDSpeed() * i);
 			temp->setHitSound(hitSound);

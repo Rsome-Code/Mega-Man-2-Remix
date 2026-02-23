@@ -10,12 +10,12 @@
 #pragma once
 
 class EquipMenu {
-	list<UISprite*> sprites;
-	list<Text*> texts;
+	list<shared_ptr<UISprite>> sprites;
+	list<shared_ptr<Text>> texts;
 
-	UISprite* passwordS;
-	UISprite* stageSelectS;
-	pController* control;
+	shared_ptr<UISprite> passwordS;
+	shared_ptr<UISprite> stageSelectS;
+	shared_ptr<pController> control;
 
 	bool upPressed = true;
 	bool downPressed = true;
@@ -23,37 +23,37 @@ class EquipMenu {
 
 	bool onPass = true;
 
-	UISprite* arrow;
+	shared_ptr<UISprite> arrow;
 	float arrowFlashTime = 0.2;
 	float flashTime_left = arrowFlashTime;
 	bool arrowDisplay = true;
 	Vector2f passPos;
 	Vector2f stagePos;
 	
-	SoundBuffer* optionB;
-	Sound* optionSound;
+	shared_ptr<SoundBuffer> optionB;
+	shared_ptr<Sound> optionSound;
 
 public:
 
-	EquipMenu(Texture* t, list<UISprite*> sprites, list<Text*> texts, Vector2f menuPos) {
+	EquipMenu(shared_ptr<Texture> t, list<shared_ptr<UISprite>> sprites, list<shared_ptr<Text>> texts, Vector2f menuPos) {
 		this->sprites = sprites;
 		this->texts = texts;
-		//control = new pController();
+		//control = shared_ptr<pController>(new pController();
 		passPos = Vector2f(menuPos.x + (45 * 4), menuPos.y + (14 * 4));
 		stagePos = Vector2f(menuPos.x + (45 * 4), menuPos.y + (30 * 4));
-		passwordS = new UISprite(t, IntRect(1125, 860, 63, 7), passPos, Vector2f(4, 4));
+		passwordS = shared_ptr<UISprite>(new UISprite(t, IntRect(1125, 860, 63, 7), passPos, Vector2f(4, 4)));
 
-		stageSelectS = new UISprite(t, IntRect(1125, 876, 94, 7), stagePos, Vector2f(4, 4));
+		stageSelectS = shared_ptr<UISprite>(new UISprite(t, IntRect(1125, 876, 94, 7), stagePos, Vector2f(4, 4)));
 
 		passPos = Vector2f(passPos.x - (16 * 4), passPos.y);
 		stagePos = Vector2f(stagePos.x - (16 * 4), stagePos.y);
 
-		arrow = new UISprite(t, IntRect(1711, 693, 5, 8), passPos, Vector2f(4, 4));
+		arrow = shared_ptr<UISprite>(new UISprite(t, IntRect(1711, 693, 5, 8), passPos, Vector2f(4, 4)));
 
-		optionB = new SoundBuffer();
+		optionB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		optionB->loadFromFile("Assets\\sound\\cursor_move.wav");
 
-		optionSound = new Sound();
+		optionSound = shared_ptr<Sound>(new Sound());
 		optionSound->setBuffer(*optionB);
 	}
 
@@ -119,9 +119,9 @@ public:
 		}
 	}
 
-	bool loop(renderer* instance, float targetRate, Music* music) {
-		control = new pController(instance->getWindow());
-		timer* time = new timer();
+	bool loop(shared_ptr<renderer> instance, float targetRate, shared_ptr<Music> music) {
+		control = shared_ptr<pController>(new pController(instance->getWindow()));
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -154,7 +154,7 @@ public:
 
 			instance->UIDisplay(sprites);
 
-			for (Text* t : texts) {
+			for (shared_ptr<Text> t : texts) {
 				instance->textDisplay(t);
 			}
 

@@ -7,7 +7,7 @@ class UIHitbox {
 protected:IntRect relativeRect;
 protected:Vector2f cameraPos;
 protected:Vector2i relativePos;
-private:UISprite* sprite;
+private:shared_ptr<UISprite> sprite;
 protected:bool visible;
 protected:Vector2f scale;
 		 bool scaled = false;
@@ -15,7 +15,7 @@ protected:Vector2f scale;
 
 	// rect is the relative position of the hitbox
 public:
-	UIHitbox(IntRect rect, bool visible, UISprite* sprite) {
+	UIHitbox(IntRect rect, bool visible, shared_ptr<UISprite> sprite) {
 		this->sprite = sprite;
 		relativePos = rect.getPosition();
 		cameraPos= Vector2f (sprite->getCameraPosition().x + relativePos.x, sprite->getCameraPosition().y + relativePos.y);
@@ -24,7 +24,7 @@ public:
 		relativeRect = IntRect(Vector2i(relativePos), Vector2i(rect.getSize().x * scale.x, rect.getSize().y * scale.y));
 	}
 
-	UIHitbox(IntRect rect, UISprite* sprite) {
+	UIHitbox(IntRect rect, shared_ptr<UISprite> sprite) {
 		this->sprite = sprite;
 		relativePos = rect.getPosition();
 		cameraPos = Vector2f(sprite->getCameraPosition().x + relativePos.x, sprite->getCameraPosition().y + relativePos.y);
@@ -34,6 +34,7 @@ public:
 	}
 
 	UIHitbox() {
+		visible = true;
 		//cout << "heh";
 	}
 
@@ -58,7 +59,7 @@ public: Vector2i getSize() {
 	void setSize(Vector2i size) {
 		  this->relativeRect = IntRect(relativeRect.getPosition(), size);
 	}
-public: UISprite* getSprite() {
+public: shared_ptr<UISprite> getSprite() {
 	return sprite;
 }
 	  Vector2f getScale() {

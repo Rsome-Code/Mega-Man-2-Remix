@@ -13,29 +13,34 @@
 
 class TeleportOut {
 
-	animation* teleAnim;
-	animTimer* teleTimer;
-	movable* sprite;
+	shared_ptr<animation> teleAnim;
+	shared_ptr<animTimer> teleTimer;
+	shared_ptr<movable> sprite;
 
 	float toWait = 3;
 	float toWait_left = toWait;
 	bool run = true;
 	float moveSpeed = 2000;
 
-	SoundBuffer* soundB;
-	Sound* sound;
+	shared_ptr<SoundBuffer> soundB;
+	shared_ptr<Sound> sound;
 
 public:
 
-	TeleportOut(movable* sprite) {
-		this->sprite = sprite;
-		teleAnim = new animation(list<IntRect>{IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(124, 128), Vector2i(7, 24)) }, sprite);
-		teleAnim->setOffsetList(list<Vector2f>{ Vector2f(0 * 4, 6 * 4), Vector2f(0 * 4, 10 * 4), Vector2f(0 * 4, 6 * 4), Vector2f(7 * 4, 0 * 4)});
-		teleTimer = new animTimer(teleAnim, 12, false);
 
-		soundB = new SoundBuffer();
+	virtual ~TeleportOut() {
+
+	}
+
+	TeleportOut(shared_ptr<movable> sprite) {
+		this->sprite = sprite;
+		teleAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(124, 128), Vector2i(7, 24)) }, sprite));
+		teleAnim->setOffsetList(list<Vector2f>{ Vector2f(0 * 4, 6 * 4), Vector2f(0 * 4, 10 * 4), Vector2f(0 * 4, 6 * 4), Vector2f(7 * 4, 0 * 4)});
+		teleTimer = shared_ptr<animTimer> (new animTimer(teleAnim, 12, false));
+
+		soundB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		soundB->loadFromFile("assets\\sound\\teleport_out.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*soundB);
 	
 	}
@@ -63,9 +68,9 @@ public:
 		}
 	}
 
-	void loop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, list<GameObject*> bObjects, camera* cam) {
+	void loop(shared_ptr<renderer> instance, float targetRate, shared_ptr<player> player, list<shared_ptr<tile>> tileList, list<shared_ptr<tile>> z2List, list<shared_ptr<tile>> z3List, list<shared_ptr<tile>> z4List, list<shared_ptr<GameObject>> obList, list<shared_ptr<GameObject>> bObjects, shared_ptr<camera> cam) {
 
-		timer* time = new timer();
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
 
 		auto start = time->timerStart();
@@ -94,17 +99,17 @@ public:
 			eachFrame(&deltaT);
 
 
-			for (GameObject* ob : bObjects) {
+			for (shared_ptr<GameObject> ob : bObjects) {
 				instance->bObjectDisplay(ob->getSprite(), cam);
 			}
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
@@ -112,14 +117,14 @@ public:
 
 			//tileDistanceCheck(instance, tileList);
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
 
-			for (object* ob : obList) {
+			for (shared_ptr<object> ob : obList) {
 				if (ob->getDisplay()) {
 					instance->objectAccess(ob, cam);
 				}

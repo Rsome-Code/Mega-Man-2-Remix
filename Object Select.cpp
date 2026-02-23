@@ -3,20 +3,20 @@
 #pragma once
 
 class objectSelect {
-	objectSprite* sprite;
-	objectHitbox* hit;
+	shared_ptr<objectSprite> sprite;
+	shared_ptr<objectHitbox> hit;
 
 public:
 
-	objectSelect(Texture* T, Vector2i i, Vector2f pos) {
-		sprite = new objectSprite("menu", T, i, Vector2i(16, 16), pos, Vector2f(4, 4));
-		hit = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 16)), true, sprite);
+	objectSelect(shared_ptr<Texture> T, Vector2i i, Vector2f pos) {
+		sprite = shared_ptr<objectSprite>(new objectSprite("menu", T, i, Vector2i(16, 16), pos, Vector2f(4, 4)));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 16)), true, sprite));
 	}
 
-	objectSprite* getSprite() {
+	shared_ptr<objectSprite> getSprite() {
 		return sprite;
 	}
-	objectHitbox* getHitbox() {
+	shared_ptr<objectHitbox> getHitbox() {
 		return hit;
 	}
 };

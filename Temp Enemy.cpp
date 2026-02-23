@@ -4,11 +4,15 @@
 class TempEnemy :public enemy {
 	using enemy::enemy;
 
+
 protected:
 	bool spawned = true;
 
 public:
-	bool isDead(list<enemy*>* tempEList) {
+
+	
+
+	bool isDead(list<shared_ptr<enemy>>* tempEList) {
 		//tempEList->remove(this);
 		//delete this;
 		
@@ -17,7 +21,7 @@ public:
 
 	virtual void initial(Vector2f pos) {};
 
-	bool yDeath(list<enemy*>* enemies) {
+	bool yDeath(list<shared_ptr<enemy>>* enemies) {
 		return isDead(enemies);
 	}
 };

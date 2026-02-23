@@ -8,7 +8,7 @@ public:
 		name = string("Change FPS: " + to_string(int(*fps)));
 	}
 
-	void action(player* p, renderer* instance, double* targetFPS) {
+	void action(shared_ptr<player> p, shared_ptr<renderer> instance, double* targetFPS) {
 
 		*targetFPS = *targetFPS + 30;
 

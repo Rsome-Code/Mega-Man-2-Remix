@@ -11,25 +11,25 @@ class BossBoomerang: public EnemyBullet {
 
 	bool move = true;
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 public:
-	BossBoomerang(Texture* t, Vector2f startPos, float angle) {
-		mov = new movable(t, IntRect(0, 146, 8, 6), startPos, Vector2f(4, 4));
+	BossBoomerang(shared_ptr<Texture> t, Vector2f startPos, float angle) {
+		mov = shared_ptr<movable>(new movable(t, IntRect(0, 146, 8, 6), startPos, Vector2f(4, 4)));
 		sprite = mov;
 		this->angle = angle;
 		speed = 600;
 
-		anim = new animation(list<IntRect>{IntRect(0, 146, 8, 6), IntRect(10, 145, 6, 8)}, mov);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(0, 146, 8, 6), IntRect(10, 145, 6, 8)}, mov));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 
-		hit = new objectHitbox(IntRect(0, 0, 8, 8), mov);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), mov));
 
 		damage = 3;
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList, player* p) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList, shared_ptr<player> p) {
 		timer->run(deltaT);
 
 		if (move) {

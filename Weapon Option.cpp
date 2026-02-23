@@ -6,20 +6,20 @@
 
 class WeaponOption:public Option {
 
-	Weapon* weapon;
-	AmmoBar* bar;
+	shared_ptr<Weapon> weapon;
+	shared_ptr<AmmoBar> bar;
 	
 
 public:
-	WeaponOption(Weapon* w, Vector2f pos) {
+	WeaponOption(shared_ptr<Weapon> w, Vector2f pos) {
 		position = pos;
 		weapon = w;
 
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\pause\\bars\\" + w->getName() + ".png");
 
-		bar = new AmmoBar(t, Vector2f(position.x + (13 *4), position.y));
-		icon = new UISprite("Letter", t, IntRect(0, 8, 8, 8), position, Vector2f(4,4));
+		bar = shared_ptr<AmmoBar>(new AmmoBar(t, Vector2f(position.x + (13 *4), position.y)));
+		icon = shared_ptr<UISprite>(new UISprite("Letter", t, IntRect(0, 8, 8, 8), position, Vector2f(4,4)));
 		bar->update(weapon->getAmmo());
 		bar->stopSound();
 	}
@@ -32,7 +32,7 @@ public:
 		}
 	}
 
-	Weapon* getWeapon() {
+	shared_ptr<Weapon> getWeapon() {
 		return weapon;
 	}
 
@@ -41,12 +41,12 @@ public:
 		displayIcon = true;
 	}
 
-	AmmoBar* getBar() {
+	shared_ptr<AmmoBar> getBar() {
 		return bar;
 	}
 
-	list<UISprite*> getSprites(){
-		list<UISprite*> temp = bar->getSprites();
+	list<shared_ptr<UISprite>> getSprites(){
+		list<shared_ptr<UISprite>> temp = bar->getSprites();
 		if (displayIcon) {
 			temp.push_back(icon);
 		}

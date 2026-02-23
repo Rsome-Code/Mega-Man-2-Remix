@@ -4,17 +4,17 @@
 class LeafShield :public Weapon {
 
 public:
-	LeafShield(objectSprite* player, Texture* t, SoundCollection* soundCol) {
+	LeafShield(shared_ptr<objectSprite> player, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		//bullets = { new megaBuster(player, t),  new megaBuster(player, t),  new megaBuster(player, t) };
 		//maxWeaponCount = 3;
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png");
 		name = "Leaf Shield";
 		
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		shootB->loadFromFile("Assets\\sound\\buster.wav");
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound>(new Sound());
 		shootSound->setBuffer(*shootB);
 	}
 	String getSymbol() {

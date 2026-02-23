@@ -10,12 +10,12 @@ class QuickMan : public Master {
 	IntRect jumpFrame = IntRect(82, 72, 26, 34);
 	IntRect shootFrame = IntRect(118, 73, 28, 33);
 
-	animation* walkAnim;
-	animTimer* walkTimer;
+	shared_ptr<animation> walkAnim;
+	shared_ptr<animTimer> walkTimer;
 
-	animation* jumpAnim;
-	animation* shootAnim;
-	animTimer* shootTimer;
+	shared_ptr<animation> jumpAnim;
+	shared_ptr<animation> shootAnim;
+	shared_ptr<animTimer> shootTimer;
 
 	bool shot = false;
 
@@ -36,33 +36,33 @@ class QuickMan : public Master {
 	int maxJumps = 3;
 	int jumpsLeft = maxJumps;
 
-	TimeStopper* timeStopper;
+	shared_ptr<TimeStopper> timeStopper;
 	int timeAmmo;
 
 	bool firstLoop = true;
 
 	void initial() {
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\quick man.png");
 		phys->setTexture(t);
 		phys->setRect(idle);
 		phys->setPosition(initialPos);
 		mov = phys;
-		introAnim = new animation(list<IntRect>{idle, IntRect(33, 25, 29, 28), IntRect(70, 27, 25, 26), IntRect(103, 27, 25, 26), IntRect(169, 27, 25, 26), IntRect(202, 27, 25, 26), IntRect(235, 22, 25, 31), IntRect(271, 24, 25, 29), IntRect(308, 22, 35, 31)}, sprite);
+		introAnim = shared_ptr<animation>(new animation(list<IntRect>{idle, IntRect(33, 25, 29, 28), IntRect(70, 27, 25, 26), IntRect(103, 27, 25, 26), IntRect(169, 27, 25, 26), IntRect(202, 27, 25, 26), IntRect(235, 22, 25, 31), IntRect(271, 24, 25, 29), IntRect(308, 22, 35, 31)}, sprite));
 		introAnim->setOffsetList(list<Vector2f>{Vector2f(0, 0), Vector2f(-5 * 4, 0 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(0 * 4, -3 * 4), Vector2f(0 * 4, -1 * 4), Vector2f(0 * 4, -3 * 4)});
-		introTimer = new animTimer(introAnim, 8, false);
+		introTimer = shared_ptr<animTimer> (new animTimer(introAnim, 8, false));
 
-		jumpAnim = new animation(list<IntRect>{jumpFrame}, mov);
-		shootAnim = new animation(list<IntRect>{shootFrame, jumpFrame}, mov);
-		shootTimer = new animTimer(shootAnim, 8, false);
+		jumpAnim = shared_ptr<animation>(new animation(list<IntRect>{jumpFrame}, mov));
+		shootAnim = shared_ptr<animation>(new animation(list<IntRect>{shootFrame, jumpFrame}, mov));
+		shootTimer = shared_ptr<animTimer> (new animTimer(shootAnim, 8, false));
 
-		walkAnim = new animation(list<IntRect>{IntRect(2, 80, 24, 28), IntRect(27, 79, 24, 28), IntRect(53, 80, 24, 28)}, sprite);
-		walkTimer = new animTimer(walkAnim, 8, true);
+		walkAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(2, 80, 24, 28), IntRect(27, 79, 24, 28), IntRect(53, 80, 24, 28)}, sprite));
+		walkTimer = shared_ptr<animTimer> (new animTimer(walkAnim, 8, true));
 		code = "quick man";
 
 		masterInitial("quick boomerang");
 
-		hit = new objectHitbox(IntRect(0, 0, 24, 28), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 24, 28), sprite));
 		hurt = hit;
 
 		phys->setGravity(-gravity);
@@ -73,9 +73,11 @@ class QuickMan : public Master {
 
 	}
 
+	
 
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 			
 
 		if (state == running) {
@@ -135,11 +137,11 @@ class QuickMan : public Master {
 
 	}
 
-	void shoot(list<EnemyBullet*>* bList) {
+	void shoot(list<shared_ptr<EnemyBullet>>* bList) {
 		int ang = 67.5;
 		int angChange = 22.5;
 		for (int i = 0; i < 3; i++) {
-			BossBoomerang* boomer = new BossBoomerang(mov->getTexture(), Vector2f(mov->getMiddlePos().x - 8, mov->getMiddlePos().y - 8), ang + (angChange * i));
+			shared_ptr<BossBoomerang> boomer = shared_ptr<BossBoomerang> (new BossBoomerang(mov->getTexture(), Vector2f(mov->getMiddlePos().x - 8, mov->getMiddlePos().y - 8), ang + (angChange * i)));
 			bList->push_back(boomer);
 		}
 
@@ -160,7 +162,7 @@ class QuickMan : public Master {
 
 
 
-	void hitRight(tile* t) {
+	void hitRight(shared_ptr<tile> t) {
 		if (t->getGround() != NULL) {
 			if (grounded) {
 				shortHop();
@@ -171,7 +173,7 @@ class QuickMan : public Master {
 		}
 	}
 
-	void hitLeft(tile* t) {
+	void hitLeft(shared_ptr<tile> t) {
 		if (t->getGround() != NULL) {
 			if (grounded) {
 				shortHop();
@@ -182,7 +184,7 @@ class QuickMan : public Master {
 		}
 	}
 
-	void jump(player* p) {
+	void jump(shared_ptr<player> p) {
 		grounded = false;
 		phys->setVVelocity(jumpSpeed);
 		jumpsLeft--;
@@ -207,7 +209,7 @@ class QuickMan : public Master {
 	}
 
 	//Do this after time stopper implementation
-	bool freezeDam(player* p) {
+	bool freezeDam(shared_ptr<player> p) {
 		timeStopper = p->getTimeStopper();
 
 		if (timeStopper->getAmmo() < timeAmmo) {
@@ -223,7 +225,7 @@ class QuickMan : public Master {
 
 
 
-	bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
+	bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
 		damPos = Vector2f(sprite->getPosition().x + (1 * 4), sprite->getPosition().y + (1 * 4));
 		if (introDone) {
 			if (hp > 0) {

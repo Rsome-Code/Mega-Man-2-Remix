@@ -6,13 +6,13 @@ class Master : public PhysicsEnemy {
 	using PhysicsEnemy::PhysicsEnemy;
 
 protected:
-	DeathAnim* deathAnimation;
-	DeathAnim* deathAnimation1;
-	DeathAnim* deathAnimation2;
+	shared_ptr<DeathAnim> deathAnimation;
+	shared_ptr<DeathAnim> deathAnimation1;
+	shared_ptr<DeathAnim> deathAnimation2;
 
-	animation* introAnim;
-	animTimer* introTimer;
-	AmmoBar* healthBar;
+	shared_ptr<animation> introAnim;
+	shared_ptr<animTimer> introTimer;
+	shared_ptr<AmmoBar> healthBar;
 
 	float deathAnimTime = 4;
 	float deathAnimTime_left = deathAnimTime;
@@ -25,7 +25,7 @@ protected:
 	bool tauntDone = false;
 	bool introDone = false;
 	
-	Music* bossMusic;
+	shared_ptr<Music> bossMusic;
 	bool noMusic = true;
 
 	float invincibleTime = 0.5;
@@ -34,8 +34,10 @@ protected:
 	float flashTime = 0.04;
 	float flashTime_left = flashTime;
 
-	objectSprite* damSprite;
+	shared_ptr<objectSprite> damSprite;
 	Vector2f damPos = Vector2f(sprite->getMiddlePos().x - (12 * 4), sprite->getMiddlePos().y - (12 * 4));
+
+	Vector2i damageSpritePos = Vector2i(433, 0);
 
 public:
 
@@ -43,29 +45,29 @@ public:
 		hp = 28;
 		introDone = false;
 		tauntDone = false;
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\bars\\" + weaponName + ".png");
 
-		healthBar = new AmmoBar(t, Vector2f(20 + (3 * (8 * 4)), 20));
+		healthBar = shared_ptr<AmmoBar>(new AmmoBar(t, Vector2f(20 + (3 * (8 * 4)), 20)));
 		healthBar->setVertical();
 		healthBar->update(0);
 		phys->enableGravity(true);
 		grounded = false;
 
-		deathAnimation = new DeathAnim(sprite, weaponName);
-		deathAnimation1 = new DeathAnim(sprite, weaponName);
-		deathAnimation2 = new DeathAnim(sprite, weaponName);
+		deathAnimation = shared_ptr<DeathAnim>(new DeathAnim(sprite, weaponName));
+		deathAnimation1 = shared_ptr<DeathAnim>(new DeathAnim(sprite, weaponName));
+		deathAnimation2 = shared_ptr<DeathAnim>(new DeathAnim(sprite, weaponName));
 
-		bossMusic = new Music();
+		bossMusic = shared_ptr<Music>(new Music());
 		bossMusic->openFromFile("assets\\sound\\music\\14 - Boss Battle.wav");
 		bossMusic->setVolume(50);
 		bossMusic->setLoop(true);
 		bossMusic->setLoopPoints({ sf::seconds(6.4), seconds(100) });
 
-		damSprite = new objectSprite("effect", sprite->getTexture(), IntRect(433, 0, 24, 24), Vector2f(0,0), Vector2f(4, 4));
+		damSprite = shared_ptr<objectSprite>(new objectSprite("effect", sprite->getTexture(), IntRect(damageSpritePos, Vector2i(24, 24)), Vector2f(0,0), Vector2f(4, 4)));
 	}
 
-	bool tauntLoop(float* deltaT, list<tile*>* tiles, player* p) {
+	bool tauntLoop(float* deltaT, list<shared_ptr<tile>>* tiles, shared_ptr<player> p) {
 
 
 		if (grounded && p->getGrounded()) {
@@ -78,7 +80,7 @@ public:
 		else {
 			phys->eachFrame(deltaT);
 			hit->updatePos();
-			for (tile* t : *tiles) {
+			for (shared_ptr<tile> t : *tiles) {
 				if (t->getGround() != NULL) {
 					groundCheck(t);
 					introAnim->thisFrame();
@@ -89,7 +91,7 @@ public:
 		return false;
 	}
 
-	bool titleLoop(float* deltaT, UIHitbox* floor) {
+	bool titleLoop(float* deltaT, shared_ptr<objectHitbox> floor) {
 			
 		if (!grounded) {
 			phys->eachFrame(deltaT);
@@ -129,7 +131,7 @@ public:
 		return false;
 	}
 
-	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
+	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
 		damPos = Vector2f(sprite->getPosition().x + (1 * 4), sprite->getPosition().y + (1 * 4));
 		if (introDone) {
 			if (hp > 0) {
@@ -178,7 +180,7 @@ public:
 		}
 	}
 
-	void introLoop(float* deltaT, list<tile*>* tileList, player* p) {
+	void introLoop(float* deltaT, list<shared_ptr<tile>>* tileList, shared_ptr<player> p) {
 		if (!tauntDone) {
 			tauntDone = tauntLoop(deltaT, tileList, p);
 		}
@@ -195,7 +197,7 @@ public:
 		bossMusic->stop();
 	}
 
-	bool death(float* deltaT, list<enemy*>* tempEList){
+	bool death(float* deltaT, list<shared_ptr<enemy>>* tempEList){
 
 		bossMusic->stop();
 
@@ -241,17 +243,17 @@ public:
 		return false;
 	}
 
-	AmmoBar** getBar() {
+	shared_ptr<AmmoBar>* getBar() {
 		return &healthBar;
 	}
 
-	vector<DeathAnim**> getDeathAnims() {
-		return vector<DeathAnim**> {&deathAnimation, &deathAnimation1, &deathAnimation2};
+	vector<shared_ptr<DeathAnim>*> getDeathAnims() {
+		return vector<shared_ptr<DeathAnim>*> {&deathAnimation, &deathAnimation1, &deathAnimation2};
 	}
 
 
 
-	void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos, SoundCollection* soundCol) {
+	void spawnItem(list<shared_ptr<Item>>* obList, shared_ptr<Texture> t, Vector2f pos, shared_ptr<SoundCollection> soundCol) {
 
 	}
 
@@ -268,7 +270,7 @@ public:
 		hp = hp - h;
 	}
 
-	objectSprite* getDamSprite() {
+	shared_ptr<objectSprite> getDamSprite() {
 		return damSprite;
 	}
 

@@ -17,23 +17,23 @@
 
 class StageIntro{
 	bool run;
-	Text* text;
-	list<movable*> particles;
-	UISprite* background;
+	shared_ptr<Text> text;
+	list<shared_ptr<movable>> particles;
+	shared_ptr<UISprite> background;
 	string textBuffer;
 	bool birds;
-	timer* time;
-	camera* cam;
-	animation* fadeIn;
-	animTimer* aTimer;
+	shared_ptr<timer> time;
+	shared_ptr<camera> cam;
+	shared_ptr<animation> fadeIn;
+	shared_ptr<animTimer> aTimer;
 	int fadeNum = 0;
-	list<movable*>::iterator pIt;
+	list<shared_ptr<movable>>::iterator pIt;
 	bool flap = false;
 	float flapTime = 0.05;
 	float flapTime_left = flapTime;
-	Master* boss = NULL;
+	shared_ptr<Master> boss = NULL;
 
-	UIHitbox* floor;
+	shared_ptr<objectHitbox> floor;
 
 	bool textStart = false;
 	float textTime = 0.2;
@@ -45,20 +45,21 @@ class StageIntro{
 	float timer = 6.6;
 	float timer_left = timer;
 
-	Music* music;
+	shared_ptr<Music> music;
 
 	sf::RectangleShape rectangle;
 	float currentTrans = 255;
 	float fadeRate = 100;
 
+	shared_ptr<objectSprite> floorContainer;
 
 public:
-	StageIntro(string name, bool aHold, Texture* bg, Texture* bossT) {
+	StageIntro(string name, bool aHold, shared_ptr<Texture> bg, shared_ptr<Texture> bossT) {
 		birds = aHold;
 		textBuffer = name;
 		transform(textBuffer.begin(), textBuffer.end(), textBuffer.begin(),::toupper);
 
-		background = new UISprite("bg", bg, IntRect(0, 359, 700, 293), Vector2f(0, 0), Vector2f(4, 4));
+		background = shared_ptr<UISprite>(new UISprite("bg", bg, IntRect(0, 359, 700, 293), Vector2f(0, 0), Vector2f(4, 4)));
 		birds = aHold;
 		if (!aHold) {
 			dotSetup(bg, IntRect(272, 283, 4, 4));
@@ -66,29 +67,32 @@ public:
 		else {
 			dotSetup(bg, IntRect(289, 281, 8, 8));
 		}
-		cam = new camera();
+		cam = shared_ptr<camera>(new camera());
 
 		pIt = particles.begin();
-		UISprite* start = *pIt;
+		shared_ptr<UISprite> start = *pIt;
 		if (!birds) {
-			fadeIn = new animation(list<IntRect> {IntRect(272, 283, 4, 4), IntRect(272, 292, 4, 4), IntRect(272, 301, 4, 4)}, start);
+			fadeIn = shared_ptr<animation>(new animation(list<IntRect> {IntRect(272, 283, 4, 4), IntRect(272, 292, 4, 4), IntRect(272, 301, 4, 4)}, start));
 		}
 		else{
-			fadeIn = new animation(list<IntRect> {IntRect(280, 281, 8, 8), IntRect(280, 290, 8, 8), IntRect(280, 299, 8, 8)}, start);
+			fadeIn = shared_ptr<animation>(new animation(list<IntRect> {IntRect(280, 281, 8, 8), IntRect(280, 290, 8, 8), IntRect(280, 299, 8, 8)}, start));
 		}
-		aTimer = new animTimer(fadeIn, 10, false);
+		aTimer = shared_ptr<animTimer> (new animTimer(fadeIn, 10, false));
 
 		bossSetup(name, bossT);
 
-		floor = new UIHitbox(IntRect(0, 430, 1, 1), background);
+		floorContainer = shared_ptr<objectSprite>(new objectSprite());
+		floorContainer->setPosition(Vector2f(0, 0));
 
-		text = new Text();
-		Font* font = new Font();
+		floor = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 430, 1, 1), floorContainer));
+
+		text = shared_ptr<Text> (new Text());
+		shared_ptr<Font> font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
 		text->setFont(*font);
 		text->setPosition(850, 570);
 
-		music = new Music();
+		music = shared_ptr<Music>(new Music());
 		music->openFromFile("assets\\sound\\music\\5 - Enemy Chosen.mp3");
 		music->setVolume(50);
 
@@ -98,31 +102,31 @@ public:
 		
 	}
 
-	void bossSetup(string name, Texture* bossT) {
+	void bossSetup(string name, shared_ptr<Texture> bossT) {
 		Vector2f pos = Vector2f(900, 0);
 		if (name == "wood man") {
-			boss = new WoodMan(bossT, Vector2f(900, 0));
+			boss = shared_ptr<Master>(new WoodMan(bossT, Vector2f(900, 0)));
 			boss->initial();
 		}
 		else if (name == "heat man") {
-			boss = new HeatMan(bossT, Vector2f(900, 0));
+			boss = shared_ptr<Master>(new HeatMan(bossT, Vector2f(900, 0)));
 			boss->initial();
 		}
 		else if (name == "bubble man") {
-			boss = new BubbleMan(bossT, Vector2f(900, 0));
+			boss = shared_ptr<Master>(new BubbleMan(bossT, Vector2f(900, 0)));
 			boss->initial();
 		}
 		else if (name == "metal man") {
-			boss = new MetalMan(bossT, Vector2f(900, 0));
+			boss = shared_ptr<Master>(new MetalMan(bossT, Vector2f(900, 0)));
 			boss->initial();
 		}
 		else if (name == "quick man") {
-			boss = new QuickMan(bossT, pos);
+			boss = shared_ptr<Master>(new QuickMan(bossT, pos));
 			boss->initial();
 		}
 	}
 
-	void dotSetup(Texture* bg, IntRect startFrame) {
+	void dotSetup(shared_ptr<Texture> bg, IntRect startFrame) {
 		for (int i = 0; i < 25; i++) {
 			float tempZ = (rand() % 100);
 			tempZ = (tempZ / 100) + 1;
@@ -138,7 +142,7 @@ public:
 
 			tempY = tempY - (mapLoc(tempZ, 312) * 2);
 
-			movable* temp = new movable("dot", bg, startFrame, Vector2f(tempX, tempY), Vector2f(4, 4), tempZ);
+			shared_ptr<movable> temp = shared_ptr<movable>(new movable("dot", bg, startFrame, Vector2f(tempX, tempY), Vector2f(4, 4), tempZ));
 			particles.push_back(temp);
 		}
 
@@ -158,7 +162,7 @@ public:
 			tempY = tempY - (mapLoc(tempZ, (112 * 4) * 2));
 			tempY = tempY + ((148 * 4) * (tempZ * 1.3));
 
-			movable* temp = new movable("dot", bg, startFrame.getPosition(), startFrame.getSize(), Vector2f(tempX, tempY), Vector2f(4, 4), tempZ);
+			shared_ptr<movable> temp = shared_ptr<movable>(new movable("dot", bg, startFrame.getPosition(), startFrame.getSize(), Vector2f(tempX, tempY), Vector2f(4, 4), tempZ));
 			particles.push_back(temp);
 		}
 	}
@@ -170,8 +174,8 @@ public:
 		return int(diff);
 	}
 
-	void moveParticles(float* deltaT, renderer* instance, camera* cam) {
-		for (movable* ob : particles) {
+	void moveParticles(float* deltaT, shared_ptr<renderer> instance, shared_ptr<camera> cam) {
+		for (shared_ptr<movable> ob : particles) {
 			if (ob->getCameraPosition().x > 1920) {
 				ob->setPosition(Vector2f(0, ob->getPosition().y));
 				while (ob->getCameraPosition().x > 0) {
@@ -188,7 +192,7 @@ public:
 
 	void animateBirds() {
 		bool thisFlap = flap;
-		for (UISprite* bird : particles) {
+		for (shared_ptr<UISprite> bird : particles) {
 			if (thisFlap) {
 				bird->setRect(IntRect(280, bird->getRect().getPosition().y, bird->getRect().getSize().x, bird->getRect().getSize().y));
 			}
@@ -223,11 +227,11 @@ public:
 	//Copied animation for multiple sprites
 	void fadeInAnim(float* deltaT){
 		bool fin = false;
-		UISprite* temp = *particles.begin();
+		shared_ptr<UISprite> temp = *particles.begin();
 		fadeIn->setSprite(temp);
 		fin = aTimer->run(deltaT);
 		if (fin) {
-			for (UISprite* ob : particles) {
+			for (shared_ptr<UISprite> ob : particles) {
 				fadeIn->setSprite(ob);
 				fadeIn->setFrame();
 			}
@@ -253,7 +257,7 @@ public:
 		}
 	}
 
-	void loop(renderer* instance, float targetRate) {
+	void loop(shared_ptr<renderer> instance, float targetRate) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -311,8 +315,8 @@ public:
 			}
 
 			
-			list<objectSprite*> obs;
-			for (objectSprite* ob : particles) {
+			list<shared_ptr<objectSprite>> obs;
+			for (shared_ptr<objectSprite> ob : particles) {
 				obs.push_back(ob);
 			}
 			instance->bObjectDisplay(obs, cam);

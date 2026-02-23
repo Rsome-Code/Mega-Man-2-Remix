@@ -25,35 +25,35 @@ using namespace std;
 using namespace sf;
 
 class Tab {
-	UISprite* background;
-	list<GameObject*> objects;
-	list<UISprite*> obSprites;
-	list<GameObject*>::iterator obIt;
-	list<UISprite*> spriteIt;
-	GameObject* selectedObject = NULL;
+	shared_ptr<UISprite> background;
+	list<shared_ptr<GameObject>> objects;
+	list<shared_ptr<UISprite>> obSprites;
+	list<shared_ptr<GameObject>>::iterator obIt;
+	list<shared_ptr<UISprite>> spriteIt;
+	shared_ptr<GameObject> selectedObject = NULL;
 
 public:
-	Tab(list<GameObject*> o, Vector2f position) {
+	Tab(list<shared_ptr<GameObject>> o, Vector2f position) {
 		objects = o;
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("Assets/tab.png");
-		background = new UISprite("BG", t, Vector2i(0, 0), Vector2i(414, 1080), position);
+		background = shared_ptr<UISprite>(new UISprite("BG", t, Vector2i(0, 0), Vector2i(414, 1080), position));
 
 		int plusX = 0;
 		int plusY = 0;
-		list<GameObject*>::iterator i = objects.begin();
+		list<shared_ptr<GameObject>>::iterator i = objects.begin();
 		int greatestY = 0;
 		bool nextLine = false;
 		bool initial = true;
 
-		for (object* o : objects) {
-			UISprite* s = o->getSprite();
+		for (shared_ptr<object> o : objects) {
+			shared_ptr<UISprite> s = o->getSprite();
 			if (s->getSize().y > greatestY) {
 				greatestY = s->getSize().y;
 			}
 
 			if (!initial) {
-				object* ob = *prev(i);
+				shared_ptr<object> ob = *prev(i);
 				if (ob->getSprite()->getSize().x + plusX > 414) {
 					nextLine = true;
 
@@ -94,7 +94,7 @@ public:
 
 	void checkMouse(Vector2i mousePos) {
 		obIt = objects.begin();
-		for (UISprite* sprite : obSprites) {
+		for (shared_ptr<UISprite> sprite : obSprites) {
 			if (checkCollision(mousePos, sprite->getCameraPosition(), sprite->getSize())) {
 				selectedObject = *obIt;
 			}
@@ -104,7 +104,7 @@ public:
 		}
 	}
 
-	GameObject* getSelected() {
+	shared_ptr<GameObject> getSelected() {
 		return selectedObject;
 	}
 
@@ -117,8 +117,8 @@ public:
 		return false;
 	}
 
-	list<UISprite*> getSprites() {
-		list<UISprite*> temp;
+	list<shared_ptr<UISprite>> getSprites() {
+		list<shared_ptr<UISprite>> temp;
 		temp = obSprites;
 		temp.push_front(background);
 		return temp;

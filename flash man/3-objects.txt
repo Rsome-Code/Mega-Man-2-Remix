@@ -1,0 +1,2 @@
+break wall,7745,3782,1
+health-big,7627,3844,1

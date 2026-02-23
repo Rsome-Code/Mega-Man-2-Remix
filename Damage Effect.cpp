@@ -2,14 +2,14 @@
 class damageEffect:public object {
 	float flickerSpeed = 0.1;
 	float tempF;
-	objectSprite* follow;
+	shared_ptr<objectSprite> follow;
 
 public:
-	damageEffect(objectSprite* fol) {
+	damageEffect(shared_ptr<objectSprite> fol) {
 		follow = fol;
-		Texture* dET = new Texture();
+		shared_ptr<Texture> dET = shared_ptr<Texture> (new Texture());
 		dET->loadFromFile("Assets\\misc\\mega buster.png");
-		sprite = new objectSprite("effect", dET, Vector2i(1, 22), Vector2i(24, 24), fol->getPosition(), Vector2f(fol->getScale().x + 1, fol->getScale().y + 1), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("effect", dET, Vector2i(1, 22), Vector2i(24, 24), fol->getPosition(), Vector2f(fol->getScale().x + 1, fol->getScale().y + 1), 1));
 		setDisplay(false);
 		sprite->setVisualOffset(Vector2f(-8, 0));
 

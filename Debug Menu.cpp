@@ -9,52 +9,56 @@
 #pragma once
 
 class DebugMenu {
-	vector<DebugOption*> options;
-	vector<Text*> texts;
+	vector<shared_ptr<DebugOption>> options;
+	vector<shared_ptr<Text>> texts;
 	int currentOption = 0;
 
 	Vector2f position = Vector2f(600, 300);
 
-	RectangleShape* background;
+	shared_ptr<RectangleShape> background;
 
-	pController* controller;
+	shared_ptr<pController> controller;
 	bool downPressed = true;
 	bool upPressed = true;
 	bool APressed = true;
 	bool startPressed = true;
 	bool selectPressed = true;
 
-	UISprite* arrow;
+	shared_ptr<UISprite> arrow;
 
 public:
-	DebugMenu(Font* font, renderer* instance, double* fps) {
-		options.push_back(new ResolutionChange(instance));
-		options.push_back(new FPSChange(fps));
-		options.push_back(new FullscreenOption(instance));
 
-		background = new RectangleShape();
+	virtual ~DebugMenu() {
+	}
+
+	DebugMenu(shared_ptr<Font> font, shared_ptr<renderer> instance, double* fps) {
+		options.push_back(shared_ptr<DebugOption>(new ResolutionChange(instance)));
+		options.push_back(shared_ptr<DebugOption>(new FPSChange(fps)));
+		options.push_back(shared_ptr<DebugOption>(new FullscreenOption(instance)));
+
+		background = shared_ptr<RectangleShape>(new RectangleShape());
 		background->setFillColor(Color::Black);
 		background->setOutlineColor(Color::White);
 		background->setOutlineThickness(4);
 		background->setPosition(position);
 		background->setSize(Vector2f(720, 480));
 
-		Texture* tex = new Texture();
+		shared_ptr<Texture> tex = shared_ptr<Texture> (new Texture());
 		tex->loadFromFile("assets\\arrow.png");
 		
 
 		textSetup(font);
 
-		arrow = new UISprite(tex, IntRect(0, 0, 5, 8), Vector2f(0, 0), Vector2f(4, 4));
+		arrow = shared_ptr<UISprite>(new UISprite(tex, IntRect(0, 0, 5, 8), Vector2f(0, 0), Vector2f(4, 4)));
 		updateArrow();
 	}
 
-	void textSetup(Font* font) {
+	void textSetup(shared_ptr<Font> font) {
 
 		Vector2f pos = Vector2f(position.x + 32, position.y + 16);
 
-		for (DebugOption* opt : options) {
-			Text* t = new Text ();
+		for (shared_ptr<DebugOption> opt : options) {
+			shared_ptr<Text> t = shared_ptr<Text>( new Text ());
 			t->setFont(*font);
 			t->setString(opt->getName());
 			t->setCharacterSize(24);
@@ -69,7 +73,7 @@ public:
 
 	void textUpdate() {
 		int i = 0;
-		for (Text* t : texts) {
+		for (shared_ptr<Text> t : texts) {
 			t->setString(options[i]->getName());
 			i++;
 		}
@@ -79,16 +83,16 @@ public:
 		arrow->setCameraPosition(Vector2f(texts[currentOption]->getPosition().x - 24, texts[currentOption]->getPosition().y));
 	}
 
-	void update(renderer* instance, double* targetRate) {
-		for (DebugOption* opt : options) {
+	void update(shared_ptr<renderer> instance, double* targetRate) {
+		for (shared_ptr<DebugOption> opt : options) {
 			opt->update(instance, targetRate);
 		}
 		textUpdate();
 	}
 
-	void loop(renderer* instance, double* targetRate, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> backgroundObjects, camera* cam, player* p) {
+	void loop(shared_ptr<renderer> instance, double* targetRate, list<shared_ptr<tile>> tileList, list<shared_ptr<tile>> z2List, list<shared_ptr<tile>> z3List, list<shared_ptr<tile>> z4List, list<shared_ptr<GameObject>> backgroundObjects, shared_ptr<camera> cam, shared_ptr<player> p) {
 
-		timer* time = new timer();
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 		bool run = true;
 
 		auto start = time->timerStart();
@@ -112,24 +116,24 @@ public:
 			startP = &start;
 
 
-			for (object* ob : backgroundObjects) {
+			for (shared_ptr<object> ob : backgroundObjects) {
 				instance->objectAccess(ob, cam);
 			}
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
 
 
 			//tileDistanceCheck(instance, tileList, cam);
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
@@ -151,7 +155,7 @@ public:
 	}
 
 
-	void inputCheck(player* p, renderer* instance, double* targetFPS, bool* run) {
+	void inputCheck(shared_ptr<player> p, shared_ptr<renderer> instance, double* targetFPS, bool* run) {
 		
 		if (controller->checkDOWN() && downPressed != true) {
 			currentOption = (currentOption + 1) % options.size();
@@ -192,13 +196,13 @@ public:
 	}
 
 
-	void tileDistanceCheck(renderer* instance, list<tile*> tileList, camera* cam) {
+	void tileDistanceCheck(shared_ptr<renderer> instance, list<shared_ptr<tile>> tileList, shared_ptr<camera> cam) {
 
 		Vector2f camPos = Vector2f(cam->getPosition().x, cam->getPosition().y);
 		Vector2u dist = Vector2u((instance->getWindow()->getSize().x + camPos.x), instance->getWindow()->getSize().y + camPos.y);
-		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
+		//list<tuple <shared_ptr<tile>, bool>>::iterator tileI = tileList.begin();
 
-		for (tile* t : tileList) {
+		for (shared_ptr<tile> t : tileList) {
 			bool display = false;
 
 			Vector2f tilePos = t->getSprite()->getPosition();

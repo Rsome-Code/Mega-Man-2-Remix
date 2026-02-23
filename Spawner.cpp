@@ -4,15 +4,15 @@
 
 class Spawner : public GameObject{
 protected:
-	Texture* tex;
-	enemy* toSpawn;
+	shared_ptr<Texture> tex;
+	shared_ptr<enemy> toSpawn;
 	Vector2f position;
 	float spawnTime = 4;
 	float spawnTime_left = 2.5;
 
-	enemy* spawned = NULL;
+	shared_ptr<enemy> spawned = NULL;
 
-
+	string levelName;
 
 public:
 
@@ -21,7 +21,7 @@ public:
 
 
 
-	void eachFrame(float* deltaT, objectSprite* player, list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	void eachFrame(float* deltaT, shared_ptr<objectSprite> player, list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		if (spawned == NULL) {
 			spawnTime_left -= *deltaT;
 			if (spawnTime_left <= 0) {
@@ -32,7 +32,7 @@ public:
 		
 		else {
 			bool passed = false;
-			for (enemy* en : *enemyList) {
+			for (shared_ptr<enemy> en : *enemyList) {
 				if (en == spawned) {
 					passed = true;
 				}
@@ -43,7 +43,7 @@ public:
 		}
 
 	}
-	virtual void spawn(list<enemy*>* enemyList, SoundCollection* soundCol) {
+	virtual void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<SoundCollection> soundCol) {
 
 
 	}
@@ -52,4 +52,9 @@ public:
 		position = pos;
 		sprite->setPosition(pos);
 	}
+
+	void setPallete(string levelName) {
+		this->levelName = levelName;
+	}
+
 };

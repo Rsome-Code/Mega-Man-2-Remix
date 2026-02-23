@@ -32,16 +32,20 @@ class FlyGuy : public TempPhysicsEnemy {
 	};
 	State state = falling;
 
-	animation* chargeAnim;
-	animTimer* chargeTimer;
+	shared_ptr<animation> chargeAnim;
+	shared_ptr<animTimer> chargeTimer;
 
-	animation* flyAnim;
-	animTimer* flyTimer;
+	shared_ptr<animation> flyAnim;
+	shared_ptr<animTimer> flyTimer;
 
 	float fallSpeed = 500;
 	float fallDistance = 200;
 
 public:
+
+	virtual ~FlyGuy() {
+
+	}
 
 	void initial() {
 		setCode("fly guy");
@@ -49,24 +53,24 @@ public:
 		phys->setRect(IntRect(137, 214, 28, 38));
 		phys->enableGravity(true);
 
-		hit = new objectHitbox(IntRect(0, 0, 27, 37), phys);
-		hurt = new objectHitbox(IntRect(0, 0, 27, 37), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 27, 37), phys));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 27, 37), phys));
 		hp = 4;
 		damage = 3;
 		grounded = false;
 
-		flyAnim = new animation(list<IntRect>{IntRect(197, 214, 32, 38), IntRect(235, 214, 32, 38)}, sprite);
-		flyTimer = new animTimer(flyAnim, 12, true);
+		flyAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(197, 214, 32, 38), IntRect(235, 214, 32, 38)}, sprite));
+		flyTimer = shared_ptr<animTimer> (new animTimer(flyAnim, 12, true));
 
-		chargeAnim = new animation(list<IntRect>{IntRect(137, 214, 28, 38), IntRect(167, 214, 28, 38), IntRect(197, 214, 32, 38), IntRect(235, 214, 32, 38)}, sprite);
-		chargeTimer = new animTimer(chargeAnim, 12, true);
+		chargeAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(137, 214, 28, 38), IntRect(167, 214, 28, 38), IntRect(197, 214, 32, 38), IntRect(235, 214, 32, 38)}, sprite));
+		chargeTimer = shared_ptr<animTimer> (new animTimer(chargeAnim, 12, true));
 		
 
 		offSetList();
 		deathAnim->setSprite(sprite);
 	}
 
-	void setSound(SoundCollection* soundCol) {
+	void setSound(shared_ptr<SoundCollection> soundCol) {
 		sound = soundCol->getLand();
 	}
 	
@@ -78,13 +82,13 @@ public:
 		return false;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		checkDirection(p->getSprite());
 		//tileCollision(tileList);
 		
 		if (state == falling) {
 
-			for (tile* t : *tileList) {
+			for (shared_ptr<tile> t : *tileList) {
 				if (t->getGround() != NULL) {
 					groundCheck(t);
 				}
@@ -108,7 +112,7 @@ public:
 			}
 		}
 		else if (state == charging) {
-			for (tile* t : *tileList) {
+			for (shared_ptr<tile> t : *tileList) {
 				if (t->getGround() != NULL) {
 					groundCheck(t);
 				}
@@ -182,7 +186,7 @@ public:
 		
 	}
 
-	void setSoundPoint(Sound** s) {
+	void setSoundPoint(shared_ptr<Sound>* s) {
 		sound = *s;
 	}
 
@@ -198,7 +202,7 @@ public:
 		}
 	}*/
 
-	/*void calcArc(player* p) {
+	/*void calcArc(shared_ptr<player> p) {
 		targetX = p->getPosition().x;
 		distX = fabs(targetX - phys->getPosition().x);
 		vertSpeed = maxVertSpeed;

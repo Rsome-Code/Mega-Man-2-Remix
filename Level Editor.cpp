@@ -50,20 +50,20 @@
 #pragma once
 
 class levelEditor {
-	
-	UISprite* tab;
-	UISprite* typeTab;
-	list<tile*> tileList;
-	list<tile*> z2List;
-	list<tile*> z3List;
-	list<tile*> z4List;
+
+	shared_ptr<UISprite> tab;
+	shared_ptr<UISprite> typeTab;
+	list<shared_ptr<tile>> tileList;
+	list<shared_ptr<tile>> z2List;
+	list<shared_ptr<tile>> z3List;
+	list<shared_ptr<tile>> z4List;
 
 	list<objectSelect*> tileDisplay;
-	list<menuSelect*> tileSelect;
-	list<menuSelect*> typeSelect;
+	list<shared_ptr<menuSelect>> tileSelect;
+	list<shared_ptr<menuSelect>> typeSelect;
 	bool run = true;
-	timer* time;
-	camera* cam;
+	shared_ptr<timer> time;
+	shared_ptr<camera> cam;
 
 	string levelName;
 	int section = 0;
@@ -77,8 +77,8 @@ class levelEditor {
 	bool rightPressed = false;
 	bool leftPressed = false;
 
-	list<menuSelect*>::iterator menuI;
-	list<tile*>::iterator worldI;
+	list<shared_ptr<menuSelect>>::iterator menuI;
+	list<shared_ptr<tile>>::iterator worldI;
 	bool tileSelection = false;
 	bool typeSelection = false;
 	bool onZ = false;
@@ -89,15 +89,15 @@ class levelEditor {
 	Vector2f flagLoc;
 
 	int selectedTexture;
-	tile* selectedTile;
+	shared_ptr<tile> selectedTile;
 
 	// 0 = backgorund, 1 = floor, 2 = Right wall, 3 = ceiling, 4 = left wall, 5 = floor and ceiling, 6 = left and right wall, 7 = full, 8 = ladder, 9 = top ladder, 10 = hori lava, 11 = vert lava, 12 = pour lava
 	int selectedType;
 	int typeHover;
 
-	menuSelect* zSelect;
+	shared_ptr<menuSelect> zSelect;
 
-	Texture* tex;
+	shared_ptr<Texture> tex;
 
 	Vector2i dragStart;
 	Vector2i highlightStart;
@@ -113,34 +113,40 @@ class levelEditor {
 
 	bool zoomed = false;
 
-	Font* font;
+	shared_ptr<Font> font;
 
 public:
-	levelEditor(Texture* T, string levelN, Font* f) {
+
+	virtual ~levelEditor() {
+
+
+	}
+
+	levelEditor(shared_ptr<Texture> T, string levelN, shared_ptr<Font> f) {
 		this->levelName = levelN;
-		Texture* tabT = new Texture;
+		shared_ptr<Texture> tabT = shared_ptr<Texture>(new Texture);
 		tex = T;
 
 		tabT->loadFromFile("Assets\\Tab.png");
-		tab = new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), Vector2f(0, 0), Vector2f(1, 1));
-		typeTab = new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), Vector2f(1920 - 414, 0), Vector2f(1, 1));
+		tab = shared_ptr<UISprite>(new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), Vector2f(0, 0), Vector2f(1, 1)));
+		typeTab = shared_ptr<UISprite>(new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), Vector2f(1920 - 414, 0), Vector2f(1, 1)));
 
 		for (int i = 0; i < 50; i++) {
 			
-			tileSelect.push_back(new menuSelect(T, Vector2i((i % 4) * 16, (i / 4) * 16), Vector2f((((i % 4) * 20) * 4) + 20, (((i / 4) * 20) * 4) + 20)));
+			tileSelect.push_back(shared_ptr<menuSelect>(new menuSelect(T, Vector2i((i % 4) * 16, (i / 4) * 16), Vector2f((((i % 4) * 20) * 4) + 20, (((i / 4) * 20) * 4) + 20))));
 		}
-		Texture* typeT = new Texture();
+		shared_ptr<Texture> typeT = shared_ptr<Texture> (new Texture());
 		typeT->loadFromFile("Assets\\Tile Select\\" + levelN + ".png");
 		for (int i = 0; i < 30; i++) {
-			typeSelect.push_back(new menuSelect(typeT, Vector2i((i* 16), 0), Vector2f((((i % 4) * 20) * 4) + 1600, (((i / 4) * 20) * 4) + 20)));
+			typeSelect.push_back(shared_ptr<menuSelect>(new menuSelect(typeT, Vector2i((i* 16), 0), Vector2f((((i % 4) * 20) * 4) + 1600, (((i / 4) * 20) * 4) + 20))));
 		}
 
-		Texture* zT = new Texture();
+		shared_ptr<Texture> zT = shared_ptr<Texture> (new Texture());
 		zT->loadFromFile("Assets\\Z.png");
-		zSelect = new menuSelect(zT, Vector2i(0, 0), Vector2f(1800, 900));
+		zSelect = shared_ptr<menuSelect>(new menuSelect(zT, Vector2i(0, 0), Vector2f(1800, 900)));
 
 
-		cam = new camera();
+		cam = shared_ptr<camera>(new camera());
 
 		flagCheck();
 
@@ -159,13 +165,13 @@ public:
 		m = new mouse();
 
 		beatSet = 0;
-		beatText = new Text();
+		beatText = shared_ptr<Text> (new Text());
 		beatText->setFont(*f);
 		beatText->setString("Beat: " + to_string(beatSet + 1));
 		beatText->setPosition(Vector2f(20, 900));
 		beatText->setFillColor(Color::Black);
 
-		font = new Font();
+		font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
 
 
@@ -173,19 +179,19 @@ public:
 	}
 
 	void flagCheck() {
-		Load* load = new Load();
-		list<GameObject*> objects;
+		shared_ptr<Load> load = shared_ptr<Load>(new Load());
+		list<shared_ptr<GameObject>> objects;
 
-		load->loadObjects(levelName, to_string(section), &objects, new Texture(), cam);
+		load->loadObjects(levelName, to_string(section), &objects, shared_ptr<Texture> (new Texture()), cam);
 
-		for (object* o : objects) {
+		for (shared_ptr<object> o : objects) {
 			if (o->getCode() == "flag") {
 				flagLoc = o->getSprite()->getPosition();
 			}
 		}
 	}
 
-	void loop(renderer* instance, double targetRate) {
+	void loop(shared_ptr<renderer> instance, double targetRate) {
 
 		cam->setZoom(0.5);
 		
@@ -193,7 +199,7 @@ public:
 		auto* startP = &start;
 		float deltaT = 0;
 
-		Load* l = new Load();
+		shared_ptr<Load> l = shared_ptr<Load>(new Load());
 		l->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 		changeZ();
 		while (instance->getWindow()->isOpen() && run) {
@@ -235,34 +241,34 @@ public:
 				//cam->setPosition(Vector2f(cam->getPosition().x, ))
 			}
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->objectSetup(t->getSprite(), cam);
 			}
 			if (z != 4) {
-				for (tile* t : z4List) {
+				for (shared_ptr<tile> t : z4List) {
 					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
 			else {
-				for (tile* t : z4List) {
+				for (shared_ptr<tile> t : z4List) {
 					instance->objectAccess(t, cam);
 				}
 			}
 
 			if (z <= 3) {
 				if (z != 3) {
-					for (tile* t : z3List) {
+					for (shared_ptr<tile> t : z3List) {
 						instance->bObjectDisplay(t->getSprite(), cam);
 					}
 				}
 				else {
-					for (tile* t : z3List) {
+					for (shared_ptr<tile> t : z3List) {
 						instance->objectAccess(t, cam);
 					}
 				}
@@ -272,12 +278,12 @@ public:
 
 			if (z <= 2) {
 				if (z != 2) {
-					for (tile* t : z2List) {
+					for (shared_ptr<tile> t : z2List) {
 						instance->bObjectDisplay(t->getSprite(), cam);
 					}
 				}
 				else {
-					for (tile* t : z2List) {
+					for (shared_ptr<tile> t : z2List) {
 						instance->objectAccess(t, cam);
 					}
 				}
@@ -285,14 +291,14 @@ public:
 			}
 
 			if (z == 1) {
-				for (tile* t : tileList) {
+				for (shared_ptr<tile> t : tileList) {
 					instance->objectAccess(t, cam);
 				}
 			}
 			
 			if (!zoomed) {
 
-				for (tile* t : tileList) {
+				for (shared_ptr<tile> t : tileList) {
 
 					if (t->getText(font) != NULL) {
 						instance->textDisplay(t->getText(font));
@@ -320,12 +326,12 @@ public:
 						}
 					}
 				}
-				instance->UIDisplay(list<UISprite*> {tab, typeTab});
-				for (menuSelect* t : tileSelect) {
+				instance->UIDisplay(list<shared_ptr<UISprite>> {tab, typeTab});
+				for (shared_ptr<menuSelect> t : tileSelect) {
 					instance->UIDisplay(t->getSprite());
 				}
 
-				for (menuSelect* t : typeSelect) {
+				for (shared_ptr<menuSelect> t : typeSelect) {
 					instance->UIDisplay(t->getSprite());
 				}
 
@@ -422,14 +428,14 @@ public:
 		z2List.clear();
 		z3List.clear();
 		z4List.clear();
-		Load* load = new Load();
+		shared_ptr<Load> load = shared_ptr<Load>(new Load());
 		load->load(levelName, to_string(section), tex, &tileList, &z2List, &z3List, &z4List);
 		
 		flagCheck();
 		changeZ();
 	}
 
-	void mouseCheck(list<tile*> *tileList, renderer* instance, Vector2i mousePos) {
+	void mouseCheck(list<shared_ptr<tile>> *tileList, shared_ptr<renderer> instance, Vector2i mousePos) {
 		
 
 		if (UITextureCheck(mousePos)) {
@@ -555,7 +561,7 @@ public:
 	}
 
 
-	void mouse1Release(list<tile*> *tileList, Vector2i mousePos) {
+	void mouse1Release(list<shared_ptr<tile>> *tileList, Vector2i mousePos) {
 		
 		Vector2i currentWorld = mouseWorld(mousePos);
 		//currentPos = Vector2i(currentPos.x , currentPos.x + (cam->getPosition().x / 2));
@@ -566,9 +572,9 @@ public:
 		Vector2i size = Vector2i(worldHighlight.getSize().x / (16*2), worldHighlight.getSize().y/(16*2));
 
 		
-		list<tile*>::iterator tI = tileList->begin();
+		list<shared_ptr<tile>>::iterator tI = tileList->begin();
 
-		list<tile*> tempList;
+		list<shared_ptr<tile>> tempList;
 
 		for (int i = 0; i < (size.x); i++) {
 			for (int j = 0; j < (size.y ); j++) {
@@ -577,7 +583,7 @@ public:
 
 				//Checks for tiles in the same location
 				if (tileList->size() > 0) {
-					for (tile* t : *tileList) {
+					for (shared_ptr<tile> t : *tileList) {
 						check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
 						if (check) {
 							break;
@@ -592,7 +598,7 @@ public:
 				tI = tileList->begin();
 
 				if (!del) {
-					tile* temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
+					shared_ptr<tile> temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
 					//temp->getSprite()->setZ(z);
 					tileList->push_back(temp);
 
@@ -603,7 +609,7 @@ public:
 		}
 
 		if (levelName == "flash man" && selectedType == 20) {
-			for (tile* t : tempList) {
+			for (shared_ptr<tile> t : tempList) {
 				FlashTile temp = *flashTileCheck(t->getLocation());
 				temp.setTiming(beatSet);
 				*t = temp;
@@ -619,7 +625,7 @@ public:
 		return false;
 	}
 
-	void mouse1Hold(list<tile*> *tileList, Vector2i mousePos) {
+	void mouse1Hold(list<shared_ptr<tile>> *tileList, Vector2i mousePos) {
 		Vector2i currentPos = Vector2i(mousePos.x - (mousePos.x % (16 * 2)), mousePos.y - (mousePos.y % (16 * 2)));
 		Vector2f size = Vector2f((currentPos.x - highlightStart.x)+(16*2), (currentPos.y - highlightStart.y) + (16*2));
 
@@ -644,7 +650,7 @@ public:
 	}
 
 
-	void mouse1Click(list<tile*> *tileList, Vector2i mousePos) {
+	void mouse1Click(list<shared_ptr<tile>> *tileList, Vector2i mousePos) {
 		highlightStart = Vector2i(mousePos.x - (mousePos.x % (16 * 2)), mousePos.y - (mousePos.y % (16 * 2)));
 		mouse1Pressed = true;
 		
@@ -653,7 +659,7 @@ public:
 
 			if (menuI != typeSelect.end()) {
 				if (selectedTile == NULL) {
-					menuSelect* temp = *menuI;
+					shared_ptr<menuSelect> temp = *menuI;
 					selectedType = typeHover;
 				}
 				else {
@@ -668,7 +674,7 @@ public:
 		else if (tileSelection) {
 			if (selectedTile == NULL) {
 				if (menuI != tileSelect.end()) {
-					menuSelect* temp = *menuI;
+					shared_ptr<menuSelect> temp = *menuI;
 					selectedTexture = (temp->getSprite()->getRect().getPosition().x / 16) + (temp->getSprite()->getRect().getPosition().y / 16) * 4;
 					textureHighlight.setPosition(Vector2f((((selectedTexture % 4) * 20) * 4) + 20, (((selectedTexture / 4) * 20) * 4) + 20));
 				}
@@ -676,7 +682,7 @@ public:
 
 			else {
 				if (menuI != tileSelect.end()) {
-					menuSelect* temp = *menuI;
+					shared_ptr<menuSelect> temp = *menuI;
 					selectedTile->setTileNum((temp->getSprite()->getRect().getPosition().x / 16) + (temp->getSprite()->getRect().getPosition().y / 16) * 4);
 
 				}
@@ -702,7 +708,7 @@ public:
 
 	void changeZ() {
 		
-		for (tile* t : z2List) {
+		for (shared_ptr<tile> t : z2List) {
 			if (z == 1) {
 				t->getSprite()->setZ(1.25);
 			}
@@ -710,7 +716,7 @@ public:
 				t->getSprite()->setZ(1);
 			}
 		}
-		for (tile* t : z3List) {
+		for (shared_ptr<tile> t : z3List) {
 			if (z == 1) {
 				t->getSprite()->setZ(1.5);
 			}
@@ -721,7 +727,7 @@ public:
 				t->getSprite()->setZ(1);
 			}
 		}
-		for (tile* t : z4List) {
+		for (shared_ptr<tile> t : z4List) {
 			if (z == 1) {
 				t->getSprite()->setZ(1.75);
 			}
@@ -744,8 +750,8 @@ public:
 	}
 
 
-	void miniSave(list<tile*> tList, ofstream* myfile) {
-		for (tile* t : tList) {
+	void miniSave(list<shared_ptr<tile>> tList, shared_ptr<ofstream> myfile) {
+		for (shared_ptr<tile> t : tList) {
 
 
 			*myfile <<t->getType() + ",";
@@ -769,8 +775,8 @@ public:
 	}
 
 	void save() {
-		ofstream* myfile;
-		myfile = new ofstream();
+		shared_ptr<ofstream> myfile;
+		myfile = shared_ptr<ofstream> (new ofstream());
 
 		myfile->open(levelName + "\\" + to_string(section) + ".txt");
 
@@ -784,7 +790,7 @@ public:
 	}
 
 
-	tile* tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
+	shared_ptr<tile> tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 
 
 		if (levelName == "flash man") {
@@ -792,31 +798,31 @@ public:
 		}
 
 		else if (selectedType == 0) {
-			return new tile(worldPos, tex, selectedTexture, z);
+			return shared_ptr<tile>(new tile(worldPos, tex, selectedTexture, z));
 		}
 		else if (selectedType == 1) {
-			return new topTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new topTile(worldPos, tex, selectedTexture));
 		}
 		else if (selectedType == 2) {
-			return new rightTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new rightTile(worldPos, tex, selectedTexture));
 		}
 		else if (selectedType == 3) {
-			return new ceilingTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new ceilingTile(worldPos, tex, selectedTexture));
 		}
 		else if (selectedType == 4) {
-			return new leftTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new leftTile(worldPos, tex, selectedTexture));
 		}
 		else if (selectedType == 8) {
-			return new ladderTile(worldPos, tex);
+			return shared_ptr<tile>(new ladderTile(worldPos, tex));
 		}
 		else if (selectedType == 9) {
-			return new topLadder(worldPos, tex);
+			return shared_ptr<tile>(new topLadder(worldPos, tex));
 		}
 		
 		else if (selectedType == 5 || selectedType == 6 ||selectedType == 7) {
-			return new solidTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
 		}
-		else if (levelName == "wood man" || levelName == "bubble name" || levelName == "heat man") {
+		else if (levelName == "wood man" || levelName == "bubble man" || levelName == "heat man") {
 			return bubbleCheck(worldPos);
 		}
 		else if (levelName == "metal man") {
@@ -824,222 +830,222 @@ public:
 		}
 		
 		else {
-			return new solidTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
 		}
 	}
 
-	tile* bubbleCheck(Vector2f worldPos) {
+	shared_ptr<tile> bubbleCheck(Vector2f worldPos) {
 		if (selectedType == 10) {
-			return new HorizontalLava(worldPos, tex, z);
+			return shared_ptr<tile>(new HorizontalLava(worldPos, tex, z));
 		}
 		else if (selectedType == 11) {
-			return new VerticalLava(worldPos, tex, z);
+			return shared_ptr<tile>(new VerticalLava(worldPos, tex, z));
 		}
 		else if (selectedType == 12) {
-			return new PourLava(worldPos, tex, z);
+			return shared_ptr<tile>(new PourLava(worldPos, tex, z));
 		}
 		else if (selectedType == 13) {
-			return new AnimTile(worldPos, tex, 0, 3, z);
+			return shared_ptr<tile>(new AnimTile(worldPos, tex, 0, 3, z));
 		}
 		else if (selectedType == 14) {
-			return new AnimTile(worldPos, tex, 1, 3, z);
+			return shared_ptr<tile>(new AnimTile(worldPos, tex, 1, 3, z));
 		}
 		else if (selectedType == 15) {
-			return new AnimTile(worldPos, tex, 2, 3, z);
+			return shared_ptr<tile>(new AnimTile(worldPos, tex, 2, 3, z));
 		}
 		else if (selectedType == 16) {
-			return new WaterAnim(worldPos, tex, 3, 3, z);
+			return shared_ptr<tile>(new WaterAnim(worldPos, tex, 3, 3, z));
 		}
 		else if (selectedType == 17) {
-			return new WaterAnim(worldPos, tex, 4, 3, z);
+			return shared_ptr<tile>(new WaterAnim(worldPos, tex, 4, 3, z));
 			}
 		else if (selectedType == 18) {
-			return new WaterAnim(worldPos, tex, 5, 3, z);
+			return shared_ptr<tile>(new WaterAnim(worldPos, tex, 5, 3, z));
 		}
 		else if (selectedType == 19) {
-			return new WaterAnim(worldPos, tex, 6, 3, z);
+			return shared_ptr<tile>(new WaterAnim(worldPos, tex, 6, 3, z));
 		}
 		else if (selectedType == 20) {
-			return new WaterTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new WaterTile(worldPos, tex, selectedTexture));
 		}
 		else if (selectedType == 21) {
-			return new DeathTile(worldPos, tex, selectedTexture, z);
+			return shared_ptr<tile>(new DeathTile(worldPos, tex, selectedTexture, z));
 		}
 	}
 
-	tile* metalCheck(Vector2f worldPos) {
+	shared_ptr<tile> metalCheck(Vector2f worldPos) {
 		if (selectedType == 10) {
-			return new AnimTile(worldPos, tex, 0, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 0, 2, z));
 		}
 		if (selectedType == 11) {
-			return new AnimTile(worldPos, tex, 1, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 1, 2, z));
 		}
 		if (selectedType == 12) {
-			return new AnimTile(worldPos, tex, 2, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 2, 2, z));
 		}
 		if (selectedType == 13) {
-			return new AnimTile(worldPos, tex, 3, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 3, 2, z));
 		}
 		if (selectedType == 14) {
-			return new AnimTile(worldPos, tex, 4, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 4, 2, z));
 		}
 		if (selectedType == 15) {
-			return new AnimTile(worldPos, tex, 5, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 5, 2, z));
 		}
 		if (selectedType == 16) {
-			return new AnimTile(worldPos, tex, 6, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 6, 2, z));
 		}
 		if (selectedType == 17) {
-			return new AnimTile(worldPos, tex, 7, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 7, 2, z));
 		}
 		if (selectedType == 18) {
-			return new AnimTile(worldPos, tex, 8, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 8, 2, z));
 		}
 		if (selectedType == 19) {
-			return new AnimTile(worldPos, tex, 9, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 9, 2, z));
 		}
 		if (selectedType == 20) {
-			return new AnimTile(worldPos, tex, 10, 2, z);
+			return shared_ptr<AnimTile>(new AnimTile(worldPos, tex, 10, 2, z));
 		}
 		if (selectedType == 21) {
-			MoveTile* temp = new MoveTile(worldPos, tex);
+			shared_ptr<MoveTile> temp = shared_ptr<MoveTile>(new MoveTile(worldPos, tex));
 			temp->setMoveRight(false);
 			return temp;
 		}
 		if (selectedType == 22) {
-			MoveTile* temp = new MoveTile(worldPos, tex);
+			shared_ptr<MoveTile> temp = shared_ptr<MoveTile>(new MoveTile(worldPos, tex));
 			temp->setMoveRight(true);
 			return temp;
 		}
 		if (selectedType == 23) {
-			return new ConveyorTile(worldPos, tex, z, true);
+			return shared_ptr<ConveyorTile>(new ConveyorTile(worldPos, tex, z, true));
 		}
 		if (selectedType == 24) {
-			return new ConveyorTile(worldPos, tex, z, false);
+			return shared_ptr<ConveyorTile>(new ConveyorTile(worldPos, tex, z, false));
 		}
 	}
 
-	//Do this next!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 	int beatSet = 0;
 
-	Text* beatText;
+	shared_ptr<Text> beatText;
 
-	tile* flashCheck(Vector2f worldPos) {
+	shared_ptr<tile> flashCheck(Vector2f worldPos) {
 		if (selectedType == 0) {
-			return new tile(worldPos, tex, selectedTexture, z);
+			return shared_ptr<tile>(new tile(worldPos, tex, selectedTexture, z));
 		}
 		if (selectedType == 1) {
-			FlashTile* t = new TopLeftCornerFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<TopLeftCornerFlash>(new TopLeftCornerFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 
 		if (selectedType == 2) {
-			FlashTile* t = new HTubeTile(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<HTubeTile>(new HTubeTile(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 3) {
-			FlashTile* t = new VTubeTile(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<VTubeTile>(new VTubeTile(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 4) {
-			FlashTile* t = new TopRightCornerFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<TopRightCornerFlash>(new TopRightCornerFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 5) {
-			FlashTile* t = new TopEdgeFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<TopEdgeFlash>(new TopEdgeFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 6) {
-			FlashTile* t = new BottomRightCornerFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<BottomRightCornerFlash>(new BottomRightCornerFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 7) {
-			FlashTile* t = new BottomLeftCornerFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<BottomLeftCornerFlash>(new BottomLeftCornerFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 8) {
-			FlashTile* t = new BottomEdgeFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<BottomEdgeFlash>(new BottomEdgeFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 9) {
-			FlashTile* t = new SquareFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<SquareFlash>(new SquareFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 10) {
-			FlashTile* t = new LeftEdgeFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<LeftEdgeFlash>(new LeftEdgeFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 11) {
-			FlashTile* t = new RightEdgeFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<RightEdgeFlash>(new RightEdgeFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 12) {
-			FlashTile* t = new TopLeftWFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<TopLeftWFlash>(new TopLeftWFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 13) {
-			FlashTile* t = new TopRightWFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<TopRightWFlash>(new TopRightWFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 14) {
-			FlashTile* t = new WWallFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<WWallFlash>(new WWallFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 15) {
-			FlashTile* t = new BottomLeftWFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<BottomLeftWFlash>(new BottomLeftWFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 16) {
-			FlashTile* t = new BottomRightWFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<BottomRightWFlash>(new BottomRightWFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 17) {
-			FlashTile* t = new BottomLeftCornerWFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<BottomLeftCornerWFlash>(new BottomLeftCornerWFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 18) {
-			FlashTile* t = new WCeilingFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<WCeilingFlash>(new WCeilingFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 		if (selectedType == 19) {
-			FlashTile* t = new WRoofFlash(worldPos, tex);
+			shared_ptr<FlashTile> t = shared_ptr<WRoofFlash>(new WRoofFlash(worldPos, tex));
 			t->setTiming(beatSet);
 			return t;
 		}
 
 		if (selectedType == 20) {
-			FlashTile* t =flashTileCheck(worldPos);
+			shared_ptr<FlashTile> t =flashTileCheck(worldPos);
 			t->setTiming(beatSet);
 			return t;
 		}
 
 		if (selectedType == 21) {
-			return new rightTile(worldPos, tex, selectedTexture);
+			return shared_ptr<tile>(new rightTile(worldPos, tex, selectedTexture));
 		}
 
 		
 	}
 
-	FlashTile* flashTileCheck(Vector2f pos) {
+	shared_ptr<FlashTile> flashTileCheck(Vector2f pos) {
 
 		bool tileBelow = false;
 		bool tileAbove = false;
@@ -1047,7 +1053,7 @@ public:
 		bool tileLeft = false;
 		bool tileRight = false;
 
-		for (tile* t : tileList) {
+		for (shared_ptr<tile> t : tileList) {
 			if (t->getLocation().x == pos.x) {
 				if (t->getLocation().y == pos.y + 1) {
 					if (t->getTiming() == beatSet) {
@@ -1076,46 +1082,46 @@ public:
 		}
 
 		if (tileRight && tileLeft) {
-			return new HTubeTile(pos, tex);
+			return shared_ptr<HTubeTile>(new HTubeTile(pos, tex));
 		}
 
 		if (tileAbove && tileBelow) {
-			return new VTubeTile(pos, tex);
+			return shared_ptr<VTubeTile>(new VTubeTile(pos, tex));
 		}
 
 		if (tileAbove && tileLeft) {
-			return new BottomRightCornerFlash(pos, tex);
+			return shared_ptr<BottomRightCornerFlash>(new BottomRightCornerFlash(pos, tex));
 		}
 
 		if (tileAbove && tileRight) {
-			return new BottomLeftCornerFlash(pos, tex);
+			return shared_ptr<BottomLeftCornerFlash>(new BottomLeftCornerFlash(pos, tex));
 		}
 
 		if (tileBelow && tileLeft) {
-			return new TopRightCornerFlash(pos, tex);
+			return shared_ptr<TopRightCornerFlash>(new TopRightCornerFlash(pos, tex));
 		}
 
 		if (tileBelow && tileRight) {
-			return new TopLeftCornerFlash(pos, tex);
+			return shared_ptr<TopLeftCornerFlash>(new TopLeftCornerFlash(pos, tex));
 		}
 
 		if (tileLeft) {
-			return new RightEdgeFlash(pos, tex);
+			return shared_ptr<RightEdgeFlash>(new RightEdgeFlash(pos, tex));
 		}
 
 		if (tileRight) {
-			return new LeftEdgeFlash(pos, tex);
+			return shared_ptr<LeftEdgeFlash>(new LeftEdgeFlash(pos, tex));
 		}
 
 		if (tileAbove) {
-			return new BottomEdgeFlash(pos, tex);
+			return shared_ptr<BottomEdgeFlash>(new BottomEdgeFlash(pos, tex));
 		}
 
 		if (tileBelow) {
-			return new TopEdgeFlash(pos, tex);
+			return shared_ptr<TopEdgeFlash>(new TopEdgeFlash(pos, tex));
 		}
 
-		return new SquareFlash(pos, tex);
+		return shared_ptr<SquareFlash>(new SquareFlash(pos, tex));
 	}
 
 	void worldInteraction(Vector2i mousePos) {
@@ -1156,7 +1162,7 @@ public:
 
 		worldI = tileList.begin();
 
-		for (tile* t : tileList) {
+		for (shared_ptr<tile> t : tileList) {
 			Vector2f loc = t->getLocation();
 
 			if (worldPos.x == loc.x && worldPos.y == loc.y) {
@@ -1174,7 +1180,7 @@ public:
 	bool UITextureCheck(Vector2i mousePos) {
 
 		menuI = tileSelect.begin();
-		for (menuSelect* m : tileSelect) {
+		for (shared_ptr<menuSelect> m : tileSelect) {
 			if (UIHitboxCheck(mousePos, m->getHitbox())) {
 				return true;
 			}
@@ -1187,7 +1193,7 @@ public:
 
 		menuI = typeSelect.begin();
 		typeHover = 0;
-		for (menuSelect* m : typeSelect) {
+		for (shared_ptr<menuSelect> m : typeSelect) {
 			if (UIHitboxCheck(mousePos, m->getHitbox())) {
 				
 				return true;
@@ -1198,7 +1204,7 @@ public:
 		return false;
 	}
 
-	bool UIHitboxCheck(Vector2i mousePos, UIHitbox* hit) {
+	bool UIHitboxCheck(Vector2i mousePos, shared_ptr<UIHitbox> hit) {
 
 		if (hit->getCameraPos().x + hit->getSize().x > mousePos.x && mousePos.x > hit->getCameraPos().x) {
 			if (hit->getCameraPos().y + hit->getSize().y > mousePos.y && mousePos.y > hit->getCameraPos().y) {

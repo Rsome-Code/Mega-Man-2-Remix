@@ -5,8 +5,8 @@
 
 class MetalBladeBullet : public bullet {
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 
 
@@ -14,15 +14,15 @@ class MetalBladeBullet : public bullet {
 
 public:
 
-	MetalBladeBullet(objectSprite* o, Texture* t, SoundCollection* soundCol) {
+	MetalBladeBullet(shared_ptr<objectSprite> o, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		origin = o;
 
-		sprite = new movable(t, IntRect(521, 58, 16, 16), Vector2f(0, 0), Vector2f(4, 4));
-		anim = new animation(list<IntRect>{IntRect(521, 58, 16, 16), IntRect(538, 58, 16, 16)}, sprite);
-		timer = new animTimer(anim, 8, true);
+		sprite = shared_ptr<movable>(new movable(t, IntRect(521, 58, 16, 16), Vector2f(0, 0), Vector2f(4, 4)));
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(521, 58, 16, 16), IntRect(538, 58, 16, 16)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 		dinkSetup(soundCol);
 
-		hitbox = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
+		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
 
 		shootTime = 1;
 		shootTemp = shootTime;
@@ -69,7 +69,7 @@ public:
 		return false;
 	}
 
-	int checkDamage(object* en) {
+	int checkDamage(shared_ptr<object> en) {
 		return en->metalDam();
 	}
 

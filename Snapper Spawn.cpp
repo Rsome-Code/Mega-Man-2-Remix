@@ -6,14 +6,14 @@ class SnapperSpawn : public SpawnOnTop {
 	using SpawnOnTop::SpawnOnTop;
 
 	void initial() {
-		en = new Snapper(texture, Vector2f(0, 0));
+		en = shared_ptr<Snapper>(new Snapper(texture, Vector2f(0, 0)));
 	}
 
 
-	void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		Vector2f startP = getSpawnPos(cam);
 
-		Snapper* temp = new Snapper(en->getSprite()->getTexture(), startP);
+		shared_ptr<Snapper> temp = shared_ptr<Snapper>(new Snapper(en->getSprite()->getTexture(), startP));
 
 		temp->setHitSound(soundCol->getHit());
 

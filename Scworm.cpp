@@ -3,22 +3,27 @@
 
 class Scworm : public TempPhysicsEnemy {
 	using TempPhysicsEnemy::TempPhysicsEnemy;
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	int speed = 40;
 
 	int moveAngle = 0;
 
 public:
+
+	virtual ~Scworm() {
+
+	}
+
 	void initial() {
 
 		phys->setRect(IntRect(335, 538, 11, 16));
 		phys->enableGravity(true);
 		phys->setPosition(initialPos);
 
-		anim = new animation(list<IntRect>{IntRect(335, 538, 11, 16), IntRect(357, 538, 11, 16)}, sprite);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(335, 538, 11, 16), IntRect(357, 538, 11, 16)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 
 		phys->setVVelocity(800);
 
@@ -31,7 +36,7 @@ public:
 			moveAngle = 180;
 		}
 
-		hit = new objectHitbox(IntRect(0, 0, 11, 16), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 11, 16), sprite));
 		hurt = hit;
 		hp = 2;
 		damage = 2;
@@ -45,20 +50,20 @@ public:
 		return 2;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		timer->run(deltaT);
 
 		if (grounded) {
-			objectHitbox* checkPoint;
+			shared_ptr<objectHitbox> checkPoint;
 			if (moveAngle == 0) {
-				checkPoint = new objectHitbox(IntRect(sprite->getSize().x/2, 0, 5.5, 16), sprite);
+				checkPoint = shared_ptr<objectHitbox>(new objectHitbox(IntRect(sprite->getSize().x/2, 0, 5.5, 16), sprite));
 			}
 			else {
-				checkPoint = new objectHitbox(IntRect(0, 0, 5.5, 16), sprite);
+				checkPoint = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 5.5, 16), sprite));
 			}
 			phys->move(moveAngle, deltaT, speed);
 			bool onGround = false;
-			for (tile* t : *tileList) {
+			for (shared_ptr<tile> t : *tileList) {
 				if (t->getGround() != NULL) {
 					if (hitboxDetect::hitboxDetection(checkPoint, t->getGround())) {
 						onGround = true;
@@ -68,7 +73,7 @@ public:
 			if (!onGround) {
 				swap();
 			}
-			delete checkPoint;
+
 		}
 		else {
 			phys->eachFrame(deltaT);

@@ -12,20 +12,20 @@ enum State {
 class Wolf :public enemy {
 	using enemy::enemy;
 
-	movable* mov;
+	shared_ptr<movable> mov;
 
-	animation* teleportAnim;
+	shared_ptr<animation> teleportAnim;
 
 	list<IntRect> idleAnim_down;
 	list<IntRect> idleAnim_up;
-	animation* idleAnim;
+	shared_ptr<animation> idleAnim;
 
 	list<IntRect> shootAnim_up;
 	list<IntRect> shootAnim_down;
-	animation* shootAnim;
+	shared_ptr<animation> shootAnim;
 
-	animTimer* teleportTimer;
-	animTimer* idleTimer;
+	shared_ptr<animTimer> teleportTimer;
+	shared_ptr<animTimer> idleTimer;
 
 	State state;
 
@@ -44,32 +44,36 @@ class Wolf :public enemy {
 
 
 public:
+
+	virtual ~Wolf() {
+	}
+
 	void initial() {
-		mov = new movable("enemy", sprite->getTexture(), IntRect(646, 727, 14, 80), Vector2f(initialPos.x, initialPos.y), Vector2f(4, 4));
+		mov = shared_ptr<movable>(new movable("enemy", sprite->getTexture(), IntRect(646, 727, 14, 80), Vector2f(initialPos.x, initialPos.y), Vector2f(4, 4)));
 		sprite = mov;
 		hp = 15;
 		damage = 4;
 
 		mov->setSpeed(500);
 
-		teleportAnim = new animation(list<IntRect>{IntRect(646, 727, 14, 80), IntRect(662, 760, 64, 14), IntRect(727, 751, 48, 32)}, sprite);
+		teleportAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(646, 727, 14, 80), IntRect(662, 760, 64, 14), IntRect(727, 751, 48, 32)}, sprite));
 		teleportAnim->setOffsetList(list<Vector2f>{Vector2f(28 * 4, 0 * 4), Vector2f(4 * 4, 25 * 4), Vector2f(12 * 4, 20 * 4)});
 		teleportAnim->thisFrame();
 		idleAnim_down = list<IntRect>{IntRect(0, 728, 67, 59), IntRect(146, 728, 67, 59), IntRect(292, 728, 67, 59)};
 		idleAnim_up = list < IntRect>{ IntRect(73, 728, 67, 59), IntRect(219, 728, 67, 59), IntRect(365, 728, 67, 59) };
-		idleAnim = new animation(idleAnim_down, sprite);
+		idleAnim = shared_ptr<animation>(new animation(idleAnim_down, sprite));
 
 		shootAnim_up = list<IntRect>{IntRect(511, 728, 67, 59)};
 		shootAnim_down = list<IntRect>{IntRect(438, 728, 67, 59)};
-		shootAnim = new animation(shootAnim_down, sprite);
+		shootAnim = shared_ptr<animation>(new animation(shootAnim_down, sprite));
 
-		teleportTimer = new animTimer(teleportAnim, 15, false);
-		idleTimer = new animTimer(idleAnim, 4, true);
+		teleportTimer = shared_ptr<animTimer> (new animTimer(teleportAnim, 15, false));
+		idleTimer = shared_ptr<animTimer> (new animTimer(idleAnim, 4, true));
 
 		setCode("wolf");
 
-		hit = new objectHitbox(IntRect(30, 45, 1, 48), sprite);
-		hurt = new objectHitbox(IntRect(0, 0, 67, 59), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(30, 45, 1, 48), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 67, 59), sprite));
 		state = teleporting;
 
 		offSetList();
@@ -78,7 +82,7 @@ public:
 		deathAnim->setSprite(sprite);
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		if (state == teleporting) {
 			teleportLoop(deltaT, tileList);
 		}
@@ -94,7 +98,7 @@ public:
 		}
 	}
 
-	void shootLoop(float* deltaT, list<EnemyBullet*>* bList) {
+	void shootLoop(float* deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 		idleAnim->reset();
 		shootAnim->thisFrame();
 		shootInterval_left -= *deltaT;
@@ -110,8 +114,8 @@ public:
 		}
 	}
 
-	void shoot(list<EnemyBullet*>* bList) {
-		WolfFireBall* bullet = new WolfFireBall(this->sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + 32 * 4));
+	void shoot(list<shared_ptr<EnemyBullet>>* bList) {
+		shared_ptr<WolfFireBall> bullet = shared_ptr<WolfFireBall> (new WolfFireBall(this->sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + 32 * 4)));
 
 		bList->push_back(bullet);
 	}
@@ -154,11 +158,11 @@ public:
 		}
 	}
 
-	void teleportLoop(float* deltaT, list<tile*>* tileList) {
+	void teleportLoop(float* deltaT, list<shared_ptr<tile>>* tileList) {
 
 		mov->move(90, deltaT);
 
-		for (tile* t : *tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL) {
 				if (groundCheck(t)) {
 					state = standing;

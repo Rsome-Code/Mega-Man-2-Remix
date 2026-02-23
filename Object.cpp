@@ -12,17 +12,22 @@
 
 class object {
 protected:
-	objectSprite* sprite;
+	shared_ptr<objectSprite> sprite;
 	bool display = true;
 	bool act = true;
 	string code;
 
 public:
+
+	virtual ~object() {
+		//delete sprite;
+	}
+
 	object() {
 
 	}
-	object(object* o) {
-		sprite = new objectSprite(o->getSprite());
+	object(shared_ptr<object> o) {
+		sprite = shared_ptr<objectSprite>(new objectSprite(o->getSprite()));
 		display = o->getDisplay();
 		act = o->getAct();
 		code = o->getCode();
@@ -34,7 +39,7 @@ public:
 		return code;
 	}
 
-	virtual objectSprite* getSprite() {
+	virtual shared_ptr<objectSprite> getSprite() {
 		return sprite;
 	}
 	bool getDisplay() {
@@ -51,8 +56,8 @@ public:
 	}
 
 	void deleteSprite() {
-		sprite->deleteStuff();
-		delete sprite;
+		//sprite->deleteStuff();
+		//delete sprite;
 		//sprite = NULL;
 	}
 
@@ -60,8 +65,8 @@ public:
 		code = cod;
 	}
 
-	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam) {};
-	virtual void eachFrame(float* deltaT, objectSprite* player) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player, shared_ptr<camera> cam) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player) {};
 	virtual void initial() {};
 	virtual bool getOffScreen() { return false; };
 	virtual void reset() {};
@@ -79,10 +84,12 @@ public:
 	virtual int flashDam() { return NULL; };
 	virtual int crashDam() { return NULL; };
 
-	virtual bool checkHurt(objectHitbox* bullet) { return false; };
-	virtual bool checkHit(objectHitbox* pHit) { return false; };
-	virtual objectHitbox* getHitbox() { return NULL; };
-	virtual objectHitbox* getHurtbox() {return NULL;};
+	virtual bool checkHurt(shared_ptr<objectHitbox> bullet) { return false; };
+	virtual bool checkHit(shared_ptr<objectHitbox> pHit) { return false; };
+	virtual shared_ptr<objectHitbox> getHitbox() { return NULL; };
+	virtual shared_ptr<objectHitbox> getLeft() { return NULL; };
+	virtual shared_ptr<objectHitbox> getRight() { return NULL; };
+	virtual shared_ptr<objectHitbox> getHurtbox() {return NULL;};
 	virtual int getDamage() { return NULL; };
 	virtual LightSource* getLightSource() { return NULL; };
 	virtual void setInitOffScreen(bool o) {};
@@ -102,14 +109,14 @@ public:
 		enum transitionAngle r = RIGHT;
 		return r;
 	}
-	virtual void spawnItem(list<object*>* obList, Texture* t, Vector2f pos) {
+	virtual void spawnItem(list<shared_ptr<object>>* obList, shared_ptr<Texture> t, Vector2f pos) {
 	}
 	virtual void setCheckpoint(){}
 	Vector2f getPosition() {
 		return sprite->getPosition();
 	}
 	virtual bool getCheckpoint() { return false; };
-	virtual void setCamera(camera* camer) {};
+	virtual void setCamera(shared_ptr<camera> camer) {};
 	void forceDisplay(bool b) {
 		display = true;
 	}

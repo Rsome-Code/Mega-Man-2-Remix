@@ -5,15 +5,17 @@
 class PhysicsBullet : public EnemyBullet {
 
 protected:
-	physicsObject* phys;
+	shared_ptr<physicsObject> phys;
 
 	bool grounded = false;
 
+	virtual ~PhysicsBullet() {
 
+	}
 
-	void tileCollision(list<tile*>* tileList) {
+	void tileCollision(list<shared_ptr<tile>>* tileList) {
 
-		for (tile* t : *tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			bool thisGround = false;
 			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
 				thisGround = groundCheck(t);
@@ -32,7 +34,7 @@ protected:
 			}
 		}
 	}
-	void checkRight(tile* t) {
+	void checkRight(shared_ptr<tile> t) {
 		if (hitboxDetect::hitboxDetection(t->getRight(), hit)) {
 			sprite->setPosition(Vector2f(t->getRight()->getPosition().x + t->getRight()->getSize().x, sprite->getPosition().y));
 			if (phys->getHVelocity() < 0) {
@@ -41,7 +43,7 @@ protected:
 		}
 	}
 
-	void checkLeft(tile* t) {
+	void checkLeft(shared_ptr<tile> t) {
 		if (hitboxDetect::hitboxDetection(t->getLeft(), hit)) {
 			sprite->setPosition(Vector2f(t->getLeft()->getPosition().x - hit->getSize().x, sprite->getPosition().y));
 			if (phys->getHVelocity() < 0) {
@@ -50,7 +52,7 @@ protected:
 		}
 	}
 
-	bool groundCheck(tile* t) {
+	bool groundCheck(shared_ptr<tile> t) {
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			grounded = true;
 			sprite->setPosition(Vector2f(sprite->getPosition().x, t->getGround()->getPosition().y - hit->getSize().y));
@@ -60,7 +62,7 @@ protected:
 		return false;
 	}
 
-	void checkCeiling(tile* t) {
+	void checkCeiling(shared_ptr<tile> t) {
 		if (hitboxDetect::hitboxDetection(t->getCeiling(), hit)) {
 			phys->setVVelocity(0);
 			sprite->setPosition(Vector2f(sprite->getPosition().x, t->getCeiling()->getPosition().y + t->getCeiling()->getSize().y + 10));

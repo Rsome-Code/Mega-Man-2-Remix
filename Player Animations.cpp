@@ -4,35 +4,35 @@
 #pragma once
 
 class playerAnimation {
-	animation* idle;
-	animation* shoot;
-	animation* throwIdle;
+	shared_ptr<animation> idle;
+	shared_ptr<animation> shoot;
+	shared_ptr<animation> throwIdle;
 
-	animation* hurt;
+	shared_ptr<animation> hurt;
 	
-	animation* jump;
-	animation* jumpShoot;
-	animation* jumpThrow;
-	animation* toe;
+	shared_ptr<animation> jump;
+	shared_ptr<animation> jumpShoot;
+	shared_ptr<animation> jumpThrow;
+	shared_ptr<animation> toe;
 
-	animation* walk;
-	animTimer* walkTimer;
-	animation* shootWalk;
-	animTimer* shootWalkTimer;
+	shared_ptr<animation> walk;
+	shared_ptr<animTimer> walkTimer;
+	shared_ptr<animation> shootWalk;
+	shared_ptr<animTimer> shootWalkTimer;
 
-	animation* ladder;
-	animation* ladderShoot;
-	animTimer* ladderTimer;
-	animation* ladderThrow;
+	shared_ptr<animation> ladder;
+	shared_ptr<animation> ladderShoot;
+	shared_ptr<animTimer> ladderTimer;
+	shared_ptr<animation> ladderThrow;
 
-	animation* ladderTop;
+	shared_ptr<animation> ladderTop;
 
 
 	float shootTime = 0.3;
 	float shootTemp = 0.3;
 	
 
-	physicsObject* sprite;
+	shared_ptr<physicsObject> sprite;
 	float idleTime = 1.5;
 	float blinkTime = 0.2;
 	float untilRun = 0.1;
@@ -47,17 +47,17 @@ class playerAnimation {
 	int currentAnim = 0;
 
 public:
-	playerAnimation(physicsObject* s) {
+	playerAnimation(shared_ptr<physicsObject> s) {
 		sprite = s;
-		idle = new animation(list<IntRect> {IntRect(Vector2i(3, 20), Vector2i(21, 25)), IntRect(Vector2i(54, 20), Vector2i(21, 25)) }, sprite);
-		toe = new animation(list<IntRect> {IntRect(Vector2i(100, 20), Vector2i(22, 25)) }, sprite);
-		jump = new animation(list<IntRect> {IntRect(Vector2i(276, 12), Vector2i(26, 31)) }, sprite);
-		walk = new animation(list<IntRect> {IntRect(Vector2i(148, 22), Vector2i(26, 26)), IntRect(Vector2i(183, 20), Vector2i(24, 26)), IntRect(Vector2i(210, 22), Vector2i(22, 26)), IntRect(Vector2i(183, 20), Vector2i(24, 26)) }, sprite);
-		walkTimer = new animTimer(walk, 8, true);
-		shootWalk = new animation(list<IntRect> {IntRect(Vector2i(35, 79), Vector2i(33, 23)), IntRect(Vector2i(70, 77), Vector2i(28, 26)), IntRect(Vector2i(103, 79), Vector2i(32, 24)), IntRect(Vector2i(70, 77), Vector2i(28, 26))}, sprite);
-		shootWalkTimer = new animTimer(shootWalk, 8, true);
-		shoot = new animation(list<IntRect>{IntRect(Vector2i(1, 77), Vector2i(31, 25))}, sprite);
-		jumpShoot = new animation(list<IntRect>{IntRect(Vector2i(140, 69), Vector2i(30, 32))}, sprite);
+		idle = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(3, 20), Vector2i(21, 25)), IntRect(Vector2i(54, 20), Vector2i(21, 25)) }, sprite));
+		toe = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(100, 20), Vector2i(22, 25)) }, sprite));
+		jump = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(276, 12), Vector2i(26, 31)) }, sprite));
+		walk = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(148, 22), Vector2i(26, 26)), IntRect(Vector2i(183, 20), Vector2i(24, 26)), IntRect(Vector2i(210, 22), Vector2i(22, 26)), IntRect(Vector2i(183, 20), Vector2i(24, 26)) }, sprite));
+		walkTimer = shared_ptr<animTimer> (new animTimer(walk, 8, true));
+		shootWalk = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(35, 79), Vector2i(33, 23)), IntRect(Vector2i(70, 77), Vector2i(28, 26)), IntRect(Vector2i(103, 79), Vector2i(32, 24)), IntRect(Vector2i(70, 77), Vector2i(28, 26))}, sprite));
+		shootWalkTimer = shared_ptr<animTimer> (new animTimer(shootWalk, 8, true));
+		shoot = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(1, 77), Vector2i(31, 25))}, sprite));
+		jumpShoot = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(140, 69), Vector2i(30, 32))}, sprite));
 		jumpShoot->setOffsetList(list<Vector2f> { Vector2f( - 4 * sprite->getScale().x, 2 * sprite->getScale().y)});
 		shooting = false;
 		shootWalk->setDisplay(false);
@@ -65,9 +65,9 @@ public:
 		toe->setDisplay(true);
 		walk->setDisplay(true);
 		jumpShoot->setDisplay(false);
-		throwIdle = new animation(list<IntRect>{IntRect(Vector2i(214, 77), Vector2i(30, 25))}, sprite);
+		throwIdle = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(214, 77), Vector2i(30, 25))}, sprite));
 
-		jumpThrow= new animation(list<IntRect>{IntRect(Vector2i(248, 69), Vector2i(29, 31))}, sprite);
+		jumpThrow= shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(248, 69), Vector2i(29, 31))}, sprite));
 		jumpThrow->setDisplay(false);
 
 		throwIdle->setOffsetList(list<Vector2f> { Vector2f(-7 * sprite->getScale().x, 0)});
@@ -75,16 +75,16 @@ public:
 		jumpShoot->setOffsetList(list<Vector2f> { Vector2f(-4 * sprite->getScale().x, 0)});
 		jumpThrow->setOffsetList(list<Vector2f> { Vector2f(-3 * sprite->getScale().x, 0)});
 
-		ladder = new animation(list<IntRect>{IntRect(Vector2i(310, 14), Vector2i(18, 31)), IntRect(Vector2i(337, 14), Vector2i(17, 31))}, sprite);
+		ladder = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(310, 14), Vector2i(18, 31)), IntRect(Vector2i(337, 14), Vector2i(17, 31))}, sprite));
 
-		ladderTop = new animation(list<IntRect>{IntRect(Vector2i(364, 18), Vector2i(18, 23))}, sprite);
+		ladderTop = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(364, 18), Vector2i(18, 23))}, sprite));
 
-		ladderTimer = new animTimer(ladder, 8, true);
-		ladderShoot = new animation(list<IntRect>{IntRect(Vector2i(177, 69), Vector2i(26, 30))}, sprite);
+		ladderTimer = shared_ptr<animTimer> (new animTimer(ladder, 8, true));
+		ladderShoot = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(177, 69), Vector2i(26, 30))}, sprite));
 		ladderShoot->setOffsetList(list<Vector2f> { Vector2f(-7 * sprite->getScale().x, 0)});
-		ladderThrow = new animation(list<IntRect>{IntRect(Vector2i(248, 69), Vector2i(30, 30))}, sprite);
+		ladderThrow = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(248, 69), Vector2i(30, 30))}, sprite));
 
-		hurt = new animation(list<IntRect>{IntRect(Vector2i(387, 12), Vector2i(26, 28))}, sprite);
+		hurt = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(387, 12), Vector2i(26, 28))}, sprite));
 
 		//metalBlade = true;
 	}
@@ -157,7 +157,7 @@ public:
 		return facingRight;
 	}
 
-	animation* getIdle(){
+	shared_ptr<animation> getIdle(){
 		return idle;
 	}
 

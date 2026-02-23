@@ -6,8 +6,8 @@ class Press:public PhysicsEnemy{
 	void initial() {
 		phys->setRect(IntRect(732, 185, 32, 112));
 		phys->setPosition(initialPos);
-		hit = new objectHitbox(IntRect(4*4, 4*96, 24, 16), phys);
-		hurt = new objectHitbox(IntRect(0, 0, 0, 0), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(4*4, 4*96, 24, 16), phys));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 0, 0), phys));
 
 		hp = 99;
 		damage = 5;
@@ -30,7 +30,7 @@ class Press:public PhysicsEnemy{
 
 	int upSpeed = 200;
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		delay_left -= *deltaT;
 		if (delay_left <= 0) {
@@ -38,7 +38,7 @@ class Press:public PhysicsEnemy{
 			if (state == moveUp) {
 				phys->move(270, deltaT, upSpeed);
 				
-				for (tile* t : *tileList) {
+				for (shared_ptr<tile> t : *tileList) {
 					if (t->getCeiling() != NULL) {
 						if (hitboxDetect::hitboxDetection(t->getCeiling(), hit)) {
 							state = moveDown;
@@ -49,7 +49,7 @@ class Press:public PhysicsEnemy{
 			}
 			else if (state == moveDown) {
 				phys->eachFrame(deltaT);
-				for (tile* t : *tileList) {
+				for (shared_ptr<tile> t : *tileList) {
 					if (t->getGround() != NULL) {
 						if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 							state = moveUp;

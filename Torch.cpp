@@ -4,15 +4,21 @@
 class Torch : public GameObject {
 
 	LightSource* light;
-	Texture* t;
+	shared_ptr<Texture> t;
 	Vector2f pos;
 	Color col;
 	float range;
 	float brightness;
 
 public:
-	Torch(Texture* t, Vector2f pos, Color col, float range, float brightness) {
-		sprite = new objectSprite("ob-1", t, IntRect(832, 23, 26, 16), pos, Vector2f(4,4), 1);
+
+	virtual ~Torch() {
+		delete light;
+		
+	}
+
+	Torch(shared_ptr<Texture> t, Vector2f pos, Color col, float range, float brightness) {
+		sprite = shared_ptr<objectSprite>(new objectSprite("ob-1", t, IntRect(832, 23, 26, 16), pos, Vector2f(4,4), 1));
 		light = new LightSource(col, range, brightness);
 		this->t = t;
 		this->pos = pos;
@@ -31,7 +37,7 @@ public:
 	}
 
 	void initial() {
-		sprite = new objectSprite("ob-1", t, IntRect(832, 23, 26, 16), pos, Vector2f(4, 4), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("ob-1", t, IntRect(832, 23, 26, 16), pos, Vector2f(4, 4), 1));
 		light = new LightSource(col, range, brightness);
 		display = false;
 		act = false;

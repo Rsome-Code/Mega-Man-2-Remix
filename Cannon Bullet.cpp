@@ -4,7 +4,8 @@
 
 class CannonBullet : public EnemyBullet {
 
-	physicsObject* phys;
+
+	shared_ptr<physicsObject> phys;
 
 	int angle;
 
@@ -16,8 +17,10 @@ class CannonBullet : public EnemyBullet {
 
 public:
 
-	CannonBullet(Texture* t, Vector2f pos, bool right) {
-		phys = new physicsObject(t, IntRect(400, 604, 8, 8), pos, Vector2f(4, 4));
+
+
+	CannonBullet(shared_ptr<Texture> t, Vector2f pos, bool right) {
+		phys = shared_ptr<physicsObject> (new physicsObject(t, IntRect(400, 604, 8, 8), pos, Vector2f(4, 4)));
 		sprite = phys;
 		mov = phys;
 
@@ -36,7 +39,7 @@ public:
 
 		speed = 200;
 
-		hit = new objectHitbox(IntRect(0, 0, 8, 8), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), phys));
 	}
 
 	void setUp(bool u) {
@@ -52,7 +55,7 @@ public:
 		}
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		hit->updatePos();
 		phys->eachFrame(deltaT);
 

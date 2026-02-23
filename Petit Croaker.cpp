@@ -3,8 +3,8 @@
 
 class PCroaker : public TempPhysicsEnemy {
 	using TempPhysicsEnemy::TempPhysicsEnemy;
-	animation* jumpAnim;
-	animTimer* jumpTimer;
+	shared_ptr<animation> jumpAnim;
+	shared_ptr<animTimer> jumpTimer;
 
 	float idleTime = 1;
 	float idleTime_left = 0;
@@ -23,15 +23,19 @@ class PCroaker : public TempPhysicsEnemy {
 
 public:
 
+	virtual ~PCroaker() {
+
+	}
+
 	void initial() {
 		phys->setRect(IntRect(166, 362, 8, 8));
-		jumpAnim = new animation(list<IntRect>{IntRect(166, 362, 8, 8), IntRect(175, 355, 11, 12)}, sprite);
-		jumpTimer = new animTimer(jumpAnim, 60, false);
+		jumpAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(166, 362, 8, 8), IntRect(175, 355, 11, 12)}, sprite));
+		jumpTimer = shared_ptr<animTimer> (new animTimer(jumpAnim, 60, false));
 
 		phys->enableGravity(true);
 		offSetList();
 		sprite->setScale(Vector2f(4, 4));
-		hit = new objectHitbox(IntRect(0, 0, 8,8), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8,8), sprite));
 		hurt = hit;
 
 		hp = 1;
@@ -48,7 +52,7 @@ public:
 		return defaultSpeed;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		if (state == idle) {
 			idleTime_left -= *deltaT;
@@ -75,7 +79,7 @@ public:
 
 	}
 
-	void jump(player* p) {
+	void jump(shared_ptr<player> p) {
 		checkDirection(p->getSprite());
 
 		if (faceRight) {

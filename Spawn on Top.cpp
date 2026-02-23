@@ -6,7 +6,7 @@ class SpawnOnTop : public SpawnArea {
 	using SpawnArea::SpawnArea;
 
 protected:
-	Vector2f getSpawnPos(camera* cam) {
+	Vector2f getSpawnPos(shared_ptr<camera> cam) {
 		int xChance = rand();
 		xChance = (xChance % 960) + 960;
 

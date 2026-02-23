@@ -28,11 +28,11 @@
 #pragma once
 
 class scene {
-	player* p;
-	timer* time;
-	camera* cam;
+	shared_ptr<player> p;
+	shared_ptr<timer> time;
+	shared_ptr<camera> cam;
 	bool run = true;
-	grid* background;
+	//grid* background;
 
 	bool onLadder = false;
 	bool ground = false;
@@ -42,26 +42,26 @@ class scene {
 
 	string stageName;
 
-	abstractStage* stage;
-	list<tile*> tileList;
-	list<tile*> z2List;
-	list<tile*> z3List;
-	list<tile*> z4List;
+	unique_ptr<abstractStage> stage;
+	list<shared_ptr<tile>> tileList;
+	list<shared_ptr<tile>> z2List;
+	list<shared_ptr<tile>> z3List;
+	list<shared_ptr<tile>> z4List;
 
-	list<tile*> newTileList;
-	list<tile*> newZ2List;
-	list<tile*> newZ3List;
-	list<tile*> newZ4List;
+	list<shared_ptr<tile>> newTileList;
+	list<shared_ptr<tile>> newZ2List;
+	list<shared_ptr<tile>> newZ3List;
+	list<shared_ptr<tile>> newZ4List;
 
-	list<GameObject*> objects;
-	list<GameObject*> backgroundObjects;
-	list<GameObject*> newBackgroundObjects;
-	list <GameObject*> foregroundObjects;
-	list <GameObject*> newForegroundObjects;
+	list<shared_ptr<GameObject>> objects;
+	list<shared_ptr<GameObject>> backgroundObjects;
+	list<shared_ptr<GameObject>> newBackgroundObjects;
+	list <shared_ptr<GameObject>> foregroundObjects;
+	list <shared_ptr<GameObject>> newForegroundObjects;
 
-	list<enemy*> enemies;
-	list<EnemyBullet*> eBullets;
-	list<Item*> items;
+	list<shared_ptr<enemy>> enemies;
+	list<shared_ptr<EnemyBullet>> eBullets;
+	list<shared_ptr<Item>> items;
 	int section = 0;
 	int transitionType;
 
@@ -70,38 +70,38 @@ class scene {
 
 	Vector2f lastCheckPoint;
 
-	Texture* enemyT;
+	shared_ptr<Texture> enemyT;
 
 	//ScreenLighting* screenLighting;
-	Pause* pause;
+	shared_ptr<Pause> pause;
 
 	bool startPressed = true;
 	bool paused = false;
 
 	bool selectPressed = true;
 
-	text* readyText;
-	Font font;
+	shared_ptr<text> readyText;
+	shared_ptr<Font> font;
 
-	Texture* miscT;
+	shared_ptr<Texture> miscT;
 
-	EndFlag* currentFlag;
-	EndFlag* lastFlag;
+	shared_ptr<EndFlag> currentFlag;
+	shared_ptr<EndFlag> lastFlag;
 	enum transitionAngle revLastAngle;
 
-	Door* door1;
-	Door* door2;
+	shared_ptr<Door> door1;
+	shared_ptr<Door> door2;
 
-	//list<enemy*> tempEnemies;
-	list<Spawner*> spawners;
+	//list<shared_ptr<enemy>> tempEnemies;
+	list<shared_ptr<Spawner>> spawners;
 
-	SpawnArea* spawner;
+	shared_ptr<SpawnArea> spawner;
 
-	AmmoBar** masterHealth = NULL;
+	shared_ptr<AmmoBar>* masterHealth = NULL;
 
-	DeathAnim** bossDeath = NULL;
-	DeathAnim** bossDeath1 = NULL;
-	DeathAnim** bossDeath2 = NULL;
+	shared_ptr<DeathAnim>* bossDeath = NULL;
+	shared_ptr<DeathAnim>* bossDeath1 = NULL;
+	shared_ptr<DeathAnim>* bossDeath2 = NULL;
 
 	bool levelEnd = false;
 	float levelEndTime = 10;
@@ -109,32 +109,38 @@ class scene {
 
 	bool fallDeath = true;
 
-	SoundBuffer* masterDeathB;
-	Sound* masterDeathSound;
+	shared_ptr<SoundBuffer> masterDeathB;
+	shared_ptr<Sound> masterDeathSound;
 
 	bool victoryPlay = false;
-	Music* victoryMusic;
+	shared_ptr<Music> victoryMusic;
 
 	bool nextFlagActive = true;
 	bool lastFlagActive = true;
 
-	TeleportOut* teleExit;
+	shared_ptr<TeleportOut> teleExit;
 
-	list<ItemBullet*> itemBullets;
+	list<shared_ptr<ItemBullet>> itemBullets;
 
 
 public:
-	scene(player* pl, abstractStage* stg, Texture* en) {
+
+	virtual ~scene() {
+		
+	}
+
+	scene(shared_ptr<player> pl, unique_ptr<abstractStage> stg, shared_ptr<Texture> en) {
 
 		enemyT = en;
-		p = pl;
+
+		p = move(pl);
 		p->getSprite()->setMovable(true);
-		time = new timer();
-		cam = new camera(p->getSprite(), Vector2f(-960, -540));
+		time = shared_ptr<timer>(new timer());
+		cam = shared_ptr<camera> (new camera(p->getSprite(), Vector2f(-960, -540)));
 		//p->setPosition(stg->getInitialPlayer());
 		cam->setPosition(stg->getInitialCamera());
-		background = new grid();
-		stage = stg;
+		//background = new grid();
+		stage = move(stg);
 		//tileList = stage->getTiles();
 		//z2List = stage->getZ2List();
 		//z3List = stage->getZ3List();
@@ -151,31 +157,34 @@ public:
 
 		//screenLighting = new ScreenLighting();
 
+		font = shared_ptr<Font>(new Font());
+		font->loadFromFile("Assets//font.otf");
 
-		font.loadFromFile("Assets//font.otf");
-		readyText = new text(string("READY"), Vector2f(900, 500), float(22), &font, &Color::White);
+
+
+		readyText = shared_ptr<text>(new text(string("READY"), Vector2f(900, 500), float(22), font, Color::White));
 
 		loadFlag();
 
-		miscT = new Texture();
+		miscT = shared_ptr<Texture> (new Texture());
 		refreshMisc();
 
 		door1 = stage->getDoor1();
 		door2 = stage->getDoor2();
 
-		for (enemy* e : enemies) {
+		for (shared_ptr<enemy> e : enemies) {
 			e->initial();
 		}
 
-		masterDeathB = new SoundBuffer();
-		masterDeathSound = new Sound();
+		masterDeathB = shared_ptr<SoundBuffer> (new SoundBuffer());
+		masterDeathSound = shared_ptr<Sound>(new Sound());
 		masterDeathB->loadFromFile("assets\\sound\\death.wav");
 		masterDeathSound->setBuffer(*masterDeathB);
 
-		victoryMusic = new Music();
+		victoryMusic = shared_ptr<Music>(new Music());
 		victoryMusic->openFromFile("assets\\sound\\music\\15 - Victory.mp3");
 
-		teleExit = new TeleportOut(p->getSprite());
+		teleExit = shared_ptr<TeleportOut> (new TeleportOut(p->getSprite()));
 
 	}
 
@@ -229,10 +238,11 @@ public:
 		obBeforeTile = beforeTileList[section];
 	}
 
-	void debugCheck(DebugMenu* dMenu, player* p, renderer* instance, double* targetRate) {
+	void debugCheck(shared_ptr<DebugMenu> dMenu, shared_ptr<player> p, shared_ptr<renderer> instance, double* targetRate) {
 		if (p->getController()->checkSELECT() && !selectPressed) {
 			dMenu->loop(instance, targetRate, tileList, z2List, z3List, z4List, backgroundObjects, cam, p);
 			selectPressed = true;
+			deltaT = 0.000000000001;
 		}
 		else if (!p->getController()->checkSELECT()) {
 			selectPressed = false;
@@ -240,9 +250,9 @@ public:
 	}
 
 	float deltaT = 0.00001;
-	bool loop(renderer* instance, double targetRate, SoundCollection* soundCol, vector<bool> beforeTileList) {
+	bool loop(shared_ptr<renderer> instance, double targetRate, shared_ptr<SoundCollection> soundCol, vector<bool> beforeTileList) {
 
-		DebugMenu* dMenu = new DebugMenu(&font, instance, &targetRate);
+		shared_ptr<DebugMenu> dMenu = shared_ptr<DebugMenu> (new DebugMenu(font, instance, &targetRate));
 
 		auto start = time->timerStart();
 		auto* startP = &start;
@@ -254,7 +264,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 0;
+		section = 10;
 
 		p->enableControls(true);
 
@@ -262,7 +272,7 @@ public:
 		loadFlag();
 		updateFlags();
 
-		Music* music = stage->getMusic();
+		shared_ptr<Music> music = stage->getMusic();
 		music->setVolume(30);
 
 
@@ -271,13 +281,13 @@ public:
 		deltaT = 0.00001;
 		//p->heal(-27);
 
-		pause = new Pause(stageName, p);
+		pause = shared_ptr<Pause> (new Pause(stageName, p));
 
 		
 
 		while (instance->getWindow()->isOpen() && run) {
 
-			debugCheck(dMenu, p, instance, &targetRate);
+			
 
 			//p->enableControls(false);
 			//p->getSprite()->enableGravity(false);
@@ -290,16 +300,18 @@ public:
 			}
 			if (time->frameLimiter(targetRate, startP)) {
 				deltaT = 0.0033;
-				//for (tile* t : tileList) {
+				//for (shared_ptr<tile> t : tileList) {
 				//	t->reset();
 			//	}
+
+				//Uncomment this for debugger
 				//deltaT = time->checkTimer(startP);
 			}
 			else {
 				deltaT = time->checkTimer(startP);
 			}
 
-
+			debugCheck(dMenu, p, instance, &targetRate);
 
 			start = time->timerStart();
 			startP = &start;
@@ -362,19 +374,22 @@ public:
 					justAfterT = false;
 				}
 			}
+
+
+
 			p->eachFrame(&deltaT, tileList, &itemBullets);
 
 			checkFall();
 
-			for (GameObject* o : objects) {
+			for (shared_ptr<GameObject> o : objects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite(), cam);
 				o->eachFrame(&deltaT, p, cam, &tileList);
 				o->eachFrame(&deltaT, p, cam);
 				o->eachFrame(&deltaT, p->getSprite());
 
-				list<GameObject*> temp;
-				for (GameObject* g : enemies) {
+				list<shared_ptr<GameObject>> temp;
+				for (shared_ptr<GameObject> g : enemies) {
 					temp.push_back(g);
 				}
 				
@@ -467,7 +482,7 @@ public:
 
 			enemyBullets(deltaT);
 
-			for (Spawner* spawn : spawners) {
+			for (shared_ptr<Spawner> spawn : spawners) {
 
 				spawn->getSprite()->setCameraPosition(Vector2f(spawn->getSprite()->getPosition().x - cam->getPosition().x, spawn->getSprite()->getPosition().y));
 				if (spawn->getSprite()->getCameraPosition().x > 0 && spawn->getSprite()->getCameraPosition().x < 1920) {
@@ -475,7 +490,7 @@ public:
 				}
 			}
 
-			for (object* o : backgroundObjects) {
+			for (shared_ptr<object> o : backgroundObjects) {
 				instance->objectAccess(o, cam);
 			}
 
@@ -495,23 +510,23 @@ public:
 
 
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), t->getDisplay(), cam);
 
 			}
 
 			if (obBeforeTile) {
-				for (enemy* t : enemies) {
+				for (shared_ptr<enemy> t : enemies) {
 					if (t->getDamSprite() != NULL) {
 						instance->objectDisplay(t->getDamSprite(), cam);
 					}
@@ -526,11 +541,11 @@ public:
 				}
 			}
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				t->animate(&deltaT);
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
-					for (objectSprite* sp : t->getInternalSprites()) {
+					for (shared_ptr<objectSprite> sp : t->getInternalSprites()) {
 						instance->objectDisplay(sp, cam);
 					}
 					
@@ -547,14 +562,14 @@ public:
 				instance->objectAccess(door2, cam);
 			}
 
-			for (object* t : objects) {
+			for (shared_ptr<object> t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
 
 			if (!obBeforeTile) {
-				for (enemy* t : enemies) {
+				for (shared_ptr<enemy> t : enemies) {
 					if (t->getDamSprite() != NULL) {
 						instance->objectDisplay(t->getDamSprite(), cam);
 					}
@@ -569,14 +584,14 @@ public:
 				}
 			}
 
-			for (ItemBullet* i : itemBullets) {
+			for (shared_ptr<ItemBullet> i : itemBullets) {
 				if (i->getSprite() != NULL) {
 					instance->objectDisplay(i->getSprite(), cam);
 				}
 			}
 
 			if (bossDeath != NULL) {
-				DeathAnim* bD = *bossDeath;
+				shared_ptr<DeathAnim> bD = *bossDeath;
 				instance->objectDisplay(bD->getSprite(), cam);
 				bD = *bossDeath1;
 				instance->objectDisplay(bD->getSprite(), cam);
@@ -586,17 +601,17 @@ public:
 
 
 
-			for (object* i : items) {
+			for (shared_ptr<object> i : items) {
 				instance->objectAccess(i, cam);
 			}
 
-			for (object* o : eBullets) {
+			for (shared_ptr<object> o : eBullets) {
 				instance->objectAccess(o, cam);
 			}
 
-			for (GameObject* g : foregroundObjects) {
-				list<GameObject*> temp;
-				for (GameObject* g : enemies) {
+			for (shared_ptr<GameObject> g : foregroundObjects) {
+				list<shared_ptr<GameObject>> temp;
+				for (shared_ptr<GameObject> g : enemies) {
 					temp.push_back(g);
 				}
 				g->setCamera(cam);
@@ -605,7 +620,15 @@ public:
 			}
 
 			if (p->getActiveWeapon()->getName() != "Time Stopper") {
-				instance->objectDisplay(p->getBullets(), cam);
+
+				list<shared_ptr<bullet>> bList = p->getBullets();
+
+				for (shared_ptr<bullet> b : bList) {
+					instance->objectDisplay(b->getSprites(), cam);
+					instance->objectDisplay(b->getSprite(), cam);
+					instance->objectHitboxDisplay(b->getHitbox(), cam);
+				}
+
 			}
 			else {
 				instance->UIDisplay(p->getUIBullets());
@@ -617,7 +640,7 @@ public:
 
 			
 
-			for (GameObject* o : backgroundObjects) {
+			for (shared_ptr<GameObject> o : backgroundObjects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite());
 
@@ -637,14 +660,14 @@ public:
 			//instance->screenLightingDisplay(screenLighting->getRectangles());
 			instance->UIDisplay(p->getUI());
 			if (masterHealth != NULL) {
-				AmmoBar* a = *masterHealth;
+				shared_ptr<AmmoBar> a = *masterHealth;
 				instance->UIDisplay(a->getSprites());
 			}
 
 
-			/*for (enemy* e : enemies) {
-				instance->objectHitboxSetup(list<objectHitbox*> {e->getHitbox()}, cam);
-				instance->hitboxDisplay(list<UIHitbox*> { e->getHitbox()});
+			/*for (shared_ptr<enemy> e : enemies) {
+				instance->objectHitboxSetup(list<shared_ptr<objectHitbox>> {e->getHitbox()}, cam);
+				instance->hitboxDisplay(list<shared_ptr<objectHitbox>> { e->getHitbox()});
 			}
 			*/
 
@@ -660,52 +683,23 @@ public:
 
 
 		if (levelEnd) {
-			list<GameObject*> temps = objects;
+			list<shared_ptr<GameObject>> temps = objects;
 			temps.push_back(door1);
 			temps.push_back(door2);
 			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, backgroundObjects, cam);
 		}
 
-		//delete music;
-		//delete teleExit;
-		//delete victoryMusic;
-		
-		for (GameObject* ob : objects) {
-			//ob->deleteSprite();
-			delete ob;
-		}
-		objects.clear();
-		for (tile* t : tileList) {
-			//t->deleteSprite();
-			delete t;
-		}
-		tileList.clear();
-		for (tile* t : z2List) {
-			//t->deleteSprite();
-			delete t;
-		}
-		z2List.clear();
-		for (tile* t : z3List) {
-			//t->deleteSprite();
-			delete t;
-		}
-		z3List.clear();
-		for (tile* t : z4List) {
-			//t->deleteSprite();
-			delete t;
-		}
-		z4List.clear();
 		
 
 		return levelEnd;
 	}
 
 	void itemBulletLoop(float deltaT) {
-		ItemBullet* toDelete = NULL;
+		shared_ptr<ItemBullet> toDelete = NULL;
 
 		
 
-		for (ItemBullet* iBul : itemBullets) {
+		for (shared_ptr<ItemBullet> iBul : itemBullets) {
 			if (iBul->eachFrame(&deltaT)) {
 				toDelete = iBul;
 			}
@@ -726,8 +720,8 @@ public:
 		}
 	}
 
-	void allTileOn(list<tile*> tL) {
-		for (tile* t : tL) {
+	void allTileOn(list<shared_ptr<tile>> tL) {
+		for (shared_ptr<tile> t : tL) {
 			t->setAct(true);
 			t->setDisplay(true);
 		}
@@ -766,15 +760,15 @@ public:
 		}
 	}
 
-	void spawnLoop(float deltaT, SoundCollection* soundCol) {
+	void spawnLoop(float deltaT, shared_ptr<SoundCollection> soundCol) {
 		spawner->eachFrame(p, deltaT, &enemies, cam, soundCol);
 	}
 
 	void enemyBullets(float deltaT) {
 
-		list<EnemyBullet*>::iterator it = eBullets.begin();
-		list<EnemyBullet*>::iterator toDelete = eBullets.end();
-		for (EnemyBullet* b : eBullets) {
+		list<shared_ptr<EnemyBullet>>::iterator it = eBullets.begin();
+		list<shared_ptr<EnemyBullet>>::iterator toDelete = eBullets.end();
+		for (shared_ptr<EnemyBullet> b : eBullets) {
 			b->eachFrame(&deltaT, &tileList);
 			b->eachFrame(&deltaT, &tileList, p);
 			if (hitboxCheck(p->getHitbox(), b->getHitbox()) && !p->isInvincible() && p->checkInControl()) {
@@ -793,25 +787,26 @@ public:
 		}
 		//removeBullets();
 		if (toDelete != eBullets.end()) {
+
 			*toDelete = NULL;
 			eBullets.erase(toDelete);
 
 		}
 	}
 
-	bool bulletsCollide(EnemyBullet* b) {
-		list<bullet*> bullets = p->getWeapon()->getBullets();
+	bool bulletsCollide(shared_ptr<EnemyBullet> b) {
+		list<shared_ptr<bullet>> bullets = p->getWeapon()->getBullets();
 		if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
-			for (bullet* playerB : bullets) {
-				objectHitbox* playerH = playerB->getHitbox();
+			for (shared_ptr<bullet> playerB : bullets) {
+				shared_ptr<objectHitbox> playerH = playerB->getHitbox();
 				if (hitboxCheck(playerH, b->getHitbox())) {
 					playerB->deflect();
 				}
 			}
 		}
 		else if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
-			for (bullet* playerB : bullets) {
-				objectHitbox* playerH = playerB->getHitbox();
+			for (shared_ptr<bullet> playerB : bullets) {
+				shared_ptr<objectHitbox> playerH = playerB->getHitbox();
 				if (hitboxCheck(playerH, b->getHitbox())) {
 					return true;
 				}
@@ -822,7 +817,7 @@ public:
 
 
 
-	bool checkEBullOffScreen(EnemyBullet* b) {
+	bool checkEBullOffScreen(shared_ptr<EnemyBullet> b) {
 		if (checkObOffScreen(b, cam->getPosition(), Vector2f(cam->getPosition().x + 1920, cam->getPosition().y + 1080))) {
 			//eBullets.remove(b);
 			//delete b;
@@ -831,7 +826,7 @@ public:
 		return false;
 	}
 
-	bool checkObOffScreen(EnemyBullet* e, Vector2f camPos, Vector2f camEdge) {
+	bool checkObOffScreen(shared_ptr<EnemyBullet> e, Vector2f camPos, Vector2f camEdge) {
 		if (e->getPosition().x > camEdge.x || e->getPosition().x + e->getSprite()->getSize().x < camPos.x) {
 			return true;
 		}
@@ -841,12 +836,12 @@ public:
 		return false;
 	}
 
-	void pDeathCheck(renderer* instance, float targetRate, Music* music, SoundCollection* soundCol) {
+	void pDeathCheck(shared_ptr<renderer> instance, float targetRate, shared_ptr<Music> music, shared_ptr<SoundCollection> soundCol) {
 		if (p->getHP() <= 0) {
 
 			music->stop();
 			p->getWeapon()->stopSound();
-			for (enemy* e : enemies) {
+			for (shared_ptr<enemy> e : enemies) {
 				e->stopMusic();
 			}
 
@@ -874,15 +869,15 @@ public:
 	}
 
 	void itemLoop(float deltaT) {
-		for (Item* o : items) {
+		for (shared_ptr<Item> o : items) {
 			o->eachFrame(&deltaT, p->getSprite(), &tileList);
 		}
 	}
 
-	bool death(renderer* instance, float tRate, camera* cam) {
+	bool death(shared_ptr<renderer> instance, float tRate, shared_ptr<camera> cam) {
 		if (p->setDead()) {
 
-			list<GameObject*> tempL = objects;
+			list<shared_ptr<GameObject>> tempL = objects;
 			tempL.push_back(door1);
 			tempL.push_back(door2);
 			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
@@ -897,7 +892,7 @@ public:
 	}
 
 	void resetObjects() {
-		for (enemy* e : enemies) {
+		for (shared_ptr<enemy> e : enemies) {
 			if (e->getIncrease() == NULL) {
 				e->setOffScreen(true);
 				e->setAct(false);
@@ -915,18 +910,18 @@ public:
 		}
 	}
 
-	EndFlag* getLastCheckpoint() {
+	shared_ptr<EndFlag> getLastCheckpoint() {
 		return stage->getLastCheckpoint(section);
 	}
 
-	void startAnim(renderer* instance, float targetRate, Music* music, SoundCollection* soundCol) {
+	void startAnim(shared_ptr<renderer> instance, float targetRate, shared_ptr<Music> music, shared_ptr<SoundCollection> soundCol) {
 
 		
 		eBullets.clear();
 		p->setDeathNull();
 		music->play();
 
-		EndFlag* flag = getLastCheckpoint();
+		shared_ptr<EndFlag> flag = getLastCheckpoint();
 
 		section = flag->getSection() + 1;
 
@@ -1006,44 +1001,45 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			for (object* o : backgroundObjects) {
+			for (shared_ptr<object> o : backgroundObjects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite());
 				instance->objectAccess(o, cam);
 			}
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				t->animate(&deltaT);
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
 			
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				t->animate(&deltaT);
 				tileDistanceCheck(instance, t);
 			}
-			for (object* o : objects) {
+			for (shared_ptr<object> o : objects) {
 				float* f = new float(0);
 				o->eachFrame(f, p->getSprite());
+				delete f;
 			}
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
-					for (objectSprite* sp : t->getInternalSprites()) {
+					for (shared_ptr<objectSprite> sp : t->getInternalSprites()) {
 						instance->objectDisplay(sp, cam);
 					}
 				}
 			}
 
-			for (GameObject* g : foregroundObjects) {
+			for (shared_ptr<GameObject> g : foregroundObjects) {
 				instance->bObjectDisplay(g->getSprite(), cam);
 			}
 
@@ -1078,7 +1074,7 @@ public:
 
 	}
 
-	void spawnItemFromEnemy(enemy* en, SoundCollection* soundCol) {
+	void spawnItemFromEnemy(shared_ptr<enemy> en, shared_ptr<SoundCollection> soundCol) {
 
 		Vector2f middle = Vector2f((en->getSprite()->getPosition().x + (en->getSprite()->getSize().x / 6)), (en->getSprite()->getPosition().y + (en->getSprite()->getSize().y / 2)));
 
@@ -1093,7 +1089,7 @@ public:
 		p->iniSplash(miscT);
 	}
 
-	void levelEndCheck(enemy* e, Music* music) {
+	void levelEndCheck(shared_ptr<enemy> e, shared_ptr<Music> music) {
 		if (e->getCode() == stage->getName()) {
 
 			p->enableControls(false);
@@ -1107,9 +1103,9 @@ public:
 		}
 	}
 
-	void levelEndSequence(Music* music, renderer* instance, float tRate, enemy* enemy) {
+	void levelEndSequence(shared_ptr<Music> music, shared_ptr<renderer> instance, float tRate, shared_ptr<enemy> enemy) {
 		music->stop();
-		list<GameObject*> tempL = objects;
+		list<shared_ptr<GameObject>> tempL = objects;
 		tempL.push_back(door1);
 		tempL.push_back(door2);
 		enemy->forceDamSprite();
@@ -1120,20 +1116,22 @@ public:
 		p->resetBullets();
 	}
 
-	void enemyCheck(float deltaT, renderer* instance, float tRate, Music* music, SoundCollection* soundCol) {
-		enemy* toDelete = NULL;
+	void enemyCheck(float deltaT, shared_ptr<renderer> instance, float tRate, shared_ptr<Music> music, shared_ptr<SoundCollection> soundCol) {
+		shared_ptr<enemy> toDelete = NULL;
 
-		for (enemy* enemy : enemies) {
-
-				
-
+		for (shared_ptr<enemy> enemy : enemies) {
 			
 
 			if (enemy->getHP() > 0) {
 
 
-				for (bullet* bull : p->getControls()->getBulletObjects()) {
+				for (shared_ptr<bullet> bull : p->getControls()->getBulletObjects()) {
+
+
+					bull->specialColl(enemy);
 					if (enemy->checkHurt(bull->getHitbox())) {
+
+						
 
 						if (!enemy->checkInvincible()) {
 							enemy->lowerHP(bull->checkDamage(enemy));
@@ -1195,15 +1193,13 @@ public:
 		if (toDelete != NULL) {
 			enemies.remove(toDelete);
 			
-			delete toDelete;
-			
 		}
 
 	}
 
 	
 	
-	bool enemyYCheck(enemy* e) {
+	bool enemyYCheck(shared_ptr<enemy> e) {
 		if (e->getSprite()->getCameraPosition().y > 1080) {
 			return e->yDeath(&enemies);
 			return e->isDead(&enemies);
@@ -1212,13 +1208,13 @@ public:
 	}
 
 
-	bool  checkPause(renderer* instance, float targetRate) {
+	bool  checkPause(shared_ptr<renderer> instance, float targetRate) {
 		if (p->getController()->checkSTART() && !startPressed && p->checkInControl()) {
 			p->getAtomicFire()->resetHold();
 
 			pause->loop(instance, targetRate, tileList, z2List, z3List, z4List, backgroundObjects, cam);
 			refreshMisc();
-			for (object* o : items) {
+			for (shared_ptr<object> o : items) {
 
 				//if (o->getSprite()->getType() == "ammo" || o->getSprite()->getType() == "health" || o->getSprite()->getType() == "E Tank" || o->getSprite()->getType() == "Extra Life") {
 
@@ -1234,7 +1230,7 @@ public:
 		return false;
 	}
 
-	void ladderAbove(tile* t) {
+	void ladderAbove(shared_ptr<tile> t) {
 
 		if (t->getCeiling() != NULL) {
 			if (hitboxCheck(p->getHead(), t->getCeiling())) {
@@ -1246,7 +1242,7 @@ public:
 
 
 
-	bool flagCheck(renderer* instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection, bool active, SoundCollection* soundCol) {
+	bool flagCheck(shared_ptr<renderer> instance, float targetRate, enum transitionAngle ang, Vector2f flagPos, bool nextSection, bool active, shared_ptr<SoundCollection> soundCol) {
 
 
 		if (active) {
@@ -1288,7 +1284,7 @@ public:
 		return false;
 	}
 
-	bool doorCheck(renderer* instance, float targetRate) {
+	bool doorCheck(shared_ptr<renderer> instance, float targetRate) {
 
 
 
@@ -1305,7 +1301,7 @@ public:
 		return false;
 	}
 
-	void doorClose(renderer* instance, float targetRate) {
+	void doorClose(shared_ptr<renderer> instance, float targetRate) {
 		if (door1->getSection() == section - 1) {
 			door1->loop(instance, cam, targetRate, p, door2->getSprite(), tileList, z2List, z3List, z4List, backgroundObjects, false);
 
@@ -1317,7 +1313,7 @@ public:
 	}
 
 
-	void startTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool nextSection, SoundCollection* soundCol) {
+	void startTransition(shared_ptr<renderer> instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool nextSection, shared_ptr<SoundCollection> soundCol) {
 		checkLastFlagRight();
 
 		if (nextSection) {
@@ -1331,7 +1327,7 @@ public:
 		updateFlags();
 		checkObBefore();
 
-		for (tile* t : tileList) {
+		for (shared_ptr<tile> t : tileList) {
 			t->resetBeat();
 		}
 
@@ -1344,7 +1340,7 @@ public:
 	}
 
 	void checkLastFlagRight() {
-		EndFlag* lastFlag = stage->getLastFlag(section);
+		shared_ptr<EndFlag> lastFlag = stage->getLastFlag(section);
 		if (lastFlag != NULL) {
 			if (lastFlag->getAngle() == RIGHT) {
 				lastFlagRight = true;
@@ -1449,7 +1445,7 @@ public:
 
 
 
-	void sectionTransition(renderer* instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool forward) {
+	void sectionTransition(shared_ptr<renderer> instance, float targetRate, transitionAngle ang, Vector2f flagPos, bool forward) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -1487,51 +1483,51 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			for (object* o : backgroundObjects) {
+			for (shared_ptr<object> o : backgroundObjects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite());
 				instance->objectAccess(o, cam);
 
 			}
-			for (object* o : newBackgroundObjects) {
+			for (shared_ptr<object> o : newBackgroundObjects) {
 				o->setCamera(cam);
 				o->eachFrame(&deltaT, p->getSprite());
 				instance->objectAccess(o, cam);
 
 			}
 
-			for (tile* t : newZ4List) {
+			for (shared_ptr<tile> t : newZ4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z4List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
-			}
-
-
-			for (tile* t : newZ3List) {
-				instance->bObjectDisplay(t->getSprite(), cam);
-			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
-			for (tile* t : newZ2List) {
+
+			for (shared_ptr<tile> t : newZ3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : newTileList) {
+
+			for (shared_ptr<tile> t : newZ2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (shared_ptr<tile> t : z2List) {
+				instance->bObjectDisplay(t->getSprite(), cam);
+			}
+			for (shared_ptr<tile> t : newTileList) {
 				instance->objectAccess(t, cam);
 			}
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				instance->objectAccess(t, cam);
 			}
 
-			for (GameObject* g : foregroundObjects) {
+			for (shared_ptr<GameObject> g : foregroundObjects) {
 				instance->objectAccess(g, cam);
 			}
-			for (GameObject* g : newForegroundObjects) {
+			for (shared_ptr<GameObject> g : newForegroundObjects) {
 				instance->objectAccess(g, cam);
 			}
 
@@ -1667,8 +1663,8 @@ public:
 	}
 
 	void loadFlag() {
-		EndFlag* thisOne = NULL;
-		for (EndFlag* flag : stage->getFlags()) {
+		shared_ptr<EndFlag> thisOne = NULL;
+		for (shared_ptr<EndFlag> flag : stage->getFlags()) {
 			if (flag->getSection() == section) {
 				thisOne = flag;
 			}
@@ -1678,9 +1674,9 @@ public:
 		}
 	}
 
-	EndFlag* getFlag(int section) {
-		EndFlag* thisOne = NULL;
-		for (EndFlag* flag : stage->getFlags()) {
+	shared_ptr<EndFlag> getFlag(int section) {
+		shared_ptr<EndFlag> thisOne = NULL;
+		for (shared_ptr<EndFlag> flag : stage->getFlags()) {
 			if (flag->getSection() == section) {
 				thisOne = flag;
 			}
@@ -1689,7 +1685,7 @@ public:
 		return thisOne;
 	}
 
-	void forceLoadSection(int i, SoundCollection* soundCol) {
+	void forceLoadSection(int i, shared_ptr<SoundCollection> soundCol) {
 		section = i;
 
 		stage->updateSection(i);
@@ -1700,7 +1696,7 @@ public:
 		updateFlags();
 		checkObBefore();
 	}
-	void loadSection(SoundCollection* soundCol) {
+	void loadSection(shared_ptr<SoundCollection> soundCol) {
 
 		stage->reload(stageName, to_string(section), soundCol);
 
@@ -1710,17 +1706,23 @@ public:
 		newZ2List = stage->getZ2List();
 		newZ3List = stage->getZ3List();
 		newZ4List = stage->getZ4List();
+
 		objects = stage->getObjects();
+
+
+
 		newBackgroundObjects = stage->getBackgroundObjects();
 		newForegroundObjects = stage->getForegroundObjects();
 		deleteEnemies();
+
 		enemies = stage->getEnemies();
+
 		spawners = stage->getSpawners();
 		items = stage->getItems();
-		for (GameObject* ob : objects) {
+		for (shared_ptr<GameObject> ob : objects) {
 			ob->initial();
 		}
-		for (enemy* e : enemies) {
+		for (shared_ptr<enemy> e : enemies) {
 			e->initial();
 		}
 		spawner = stage->getAreaSpawner();
@@ -1730,7 +1732,7 @@ public:
 
 	void bossCheck() {
 		bool bossHere = false;
-		for (enemy* e : enemies) {
+		for (shared_ptr<enemy> e : enemies) {
 
 			if (e->getBar() != NULL) {
 				masterHealth = e->getBar();
@@ -1754,7 +1756,7 @@ public:
 		}
 	}
 
-	void loadNextSection(SoundCollection* soundCol) {
+	void loadNextSection(shared_ptr<SoundCollection> soundCol) {
 		section++;
 
 		loadSection(soundCol);
@@ -1766,6 +1768,7 @@ public:
 		z2List = newZ2List;
 		z3List = newZ3List;
 		z4List = newZ4List;
+
 
 		
 
@@ -1780,35 +1783,15 @@ public:
 	}
 
 	void deleteObjects() {
-		for (GameObject* g : foregroundObjects) {
-			delete g;
-		}
-		for (GameObject* g : backgroundObjects) {
-			delete g;
-		}
-		
-		for (tile* g : tileList) {
-			delete g;
-		}
-		for (tile* g : z2List) {
-			delete g;
-		}
-		for (tile* g : z3List) {
-			delete g;
-		}
-		for (tile* g : z4List) {
-			delete g;
-		}
+
 	}
 
 	void deleteEnemies() {
-		for (enemy* e : enemies) {
-			delete e;
-		}
+		
 	}
 
 	void lightingCheck() {
-		for (object* ob : objects) {
+		for (shared_ptr<object> ob : objects) {
 			if (ob->getLightSource() != NULL) {
 				LightSource* light = ob->getLightSource();
 				light->updatePos(ob->getSprite()->getCameraPosition());
@@ -1826,9 +1809,9 @@ public:
 
 
 
-	void enemyCollisionCheck(list<enemy*> eList, renderer* instance, float targetRate) {
+	void enemyCollisionCheck(list<shared_ptr<enemy>> eList, shared_ptr<renderer> instance, float targetRate) {
 
-		for (enemy* e : eList) {
+		for (shared_ptr<enemy> e : eList) {
 			//p->takeDamage(e->getDamage());
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
@@ -1850,8 +1833,8 @@ public:
 		}
 	}
 
-	void itemCollisionCheck(renderer* instance, float targetRate) {
-		for (Item* e : items) {
+	void itemCollisionCheck(shared_ptr<renderer> instance, float targetRate) {
+		for (shared_ptr<Item> e : items) {
 			if (e->getAct() && e->getHitbox() != NULL) {
 				if (hitboxCheck(e->getHitbox(), p->getHitbox())) {
 					if (e->getIncrease() != NULL) {
@@ -1862,7 +1845,7 @@ public:
 		}
 	}
 
-	void itemGet(renderer* instance, float targetRate, object* item) {
+	void itemGet(shared_ptr<renderer> instance, float targetRate, shared_ptr<object> item) {
 		bool loop = true;
 		if (item->getSprite()->getType() == "health") {
 			if (p->getHP() == p->getMaxHP()) {
@@ -1900,7 +1883,7 @@ public:
 
 	}
 
-	void itemLoop(renderer* instance, float targetRate, object* item) {
+	void itemLoop(shared_ptr<renderer> instance, float targetRate, shared_ptr<object> item) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -1937,48 +1920,48 @@ public:
 
 
 
-			for (object* ob : backgroundObjects) {
+			for (shared_ptr<object> ob : backgroundObjects) {
 				instance->objectAccess(ob, cam);
 			}
 
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 				tileDistanceCheck(instance, t);
 			}
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
-			for (object* t : objects) {
+			for (shared_ptr<object> t : objects) {
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
 
-			for (object* item : items) {
+			for (shared_ptr<object> item : items) {
 				instance->objectAccess(item, cam);
 			}
 
-			for (enemy* t : enemies) {
+			for (shared_ptr<enemy> t : enemies) {
 				if (t->getDamSprite() != NULL) {
 					instance->objectDisplay(t->getDamSprite(), cam);
 				}
@@ -1988,7 +1971,7 @@ public:
 			}
 			instance->objectDisplay(p->getSprite(), cam);
 
-			for (GameObject* g : foregroundObjects) {
+			for (shared_ptr<GameObject> g : foregroundObjects) {
 				instance->bObjectDisplay(g->getSprite(), cam);
 			}
 
@@ -2015,18 +1998,18 @@ public:
 		}
 	}
 
-	void tileDistanceCheck(renderer* instance, tile* t) {
+	void tileDistanceCheck(shared_ptr<renderer> instance, shared_ptr<tile> t) {
 
 		Vector2f camPos = Vector2f(cam->getPosition().x - (32 * 4), cam->getPosition().y - (32 * 4));
 		Vector2u dist = Vector2u((1920 + camPos.x + (64 * 4)), 1080 + camPos.y + (64 * 4));
-		//list<tuple <tile*, bool>>::iterator tileI = tileList.begin();
+		//list<tuple <shared_ptr<tile>, bool>>::iterator tileI = tileList.begin();
 
 
 		bool display = false;
 
 		Vector2f tilePos = t->getSprite()->getPosition();
 
-		if (tilePos.x > camPos.x - (16 * 4) && tilePos.x < dist.x && tilePos.y > camPos.y - (16 * 4) && tilePos.y < dist.y) {
+		if (tilePos.x > camPos.x - (16 * 4) && tilePos.x < dist.x && tilePos.y > camPos.y - (32 * 4) && tilePos.y < dist.y) {
 			display = true;
 		}
 
@@ -2037,9 +2020,9 @@ public:
 
 	}
 
-	/*void backgroundTileDistanceCheck(list<tile*> tiles) {
+	/*void backgroundTileDistanceCheck(list<shared_ptr<tile>> tiles) {
 
-		for (tile* t : tiles) {
+		for (shared_ptr<tile> t : tiles) {
 			bool display = false;
 			if (t->getSprite()->getCameraPosition().x > -(16 * 4)) {
 				if (t->getSprite()->getCameraPosition().x < 1920) {
@@ -2058,9 +2041,9 @@ public:
 		}
 	}*/
 
-	void backgroundTileDistanceCheck(list<tile*> tiles) {
+	void backgroundTileDistanceCheck(list<shared_ptr<tile>> tiles) {
 
-		for (tile* t : tiles) {
+		for (shared_ptr<tile> t : tiles) {
 			float x = t->getSprite()->getCameraPosition().x;
 			bool displayX = !(x < -(16 * 4)) && !(1920 < x);
 
@@ -2074,13 +2057,13 @@ public:
 	}
 
 
-	void enemyDistanceCheck(renderer* instance, list<enemy*> objects) {
+	void enemyDistanceCheck(shared_ptr<renderer> instance, list<shared_ptr<enemy>> objects) {
 		float camPos = cam->getPosition().x;
 		float camEdge = cam->getPosition().x + 1920;
 
-		enemy* toDelete = NULL;
+		shared_ptr<enemy> toDelete = NULL;
 
-		for (enemy* e : objects) {
+		for (shared_ptr<enemy> e : objects) {
 			//If object is still active
 			if (e->getAct()) {
 				if (e->deleteOverY() && e->deleteOverX()) {
@@ -2135,7 +2118,7 @@ public:
 		}
 	}
 
-	bool checkObOffScreen(enemy* e, Vector2f camPos, Vector2f camEdge) {
+	bool checkObOffScreen(shared_ptr<enemy> e, Vector2f camPos, Vector2f camEdge) {
 		if (e->getPosition().x > camEdge.x || e->getPosition().x + e->getSprite()->getSize().x < camPos.x) {
 			return true;
 		}
@@ -2146,7 +2129,7 @@ public:
 
 		return false;
 	}
-	bool checkObOffScreenX(enemy* e, Vector2f camPos, float camEdge) {
+	bool checkObOffScreenX(shared_ptr<enemy> e, Vector2f camPos, float camEdge) {
 		if (e->getPosition().x > camEdge || e->getPosition().x + e->getSprite()->getSize().x < camPos.x) {
 			return true;
 		}
@@ -2154,7 +2137,7 @@ public:
 		return false;
 	}
 
-	bool checkObOffScreenY(enemy* e, Vector2f camPos, float camEdge) {
+	bool checkObOffScreenY(shared_ptr<enemy> e, Vector2f camPos, float camEdge) {
 		if (e->getPosition().y > camEdge || e->getPosition().y + e->getSprite()->getSize().y < camPos.y) {
 			return true;
 		}
@@ -2162,7 +2145,7 @@ public:
 		return false;
 	}
 
-	bool checkInitInScreen(enemy* e, float camPos, float camEdge) {
+	bool checkInitInScreen(shared_ptr<enemy> e, float camPos, float camEdge) {
 		if (e->getInitialPosition().x > camEdge || e->getInitialPosition().x < camPos) {
 			return true;
 		}
@@ -2170,7 +2153,7 @@ public:
 	}
 
 
-	bool ladderTileCheck(tile* t) {
+	bool ladderTileCheck(shared_ptr<tile> t) {
 
 		if (t->getAct()) {
 			if (t->getLadder() != NULL) {
@@ -2184,7 +2167,7 @@ public:
 		return false;
 	}
 
-	bool headLadderTileCheck(tile* t) {
+	bool headLadderTileCheck(shared_ptr<tile> t) {
 
 		if (t->getAct()) {
 			if (t->getLadder() != NULL) {
@@ -2197,7 +2180,7 @@ public:
 		return false;
 	}
 
-	bool ladderBelowTileCheck(tile* t) {
+	bool ladderBelowTileCheck(shared_ptr<tile> t) {
 
 		if (t->getAct()) {
 			if (t->getLadder() != NULL) {
@@ -2210,7 +2193,7 @@ public:
 		return false;
 	}
 
-	bool ladderAboveTileCheck(tile* t) {
+	bool ladderAboveTileCheck(shared_ptr<tile> t) {
 
 		if (t->getAct()) {
 			if (t->getLadder() != NULL) {
@@ -2223,14 +2206,14 @@ public:
 		return false;
 	}
 
-	void onLadderTileCheck(list<tile*> t, renderer* instance) {
+	void onLadderTileCheck(list<shared_ptr<tile>> t, shared_ptr<renderer> instance) {
 		p->getControls()->setInfrontOfLadder(false);
 
 		bool lBelow = false;
 		bool lAbove = false;
 		bool getupAnim = false;
 
-		for (tile* t : tileList) {
+		for (shared_ptr<tile> t : tileList) {
 			
 
 			if (ladderBelowTileCheck(t)) {
@@ -2264,7 +2247,7 @@ public:
 		}
 	}
 
-	void tileCheck(renderer* instance, float* deltaT) {
+	void tileCheck(shared_ptr<renderer> instance, float* deltaT) {
 		
 		bool lBelow = false;
 		bool lAbove = false;
@@ -2274,7 +2257,7 @@ public:
 		float frictionDecrease = 0;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////
-		for (tile* t : tileList) {
+		for (shared_ptr<tile> t : tileList) {
 			if (!p->getControls()->getOnLadder()) {
 
 				bool thisGround = false;
@@ -2400,7 +2383,7 @@ public:
 	}
 
 
-	bool hitboxCheck(objectHitbox* pHit, objectHitbox* hit) {
+	bool hitboxCheck(shared_ptr<objectHitbox> pHit, shared_ptr<objectHitbox> hit) {
 
 		return hitboxDetect::hitboxDetection(pHit, hit);
 

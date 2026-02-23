@@ -24,18 +24,18 @@ public:
 		mov->applyRect(IntRect(0, 0, 16, 16));
 		mov->setPosition(initialPos);
 
-		hit = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
-		hurt = new objectHitbox(IntRect(-9999, 0, 0, 0), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(-9999, 0, 0, 0), sprite));
 		setCode();
 
 
 	}
 
-	void setSoundPointer(Sound* sou) {
+	void setSoundPointer(shared_ptr<Sound> sou) {
 		sound = sou;
 	}
 
-	void setTexture(Texture* tex) {
+	void setTexture(shared_ptr<Texture> tex) {
 		sprite->setTexture(tex);
 	}
 

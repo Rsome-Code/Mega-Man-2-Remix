@@ -3,14 +3,14 @@
 #pragma once
 
 class Flash {
-	object* ob;
+	shared_ptr<object> ob;
 
 	float flashTime = 0.01666666;
 	float flashTime_left = flashTime;
 
 public:
 
-	Flash(object* o) {
+	Flash(shared_ptr<object> o) {
 		ob = o;
 	}
 

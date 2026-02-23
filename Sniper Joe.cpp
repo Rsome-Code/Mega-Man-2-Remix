@@ -1,16 +1,16 @@
-#include "physics enemy.cpp"
+#include "temp physics enemy.cpp"
 #include "sniper bullet.cpp"
 #include <SFML/Audio.hpp>
 #pragma once
 
-class SniperJoe : public PhysicsEnemy {
-	using PhysicsEnemy::PhysicsEnemy;
+class SniperJoe : public TempPhysicsEnemy {
+	using TempPhysicsEnemy::TempPhysicsEnemy;
 
-	animation* shootSprite;
-	animation* blockSprite;
+	shared_ptr<animation> shootSprite;
+	shared_ptr<animation> blockSprite;
 
 
-	Sound* shootSound;
+	shared_ptr<Sound> shootSound;
 
 	bool faceRight = false;
 
@@ -32,18 +32,20 @@ class SniperJoe : public PhysicsEnemy {
 
 public:
 
+
+
 	void initial() {
 		ini();
 		rawSpawn = true;
 	}
 
 	void ini() {
-		shootSprite = new animation(IntRect(648, 443, 22, 24), sprite);
+		shootSprite = shared_ptr<animation>(new animation(IntRect(648, 443, 22, 24), sprite));
 		shootSprite->thisFrame();
-		blockSprite = new animation(IntRect(623, 443, 24, 24), sprite);
+		blockSprite = shared_ptr<animation>(new animation(IntRect(623, 443, 24, 24), sprite));
 		phys->setScale(Vector2f(4, 4));
-		hit = new objectHitbox(IntRect(0, 0, 24, 24), sprite);
-		hurt = new objectHitbox(IntRect(4, 4, 0, 0), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 24, 24), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(4, 4, 0, 0), sprite));
 		state = blocking;
 		phys->enableGravity(true);
 		phys->setPosition(initialPos);
@@ -54,11 +56,11 @@ public:
 		hp = 8;
 		damage = 3;
 		setCode("sniper joe");
-
+		grounded = false;
 
 	}
 
-	void setSound(SoundCollection* soundCol) {
+	void setSound(shared_ptr<SoundCollection> soundCol) {
 		shootSound = soundCol->getShoot();
 	}
 
@@ -68,7 +70,7 @@ public:
 
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		tileCollision(tileList);
 		checkDirection(p->getSprite());
@@ -77,7 +79,7 @@ public:
 			if (!grounded) {
 				phys->eachFrame(deltaT);
 			}
-			hurt = new objectHitbox(IntRect(4, 4, 0, 0), sprite);
+			hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(4, 4, 0, 0), sprite));
 			blockSprite->thisFrame();
 			untilShoot_left -= *deltaT;
 			if (untilShoot_left <= 0) {
@@ -105,7 +107,7 @@ public:
 
 	}
 
-	void shoot(list<EnemyBullet*>* bList) {
+	void shoot(list<shared_ptr<EnemyBullet>>* bList) {
 		shootSound->play();
 		Vector2f sPos;
 		int angle;
@@ -118,11 +120,11 @@ public:
 			angle = 180;
 		}
 
-		SniperBullet* newB = new SniperBullet(sprite->getTexture(), sPos, angle);
+		shared_ptr<SniperBullet> newB = shared_ptr<SniperBullet> ( new SniperBullet(sprite->getTexture(), sPos, angle));
 		bList->push_back(newB);
 	}
 
-	bool isDead(list<enemy*>* tempEList) {
+	bool isDead(list<shared_ptr<enemy>>* tempEList) {
 		if (!rawSpawn) {
 			return true;
 		}

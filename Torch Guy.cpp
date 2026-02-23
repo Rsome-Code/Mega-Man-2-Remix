@@ -6,46 +6,52 @@ class TorchGuy : public enemy {
 
 	using enemy::enemy;
 
-	animation* idleAnim;
-	animTimer* idleTimer;
+	shared_ptr<animation> idleAnim;
+	shared_ptr<animTimer> idleTimer;
 
-	animation* throwAnim;
-	animTimer* throwTimer;
+	shared_ptr<animation> throwAnim;
+	shared_ptr<animTimer> throwTimer;
 
 	float idleTime = 2;
 	float idleTime_left = idleTime;
 
-	FireBullet* bullet = NULL;
+	shared_ptr<FireBullet> bullet = NULL;
 
 	enum State {
 		idle, throwing
 	};
 	State state = idle;
 
+
+public:
+	virtual ~TorchGuy() {
+
+	}
+
 	void initial() {
 		mov->setRect(IntRect(638, 65, 40, 35));
 
 		mov->setPosition(initialPos);
 
-		idleAnim = new animation(list<IntRect>{IntRect(638, 65, 40, 35), IntRect(679, 68, 40, 32)}, sprite);
-		idleTimer = new animTimer(idleAnim, 8, true);
+		idleAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(638, 65, 40, 35), IntRect(679, 68, 40, 32)}, sprite));
+		idleTimer = shared_ptr<animTimer> (new animTimer(idleAnim, 8, true));
 
 		idleAnim->setOffsetList(list<Vector2f>{ Vector2f(0, 0), Vector2f(0 * 4, 3 * 4)});
 
-		throwAnim = new animation(list<IntRect>{IntRect(721, 68, 39, 32), IntRect(765, 64, 44, 36)}, sprite);
-		throwTimer = new animTimer(throwAnim, 8, false);
+		throwAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(721, 68, 39, 32), IntRect(765, 64, 44, 36)}, sprite));
+		throwTimer = shared_ptr<animTimer> (new animTimer(throwAnim, 8, false));
 		throwAnim->setOffsetList(list<Vector2f>{ Vector2f(1 * 4, 3 * 4), Vector2f(-4 * 4, -1 * 4)});
 
 		code = "torch guy";
 
-		hit = new objectHitbox(IntRect(0, 0, 40, 35), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 40, 35), sprite));
 		hurt = hit;
 
 		hp = 5;
 		damage = 5;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 
 		if (state == idle) {
@@ -87,12 +93,12 @@ class TorchGuy : public enemy {
 		return 5;
 	}
 
-	void throwFire(list<EnemyBullet*>* bList, player* p) {
-		bullet = new FireBullet(sprite->getTexture(), sprite->getPosition(), p->getPosition().x);
+	void throwFire(list<shared_ptr<EnemyBullet>>* bList, shared_ptr<player> p) {
+		bullet = shared_ptr<FireBullet> (new FireBullet(sprite->getTexture(), sprite->getPosition(), p->getPosition().x));
 		bList->push_back(bullet);
 	}
-	bool checkBulletGone(list<EnemyBullet*>* bList) {
-		for (EnemyBullet* b : *bList) {
+	bool checkBulletGone(list<shared_ptr<EnemyBullet>>* bList) {
+		for (shared_ptr<EnemyBullet> b : *bList) {
 			if (b == bullet) {
 				return false;
 			}

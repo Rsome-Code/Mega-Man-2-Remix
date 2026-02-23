@@ -8,7 +8,7 @@ protected:
 	bool canMove = true;
 
 public:
-	movable(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, int cameraSpeed) {
+	movable(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale, int cameraSpeed) {
 		this->type = type;
 		this->texture = texture;
 
@@ -20,7 +20,7 @@ public:
 		this->speed = 500;
 		zAxis = cameraSpeed;
 	}
-	movable(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
+	movable(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
 		this->type = type;
 		this->texture = texture;
 
@@ -32,7 +32,7 @@ public:
 		this->speed = 500;
 		zAxis = 1;
 	}
-	movable(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+	movable(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 		this->type = type;
 		this->texture = texture;
 
@@ -45,7 +45,7 @@ public:
 		zAxis = 1;
 	}
 
-	movable(Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+	movable(shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 		this->type = "";
 		this->texture = texture;
 
@@ -58,7 +58,7 @@ public:
 		zAxis = 1;
 	}
 
-	movable(string type, Texture* texture, Image im, IntRect rect, Vector2f position, Vector2f scale, int cameraSpeed, float defaultTransparency) {
+	movable(string type, shared_ptr<Texture> texture, Image im, IntRect rect, Vector2f position, Vector2f scale, int cameraSpeed, float defaultTransparency) {
 		this->type = type;
 		this->texture = texture;
 
@@ -70,10 +70,25 @@ public:
 		this->speed = 500;
 		zAxis = cameraSpeed;
 		this->defaultTransparency = defaultTransparency;
-		image = im;
+		//image = im;
 	}
 public: movable() {
 }
+	  movable(shared_ptr< movable> mov) {
+		  this->type = mov->getType();
+		  texture = mov->getTexture();
+		  loadTexture();
+		  setRect(mov->getRect().getPosition(), mov->getRect().getSize());
+
+		  setPosition(mov->getPosition());
+		  setScale(mov->getScale());
+		  cameraPosition = Vector2f(0, 0);
+		  this->speed = 500;
+		  zAxis = mov->getZ();
+		  this->defaultTransparency = mov->getDefaultTransparency();
+		  //image = mov->getImage();
+	  }
+
 	Vector2f calcXY(float angle, float dist) {
 		angle = angle / 57.295779513082320876798154814105;
 		float adjacent = cos(angle) * dist;

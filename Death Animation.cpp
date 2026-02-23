@@ -5,9 +5,9 @@
 #pragma once
 
 class DeathAnim {
-	objectSprite* sprite;
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<objectSprite> sprite;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 	float growRate = 0.5;
 	float growAccel = 64;
 
@@ -16,12 +16,17 @@ class DeathAnim {
 
 	
 public:
-	DeathAnim(objectSprite* origin, string palette) {
-		Texture* t = new Texture;
+
+	virtual ~DeathAnim() {
+
+	}
+
+	DeathAnim(shared_ptr<objectSprite> origin, string palette) {
+		shared_ptr<Texture> t = shared_ptr<Texture>(new Texture);
 		t->loadFromFile("Assets//death//" + palette + ".png");
-		sprite = new objectSprite("death anim", t, IntRect(0, 0, 96, 96), origin->getPosition(), Vector2f(0.00000, 0.00000));
-		anim = new animation(list<IntRect>{IntRect(0, 0, 96, 96), IntRect(98, 0, 96, 96), IntRect(196, 0, 96, 96), IntRect(294, 0, 96, 96)}, sprite);
-		timer = new animTimer(anim, 15, true);
+		sprite = shared_ptr<objectSprite>(new objectSprite("death anim", t, IntRect(0, 0, 96, 96), origin->getPosition(), Vector2f(0.00000, 0.00000)));
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(0, 0, 96, 96), IntRect(98, 0, 96, 96), IntRect(196, 0, 96, 96), IntRect(294, 0, 96, 96)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 15, true));
 		originPos = origin->getPosition();
 		originSize = origin->getSize();
 	}
@@ -49,15 +54,15 @@ public:
 		sprite->setPosition(Vector2f(newPosX, newPosY));
 	}
 	
-	objectSprite* getSprite() {
+	shared_ptr<objectSprite> getSprite() {
 		return sprite;
 	}
 
-	animation* getAnim() {
+	shared_ptr<animation> getAnim() {
 		return anim;
 	}
 
-	void setOrigin(objectSprite* sprite) {
+	void setOrigin(shared_ptr<objectSprite> sprite) {
 		originPos = sprite->getPosition();
 		originSize = sprite->getSize();
 	}

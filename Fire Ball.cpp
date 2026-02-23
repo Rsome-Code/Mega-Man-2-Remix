@@ -13,9 +13,9 @@ class FireBall : public EnemyBullet {
 	float angle;
 	float speed;
 
-	physicsObject* phys;
-	animation* burnAnim;
-	animTimer* burnTimer;
+	shared_ptr<physicsObject> phys;
+	shared_ptr<animation> burnAnim;
+	shared_ptr<animTimer> burnTimer;
 
 	enum State {
 		flying, burning
@@ -24,8 +24,8 @@ class FireBall : public EnemyBullet {
 	State state = flying;
 
 public:
-	FireBall(float startAngle, float speed, Texture* t, Vector2f pos, float upDist) {
-		phys = new physicsObject(t, IntRect(248, 125, 8, 8), pos, Vector2f(4, 4));
+	FireBall(float startAngle, float speed, shared_ptr<Texture> t, Vector2f pos, float upDist) {
+		phys = shared_ptr<physicsObject> (new physicsObject(t, IntRect(248, 125, 8, 8), pos, Vector2f(4, 4)));
 		mov = phys;
 		sprite = mov;
 		angle = startAngle;
@@ -33,9 +33,9 @@ public:
 		upDistance = upDist;
 		
 
-		burnAnim = new animation(list<IntRect> {IntRect(248, 125, 8, 8), IntRect(258, 125, 8, 8), IntRect(266, 125, 8, 8)}, phys);
-		burnTimer = new animTimer(burnAnim, 6, true);
-		hit = new objectHitbox(IntRect(0, 0, 8, 8), mov);
+		burnAnim = shared_ptr<animation>(new animation(list<IntRect> {IntRect(248, 125, 8, 8), IntRect(258, 125, 8, 8), IntRect(266, 125, 8, 8)}, phys));
+		burnTimer = shared_ptr<animTimer> (new animTimer(burnAnim, 6, true));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), mov));
 
 		upCalc();
 
@@ -51,7 +51,7 @@ public:
 
 		vSpeed = speed * vSpeed;
 		if (angle > 45) {
-			vSpeed + 200;
+			//vSpeed += 200;
 		}
 
 		phys->setVVelocity(fabs(vSpeed));
@@ -63,7 +63,7 @@ public:
 		upSpeed = upDistance / timeToUp;
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 
 		burnTimer->run(deltaT);
 		hit->updatePos();
@@ -96,8 +96,8 @@ public:
 
 	}
 
-	void tileCheck(list<tile*>* tileList) {
-		for (tile* t : *tileList) {
+	void tileCheck(list<shared_ptr<tile>>* tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL) {
 				if (hitboxDetect::hitboxDetection(hit, t->getGround())) {
 					state = burning;

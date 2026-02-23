@@ -6,11 +6,11 @@
 class LavaTile :public DeathTile {
 
 protected:
-	animation* flowAnim;
-	animTimer* flowTimer;
+	shared_ptr<animation> flowAnim;
+	shared_ptr<animTimer> flowTimer;
 
 public:
-	/*LavaTile(Vector2f loc, Texture* t, int tileNum, float z) {
+	/*LavaTile(Vector2f loc, shared_ptr<Texture> t, int tileNum, float z) {
 		this->z = z;
 		tileNumber = tileNum;
 		location = loc;
@@ -19,9 +19,9 @@ public:
 
 
 		location = loc;
-		sprite = new objectSprite("Tile", t, Vector2i(tX * 16, tY * 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("Tile", t, Vector2i(tX * 16, tY * 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
 
-		deathBox = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
+		deathBox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
 
 		
 	}*/
@@ -32,9 +32,9 @@ public:
 			temp.push_back(IntRect(Vector2i(sprite->getRect().getPosition().x, sprite->getRect().getPosition().y + (i*16)), Vector2i(sprite->getRect().getSize())));
 		}
 
-		flowAnim = new animation(temp, sprite);
+		flowAnim = shared_ptr<animation>(new animation(temp, sprite));
 		
-		flowTimer = new animTimer(flowAnim, 4, true);
+		flowTimer = shared_ptr<animTimer> (new animTimer(flowAnim, 4, true));
 	}
 
 	void animate(float* deltaT) {

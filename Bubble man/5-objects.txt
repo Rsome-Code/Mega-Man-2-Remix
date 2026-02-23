@@ -1,5 +1,5 @@
 background-7400703,0,0,1
 croaker,13185,5377,1
 fall platform,13055,5566,1
-snapper-spawn,14789,4100,1
-snapper-spawn,16707,4100,1
+snapper-spawn,14789,4150,1
+snapper-spawn,16707,4150,1

@@ -12,7 +12,6 @@ Essentially, it interprets the current state of the game to figure out exactly w
 #include "Object Hitbox.cpp"
 #include "text.cpp"
 #include <iostream>
-#include <list>
 #include "Object.cpp"
 
 #pragma once
@@ -22,7 +21,7 @@ using namespace std;
 
 class renderer{
 
-	RenderWindow* w;
+	shared_ptr<RenderWindow> w;
 	float ratio;
 
 	float resolutionFactor;
@@ -31,8 +30,14 @@ class renderer{
 
 	bool fullscreen;
 
+public:
+
+	virtual ~renderer() {
+
+	}
+
 public: 
-	renderer(RenderWindow* wi, bool fullscreen) {
+	renderer(shared_ptr<RenderWindow> wi, bool fullscreen) {
 		this->w = wi;
 		ratio = getRatio();
 
@@ -51,10 +56,10 @@ public:
 		w->close();
 		
 		if (fullscreen) {
-			w = new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Fullscreen);
+			w = shared_ptr<RenderWindow>(new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Fullscreen));
 		}
 		else {
-			w = new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Default);
+			w = shared_ptr<RenderWindow>(new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Default));
 		}
 		resolutionFactor = float(w->getSize().y) / float(defaultResolution);
 	}
@@ -67,7 +72,7 @@ public:
 private:
 
 
-	void resolutionFix(UISprite* sprite) {
+	void resolutionFix(shared_ptr<UISprite> sprite) {
 
 		int windowS = w->getSize().y;
 
@@ -82,7 +87,7 @@ private:
 
 	}
 
-	void resolutionCorrection(UISprite* sprite) {
+	void resolutionCorrection(shared_ptr<UISprite> sprite) {
 		Sprite* s = sprite->getSprite();
 
 		s->setScale(sprite->getSprite()->getScale() / resolutionFactor);
@@ -90,12 +95,12 @@ private:
 		s->setPosition(sprite->getSprite()->getPosition() / resolutionFactor);
 	}
 
-	void resolutionFix(objectHitbox* hit) {
+	void resolutionFix(shared_ptr<UIHitbox> hit) {
 	}
-	void resolutionFix(UIHitbox* hit) {
+	void resolutionFix(shared_ptr<objectHitbox> hit) {
 	}
 
-	void resolutionFix(RectangleShape* rect) {
+	void resolutionFix(shared_ptr<RectangleShape> rect) {
 		int windowS = w->getSize().y;
 
 		//float resolutionFactor = float(windowS) / float(defaultResolution);
@@ -103,7 +108,7 @@ private:
 		rect->setPosition(rect->getPosition() * resolutionFactor);
 	}
 
-	void rectCorrection(RectangleShape* rect) {
+	void rectCorrection(shared_ptr<RectangleShape> rect) {
 		int windowS = w->getSize().y;
 
 		//float resolutionFactor = float(windowS) / float(defaultResolution);
@@ -111,7 +116,7 @@ private:
 		rect->setPosition(rect->getPosition() / resolutionFactor);
 	}
 
-	void resolutionFix(Text* t) {
+	void resolutionFix(shared_ptr<Text> t) {
 		
 		int windowS = w->getSize().y;
 
@@ -122,19 +127,19 @@ private:
 		t->setPosition(t->getPosition() * resolutionFactor);
 	}
 
-	void resolutionFix(text* te) {
+	void resolutionFix(shared_ptr<text> te) {
 
 		int windowS = w->getSize().y;
 
 		//float resolutionFactor = float(windowS) / float(defaultResolution);
 
-		Text* t = te->getRender();
+		shared_ptr<Text> t = te->getRender();
 
 		t->setScale(Vector2f(1 * resolutionFactor, 1 * resolutionFactor));
 		t->setPosition(te->getPosition() * resolutionFactor);
 	}
 
-	void textCorrection(Text* t) {
+	void textCorrection(shared_ptr<Text> t) {
 		int windowS = w->getSize().y;
 
 		//float resolutionFactor = float(windowS) / float(defaultResolution);
@@ -145,57 +150,52 @@ private:
 
 public:
 
-	void textDisplay(list<text*> textList){
-		//list<text*> temp = resolutionTextScale(textList);
-		for (text* text : textList) {
+	void textDisplay(list<shared_ptr<text>> textList){
+		//list<shared_ptr<text>> temp = resolutionTextScale(textList);
+		for (shared_ptr<text> text : textList) {
 			resolutionFix(text);
 			w->draw(*text->getRender());
 		}
 	}
 
-	void textDisplay(text* text) {
-		//list<text*> temp = resolutionTextScale(textList);
+	void textDisplay(shared_ptr<text> text) {
+		//list<shared_ptr<text>> temp = resolutionTextScale(textList);
 		resolutionFix(text);
 		w->draw(*text->getRender());
 		
 		
 	}
-	void textDisplay(Text* text) {
-		//list<text*> temp = resolutionTextScale(textList);
+	void textDisplay(shared_ptr<Text> text) {
+		//list<shared_ptr<text>> temp = resolutionTextScale(textList);
 		resolutionFix(text);
 		w->draw(*text);
 		textCorrection(text);
 	}
 
-	void textDisplay(vector<Text*> text) {
+	void textDisplay(vector<shared_ptr<Text>> text) {
 
-		for (Text* t : text) {
+		for (shared_ptr<Text> t : text) {
 			textDisplay(t);
 		}
 	}
 
-	void objectAccess(object* object, camera* cam) {
+	void objectAccess(shared_ptr<object> object, shared_ptr<camera> cam) {
 		if (object->getDisplay()) {
 			objectDisplay(object->getSprite(), cam);
 		}
 	}
 
-	void rectDisplay(RectangleShape* rect) {
+	void rectDisplay(shared_ptr<RectangleShape> rect) {
 		resolutionFix(rect);
 		w->draw(*rect);
 		rectCorrection(rect);
 	}
 
-	void objectDisplay(objectSprite* object, camera* cam) {
+	void objectDisplay(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
 	
 		objectSetup(object, cam);
 		resolutionFix(object);
 		Sprite* s = object->getSprite();
-
-		Sprite sp = *s;
-		sp.setPosition(Vector2f(std::round(sp.getPosition().x), std::round(sp.getPosition().y)));
-
-		
 
 		w->draw(*s);
 		resolutionCorrection(object);
@@ -203,11 +203,11 @@ public:
 		lightingDisplay(object, cam);
 	}
 
-	void lightingDisplay(objectSprite* object, camera* cam) {
-		list<RectangleShape*> pix = object->getPixels();
+	void lightingDisplay(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
+		list<shared_ptr<RectangleShape>> pix = object->getPixels();
 
-		for (RectangleShape* rect : pix) {
-			RectangleShape* temp = new RectangleShape();
+		for (shared_ptr<RectangleShape> rect : pix) {
+			shared_ptr<RectangleShape> temp = shared_ptr<RectangleShape>(new RectangleShape());
 			temp->setPosition(rect->getPosition() + object->getCameraPosition());
 			temp->setSize(rect->getSize());
 			temp->setFillColor(rect->getFillColor());
@@ -215,9 +215,9 @@ public:
 		}
 	}
 
-	void screenLightingDisplay(list <RectangleShape*> rectangles) {
-		for (RectangleShape* rect : rectangles) {
-			RectangleShape* temp = new RectangleShape();
+	void screenLightingDisplay(list <shared_ptr<RectangleShape>> rectangles) {
+		for (shared_ptr<RectangleShape> rect : rectangles) {
+			shared_ptr<RectangleShape> temp = shared_ptr<RectangleShape>(new RectangleShape());
 			temp->setPosition(rect->getPosition());
 			temp->setSize(rect->getSize());
 			temp->setFillColor(rect->getFillColor());
@@ -225,7 +225,7 @@ public:
 		}
 	}
 
-	void objectSetup(objectSprite* object, camera* cam) {
+	void objectSetup(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
 		Vector2f cPosition = cam->getPosition();
 		float zoom = cam->getZoom();
 		Vector2f sPosition = object->getPosition();
@@ -237,9 +237,11 @@ public:
 		object->setCameraScale(Vector2f(object->getScale().x * zoom, object->getScale().y * zoom));
 
 		object->setCameraPosition(Vector2f((newPos.x * zoom), (newPos.y * zoom)));
+
+
 	}
 
-	void bObjectDisplay(objectSprite* object, camera* cam) {
+	void bObjectDisplay(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
 
 		
 
@@ -251,7 +253,7 @@ public:
 		resolutionCorrection(object);
 	}
 
-	void bObjectDisplay(objectSprite* object, bool display, camera* cam) {
+	void bObjectDisplay(shared_ptr<objectSprite> object, bool display, shared_ptr<camera> cam) {
 
 		bObjectCalc(object, cam);
 
@@ -265,7 +267,7 @@ public:
 		}
 	}
 
-	void bObjectCalc(objectSprite* object, camera* cam) {
+	void bObjectCalc(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
 		float mult = object->getZ() - 1;
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult));
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y);
@@ -284,14 +286,14 @@ public:
 
 	}
 
-	void bObjectDisplay(list<objectSprite*> objects, camera* cam) {
-		for (objectSprite* ob : objects) {
+	void bObjectDisplay(list<shared_ptr<objectSprite>> objects, shared_ptr<camera> cam) {
+		for (shared_ptr<objectSprite> ob : objects) {
 			bObjectDisplay(ob, cam);
 		}
 	}
 
 
-	void objectDisplay(list<objectSprite*> objectList, camera* cam) {
+	void objectDisplay(list<shared_ptr<objectSprite>> objectList, shared_ptr<camera> cam) {
 		 //This check if the sprite the camera is following has been flipped
 		
 		//resolutionObjectScale(objectList);
@@ -302,22 +304,23 @@ public:
 		//This number is how much the camera needs to be moved if said sprite is flipped
 		//float flipAmount = cam->getFAmount();
 
-		for (objectSprite* sprite : objectList) {
-			objectDisplay(sprite, cam);
-
+		for (shared_ptr<objectSprite> sprite : objectList) {
+			if (sprite != NULL) {
+				objectDisplay(sprite, cam);
+			}
 		}
 	}
 
-	void UIDisplay(list<UISprite*> spriteList) {
+	void UIDisplay(list<shared_ptr<UISprite>> spriteList) {
 		//resolutionScale(spriteList);
-		for (UISprite* sprite : spriteList) {
+		for (shared_ptr<UISprite> sprite : spriteList) {
 
 
 			UIDisplay(sprite);
 		}
 	}
 
-	void UIDisplay(UISprite* sprite) {
+	void UIDisplay(shared_ptr<UISprite> sprite) {
 		//resolutionScale(spriteList);
 
 
@@ -333,15 +336,22 @@ public:
 		
 	}
 
-	void hitboxDisplay(list<UIHitbox*> hitList) {
+	void hitboxDisplay(list<shared_ptr<objectHitbox>> hitList) {
 
 
-		for (UIHitbox* hit : hitList) {
+		for (shared_ptr<objectHitbox> hit : hitList) {
 			hitboxDisplay(hit);
 		}
 	}
 
-	void hitboxDisplay(UIHitbox* hit) {
+	void objectHitboxDisplay(shared_ptr<objectHitbox> hit, shared_ptr<camera> cam) {
+
+		objectHitboxSetup(hit, cam);
+		hitboxDisplay(hit);
+
+	}
+
+	void hitboxDisplay(shared_ptr<objectHitbox> hit) {
 
 
 		//if (hit->isVisible()) {
@@ -355,7 +365,7 @@ public:
 		
 	}
 
-	void hitboxDisplay(UIHitbox* hit, float zoom) {
+	void hitboxDisplay(shared_ptr<objectHitbox> hit, float zoom) {
 
 
 		//if (hit->isVisible()) {
@@ -369,7 +379,7 @@ public:
 
 	}
 
-	void hitboxDisplay(UIHitbox* hit, Color col) {
+	void hitboxDisplay(shared_ptr<objectHitbox> hit, Color col) {
 
 
 		//if (hit->isVisible()) {
@@ -382,7 +392,7 @@ public:
 
 	}
 
-	void hitboxDisplay(UIHitbox* hit, Color col, float zoom) {
+	void hitboxDisplay(shared_ptr<objectHitbox> hit, Color col, float zoom) {
 
 
 		//if (hit->isVisible()) {
@@ -396,16 +406,16 @@ public:
 
 	}
 
-	void objectHitboxSetup(list<objectHitbox*> hitList, camera* cam) {
+	void objectHitboxSetup(list<shared_ptr<objectHitbox>> hitList, shared_ptr<camera> cam) {
 
 		
-		for (objectHitbox* hit : hitList) {
+		for (shared_ptr<objectHitbox> hit : hitList) {
 			objectHitboxSetup(hit, cam);
 
 		}
 	}
 
-	void objectHitboxSetup(objectHitbox* hit, camera* cam) {
+	void objectHitboxSetup(shared_ptr<objectHitbox> hit, shared_ptr<camera> cam) {
 
 		Vector2f camPosition = cam->getPosition();
 		
@@ -414,7 +424,7 @@ public:
 		hitboxDisplay(hit, cam->getZoom());
 	}
 
-	void objectHitboxSetup(objectHitbox* hit, camera* cam, Color col) {
+	void objectHitboxSetup(shared_ptr<objectHitbox> hit, shared_ptr<camera> cam, Color col) {
 
 		Vector2f camPosition = cam->getPosition();
 
@@ -429,17 +439,17 @@ public:
 		return currentRes / 1080;
 	}
 
-	/*void resolutionObjectScale(list<objectSprite*> sprites) {
-		list<UISprite*> temp;
-		for (UISprite* s : sprites) {
+	/*void resolutionObjectScale(list<shared_ptr<objectSprite>> sprites) {
+		list<shared_ptr<UISprite>> temp;
+		for (shared_ptr<UISprite> s : sprites) {
 			temp.push_back(s);
 		}
 		resolutionScale(temp);
 	}
 
-	void resolutionScale(list<UISprite*> sprites) {
+	void resolutionScale(list<shared_ptr<UISprite>> sprites) {
 		
-		for (UISprite* sprite : sprites) {
+		for (shared_ptr<UISprite> sprite : sprites) {
 			Vector2f currentS = sprite->getScale();
 			Sprite* s = sprite->getSprite();
 			
@@ -447,16 +457,16 @@ public:
 		}
 	}
 
-	list<text*> resolutionTextScale(list<text*> texts) {
-		list<text*> temp;
-		for (text* t : texts) {
+	list<shared_ptr<text>> resolutionTextScale(list<shared_ptr<text>> texts) {
+		list<shared_ptr<text>> temp;
+		for (shared_ptr<text> t : texts) {
 			temp.push_back(t);
 			float currentS = t->getSize();
 			t->setRenderSize(currentS);
 		}
 	}*/
 
-	RenderWindow* getWindow() {
+	shared_ptr<RenderWindow> getWindow() {
 		return w;
 	}
 };

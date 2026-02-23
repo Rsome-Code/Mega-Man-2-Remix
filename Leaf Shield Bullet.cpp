@@ -13,13 +13,13 @@ class LeafShieldBullet : public EnemyBullet {
 	float shotSpeed = 500;
 
 public:
-	LeafShieldBullet(Texture* t, Vector2f pos) {
+	LeafShieldBullet(shared_ptr<Texture> t, Vector2f pos) {
 		
-		mov = new movable(string("eBullet"), t, IntRect(337, 335, 15, 15),pos, Vector2f(4, 4));
+		mov = shared_ptr<movable>(new movable(string("eBullet"), t, IntRect(337, 335, 15, 15),pos, Vector2f(4, 4)));
 		Vector2f position = Vector2f(pos.x - (mov->getSize().x / 2), pos.y - (mov->getSize().y / 2));
 		mov->setPosition(position);
 		sprite = mov;
-		hit = new objectHitbox(IntRect(-5, -5, 25, 25), mov);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(-5, -5, 25, 25), mov));
 
 		damage = 4;
 		collType = DESTROY;
@@ -44,7 +44,7 @@ public:
 	}
 	
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		
 		angle = angle + (angleSpeed * *deltaT);
 		mov->move(angle, deltaT, speed);

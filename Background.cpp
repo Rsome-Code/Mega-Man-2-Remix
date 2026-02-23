@@ -5,17 +5,17 @@
 
 
 class Background:public GameObject {
-	camera* cam;
+	shared_ptr<camera> cam;
 
 public:
 	Background(Color col) {
 
-		sprite = new objectSprite();
+		sprite = shared_ptr<objectSprite>(new objectSprite());
 		sprite->getSprite()->setColor(col);
 		sprite->setRect(IntRect(0,0,1, 1));
 		sprite->setScale(Vector2f(200, 200));
 
-		sprite->setTexture(new Texture());
+		sprite->setTexture(shared_ptr<Texture> (new Texture()));
 
 		setCode("background-" + to_string(col.toInteger()));
 
@@ -23,23 +23,23 @@ public:
 
 	Background(int col) {
 
-		sprite = new objectSprite();
+		sprite = shared_ptr<objectSprite>(new objectSprite());
 		sprite->getSprite()->setColor(Color::Color(col));
 		sprite->setRect(IntRect(0, 0, 1, 1));
 		sprite->setScale(Vector2f(200, 200));
 
-		sprite->setTexture(new Texture());
+		sprite->setTexture(shared_ptr<Texture> (new Texture()));
 
 		setCode("background-" + to_string(col));
 
 
 	}
 
-	void setCamera(camera* camer) {
+	void setCamera(shared_ptr<camera> camer) {
 		cam = camer;
 	}
 
-	virtual void eachFrame(float* deltaT, objectSprite* player) {
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player) {
 		sprite->setScale(Vector2f(1940, 1080));
 		sprite->setPosition(Vector2f(cam->getPosition().x - 10, cam->getPosition().y));
 	};

@@ -5,23 +5,23 @@
 class QuickBoomerang : public Weapon {
 
 public:
-	QuickBoomerang(objectSprite* player, Texture* t, SoundCollection* soundCol) {
+	QuickBoomerang(shared_ptr<objectSprite> player, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		maxWeaponCount = 6;
 
 		for (int i = 0; i < maxWeaponCount; i++) {
-			BoomerangBullet* bul = new BoomerangBullet(t, player, soundCol);
+			shared_ptr<BoomerangBullet> bul = shared_ptr<BoomerangBullet>(new BoomerangBullet(t, player, soundCol));
 			bullets.push_back(bul);
 		}
 
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\Quick Boomerang.png");
 
 		ammoDecrease = 0.1;
 		name = "Quick Boomerang";
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		shootB->loadFromFile("assets\\sound\\buster.wav");
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound>(new Sound());
 		shootSound->setBuffer(*shootB);
 	}
 

@@ -4,8 +4,8 @@
 class Chicken :public TempPhysicsEnemy {
 	using TempPhysicsEnemy::TempPhysicsEnemy;
 
-	animation* runAnim;
-	animTimer* runTimer;
+	shared_ptr<animation> runAnim;
+	shared_ptr<animTimer> runTimer;
 	float runSpeed = 500;
 
 	float jumpTime = 1.5;
@@ -13,6 +13,11 @@ class Chicken :public TempPhysicsEnemy {
 	float jumpForce = 1200;
 
 public:
+
+	virtual ~Chicken() {
+
+	}
+
 	void initial(Vector2f pos) {
 		initialPos = pos;
 		sprite->setPosition(pos);
@@ -22,15 +27,15 @@ public:
 
 		grounded = false;
 		phys->enableGravity(true);
-		runAnim = new animation(list<IntRect> {IntRect(245, 311, 34, 37), IntRect(289, 308, 27, 40), IntRect(350, 311, 40, 37), IntRect(289, 308, 27, 40)}, sprite);
+		runAnim = shared_ptr<animation>(new animation(list<IntRect> {IntRect(245, 311, 34, 37), IntRect(289, 308, 27, 40), IntRect(350, 311, 40, 37), IntRect(289, 308, 27, 40)}, sprite));
 		runAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4), Vector2f(-2 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4) });
-		runTimer = new animTimer(runAnim, 10, true);
+		runTimer = shared_ptr<animTimer> (new animTimer(runAnim, 10, true));
 
 		hp = 5;
 		damage = 4;
 
-		hit = new objectHitbox(IntRect(0, 0, 34, 37), sprite);
-		hurt = new objectHitbox(IntRect(0, 0, 34, 37), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 34, 37), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 34, 37), sprite));
 
 		setCode("chicken");
 	}
@@ -39,7 +44,7 @@ public:
 		setCode("chicken");
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		move(deltaT);
 
 		if (phys->getAcceleration().y < 0) {
@@ -66,8 +71,8 @@ public:
 
 	
 
-	void floorCheck(list<tile*>* tileList) {
-		for (tile* t : *tileList) {
+	void floorCheck(list<shared_ptr<tile>>* tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL) {
 				groundCheck(t);
 			}

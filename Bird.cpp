@@ -6,9 +6,9 @@
 
 class Bird : public TempEnemy {
 	using TempEnemy::TempEnemy;
-	Egg* egg;
+	shared_ptr<Egg> egg;
 
-	movable* mov;
+	shared_ptr<movable> mov;
 	enum State {
 		NotDropped, Dropped
 	};
@@ -18,13 +18,20 @@ class Bird : public TempEnemy {
 
 	float dropDist = 400;
 
-	animation* flap;
-	animTimer* flapTimer;
+	shared_ptr<animation> flap;
+	shared_ptr<animTimer> flapTimer;
 
 public:
+
+	virtual ~Bird() {
+
+		//delete egg;
+	}
+
 	void initial() {
 
-		mov = new movable("enemy", sprite->getTexture(), IntRect(539, 420, 18, 16), Vector2f(1200, 1200), Vector2f(4, 4), 1);
+
+		mov = shared_ptr<movable>(new movable("enemy", sprite->getTexture(), IntRect(539, 420, 18, 16), Vector2f(1200, 1200), Vector2f(4, 4), 1));
 		sprite = mov;
 
 		offSetList();
@@ -32,21 +39,21 @@ public:
 		act = false;
 		display = false;
 
-		egg = new Egg(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + sprite->getSize().y));
+		egg = shared_ptr<Egg>(new Egg(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + sprite->getSize().y)));
 		state = NotDropped;
 
-		flap = new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite);
-		flapTimer = new animTimer(flap, 15, true);
+		flap = shared_ptr<animation>(new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite));
+		flapTimer = shared_ptr<animTimer> (new animTimer(flap, 15, true));
 		setCode("bird");
 		deathAnim->setSprite(sprite);
 	}
-	void initial(Vector2f pos, SoundCollection* soundCol) {
+	void initial(Vector2f pos, shared_ptr<SoundCollection> soundCol) {
 
 		hitSound = soundCol->getHit();
 
 		initialPos = pos;
 
-		mov = new movable("enemy", sprite->getTexture(), IntRect(539, 420, 18, 16), pos, Vector2f(4, 4), 1);
+		mov = shared_ptr<movable>(new movable("enemy", sprite->getTexture(), IntRect(539, 420, 18, 16), pos, Vector2f(4, 4), 1));
 		sprite = mov;
 
 		offSetList();
@@ -54,22 +61,22 @@ public:
 		act = true;
 		display = true;
 
-		egg = new Egg(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + sprite->getSize().y));
+		egg = shared_ptr<Egg>(new Egg(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y + sprite->getSize().y)));
 		egg->initial();
 		egg->setHitSound(soundCol->getHit());
 		state = NotDropped;
 
-		hit = new objectHitbox(IntRect(0,0, 18, 16), sprite);
-		hurt = new objectHitbox(IntRect(0, 0, 18, 16), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0,0, 18, 16), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 18, 16), sprite));
 
-		flap = new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite);
-		flapTimer = new animTimer(flap, 15, true);
+		flap = shared_ptr<animation>(new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite));
+		flapTimer = shared_ptr<animTimer> (new animTimer(flap, 15, true));
 
 		hp = 1;
 		deathAnim->setSprite(sprite);
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		mov->move(180, deltaT, speed);
 		if (state == NotDropped) {
 			eggFollow();
@@ -84,7 +91,7 @@ public:
 		flapTimer->run(deltaT);
 	}
 
-	void checkPDistance(player* p) {
+	void checkPDistance(shared_ptr<player> p) {
 		if (mov->getPosition().x <= p->getPosition().x + dropDist) {
 			state = Dropped;
 			egg->setDropped(true);

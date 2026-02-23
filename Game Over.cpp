@@ -10,26 +10,31 @@
 #pragma once
 
 class GameOver {
-	UISprite* background;
+	shared_ptr<UISprite> background;
 
 	float timeLeft = 5;
-	Music* music;
+	shared_ptr<Music> music;
 
 public:
+
+	virtual ~GameOver() {
+
+	}
+
 	GameOver() {
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\NES - Mega Man 2 - Miscellaneous - Menus.png");
 
-		background = new UISprite(t, IntRect(520, 282, 520, 288), Vector2f(0, 0), Vector2f(4, 4));
+		background = shared_ptr<UISprite>(new UISprite(t, IntRect(520, 282, 520, 288), Vector2f(0, 0), Vector2f(4, 4)));
 
-		music = new Music();
+		music = shared_ptr<Music>(new Music());
 		music->openFromFile("assets\\sound\\music\\game over.mp3");
 		music->setVolume(50);
 
 	}
 
-	void loop(renderer* instance, float targetRate) {
-		timer* time = new timer();
+	void loop(shared_ptr<renderer> instance, float targetRate) {
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
 
 		auto start = time->timerStart();
@@ -62,10 +67,7 @@ public:
 			instance->getWindow()->clear();
 		}
 
-		delete music;
-		delete background->getTexture();
-		delete background;
-		delete time;
+
 
 	}
 };

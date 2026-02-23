@@ -6,28 +6,33 @@
 
 class GameObject : public object {
 protected:
-	SoundBuffer* soundB;
-	Sound* sound;
+	shared_ptr<SoundBuffer> soundB;
+	shared_ptr<Sound> sound;
 
 public:
+
+	virtual ~GameObject() {
+	
+	}
+
 	GameObject(){
 	
 	}
-	GameObject(GameObject* o) {
-		sprite = new objectSprite(o->getSprite());
+	GameObject(shared_ptr<GameObject> o) {
+		sprite = shared_ptr<objectSprite>(new objectSprite(o->getSprite()));
 		display = o->getDisplay();
 		act = o->getAct();
 		code = o->getCode();
 	}
-	virtual list<tile*> getTiles() { return list<tile*> {}; }
+	virtual list<shared_ptr<tile>> getTiles() { return list<shared_ptr<tile>> {}; }
 
-	void setSoundB(SoundBuffer* soundB) {
+	void setSoundB(shared_ptr<SoundBuffer> soundB) {
 		this->soundB = soundB;
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*soundB);
 
 	}
-	void setSound(Sound* s) {
+	void setSound(shared_ptr<Sound> s) {
 		sound = s;
 	}
 
@@ -68,20 +73,26 @@ public:
 	virtual void quickmanPallete() {}
 	virtual void bubblemanPallete() {}
 
-	virtual void eachFrame(float* deltaT, player* player, camera* cam) {};
-	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam) {};
-	virtual void eachFrame(float* deltaT, objectSprite* player, camera* cam, list<tile*>* tileList) {};
-	virtual void eachFrame(float* deltaT, player* player, camera* cam, list<tile*>* tileList) {};
-	virtual void eachFrame(float* deltaT, objectSprite* player){};
-	virtual void eachFrame(float* deltaT, objectSprite* player, list<GameObject*> enemies) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<player> player, shared_ptr<camera> cam) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player, shared_ptr<camera> cam) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player, shared_ptr<camera> cam, list<shared_ptr<tile>>* tileList) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<player> player, shared_ptr<camera> cam, list<shared_ptr<tile>>* tileList) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player){};
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player, list<shared_ptr<GameObject>> enemies) {};
 
-	virtual void setSoundPointer(Sound* sou) {
+	virtual void setSoundPointer(shared_ptr<Sound> sou) {
 
 	}
 
 	virtual void initial() {};
 
-	virtual list<objectSprite*> getSprites() {
-		return list<objectSprite*> {sprite};
+	virtual list<shared_ptr<objectSprite>> getSprites() {
+		return list<shared_ptr<objectSprite>> {sprite};
+	}
+
+	virtual void deleteInt() {
+
+
+	
 	}
 };

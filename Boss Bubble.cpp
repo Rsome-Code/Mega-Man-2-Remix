@@ -4,10 +4,10 @@
 #pragma once
 
 class BossBubble : public EnemyBullet {
-	physicsObject* phys;
+	shared_ptr<physicsObject> phys;
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	int hSpeed = 300;
 	int jumpForce = 600;
@@ -15,27 +15,27 @@ class BossBubble : public EnemyBullet {
 	int angle;
 
 public:
-	BossBubble(Texture* t, Vector2f pos, bool right) {
+	BossBubble(shared_ptr<Texture> t, Vector2f pos, bool right) {
 		if (right) {
 			angle = 0;
 		}
 		else {
 			angle = 180;
 		}
-		phys = new physicsObject(t, IntRect(1, 74, 16, 16), pos, Vector2f(4, 4));
+		phys = shared_ptr<physicsObject> (new physicsObject(t, IntRect(1, 74, 16, 16), pos, Vector2f(4, 4)));
 		sprite = phys;
 		phys->setGravity(-900);
 		phys->enableGravity(true);
-		anim = new animation(list<IntRect>{IntRect(1, 74, 16, 16), IntRect(19, 75, 14, 14)}, sprite);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(1, 74, 16, 16), IntRect(19, 75, 14, 14)}, sprite));
 		anim->setOffsetList(list<Vector2f>{Vector2f(0, 0), Vector2f(1 * 4, 1 * 4)});
-		timer = new animTimer(anim, 8, true);
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 
-		hit = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
 
 		damage = 3;
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		timer->run(deltaT);
 		phys->eachFrame(deltaT);
 		hit->updatePos();
@@ -52,8 +52,8 @@ public:
 		phys->setVVelocity(jumpForce);
 	}
 
-	bool groundCheck(list<tile*>* tileList) {
-		for (tile* t : *tileList) {
+	bool groundCheck(list<shared_ptr<tile>>* tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL) {
 				if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 					return true;

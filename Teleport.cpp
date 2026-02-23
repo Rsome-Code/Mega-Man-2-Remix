@@ -7,66 +7,76 @@
 
 #pragma once
 class teleport {
-	movable* sprite;
-	float* speed = new float(2000);
+	shared_ptr<movable> sprite;
+	float speed = float(2000);
 	float startX;
-	Vector2f* startLoc;
-	bool* initial;
-	animation* teleportAnim;
-	animTimer* timer;
+	Vector2f startLoc;
+	bool initial;
+	shared_ptr<animation> teleportAnim;
+	shared_ptr<animTimer> timer;
 
 
 	bool hitFloor = false;
 
 	bool looped = false;
 
-	Sound* teleSound;
-	SoundBuffer* teleB;
+	shared_ptr<Sound> teleSound;
+	shared_ptr<SoundBuffer> teleB;
 
 	
 
 public:
-	teleport(movable* sprite, float startX, float startY){
+
+	virtual ~teleport() {
+
+		//delete sprite;
+
+		//delete teleportAnim;
+		//delete timer;
+
+	}
+
+	teleport(shared_ptr<movable> sprite, float startX, float startY){
 		this->sprite = sprite;
 		this->startX = startX;
-		initial = new bool(true);
-		startLoc = new Vector2f(startX, startY);
-		this->sprite->setPosition(*startLoc);
+		initial = true;
+		startLoc = Vector2f(startX, startY);
+		this->sprite->setPosition(startLoc);
 
-		teleportAnim = new animation(list<IntRect> {IntRect(Vector2i(124, 128), Vector2i(7, 24)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19))}, sprite);
+		teleportAnim = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(124, 128), Vector2i(7, 24)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19))}, sprite));
 		
 		teleportAnim->setOffsetList(list<Vector2f> {Vector2f(sprite->getScale().x * 5, sprite->getScale().y * 2), Vector2f(sprite->getScale().x * 0, sprite->getScale().y * 7), Vector2f(sprite->getScale().x * 0, sprite->getScale().y * 11), Vector2f(sprite->getScale().x * 0, sprite->getScale().y * 7)});
 
 		teleportAnim->thisFrame();
-		timer = new animTimer(teleportAnim, 12, false);
+		timer = shared_ptr<animTimer> (new animTimer(teleportAnim, 12, false));
 
-		teleB = new SoundBuffer();
+		teleB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		teleB->loadFromFile("assets\\sound\\teleport_in.wav");
 
-		teleSound = new Sound();
+		teleSound = shared_ptr<Sound>(new Sound());
 		teleSound->setBuffer(*teleB);
 	}
 
-	teleport(movable* sprite, float startX) {
+	teleport(shared_ptr<movable> sprite, float startX) {
 		this->sprite = sprite;
 
 		this->startX = startX;
-		initial = new bool (false);
-		teleportAnim = new animation(list<IntRect> {IntRect(Vector2i(124, 128), Vector2i(7, 24)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19))}, sprite);
+		initial = false;
+		teleportAnim = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(124, 128), Vector2i(7, 24)), IntRect(Vector2i(134, 132), Vector2i(22, 19)), IntRect(Vector2i(163, 136), Vector2i(22, 15)), IntRect(Vector2i(134, 132), Vector2i(22, 19))}, sprite));
 
 		teleportAnim->setOffsetList(list<Vector2f> {Vector2f(sprite->getScale().x * 5, sprite->getScale().y * 2), Vector2f(sprite->getScale().x * 0, sprite->getScale().y * 7), Vector2f(sprite->getScale().x * 0, sprite->getScale().y * 11), Vector2f(sprite->getScale().x * 0, sprite->getScale().y * 7)});
 
 		teleportAnim->thisFrame();
-		timer = new animTimer(teleportAnim, 12, false);
-		teleB = new SoundBuffer();
+		timer = shared_ptr<animTimer> (new animTimer(teleportAnim, 12, false));
+		teleB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		teleB->loadFromFile("assets\\sound\\teleport_in.wav");
 
-		teleSound = new Sound();
+		teleSound = shared_ptr<Sound>(new Sound());
 		teleSound->setBuffer(*teleB);
 
 	}
 
-	bool eachFrame(float* deltaT, list<tile*> tiles, objectHitbox* foot) {
+	bool eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, shared_ptr<objectHitbox> foot) {
 		teleportAnim->thisFrame();
 		//if (sprite->getPosition().y < targetLoc->y) {
 
@@ -87,17 +97,13 @@ public:
 			looped = true;
 		}
 		if(!hitFloor){
-			sprite->move(90, deltaT, *speed);
+			sprite->move(90, deltaT, speed);
 		}
 		else {
 			timer->run(deltaT);
 			if (timer->isFinished(deltaT)) {
-				delete timer;
-				delete teleportAnim;
-				delete initial;
-				delete startLoc;
-				
-				delete speed;
+
+
 				return true;
 			}
 		}
@@ -110,10 +116,10 @@ public:
 		hitFloor = true;
 	}
 
-	bool floorCheck(list<tile*> tiles, objectHitbox* foot) {
+	bool floorCheck(list<shared_ptr<tile>> tiles, shared_ptr<objectHitbox> foot) {
 
 		float currentX = sprite->getSprite()->getPosition().x;
-		for (tile* t : tiles) {
+		for (shared_ptr<tile> t : tiles) {
 
 			if (t->getGround() != NULL) {
 				if (hitboxDetect::hitboxDetection(foot, t->getGround())) {

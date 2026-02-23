@@ -4,9 +4,13 @@
 
 class TileWithObject : public tile {
 protected:
-	list<objectSprite*> objects;
+	list<shared_ptr<objectSprite>> objects;
 
-	list<objectSprite*> getInternalSprites() {
+	list<shared_ptr<objectSprite>> getInternalSprites() {
 		return objects;
+	}
+
+	virtual void deleteInt() {
+
 	}
 };

@@ -4,31 +4,38 @@ using namespace sf;
 using namespace std;
 
 class text {
-	Text* render;
+	shared_ptr<Text> render;
 	string content;
 	float numContent;
 	float size;
 	Vector2f position;
-	Font* font;
-	const::Color* colour;
+	shared_ptr<Font> font;
+	Color colour;
 
 public:
-	text(string content, Vector2f position, float size, Font* font, const::Color* colour) {
+
+	virtual ~text() {
+
+		//delete font;
+		//delete colour;
+	}
+
+	text(string content, Vector2f position, float size, shared_ptr<Font> font, Color colour) {
 		this->content = content;
 		this->position = position;
 		this->size = size;
 		this->font = font;
 		this->colour = colour;
 
-		render = new Text();
+		render = shared_ptr<Text> (new Text());
 		render->setFont(*font);
 		render->setCharacterSize(size); // in pixels
-		render->setFillColor(*colour); // set the text color
+		render->setFillColor(colour); // set the text color
 		//render->setStyle(sf::Text::Bold | sf::Text::Underlined); // set text style
 		render->setString(content);
 		render->setPosition(position);
 	}
-	text(int content, Vector2f position, float size, Font* font, const::Color* colour) {
+	text(int content, Vector2f position, float size, shared_ptr<Font> font, Color colour) {
 		numContent = content;
 		this->content = to_string(content);
 		this->position = position;
@@ -38,7 +45,7 @@ public:
 
 		render->setFont(*font);
 		render->setCharacterSize(size); // in pixels
-		render->setFillColor(*colour); // set the text color
+		render->setFillColor(colour); // set the text color
 		//render->setStyle(sf::Text::Bold | sf::Text::Underlined); // set text style
 		render->setString(this->content);
 		render->setPosition(position);
@@ -58,7 +65,7 @@ public:
 		render->setCharacterSize(s);
 	}
 
-	Text* getRender() {
+	shared_ptr<Text> getRender() {
 		return render;
 	}
 

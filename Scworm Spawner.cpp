@@ -3,8 +3,8 @@
 
 class ScwormSpawn : public enemy {
 	using enemy::enemy;
-	animation* spawnAnim;
-	animTimer* timer;
+	shared_ptr<animation> spawnAnim;
+	shared_ptr<animTimer> timer;
 
 	float untilSpawn = 3;
 	float untilSpawn_left = 0;
@@ -12,13 +12,18 @@ class ScwormSpawn : public enemy {
 	int maxSpawn = 10;
 
 public:
+
+	virtual ~ScwormSpawn() {
+
+	}
+
 	void initial() {
 		mov->setRect(IntRect(231, 546, 16, 8));
-		spawnAnim = new animation(list<IntRect>{IntRect(231, 546, 16, 8), IntRect(248, 543, 16, 11), IntRect(265, 538, 16, 16), IntRect(282, 538, 16, 16), IntRect(299, 530, 16, 24), IntRect(318, 530, 16, 24)}, sprite);
-		timer = new animTimer(spawnAnim, 8, false);
+		spawnAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(231, 546, 16, 8), IntRect(248, 543, 16, 11), IntRect(265, 538, 16, 16), IntRect(282, 538, 16, 16), IntRect(299, 530, 16, 24), IntRect(318, 530, 16, 24)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(spawnAnim, 8, false));
 		hp = 3;
 		damage = 2;
-		hit = new objectHitbox(IntRect(0, 0, 16, 8), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 8), sprite));
 		hurt = hit;
 
 		mov->setPosition(initialPos);
@@ -33,7 +38,7 @@ public:
 	};
 	State state = idle;
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		if (state == idle) {
 			untilSpawn_left -= *deltaT;
 			if (untilSpawn_left <= 0) {
@@ -57,9 +62,9 @@ public:
 		
 	}
 
-	bool checkAmmount(list<enemy*>* objectList) {
+	bool checkAmmount(list<shared_ptr<enemy>>* objectList) {
 		int ammount = 0;
-		for (enemy* e : *objectList) {
+		for (shared_ptr<enemy> e : *objectList) {
 			if (e->getCode() == "scworm") {
 				ammount++;
 			}
@@ -70,8 +75,8 @@ public:
 		return true;
 	}
 
-	void spawn(list<enemy*>* enemyList) {
-		Scworm* temp = new Scworm(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y - 4*4));
+	void spawn(list<shared_ptr<enemy>>* enemyList) {
+		shared_ptr<Scworm> temp = shared_ptr<Scworm> (new Scworm(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getPosition().y - 4*4)));
 		temp->setHitSound(hitSound);
 		temp->initial();
 		enemyList->push_back(temp);

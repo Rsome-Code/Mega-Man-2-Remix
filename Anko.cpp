@@ -13,16 +13,22 @@ class Anko : public enemy {
 	float blinkTime_left = blinkTime;
 	bool blinkOn = false;
 
-	list<objectSprite*> explos;
+	list<shared_ptr<objectSprite>> explos;
 
 	bool deathAnimFin = false;
-	objectSprite* currentEx = NULL;
+	shared_ptr<objectSprite> currentEx = NULL;
+
+public:
+	virtual ~Anko() {
+
+	}
 
 	void initial() {
 		mov->setRect(IntRect(0, 795, 112, 80));
 		mov->setPosition(initialPos);
-		hit = new objectHitbox(IntRect(18*4, 16*4, 112, (80 - 16)), sprite);
-		hurt = new objectHitbox(IntRect(25*4, 0, 30, 14), sprite);
+		mov->setVisualOffset(Vector2f(0, 0));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(18*4, 16*4, 112, (80 - 16)), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(25*4, 0, 30, 14), sprite));
 		hp = 15;
 		damage = 5;
 
@@ -30,11 +36,14 @@ class Anko : public enemy {
 		blinkTime_left = blinkTime;
 		blinkOn = false;
 
+		deathAnimFin = false;
+
 		if (explos.empty()) {
+			deathAnim->reset();
 			for (int i = 0; i < 7; i++) {
 				Vector2i posi = Vector2i(rand() % int(mov->getSize().x), rand() % int(mov->getSize().y));
 				posi = Vector2i(posi.x + sprite->getPosition().x, posi.y + sprite->getPosition().y);
-				objectSprite* exp = new objectSprite(mov->getTexture(), deathAnim->getCurrentRect(), Vector2f(posi), Vector2f(4, 4));
+				shared_ptr<objectSprite> exp = shared_ptr<objectSprite>(new objectSprite(mov->getTexture(), deathAnim->getCurrentRect(), Vector2f(posi), Vector2f(4, 4)));
 				explos.push_back(exp);
 			}
 		}
@@ -42,7 +51,7 @@ class Anko : public enemy {
 		
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		if (checkShrinks(objectList)) {
 			spawnDelay_left -= *deltaT;
 			if (spawnDelay_left <= 0) {
@@ -60,9 +69,9 @@ class Anko : public enemy {
 
 	}
 
-	void spawn(list<enemy*>* objectList) {
+	void spawn(list<shared_ptr<enemy>>* objectList) {
 		
-		Shrink* temp = new Shrink(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getMiddlePos().y));
+		shared_ptr<Shrink> temp = shared_ptr<Shrink>(new Shrink(sprite->getTexture(), Vector2f(sprite->getPosition().x, sprite->getMiddlePos().y)));
 		temp->initial();
 			
 		temp->setHitSound(hitSound);
@@ -71,9 +80,9 @@ class Anko : public enemy {
 		
 	}
 
-	bool checkShrinks(list<enemy*>* enemies) {
+	bool checkShrinks(list<shared_ptr<enemy>>* enemies) {
 		int num = 0;
-		for (enemy* e : *enemies) {
+		for (shared_ptr<enemy> e : *enemies) {
 			if (e->getCode() == "shrink") {
 				num++;
 			}
@@ -102,7 +111,7 @@ class Anko : public enemy {
 
 
 
-	bool death(float* deltaT, list<enemy*>* tempEList) {
+	bool death(float* deltaT, list<shared_ptr<enemy>>* tempEList) {
 		hit->setPosition(Vector2f(-1000, 0));
 		hurt->setPosition(Vector2f(-1000, 0));
 		if (deathAnimFin) {
@@ -161,7 +170,7 @@ class Anko : public enemy {
 		}
 	}
 
-	objectSprite* getDamSprite() {
+	shared_ptr<objectSprite> getDamSprite() {
 		if (currentEx != NULL) {
 			return sprite;
 		}
@@ -169,7 +178,7 @@ class Anko : public enemy {
 		
 	}
 
-	objectSprite* getSprite() {
+	shared_ptr<objectSprite> getSprite() {
 		if (currentEx != NULL) {
 			return currentEx;
 		}

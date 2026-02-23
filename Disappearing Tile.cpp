@@ -5,7 +5,7 @@
 #pragma once
 
 class DisappearingTile : public GameObject {
-	solidTile* t;
+	shared_ptr<solidTile> t;
 	int currentBeat = 0;
 	int maxBeat = 4;
 	int onBeat;
@@ -13,29 +13,29 @@ class DisappearingTile : public GameObject {
 	float beatTime = 1.25;
 	float beatTime_left = beatTime;
 	
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 
 	bool on = false;
 
-	Sound* sound;
+	shared_ptr<Sound> sound;
 	
 public:
-	DisappearingTile(Texture* tex, Vector2f loc, int onBeat) {
+	DisappearingTile(shared_ptr<Texture> tex, Vector2f loc, int onBeat) {
 		this->onBeat = onBeat;
 		Vector2f location = Vector2f(loc.x / 16, loc.y / 16);
-		t = new DisTile(location, tex, 0);
+		t = shared_ptr<DisTile>(new DisTile(location, tex, 0));
 
 		//t->getSprite()->setTexture(tex);
 
 		t->getSprite()->setRect(IntRect(641, 635, 16, 19));
 
 
-		anim = new animation(list<IntRect>{IntRect(641, 635, 16, 19), IntRect(658, 635, 16, 22), IntRect(675, 635, 16, 22), IntRect(692, 635, 16, 22), IntRect(709, 635, 16, 22)}, t->getSprite());
-		timer = new animTimer(anim, 10, false);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(641, 635, 16, 19), IntRect(658, 635, 16, 22), IntRect(675, 635, 16, 22), IntRect(692, 635, 16, 22), IntRect(709, 635, 16, 22)}, t->getSprite()));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 10, false));
 
-		sprite = new objectSprite("h", tex, IntRect(641 + (onBeat *16), 662, 16, 19), loc, Vector2f(4, 4));
+		sprite = shared_ptr<objectSprite>(new objectSprite("h", tex, IntRect(641 + (onBeat *16), 662, 16, 19), loc, Vector2f(4, 4)));
 		
 
 		setCode("disappearing tile-" + to_string(onBeat));
@@ -59,7 +59,7 @@ public:
 		display = false;
 	}
 
-	void eachFrame(float* deltaT, objectSprite* player, camera* cam) {
+	void eachFrame(float* deltaT, shared_ptr<objectSprite> player, shared_ptr<camera> cam) {
 
 		t->getSprite()->setCameraPosition(t->getSprite()->getPosition() - cam->getPosition());
 
@@ -89,7 +89,7 @@ public:
 
 				if (t->getSprite()->getCameraPosition().x > 0 && t->getSprite()->getCameraPosition().x < 1920) {
 					
-					//Sound* s = *sound;
+					//shared_ptr<Sound> s = *sound;
 					if (sound->getStatus() != Sound::Playing) {
 						sound->play();
 					}
@@ -118,11 +118,11 @@ public:
 
 	}
 
-	list<tile*> getTiles(){
-		return (list<tile*>{t});
+	list<shared_ptr<tile>> getTiles(){
+		return (list<shared_ptr<tile>>{t});
 	}
 
-	virtual void setSoundPointer(Sound* sou) {
+	virtual void setSoundPointer(shared_ptr<Sound> sou) {
 		sound = sou;
 	}
 

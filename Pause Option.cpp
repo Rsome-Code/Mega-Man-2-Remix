@@ -5,7 +5,7 @@
 
 class Option {
 protected:
-	UISprite* icon;
+	shared_ptr<UISprite> icon;
 	float flashTime = 0.15;
 	float flashTime_left = flashTime;
 
@@ -18,12 +18,12 @@ protected:
 
 public:
 	Option() {}
-	Option(Texture* t, Vector2f pos) {
+	Option(shared_ptr<Texture> t, Vector2f pos) {
 		position = pos;
 
 
 
-		icon = new UISprite("Letter", t, IntRect(0, 8, 8, 8), position, Vector2f(4, 4));
+		icon = shared_ptr<UISprite>(new UISprite("Letter", t, IntRect(0, 8, 8, 8), position, Vector2f(4, 4)));
 	
 	}
 
@@ -46,12 +46,12 @@ public:
 		displayIcon = true;
 	}
 
-	virtual AmmoBar* getBar() {
+	virtual shared_ptr<AmmoBar> getBar() {
 		return NULL;
 	}
 
-	virtual list<UISprite*> getSprites() {
-		list<UISprite*> temp;
+	virtual list<shared_ptr<UISprite>> getSprites() {
+		list<shared_ptr<UISprite>> temp;
 		if (displayIcon) {
 			temp.push_back(icon);
 		}
@@ -60,7 +60,7 @@ public:
 
 	}
 
-	virtual Weapon* getWeapon() {
+	virtual shared_ptr<Weapon> getWeapon() {
 		return NULL;
 	}
 };

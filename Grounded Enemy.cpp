@@ -2,22 +2,23 @@
 #pragma once
 
 class GroundedEnemy : public enemy {
-	
 	using enemy::enemy;
 protected:
 
 	int angle = 180;
 
-	animation* moveAnim;
-	animTimer* moveTimer;
+	shared_ptr<animation> moveAnim;
+	shared_ptr<animTimer> moveTimer;
 
 
 
-	void checkDirection(list<tile*>* tileList) {
+	void checkDirection(list<shared_ptr<tile>>* tileList) {
 		bool onGround = false;
 
-		objectHitbox tempH = *hit;
-		objectHitbox* temp = &tempH;
+
+		shared_ptr<objectHitbox> temp = shared_ptr<objectHitbox> (new objectHitbox(*hit));
+
+	
 		//temp->setSprite(sprite);
 
 		temp->setSize(Vector2i(1, temp->getSize().y));
@@ -26,7 +27,7 @@ protected:
 			temp->updatePos();
 		}
 
-		for (tile* t : *tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL) {
 
 				if (faceRight) {

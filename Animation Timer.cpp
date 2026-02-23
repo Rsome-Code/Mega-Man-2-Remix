@@ -6,14 +6,14 @@
 #pragma once
 
 class animTimer {
-	animation* anim;
+	shared_ptr<animation> anim;
 	float fps;
 	float targetDelta;
 	float countDown;
 	bool loop;
 	bool display;
 
-public:animTimer(animation* anim, float fps, bool loop) {
+public:animTimer(shared_ptr<animation> anim, float fps, bool loop) {
 		this->anim = anim;
 		this->fps = fps;
 		targetDelta = (1 / fps);
@@ -85,7 +85,7 @@ public:
 		anim->setDisplay(b);
 	}
 
-	void setAnim(animation* a) {
+	void setAnim(shared_ptr<animation> a) {
 		anim = a;
 	}
 };

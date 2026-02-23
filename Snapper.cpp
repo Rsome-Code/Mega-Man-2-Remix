@@ -7,8 +7,8 @@ class Snapper : public TempPhysicsEnemy {
 
 	int fallSpeed = 200;
 
-	animation* anim;
-	animTimer* aTimer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> aTimer;
 
 	enum State {
 		falling, jumping, running
@@ -26,6 +26,11 @@ class Snapper : public TempPhysicsEnemy {
 	int runAngle = 180;
 
 public:
+
+	virtual ~Snapper() {
+
+	}
+
 	void initial() {
 		phys->setPosition(initialPos);
 		phys->setRect(IntRect(473, 115, 22, 16));
@@ -38,10 +43,10 @@ public:
 
 		hp = 2;
 
-		anim = new animation(list<IntRect>{IntRect(473, 115, 22, 16), IntRect(497, 109, 27, 22)}, sprite);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(473, 115, 22, 16), IntRect(497, 109, 27, 22)}, sprite));
 		anim->setOffsetList(list<Vector2f>{Vector2f(0, 0), Vector2f(-3 * 4, -7 * 4)});
-		aTimer = new animTimer(anim, 8, true);
-		hit = new objectHitbox(IntRect(0, 0, 22, 16), sprite);
+		aTimer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 22, 16), sprite));
 		hurt = hit;
 
 		setCode("snapper");
@@ -55,13 +60,13 @@ public:
 	}
 
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		aTimer->run(deltaT);
 
 		if (state == falling) {
 			phys->move(90, deltaT, fallSpeed);
-			for (tile* t : *tileList) {
+			for (shared_ptr<tile> t : *tileList) {
 				if (t->getGround() != NULL) {
 					groundCheck(t);
 				}
@@ -96,7 +101,7 @@ public:
 
 		else if (state == running) {
 			grounded = false;
-			for (tile* t : *tileList) {
+			for (shared_ptr<tile> t : *tileList) {
 				if (t->getGround() != NULL) {
 					groundCheck(t);
 				}

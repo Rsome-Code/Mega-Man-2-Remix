@@ -3,24 +3,24 @@
 
 class BeamCollection : public GameObject{
 	
-	list<Beam*> beamList = {};
+	list<shared_ptr<Beam>> beamList = {};
 
 	float untilStart = 0.5;
 	float untilStart_left = untilStart/4;
 
-	list<Beam*>::iterator beamIt;
+	list<shared_ptr<Beam>>::iterator beamIt;
 
 public:
-	BeamCollection(list<Beam*> beams) {
+	BeamCollection(list<shared_ptr<Beam>> beams) {
 		bool sorted = false;
 		
 		float aboveThis = -99999;
 		
-		Beam* lowestBeam;
+		shared_ptr<Beam> lowestBeam;
 
 		for (int i = 0; i < beams.size(); i++) {
 			float lowestY = 9999999999;
-			for (Beam* beam : beams) {
+			for (shared_ptr<Beam> beam : beams) {
 				if (beam->getPosition().y > aboveThis) {
 					if (beam->getPosition().y < lowestY) {
 						lowestBeam = beam;
@@ -41,16 +41,16 @@ public:
 		code = "beam collection";
 	}
 
-	void setSoundPointer(Sound* sou) {
-		for (Beam* b : beamList) {
+	void setSoundPointer(shared_ptr<Sound> sou) {
+		for (shared_ptr<Beam> b : beamList) {
 			b->setSoundPointer(sou);
 		}
 	}
 
-	void addBeam(Beam* b) {
+	void addBeam(shared_ptr<Beam> b) {
 		if (!beamList.empty()) {
-			list<Beam*>::iterator it = beamList.begin();
-			for (Beam* current : beamList) {
+			list<shared_ptr<Beam>>::iterator it = beamList.begin();
+			for (shared_ptr<Beam> current : beamList) {
 
 				if (current->getInitialPosition().y >= b->getInitialPosition().y) {
 					beamList.insert(it, b);
@@ -70,13 +70,13 @@ public:
 		beamIt = beamList.begin();
 	}
 
-	void eachFrame(float* deltaT, player* player, camera* cam) {
+	void eachFrame(float* deltaT, shared_ptr<player> player, shared_ptr<camera> cam) {
 
 		if (beamIt != beamList.end()) {
 			untilStart_left -= *deltaT;
 			if (untilStart_left <= 0) {
 				untilStart_left = untilStart;
-				Beam* b = *beamIt;
+				shared_ptr<Beam> b = *beamIt;
 				b->moveStart();
 				beamIt = next(beamIt);
 

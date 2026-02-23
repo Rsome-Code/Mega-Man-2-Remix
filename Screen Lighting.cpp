@@ -10,7 +10,7 @@ using namespace sf;
 using namespace std;
 
 class ScreenLighting {
-	list<RectangleShape*> rectangles;
+	list<shared_ptr<RectangleShape>> rectangles;
 	float defaultTransparency;
 
 public:
@@ -18,7 +18,7 @@ public:
 		int rDiv = 1;
 		for (int y = 0; y < 1080/rDiv; y++) {
 			for (int x = 0; x < 1920/rDiv; x++) {
-				RectangleShape* temp = new RectangleShape(Vector2f(rDiv,rDiv));
+				shared_ptr<RectangleShape> temp = shared_ptr<RectangleShape>(new RectangleShape(Vector2f(rDiv,rDiv)));
 				temp->setPosition(Vector2f(x*rDiv, y*rDiv));
 				rectangles.push_back(temp);
 			}
@@ -27,7 +27,7 @@ public:
 		defaultTransparency = 200;
 	}
 
-	list<RectangleShape*> getRectangles() {
+	list<shared_ptr<RectangleShape>> getRectangles() {
 		return rectangles;
 	}
 	void setDefaultTransparency(float t) {
@@ -38,9 +38,9 @@ public:
 	}
 
 
-	void lightingCheck(LightSource* light, camera* cam) {
+	void lightingCheck(LightSource* light, shared_ptr<camera> cam) {
 		bool done = false;
-		for (RectangleShape* pixel : rectangles) {
+		for (shared_ptr<RectangleShape> pixel : rectangles) {
 			Vector2f check = pixelPosition(pixel);
 			float distance = Maths::getDistance(pixelPosition(pixel), light->getPosition());
 			if (!done) {
@@ -74,7 +74,7 @@ public:
 		}
 	}
 
-	Vector2f pixelPosition(RectangleShape* pixel) {
+	Vector2f pixelPosition(shared_ptr<RectangleShape> pixel) {
 		Vector2f relPosition = pixel->getPosition();
 		Vector2f camPos = relPosition;
 		return (camPos);

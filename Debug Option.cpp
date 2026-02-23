@@ -8,11 +8,11 @@ protected:
 	string name;
 
 public:
-	virtual void action(player* p, renderer* instance, double* targetFPS) = 0;
+	virtual void action(shared_ptr<player> p, shared_ptr<renderer> instance, double* targetFPS) = 0;
 
 	string getName() {
 		return name;
 	}
 
-	virtual void update(renderer* instance, double* fps) {}
+	virtual void update(shared_ptr<renderer> instance, double* fps) {}
 };

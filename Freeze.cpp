@@ -8,9 +8,9 @@
 class Freeze {
 	
 public:
-	static void stop(renderer* instance, float targetRate, player* player, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> obList, list<enemy*> eList, list<EnemyBullet*> eBList, list<GameObject*> backgroundObjects, list<GameObject*> foregroundObjects, camera* cam, float timeLeft) {
+	static void stop(shared_ptr<renderer> instance, float targetRate, shared_ptr<player> player, list<shared_ptr<tile>> tileList, list<shared_ptr<tile>> z2List, list<shared_ptr<tile>> z3List, list<shared_ptr<tile>> z4List, list<shared_ptr<GameObject>> obList, list<shared_ptr<enemy>> eList, list<shared_ptr<EnemyBullet>> eBList, list<shared_ptr<GameObject>> backgroundObjects, list<shared_ptr<GameObject>> foregroundObjects, shared_ptr<camera> cam, float timeLeft) {
 
-		timer* time = new timer();
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
 
 		auto start = time->timerStart();
@@ -33,17 +33,17 @@ public:
 			start = time->timerStart();
 			startP = &start;
 
-			for (object* ob : backgroundObjects) {
+			for (shared_ptr<object> ob : backgroundObjects) {
 				instance->objectAccess(ob, cam);
 			}
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
@@ -51,40 +51,43 @@ public:
 
 			//tileDistanceCheck(instance, tileList);
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
 			}
 
-			for (object* ob : obList) {
+			for (shared_ptr<object> ob : obList) {
 				if (ob->getDisplay() && ob->getSprite() != NULL) {
 					instance->objectAccess(ob, cam);
 				}
 			}
 
-			for (enemy* e : eList) {
+			for (shared_ptr<enemy> e : eList) {
 				if (e->getDisplay()) {
 					if (e->getDamSprite() != NULL) {
 						instance->objectDisplay(e->getDamSprite(), cam);
 					}
 					instance->objectAccess(e, cam);
 					if (e->getBar() != NULL) {
-						AmmoBar* bar = *e->getBar();
+						shared_ptr<AmmoBar> bar = *e->getBar();
 						instance->UIDisplay(bar->getSprites());
 					}
 				}
 			}
 
-			for (EnemyBullet* eB : eBList) {
+			for (shared_ptr<EnemyBullet> eB : eBList) {
 				if (eB->getDisplay()) {
 					instance->objectAccess(eB, cam);
 				}
 			}
 
 			if (player->getActiveWeapon()->getName() != "Time Stopper") {
-				instance->objectDisplay(player->getBullets(), cam);
+				
+				for (shared_ptr<bullet> b : player->getBullets()) {
+					instance->objectDisplay(b->getSprite(), cam);
+				}
 			}
 			else {
 				instance->UIDisplay(player->getUIBullets());
@@ -93,7 +96,7 @@ public:
 			instance->objectDisplay(player->getSprites(), cam);
 			instance->objectDisplay(player->getSprite(), cam);
 
-			for (GameObject* g : foregroundObjects) {
+			for (shared_ptr<GameObject> g : foregroundObjects) {
 				instance->bObjectDisplay(g->getSprite(), cam);
 			}
 

@@ -7,7 +7,7 @@
 
 class Weapon {
 protected:
-	list<bullet*> bullets;
+	list<shared_ptr<bullet>> bullets;
 	
 	bool fireReady = true;
 	int weaponCount = 0;
@@ -17,18 +17,18 @@ protected:
 	int maxAmmo = 28;
 	float ammoDecrease = 1;
 
-	Texture* colourP;
+	shared_ptr<Texture> colourP;
 
 	string name;
 
-	Sound* shootSound;
-	SoundBuffer* shootB;
+	shared_ptr<Sound> shootSound;
+	shared_ptr<SoundBuffer> shootB;
 
 public:
 
 
-	void tileColl(list<tile*> tileList) {
-		for (bullet* bull : bullets) {
+	void tileColl(list<shared_ptr<tile>> tileList) {
+		for (shared_ptr<bullet> bull : bullets) {
 			bull->tileCollision(tileList);
 		}
 	}
@@ -45,7 +45,7 @@ public:
 	}
 
 	virtual void eachFrame(float* deltaT) {
-		for (bullet* b : bullets) {
+		for (shared_ptr<bullet> b : bullets) {
 			if (b->eachFrame(deltaT)) {
 				
 				weaponCount--;
@@ -64,9 +64,15 @@ public:
 
 		bool fired = false;
 
+		for (shared_ptr<bullet> b : bullets) {
+			if (b->getShooting()) {
+				b->secondFire();
+			}
+		}
+
 		if (checkAmmo()) {
 
-			for (bullet* b : bullets) {
+			for (shared_ptr<bullet> b : bullets) {
 				if (!b->getShooting()) {
 					b->start(right);
 					shootSound->play();
@@ -84,14 +90,13 @@ public:
 
 			
 		}
-		else {
-			secondFire();
-		}
+		
+
 		return fired;
 	
 	}
 
-	virtual list<bullet*> getBullets() {
+	virtual list<shared_ptr<bullet>> getBullets() {
 		return bullets;
 	}
 
@@ -123,7 +128,7 @@ public:
 		return ammo;
 	}
 
-	Texture* getTexture() {
+	shared_ptr<Texture> getTexture() {
 		return colourP;
 	}
 
@@ -134,18 +139,18 @@ public:
 	virtual void stopSound() {}
 
 	void shootReset() {
-		for (bullet* b : bullets) {
+		for (shared_ptr<bullet> b : bullets) {
 			b->shootReset();
 		}
 	}
 
 	virtual String getSymbol() = 0;
 
-	virtual bool fire(bool right, list<ItemBullet*>* allItems) {
+	virtual bool fire(bool right, list<shared_ptr<ItemBullet>>* allItems) {
 		return false;
 	}
 
-	virtual void checkCount(list<ItemBullet*> allItems) {}
+	virtual void checkCount(list<shared_ptr<ItemBullet>> allItems) {}
 
 	virtual bool checkThrow() {
 		return false;

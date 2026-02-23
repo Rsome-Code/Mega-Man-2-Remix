@@ -4,15 +4,15 @@
 
 class AtomicFire : public Weapon {
 
-	AtomicFireB* bul;
+	shared_ptr<AtomicFireB> bul;
 
 
 public:
-	AtomicFire(objectSprite* player, Texture* t, SoundCollection* soundCol) {
-		bul = new AtomicFireB(player, t, soundCol);
+	AtomicFire(shared_ptr<objectSprite> player, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
+		bul = shared_ptr<AtomicFireB>(new AtomicFireB(player, t, soundCol));
 		bullets = {bul};
 		maxWeaponCount = 1;
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\Atomic fire.png");
 
 		ammoDecrease = 5;
@@ -22,7 +22,7 @@ public:
 
 	bool hold(float* deltaT) {
 		if (checkAmmo()) {
-			bullet* temp = *bullets.begin();
+			shared_ptr<bullet> temp = *bullets.begin();
 			temp->hold(deltaT);
 			return true;
 		}
@@ -32,7 +32,7 @@ public:
 	bool release(bool right) {
 		if (checkAmmo()) {
 			
-			bullet* temp = *bullets.begin();
+			shared_ptr<bullet> temp = *bullets.begin();
 			if (temp->release(right)) {
 				ammo = ammo - ammoDecrease;
 				if (ammo < 0) {
@@ -58,11 +58,11 @@ public:
 	}
 
 	float getHoldTime() {
-		bullet* temp = *bullets.begin();
+		shared_ptr<bullet> temp = *bullets.begin();
 		return temp->getHoldTime();
 	}
 	float getMaxHoldTime() {
-		bullet* temp = *bullets.begin();
+		shared_ptr<bullet> temp = *bullets.begin();
 		return temp->getMaxHoldTime();
 	}
 

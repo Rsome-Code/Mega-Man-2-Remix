@@ -17,21 +17,27 @@ using namespace std;
 using namespace sf;
 
 class TextBox {
-	list<Text*> text;
+	list<shared_ptr<Text>> text;
 
-	list<Text*>::iterator current;
+	list<shared_ptr<Text>>::iterator current;
 
-	TextBox(list<Text*> texts) {
+public:
+	TextBox(list<shared_ptr<Text>> texts) {
 		text = texts;
 		current = text.begin();
 	}
 
-public:
+	virtual ~TextBox() {
+
+	}
+
+
+
 	void nextText() {
 		current = next(current);
 	}
 
-	Text* getCurrent() {
+	shared_ptr<Text> getCurrent() {
 		return *current;
 	}
 

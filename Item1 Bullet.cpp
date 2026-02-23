@@ -4,8 +4,8 @@
 
 class Item1Bullet : public ItemBullet {
 
-	animation* flyAnim;
-	animTimer* flyTimer;
+	shared_ptr<animation> flyAnim;
+	shared_ptr<animTimer> flyTimer;
 
 	float time = 5;
 
@@ -16,13 +16,13 @@ class Item1Bullet : public ItemBullet {
 
 public:
 
-	Item1Bullet(Texture* t, Vector2f pos) {
-		phys = new physicsObject(t, IntRect(396, 287, 22, 13), pos, Vector2f(4, 4));
+	Item1Bullet(shared_ptr<Texture> t, Vector2f pos) {
+		phys = shared_ptr<physicsObject> (new physicsObject(t, IntRect(396, 287, 22, 13), pos, Vector2f(4, 4)));
 
-		flyAnim = new animation(list<IntRect>{IntRect(396, 287, 22, 13), IntRect(421, 287, 22, 13)}, phys);
-		flyTimer = new animTimer(flyAnim, 8, true);
+		flyAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(396, 287, 22, 13), IntRect(421, 287, 22, 13)}, phys));
+		flyTimer = shared_ptr<animTimer> (new animTimer(flyAnim, 8, true));
 
-		hitbox = new objectHitbox(IntRect(0, 0, 22, 2), phys);
+		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 22, 2), phys));
 		code = "item 1";
 	
 	}

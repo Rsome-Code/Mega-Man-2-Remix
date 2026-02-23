@@ -7,14 +7,14 @@ class JellyFishSpawner : public SpawnOnTop {
 	using SpawnOnTop::SpawnOnTop;
 
 	void initial() {
-		en = new JellyFish(texture, Vector2f(0, 0));
+		en = shared_ptr<JellyFish>(new JellyFish(texture, Vector2f(0, 0)));
 	}
 
 
-	void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		Vector2f startP = getSpawnPos(cam);
 
-		JellyFish* temp = new JellyFish(en->getSprite()->getTexture(), startP);
+		shared_ptr<JellyFish> temp = shared_ptr<JellyFish>(new JellyFish(en->getSprite()->getTexture(), startP));
 
 		temp->setHitSound(soundCol->getHit());
 

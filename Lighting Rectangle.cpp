@@ -3,7 +3,7 @@
 
 class LightingRect : public GameObject {
 	
-	camera* cam;
+	shared_ptr<camera> cam;
 	float transparency = maxTrans;
 	int minTrans = 80;
 	int maxTrans = 255;
@@ -20,12 +20,12 @@ class LightingRect : public GameObject {
 public:
 	LightingRect() {
 
-		sprite = new objectSprite();
+		sprite = shared_ptr<objectSprite>(new objectSprite());
 		sprite->getSprite()->setColor(sf::Color::Black);
 		sprite->setRect(IntRect(0, 0, 1, 1));
 		sprite->setScale(Vector2f(200, 200));
 
-		sprite->setTexture(new Texture());
+		sprite->setTexture(shared_ptr<Texture> (new Texture()));
 
 		setCode("lighting rect");
 
@@ -37,11 +37,11 @@ public:
 
 
 
-	void setCamera(camera* camer) {
+	void setCamera(shared_ptr<camera> camer) {
 		cam = camer;
 	}
 
-	virtual void eachFrame(float* deltaT, objectSprite* player, list<GameObject*> enemies) {
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player, list<shared_ptr<GameObject>> enemies) {
 
 		float thisChange = changeSpeed * *deltaT;
 
@@ -72,8 +72,8 @@ public:
 		sprite->setColour(Color(red, 0, 0, transparency));
 	};
 
-	bool checkEnemies(list<GameObject*> enemies) {
-		for (GameObject* e : enemies) {
+	bool checkEnemies(list<shared_ptr<GameObject>> enemies) {
+		for (shared_ptr<GameObject> e : enemies) {
 			if (e->getDisplay()) {
 				return true;
 			}

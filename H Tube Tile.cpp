@@ -3,27 +3,27 @@
 
 class HTubeTile : public FlashTile {
 
-	objectHitbox* groundHitbox;
+	shared_ptr<objectHitbox> groundHitbox;
 
-	objectHitbox* ceilingHitbox;
+	shared_ptr<objectHitbox> ceilingHitbox;
 
 public:
-	HTubeTile(Vector2f loc, Texture* t) {
+	HTubeTile(Vector2f loc, shared_ptr<Texture> t) {
 		location = loc;
 
-		sprite = new objectSprite("Tile", t, Vector2i(64, 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("Tile", t, Vector2i(64, 16), Vector2i(16, 16), Vector2f(loc.x * size, loc.y * size), Vector2f(4, 4), 1));
 
-		groundHitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite);
-		ceilingHitbox = new objectHitbox(IntRect(Vector2i(0, size), Vector2i(16, 1)), true, sprite);
+		groundHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite));
+		ceilingHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, size), Vector2i(16, 1)), true, sprite));
 
 		type = "horizontal flash";
 		
 	}
 
-	objectHitbox* getGround() {
+	shared_ptr<objectHitbox> getGround() {
 		return groundHitbox;
 	}
-	objectHitbox* getCeiling() {
+	shared_ptr<objectHitbox> getCeiling() {
 		return ceilingHitbox;
 	}
 
@@ -32,6 +32,10 @@ public:
 		groundHitbox->updatePos();
 
 		ceilingHitbox->updatePos();
+	}
+
+	virtual void deleteHits() {
+
 	}
 	
 };

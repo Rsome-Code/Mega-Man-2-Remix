@@ -10,11 +10,25 @@ class FlashTile : public tile {
 
 	int currentBeat = 0;
 
-	Text* beatText;
+	shared_ptr<Text> beatText;
 
 	float frictD = 7000;
 
 public:
+
+	void deleteInt() {
+
+
+
+		//delete& beat;
+		//delete& beat_left;
+		//delete& currentBeat;
+		//delete& frictD;
+
+		deleteHits();
+
+	}
+
 	void setTiming() {
 		timing = (int(location.x) + int (location.y)) % 3;
 		type = type + "-" + to_string(timing);
@@ -28,10 +42,10 @@ public:
 		type = type + "-" + to_string(timing);
 	}
 
-	void textUpdate(Font* font) {
-		delete beatText;
+	void textUpdate(shared_ptr<Font> font) {
 
-		beatText = new Text();
+
+		beatText = shared_ptr<Text> (new Text());
 		beatText->setString(to_string(timing + 1));
 		beatText->setFillColor(Color::Black);
 		beatText->setPosition(sprite->getCameraPosition());
@@ -39,7 +53,7 @@ public:
 		beatText->setCharacterSize(20);
 	}
 
-	Text* getText(Font* font) {
+	shared_ptr<Text> getText(shared_ptr<Font> font) {
 		textUpdate(font);
 
 		return beatText;
@@ -79,5 +93,9 @@ public:
 	//void animate(float* deltaT) {
 
 	//}
+
+
+
+	virtual void deleteHits() {};
 
 };

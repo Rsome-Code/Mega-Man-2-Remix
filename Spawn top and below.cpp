@@ -8,7 +8,7 @@ protected:
 	bool up = false;
 
 protected:
-	Vector2f getSpawnPos(camera* cam) {
+	Vector2f getSpawnPos(shared_ptr<camera> cam) {
 
 		bool above = rand() % 2;
 
@@ -23,7 +23,7 @@ protected:
 	}
 
 protected:
-	Vector2f getAbove(camera* cam) {
+	Vector2f getAbove(shared_ptr<camera> cam) {
 		int xChance = rand();
 		xChance = (xChance % 960) + 960;
 
@@ -31,7 +31,7 @@ protected:
 	}
 
 protected:
-	Vector2f getBelow(camera* cam) {
+	Vector2f getBelow(shared_ptr<camera> cam) {
 		int xChance = rand();
 		xChance = (xChance % 960) + 960;
 

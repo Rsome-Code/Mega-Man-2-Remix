@@ -10,28 +10,38 @@
 
 class bullet {
 protected:
-	movable* sprite;
+	shared_ptr<movable> sprite;
 	bool shooting = false;
 	float shootTime;
 	float shootTemp;
 
-	objectSprite* origin;
-	objectHitbox* hitbox;
+	shared_ptr<objectSprite> origin;
+	shared_ptr<objectHitbox> hitbox;
 	float speed = 1750;
 	bool right;
 
 	float direction;
-	Sound* dink;
-	SoundBuffer* dinkB;
+	shared_ptr<Sound> dink;
+	shared_ptr<SoundBuffer> dinkB;
 
 	bool deflected = false;
 
 public:
 
 
+	virtual void specialColl(shared_ptr<object> ob) {};
 
-	void dinkSetup(SoundCollection* soundCol) {
+
+	void dinkSetup(shared_ptr<SoundCollection> soundCol) {
 		dink = soundCol->getDink();
+	}
+
+	virtual void setSounds(shared_ptr<SoundCollection> soundCol) {
+		dinkSetup(soundCol);
+	}
+
+	virtual list<shared_ptr <objectSprite>> getSprites() {
+		return list< shared_ptr <objectSprite>> {NULL};
 	}
 
 	bullet() {}
@@ -45,22 +55,22 @@ public:
 		return shooting;
 	}
 
-	objectSprite* getSprite() {
+	shared_ptr<objectSprite> getSprite() {
 		return sprite;
 	}
 
-	virtual list<UISprite*> getUISprites() {
-		return list<UISprite*>{};
+	virtual list<shared_ptr<UISprite>> getUISprites() {
+		return list<shared_ptr<UISprite>>{};
 	}
 
 
-	virtual objectHitbox* getHitbox() { return hitbox; };
-	virtual void onHit(object* e) {
+	virtual shared_ptr<objectHitbox> getHitbox() { return hitbox; };
+	virtual void onHit(shared_ptr<object> e) {
 		if (e->getHP() > 0) {
 			shootReset();
 		}
 	};
-	virtual int checkDamage(object* en) { return NULL; };
+	virtual int checkDamage(shared_ptr<object> en) { return NULL; };
 	virtual void hold(float* deltaT) {};
 	virtual float getHoldTime() { return NULL; };
 	virtual float getMaxHoldTime() { return NULL; };
@@ -82,7 +92,7 @@ public:
 		direction = num;
 	}
 
-	void shootReset() {
+	virtual void shootReset() {
 		sprite->setPosition(Vector2f(0, 0));
 		hitbox->updatePos();
 		shooting = false;
@@ -91,6 +101,6 @@ public:
 
 	virtual void uniqueReset() {};
 
-	virtual void tileCollision(list<tile*> tileList) {};
+	virtual void tileCollision(list<shared_ptr<tile>> tileList) {};
 	
 };

@@ -8,22 +8,22 @@ class BubbleMan : public Master{
 	using Master::Master;
 	IntRect idle = IntRect(1, 23, 28, 28);
 
-	animation* swimAnim;
-	animTimer* swimTimer;
+	shared_ptr<animation> swimAnim;
+	shared_ptr<animTimer> swimTimer;
 
-	animation* swimShoot;
-	animTimer* shootTimer;
+	shared_ptr<animation> swimShoot;
+	shared_ptr<animTimer> shootTimer;
 	float shootDelay = 0.6;
 	float shootDelay_left = 0;
 
-	animation* bubbleShootAnim;
-	animTimer* bubbleTimer;
+	shared_ptr<animation> bubbleShootAnim;
+	shared_ptr<animTimer> bubbleTimer;
 	float bubbleDelay = 1;
 	float bubbleDelay_left = bubbleDelay;
 
-	animation* standShoot;
-	animTimer* standTimer;
-	animation* stand;
+	shared_ptr<animation> standShoot;
+	shared_ptr<animTimer> standTimer;
+	shared_ptr<animation> stand;
 
 	int shootNumber;
 	int swimAngle;
@@ -35,35 +35,35 @@ class BubbleMan : public Master{
 	int xTarget;
 
 	void initial() {
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\bubble man.png");
 		phys->setTexture(t);
 
 		phys->setRect(IntRect(148, 22, 29, 33));
 		sprite = phys;
 
-		introAnim = new animation(list<IntRect>{idle, IntRect(39, 21, 25, 30), IntRect(71, 24, 28, 27)}, sprite);
+		introAnim = shared_ptr<animation>(new animation(list<IntRect>{idle, IntRect(39, 21, 25, 30), IntRect(71, 24, 28, 27)}, sprite));
 		introAnim->setOffsetList(list<Vector2f>{Vector2f(0, 0), Vector2f(3 * 4, -2 * 4), Vector2f(0 * 4, 1 * 4)});
-		introTimer = new animTimer(introAnim, 8, false);
+		introTimer = shared_ptr<animTimer> (new animTimer(introAnim, 8, false));
 
-		swimAnim = new animation(list<IntRect>{IntRect(148, 22, 29, 33), IntRect(182, 22, 28, 29)}, sprite);
+		swimAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(148, 22, 29, 33), IntRect(182, 22, 28, 29)}, sprite));
 		swimAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, -4 * 4), Vector2f(0 * 4, 0 * 4)});
-		swimTimer = new animTimer(swimAnim, 8, true);
+		swimTimer = shared_ptr<animTimer> (new animTimer(swimAnim, 8, true));
 
-		swimShoot = new animation(list<IntRect>{IntRect(218, 23, 28, 33), IntRect(251, 23, 28, 30)}, sprite);
+		swimShoot = shared_ptr<animation>(new animation(list<IntRect>{IntRect(218, 23, 28, 33), IntRect(251, 23, 28, 30)}, sprite));
 		swimShoot->setOffsetList(list<Vector2f>{Vector2f(-4 * 4, -4 * 4), Vector2f(-5 * 4, -1 * 4)});
-		shootTimer = new animTimer(swimShoot, 8, true);
+		shootTimer = shared_ptr<animTimer> (new animTimer(swimShoot, 8, true));
 		state = wait;
 		
-		standShoot = new animation(list<IntRect>{IntRect(108, 26, 28, 25), idle}, sprite);
+		standShoot = shared_ptr<animation>(new animation(list<IntRect>{IntRect(108, 26, 28, 25), idle}, sprite));
 		standShoot->setOffsetList(list<Vector2f>{Vector2f(0 * 4, 3 * 4), Vector2f(0, 0)});
-		standTimer = new animTimer(standShoot, 8, false);
-		stand = new animation(idle, sprite);
+		standTimer = shared_ptr<animTimer> (new animTimer(standShoot, 8, false));
+		stand = shared_ptr<animation>(new animation(idle, sprite));
 		masterInitial(string("bubble man"));
 		setCode("bubble man");
 
 		damage = 5;
-		hit = new objectHitbox(IntRect(0, 0, 29, 28), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 29, 28), sprite));
 		hurt = hit;
 	}
 
@@ -73,7 +73,7 @@ class BubbleMan : public Master{
 	};
 	State state = standing;
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		checkDirection(p->getSprite());
 
@@ -151,7 +151,7 @@ class BubbleMan : public Master{
 		faceRight = r;
 	}
 
-	bool swim(float* deltaT, list<tile*>* tileList, objectSprite* p) {
+	bool swim(float* deltaT, list<shared_ptr<tile>>* tileList, shared_ptr<objectSprite> p) {
 		if (shootDelay_left <= 0) {
 			swimTimer->run(deltaT);
 		}
@@ -176,7 +176,7 @@ class BubbleMan : public Master{
 		
 	}
 
-	void floatLoop(float* deltaT, list<tile*>* tileList) {
+	void floatLoop(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		if (shootDelay_left <= 0) {
 			swimTimer->run(deltaT);
 		}
@@ -186,7 +186,7 @@ class BubbleMan : public Master{
 
 		phys->move(90, deltaT, 200);
 
-		for (tile* t : *tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL) {
 				if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 					grounded = true;
@@ -197,7 +197,7 @@ class BubbleMan : public Master{
 		
 	}
 
-	bool checkShoot(player* p, list<EnemyBullet*>* bList) {
+	bool checkShoot(shared_ptr<player> p, list<shared_ptr<EnemyBullet>>* bList) {
 		if (hitboxDetect::hitboxYDetection(p->getSprite()->getMiddlePos(), hit)) {
 			if (shootDelay_left <= 0) {
 				
@@ -208,13 +208,13 @@ class BubbleMan : public Master{
 		return false;
 	}
 
-	void shootBullet(list<EnemyBullet*>* bList) {
-		WaterBullet* temp;
+	void shootBullet(list<shared_ptr<EnemyBullet>>* bList) {
+		shared_ptr<WaterBullet> temp;
 		if (!faceRight) {
-			temp = new WaterBullet(sprite->getTexture(), sprite->getMiddlePos(), 180);
+			temp = shared_ptr<WaterBullet> (new WaterBullet(sprite->getTexture(), sprite->getMiddlePos(), 180));
 		}
 		else {
-			temp = new WaterBullet(sprite->getTexture(), sprite->getMiddlePos(), 0);
+			temp = shared_ptr<WaterBullet> (new WaterBullet(sprite->getTexture(), sprite->getMiddlePos(), 0));
 		}
 		temp->spriteSetup(sprite->getTexture(), sprite->getMiddlePos());
 		bList->push_back(temp);
@@ -223,12 +223,12 @@ class BubbleMan : public Master{
 			swimShoot->thisFrame();
 		}
 	}
-	void shootBubble(list<EnemyBullet*>* bList) {
+	void shootBubble(list<shared_ptr<EnemyBullet>>* bList) {
 		standShoot->reset();
 		standTimer->reset();
-		BossBubble* temp;
+		shared_ptr<BossBubble> temp;
 		
-		temp = new BossBubble(sprite->getTexture(), sprite->getMiddlePos(), faceRight);
+		temp = shared_ptr<BossBubble> (new BossBubble(sprite->getTexture(), sprite->getMiddlePos(), faceRight));
 		
 		bList->push_back(temp);
 	}

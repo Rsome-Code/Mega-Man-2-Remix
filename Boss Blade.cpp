@@ -4,28 +4,28 @@
 
 class BossBlade : public EnemyBullet {
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	int angle;
 	
 
 
 public:
-	BossBlade(Texture* t, Vector2f pos, Vector2f target) {
-		mov = new movable(t, IntRect(1, 121, 16, 16), pos, Vector2f(4, 4));
+	BossBlade(shared_ptr<Texture> t, Vector2f pos, Vector2f target) {
+		mov = shared_ptr<movable>(new movable(t, IntRect(1, 121, 16, 16), pos, Vector2f(4, 4)));
 		sprite = mov;
-		anim = new animation(list<IntRect>{IntRect(1, 121, 16, 16), IntRect(18, 121, 16, 16)}, mov);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(1, 121, 16, 16), IntRect(18, 121, 16, 16)}, mov));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 
 		angle = Maths::getAngle(pos, target);
 		speed = 800;
 
-		hit = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
 		damage = 3;
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		timer->run(deltaT);
 		hit->updatePos();
 		mov->move(angle, deltaT, speed);

@@ -4,10 +4,10 @@
 
 class PieRobot : public PhysicsEnemy {
 	using PhysicsEnemy::PhysicsEnemy;
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
-	GearSaw* saw;
+	shared_ptr<GearSaw> saw;
 
 	bool firstFrame = true;
 
@@ -21,6 +21,11 @@ class PieRobot : public PhysicsEnemy {
 	bool moved = false;
 
 public:
+
+	virtual ~PieRobot() {
+
+	}
+
 	void initial() {
 		phys->setRect(IntRect(338, 493, 25, 30));
 		phys->setVVelocity(0);
@@ -30,16 +35,16 @@ public:
 		
 
 		sprite = phys;
-		hit = new objectHitbox(IntRect(0, 0, 25, 30), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 25, 30), sprite));
 		hurt = hit;
 
-		anim = new animation(list<IntRect>{IntRect(338, 493, 25, 30), IntRect(370, 494, 25, 29)}, sprite);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(338, 493, 25, 30), IntRect(370, 494, 25, 29)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 
 		hp = 1;
 		damage = 3;
 
-		saw = new GearSaw(sprite->getTexture(), Vector2f(initialPos.x - 4, initialPos.y));
+		saw = shared_ptr<GearSaw> (new GearSaw(sprite->getTexture(), Vector2f(initialPos.x - 4, initialPos.y)));
 		saw->initial();
 		saw->setHitSound(hitSound);
 		firstFrame = true;
@@ -53,7 +58,7 @@ public:
 		act = true;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		timer->run(deltaT);
 		if (firstFrame) {
 			objectList->push_back(saw);
@@ -99,8 +104,8 @@ public:
 		}
 	}
 
-	bool checkSaw(list<enemy*>* objectList) {
-		for (enemy* en : *objectList) {
+	bool checkSaw(list<shared_ptr<enemy>>* objectList) {
+		for (shared_ptr<enemy> en : *objectList) {
 			if (en == saw) {
 				return en->getAct();
 			}

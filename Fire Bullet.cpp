@@ -6,25 +6,29 @@
 class FireBullet : public EnemyBullet {
 
 	float distance;
-	physicsObject* phys;
+	shared_ptr<physicsObject> phys;
 
 public:
-	FireBullet(Texture* t, Vector2f position, float target){
+
+
+	
+
+	FireBullet(shared_ptr<Texture> t, Vector2f position, float target){
 		distance = position.x - target;
 		speed = 600;
 		angle = 180;
-		phys = new physicsObject(t, IntRect(398, 115, 16, 16), position, Vector2f(4,4));
+		phys = shared_ptr<physicsObject> (new physicsObject(t, IntRect(398, 115, 16, 16), position, Vector2f(4,4)));
 		mov = phys;
 		sprite = mov;
 		
-		hit = new objectHitbox(IntRect(0, 0, 16, 16), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
 		phys->enableGravity(true);
 		phys->setVVelocity(700);
 
 		damage = 3;
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		phys->eachFrame(deltaT);
 		mov->move(angle, deltaT, speed);
 		hit->updatePos();
@@ -34,7 +38,7 @@ public:
 		}
 	}
 
-	void updateDistance(player* p) {
+	void updateDistance(shared_ptr<player> p) {
 		distance = sprite->getPosition().x - p->getPosition().x;
 	}
 };

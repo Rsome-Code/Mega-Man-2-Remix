@@ -11,14 +11,14 @@ public:
 
 		hp = 1;
 		phys->setRect(IntRect(469, 437, 13, 10));
-		hit = new objectHitbox(IntRect(0, 0, 13, 10), phys);
-		hurt = new objectHitbox(IntRect(0, 0, 13, 10), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 13, 10), phys));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 13, 10), phys));
 		grounded = false;
 		offSetList();
 		damage = 4;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
 
 
 		if (dropped) {
@@ -27,7 +27,7 @@ public:
 		
 	}
 
-	void isDropped(list<tile*>* tileList, list<enemy*>* objectList, float* deltaT, SoundCollection* soundCol) {
+	void isDropped(list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, float* deltaT, shared_ptr<SoundCollection> soundCol) {
 		phys->enableGravity(true);
 		phys->eachFrame(deltaT);
 		tileCollision(tileList);
@@ -40,9 +40,9 @@ public:
 
 
 
-	void spawnBirds(list<enemy*>* objectList, SoundCollection* soundCol) {
+	void spawnBirds(list<shared_ptr<enemy>>* objectList, shared_ptr<SoundCollection> soundCol) {
 		for (int i = 0; i < 8; i++) {
-			SmallBird* temp = new SmallBird(sprite->getTexture(), sprite->getMiddlePos());
+			shared_ptr<SmallBird> temp = shared_ptr<SmallBird>(new SmallBird(sprite->getTexture(), sprite->getMiddlePos()));
 			temp->initial();
 			temp->setHitSound(soundCol->getHit());
 			objectList->push_back(temp);

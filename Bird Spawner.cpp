@@ -8,11 +8,11 @@ class BirdSpawner: public SpawnArea {
 
 public:
 	void initial() {
-		en = new Bird(texture, Vector2f(0,0));
+		en = shared_ptr<Bird>(new Bird(texture, Vector2f(0,0)));
 	}
 
-	void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
-		Bird* temp = new Bird(texture, Vector2f(0, 0));
+	void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
+		shared_ptr<Bird> temp = shared_ptr<Bird>(new Bird(texture, Vector2f(0, 0)));
 		
 		
 

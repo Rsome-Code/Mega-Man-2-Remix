@@ -4,34 +4,34 @@
 #pragma once
 
 class Splash {
-	objectSprite* sprite;
+	shared_ptr<objectSprite> sprite;
 
-	animation* splashAnim;
-	animTimer* splashTimer;
-	Texture* tex;
+	shared_ptr<animation> splashAnim;
+	shared_ptr<animTimer> splashTimer;
+	shared_ptr<Texture> tex;
 
-	SoundBuffer* sB;
-	Sound* sound;
+	shared_ptr<SoundBuffer> sB;
+	shared_ptr<Sound> sound;
 
 	bool on = false;
 
 public:
 	
-	Splash(Texture* t) {
+	Splash(shared_ptr<Texture> t) {
 		tex = t;
 
-		sB = new SoundBuffer();
+		sB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		sB->loadFromFile("assets\\sound\\water_splash.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*sB);
 		sprite = NULL;
 	}
 
-	void start(objectSprite* player) {
-		sprite = new objectSprite(tex, IntRect(168, 2, 13, 31), Vector2f(player->getPosition().x, player->getMiddlePos().y), Vector2f(4, 4));
+	void start(shared_ptr<objectSprite> player) {
+		sprite = shared_ptr<objectSprite>(new objectSprite(tex, IntRect(168, 2, 13, 31), Vector2f(player->getPosition().x, player->getMiddlePos().y), Vector2f(4, 4)));
 
-		splashAnim = new animation(list<IntRect>{IntRect(168, 2, 13, 31), IntRect(184, 2, 13, 31), IntRect(201, 2, 16, 31), IntRect(223, 2, 6, 31)}, sprite);
-		splashTimer = new animTimer(splashAnim, 8, false);
+		splashAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(168, 2, 13, 31), IntRect(184, 2, 13, 31), IntRect(201, 2, 16, 31), IntRect(223, 2, 6, 31)}, sprite));
+		splashTimer = shared_ptr<animTimer> (new animTimer(splashAnim, 8, false));
 
 		sound->play();
 		on = true;
@@ -48,7 +48,7 @@ public:
 		}
 	}
 
-	objectSprite* getSprite() {
+	shared_ptr<objectSprite> getSprite() {
 		return sprite;
 	}
 };

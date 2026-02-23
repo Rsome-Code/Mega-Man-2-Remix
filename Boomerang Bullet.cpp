@@ -4,7 +4,7 @@
 #pragma once
 
 class BoomerangBullet : public bullet {
-	movable* mov;
+	shared_ptr<movable> mov;
 	float flyTime = 0.2;
 	float flyTime_left = flyTime;
 
@@ -13,20 +13,20 @@ class BoomerangBullet : public bullet {
 	
 	float slowTurnSpeed = 3;
 	float fastTurnSpeed = 30;
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	int angle;
 
 public:
-	BoomerangBullet(Texture* tex, objectSprite* pl, SoundCollection* soundCol){
+	BoomerangBullet(shared_ptr<Texture> tex, shared_ptr<objectSprite> pl, shared_ptr<SoundCollection> soundCol){
 		origin = pl;
-		mov = new movable(tex, IntRect(219, 284, 8, 6), Vector2f(0,0), Vector2f(4, 4));
+		mov = shared_ptr<movable>(new movable(tex, IntRect(219, 284, 8, 6), Vector2f(0,0), Vector2f(4, 4)));
 		sprite = mov;
-		hitbox = new objectHitbox(IntRect(0, 0, 8, 8), sprite);
+		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), sprite));
 
-		anim = new animation(list<IntRect>{IntRect(219, 284, 8, 6), IntRect(229, 283, 6, 8)}, sprite);
-		timer = new animTimer(anim, 16, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(219, 284, 8, 6), IntRect(229, 283, 6, 8)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 16, true));
 		
 
 		shootTime = 3;
@@ -127,7 +127,7 @@ public:
 		return false;
 	}
 
-	int checkDamage(object* en) {
+	int checkDamage(shared_ptr<object> en) {
 		return en->quickDam();
 	}
 };

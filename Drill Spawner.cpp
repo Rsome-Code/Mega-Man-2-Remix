@@ -9,16 +9,16 @@ class DrillSpawner : public SpawnAboveBelow {
 	
 
 	void initial() {
-		en = new Drill(texture, Vector2f(0, 0));
+		en = shared_ptr<Drill>(new Drill(texture, Vector2f(0, 0)));
 		en->setCode("drill");
 		toSpawn = 0.75;
 		toSpawn_left = 0;
 	}
 
-	void spawn(list<enemy*>* enemyList, camera* cam, SoundCollection* soundCol) {
+	void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		Vector2f startP = getSpawnPos(cam);
 
-		Drill* temp = new Drill(en->getSprite()->getTexture(), startP);
+		shared_ptr<Drill> temp = shared_ptr<Drill>(new Drill(en->getSprite()->getTexture(), startP));
 		temp->setUP(!up);
 
 		temp->setHitSound(soundCol->getHit());

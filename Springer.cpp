@@ -4,8 +4,9 @@
 
 class Springer : public GroundedEnemy {
 	using GroundedEnemy::GroundedEnemy;
-	animation* springAnim;
-	animTimer* springTimer;
+
+	shared_ptr<animation> springAnim;
+	shared_ptr<animTimer> springTimer;
 
 
 
@@ -27,16 +28,22 @@ class Springer : public GroundedEnemy {
 
 	State state = move;
 
+public:
+
+	virtual ~Springer() {
+
+	}
+
 	void initial() {
-		moveAnim = new animation(list<IntRect>{moveS}, sprite);
+		moveAnim = shared_ptr<animation>(new animation(list<IntRect>{moveS}, sprite));
 		mov->setRect(moveS);
 		mov->setPosition(initialPos);
 		mov->setScale(Vector2f(4, 4));
-		springAnim = new animation(list<IntRect>{IntRect(164, 640, 16, 19), IntRect(181, 627, 24, 32), IntRect(206, 640, 16, 19), IntRect(224, 627, 24, 32)}, sprite);
+		springAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(164, 640, 16, 19), IntRect(181, 627, 24, 32), IntRect(206, 640, 16, 19), IntRect(224, 627, 24, 32)}, sprite));
 
 		springAnim->setOffsetList(leftOffset);
-		springTimer = new animTimer(springAnim, 8, true);
-		hit = new objectHitbox(IntRect(0, 0, 16, 11), mov);
+		springTimer = shared_ptr<animTimer> (new animTimer(springAnim, 8, true));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 11), mov));
 		hurt = hit;
 		setCode("springer");
 		offSetList();
@@ -46,7 +53,7 @@ class Springer : public GroundedEnemy {
 		//setFacing(true);
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		springTime_left -= *deltaT;
 
@@ -70,7 +77,7 @@ class Springer : public GroundedEnemy {
 		springTimer->run(deltaT);
 	}
 
-	void moveLoop(float* deltaT, list<tile*>* tileList, player* p) {
+	void moveLoop(float* deltaT, list<shared_ptr<tile>>* tileList, shared_ptr<player> p) {
 
 		checkDirection(tileList);
 		mov->move(angle, deltaT, speed);

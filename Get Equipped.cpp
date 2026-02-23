@@ -16,9 +16,9 @@ class EquipAnim {
 	};
 
 	string symbolText;
-	Text* symbol;
+	shared_ptr<Text> symbol;
 	string getEquipText;
-	Text* getEquip;
+	shared_ptr<Text> getEquip;
 
 	float textTime = 0.2;
 	float textTime_left = textTime;
@@ -29,10 +29,10 @@ class EquipAnim {
 	float flashTime_left = flashTime;
 	float flashFinishTime = 2;
 
-	UISprite* background;
-	UISprite* megaMan;
+	shared_ptr<UISprite> background;
+	shared_ptr<UISprite> megaMan;
 
-	RectangleShape* rectangle;
+	shared_ptr<RectangleShape> rectangle;
 	float fadeSpeed = 200;
 	float transparency = 255;
 
@@ -41,33 +41,33 @@ class EquipAnim {
 
 	State state;
 
-	Music* music;
+	shared_ptr<Music> music;
 
 	bool playMusic = false;
 
 
 public:
 
-	void init(Weapon* weapon){
-		symbol = new Text();
-		getEquip = new Text();
+	void init(shared_ptr<Weapon> weapon){
+		symbol = shared_ptr<Text> (new Text());
+		getEquip = shared_ptr<Text> (new Text());
 
 		symbolText = ("-"+weapon->getSymbol()+"- ");
 		getEquipText = ("Get Equipped \nwith \n" + weapon->getTextName());
 
-		Font* font = new Font();
+		shared_ptr<Font> font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
 		symbol->setFont(*font);
 		getEquip->setFont(*font);
 
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\NES - Mega Man 2 - Miscellaneous - Menus.png");
 
-		background = new UISprite("BackGround", t, IntRect(1, 552, 496, 304), Vector2f(0, 0), Vector2f(4, 4));
+		background = shared_ptr<UISprite>(new UISprite("BackGround", t, IntRect(1, 552, 496, 304), Vector2f(0, 0), Vector2f(4, 4)));
 
-		Texture* mega = new Texture();
+		shared_ptr<Texture> mega = shared_ptr<Texture> (new Texture());
 		mega->loadFromFile("assets\\weapon get\\" + weapon->getName()+".png");
-		megaMan = new UISprite("mega", mega, oldColour, Vector2f(600, 200), Vector2f(4, 4));
+		megaMan = shared_ptr<UISprite>(new UISprite("mega", mega, oldColour, Vector2f(600, 200), Vector2f(4, 4)));
 
 		symbol->setPosition(Vector2f(766, 200));
 		symbol->setCharacterSize(34);
@@ -75,7 +75,7 @@ public:
 		getEquip->setCharacterSize(34);
 		getEquip->setLineSpacing(2);
 		
-		rectangle = new RectangleShape();
+		rectangle = shared_ptr<RectangleShape>(new RectangleShape());
 		rectangle->setFillColor(Color(0,0,0, 255));
 		rectangle->setPosition(megaMan->getCameraPosition());
 		rectangle->setSize(megaMan->getSize());
@@ -88,12 +88,12 @@ public:
 
 	}
 
-	EquipAnim(Weapon* weapon, bool musicOn) {
+	EquipAnim(shared_ptr<Weapon> weapon, bool musicOn) {
 		init(weapon);
 		playMusic = musicOn;
 		if (musicOn) {
 			
-			music = new Music();
+			music = shared_ptr<Music>(new Music());
 			music->openFromFile("assets\\sound\\music\\16 - Get Your Weapons Ready.wav");
 			music->setLoop(true);
 			music->setLoopPoints({ seconds(0), seconds(2.6720) });
@@ -182,13 +182,13 @@ public:
 		}
 	}
 
-	Music* getMusic() {
+	shared_ptr<Music> getMusic() {
 		return music;
 	}
 
 
-	void loop(renderer* instance, float targetRate) {
-		timer* time = new timer();
+	void loop(shared_ptr<renderer> instance, float targetRate) {
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
 
 		auto start = time->timerStart();
@@ -253,16 +253,16 @@ public:
 		}
 	}
 
-	list<UISprite*> getSprites() {
-		list<UISprite*> sprites = { background, megaMan };
+	list<shared_ptr<UISprite>> getSprites() {
+		list<shared_ptr<UISprite>> sprites = { background, megaMan };
 		return sprites;
 	}
-	list<Text*> getText() {
-		list<Text*> texts = { symbol, getEquip };
+	list<shared_ptr<Text>> getText() {
+		list<shared_ptr<Text>> texts = { symbol, getEquip };
 		return texts;
 	}
 
-	Texture* getTexture() {
+	shared_ptr<Texture> getTexture() {
 		return background->getTexture();
 	}
 };

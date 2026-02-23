@@ -8,9 +8,9 @@ class FlyGuySpawner:public Spawner {
 
 public:
 
-	FlyGuySpawner(Texture* tex, Vector2f pos) {
+	FlyGuySpawner(shared_ptr<Texture> tex, Vector2f pos) {
 		position = pos;
-		toSpawn = new FlyGuy(tex, Vector2f(position));
+		toSpawn = shared_ptr<FlyGuy> (new FlyGuy(tex, Vector2f(position)));
 		toSpawn->initial();
 		sprite = toSpawn->getSprite();
 		setCode(toSpawn->getCode() + "-spawn");
@@ -18,15 +18,15 @@ public:
 
 		this->tex = tex;
 
-		soundB = new SoundBuffer();
+		soundB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		soundB->loadFromFile("assets\\sound\\fly_boy.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*soundB);
 
 	}
 
-	void spawn(list<enemy*>* enemyList, SoundCollection* soundCol) {
-		FlyGuy* temp = new FlyGuy(tex, position);
+	void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<SoundCollection> soundCol) {
+		shared_ptr<FlyGuy> temp = shared_ptr<FlyGuy>(new FlyGuy(tex, position));
 		temp->initial();
 		temp->setSoundPoint(&sound);
 

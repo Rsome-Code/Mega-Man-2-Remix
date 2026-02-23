@@ -16,26 +16,26 @@ class Crabbot : public GroundedEnemy {
 
 	void initial() {
 
-		mov = new movable(sprite->getTexture(), IntRect(284, 653, 21, 23), initialPos, Vector2f(4, 4));
+		mov = shared_ptr<movable>(new movable(sprite->getTexture(), IntRect(284, 653, 21, 23), initialPos, Vector2f(4, 4)));
 		sprite = mov;
 
-		moveAnim = new animation(list<IntRect>{IntRect(284, 653, 21, 23), IntRect(309, 652, 21, 24)}, sprite);
+		moveAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(284, 653, 21, 23), IntRect(309, 652, 21, 24)}, sprite));
 		moveAnim->setOffsetList(list<Vector2f>{Vector2f(0, 0), Vector2f(0 * 4, -1 * 4)});
 
-		moveTimer = new animTimer(moveAnim, 8, true);
+		moveTimer = shared_ptr<animTimer> (new animTimer(moveAnim, 8, true));
 
 		hp = 6;
 		damage = 3;
 		speed = slowSpeed;
 		setCode("crabbot");
 
-		hit = new objectHitbox(IntRect(0, 0, 21, 23), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 21, 23), sprite));
 		hurt = hit;
 		offSetList();
 		deathAnim->setSprite(sprite);
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		moveTimer->run(deltaT);
 		checkDirection(tileList);
 		mov->move(angle, deltaT, speed);
@@ -48,8 +48,8 @@ class Crabbot : public GroundedEnemy {
 
 	}
 
-	void shoot(list<EnemyBullet*>* bList) {
-		Shell* temp = new Shell(sprite->getTexture(), sprite->getMiddlePos(), faceRight);
+	void shoot(list<shared_ptr<EnemyBullet>>* bList) {
+		shared_ptr<Shell> temp = shared_ptr<Shell> (new Shell(sprite->getTexture(), sprite->getMiddlePos(), faceRight));
 		bList->push_back(temp);
 	}
 
@@ -60,8 +60,8 @@ class Crabbot : public GroundedEnemy {
 	void onDamage() {
 		hurted = true;
 		speed = fastSpeed;
-		delete moveAnim;
-		moveAnim = new animation(nakedList, sprite);
+
+		moveAnim = shared_ptr<animation>(new animation(nakedList, sprite));
 		moveTimer->setAnim(moveAnim);
 		moveAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, 12 * 4), Vector2f(0 * 4, 11 * 4)});
 		moveAnim->thisFrame();
@@ -70,7 +70,7 @@ class Crabbot : public GroundedEnemy {
 		}
 
 		hit->setRelativeRect(IntRect(0,0, 21, 11));
-		//hit = new objectHitbox(IntRect(0, 12*4, 21, 11), sprite);
+		//hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 12*4, 21, 11), sprite));
 		//hurt = hit;
 		
 	}

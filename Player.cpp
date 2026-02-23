@@ -20,26 +20,27 @@
 #include "metal blade.cpp"
 #include "quick boomerang.cpp"
 #include "time stopper.cpp"
+#include "crash bomb.cpp"
 #pragma once
 
 class player {
 	int lives = 2;
 	int ETanks = 0;
-	physicsObject* sprite;
-	Texture* texture;
-	pControls* controls;
+	shared_ptr<physicsObject> sprite;
+	shared_ptr<Texture> texture;
+	shared_ptr<pControls> controls;
 	bool grounded = true;
-	teleport* tele;
+	shared_ptr<teleport> tele;
 
 	int maxHP = 28;
 
-	objectHitbox* hit;
-	objectHitbox* foot;
-	objectHitbox* head;
-	objectHitbox* ladderHit;
-	objectHitbox* ladderBelow;
-	objectHitbox* ladderAbove;
-	objectHitbox* belowBox;
+	shared_ptr<objectHitbox> hit;
+	shared_ptr<objectHitbox> foot;
+	shared_ptr<objectHitbox> head;
+	shared_ptr<objectHitbox> ladderHit;
+	shared_ptr<objectHitbox> ladderBelow;
+	shared_ptr<objectHitbox> ladderAbove;
+	shared_ptr<objectHitbox> belowBox;
 
 	bool gotAtomicFire = false;
 	bool gotShield = false;
@@ -47,15 +48,16 @@ class player {
 	bool gotBlade = false;
 	bool gotBoomerang = false;
 	bool gotTimeStopper = false;
+	bool gotBomb = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
 	int cycles = 0;
 
-	playerAnimation* pAnim;
+	shared_ptr<playerAnimation> pAnim;
 
-	energyBar* health;
-	AmmoBar* ammoBar;
+	shared_ptr<energyBar> health;
+	shared_ptr<AmmoBar> ammoBar;
 	Vector2f ammoPos = Vector2f(20 + (2*(8*4)), 20);
 	bool displayAmmo = false;
 
@@ -63,24 +65,25 @@ class player {
 	float damageTime = 0.5;
 	float tempDTime = 0.5;
 
-	damageEffect* dam;
+	shared_ptr<damageEffect> dam;
 
-	MegaBuster* megaBuster;
-	AtomicFire* atomicFire;
-	LeafShield* leafShield;
-	BubbleLead* bubbleLead;
-	MetalBlade* metalBlade;
-	QuickBoomerang* quickBoomerang;
-	TimeStopper* timeStopper;
-	Item1* item1;
+	shared_ptr<MegaBuster> megaBuster;
+	shared_ptr<AtomicFire> atomicFire;
+	shared_ptr<LeafShield> leafShield;
+	shared_ptr<BubbleLead> bubbleLead;
+	shared_ptr<MetalBlade> metalBlade;
+	shared_ptr<QuickBoomerang> quickBoomerang;
+	shared_ptr<TimeStopper> timeStopper;
+	shared_ptr<CrashBomb> crashBomb;
+	shared_ptr<Item1> item1;
 
-	Weapon* active = megaBuster;
+	shared_ptr<Weapon> active = megaBuster;
 
 	string palette;
 
-	DeathAnim* deathAnim;
-	DeathAnim* deathAnim1;
-	DeathAnim* deathAnim2;
+	shared_ptr<DeathAnim> deathAnim;
+	shared_ptr<DeathAnim> deathAnim1;
+	shared_ptr<DeathAnim> deathAnim2;
 
 	float deathTime = 6;
 	float deathTime_left = deathTime;
@@ -94,67 +97,74 @@ class player {
 	float flashTime_left = flashTime;
 	bool display = true;
 
-	SoundBuffer* damageB;
-	Sound* damageSound;
+	shared_ptr<SoundBuffer> damageB;
+	shared_ptr<Sound> damageSound;
 
-	Splash* splash;
+	shared_ptr<Splash> splash;
 	bool inWater = false;
 
 	float frictionDecrease = 0;
 
+	bool movable = true;
+
 public:
-	player(pController* p1, SoundCollection* soundCol) {
+
+	virtual ~player() {
+
+	}
+
+	player(shared_ptr<pController> p1, shared_ptr<SoundCollection> soundCol) {
 		
-		texture = new Texture();
+		texture = shared_ptr<Texture> (new Texture());
 		if (!texture->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png")) {
 			cout << "error";
 		}
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\weapons.png");
 
-		Image im = texture->copyToImage();
-		Image* image = &im;
-		sprite = new physicsObject("player", texture, im, IntRect(2, 21, 22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1, 200);
+		//shared_ptr<Image> image = shared_ptr<Image> (&texture->copyToImage());
+		sprite = shared_ptr<physicsObject> (new physicsObject("player", texture, IntRect(2, 21, 22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1));
 
 		sprite->setFullColour(&Color::Red);
 
-		pAnim = new playerAnimation(sprite);
-		controls = new pControls(p1, sprite, pAnim);
+		pAnim = shared_ptr<playerAnimation> (new playerAnimation(sprite));
+		controls = shared_ptr<pControls>(new pControls(p1, sprite, pAnim));
 
 
 
 		
 
-		hit = new objectHitbox(IntRect(Vector2i(5 * sprite->getScale().x, 2 * sprite->getScale().y), Vector2i(11, 22)), true, sprite);
-		foot = new objectHitbox(IntRect(Vector2i(7 * sprite->getScale().x, 7 * sprite->getScale().y), Vector2i(7, 20)), true, sprite);
-		head = new objectHitbox(IntRect(Vector2i(7 * sprite->getScale().x, 1 * sprite->getScale().y), Vector2i(7, 2)), true, sprite);
-		ladderHit = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 24 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
-		ladderBelow = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
-		ladderAbove = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 21 * sprite->getScale().y), Vector2i(10, 2)), true, sprite);
-		belowBox = new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 20)), true, sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(5 * sprite->getScale().x, 2 * sprite->getScale().y), Vector2i(11, 22)), true, sprite));
+		foot = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(7 * sprite->getScale().x, 7 * sprite->getScale().y), Vector2i(7, 20)), true, sprite));
+		head = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(7 * sprite->getScale().x, 1 * sprite->getScale().y), Vector2i(7, 2)), true, sprite));
+		ladderHit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 24 * sprite->getScale().y), Vector2i(10, 2)), true, sprite));
+		ladderBelow = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 2)), true, sprite));
+		ladderAbove = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 21 * sprite->getScale().y), Vector2i(10, 2)), true, sprite));
+		belowBox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(6 * sprite->getScale().x, 26 * sprite->getScale().y), Vector2i(10, 20)), true, sprite));
 
-		Texture* hbT = new Texture();
+		shared_ptr<Texture> hbT = shared_ptr<Texture> (new Texture());
 		hbT->loadFromFile("Assets\\Health.png");
-		health = new energyBar(hbT, Vector2f(20,20));
+		health = shared_ptr <energyBar> (new energyBar(hbT, Vector2f(20,20)));
 
-		dam = new damageEffect(sprite);
+		dam = shared_ptr <damageEffect>(new damageEffect(sprite));
 
 
 
-		megaBuster = new MegaBuster(sprite, t, soundCol);
+		megaBuster = shared_ptr <MegaBuster>(new MegaBuster(sprite, t, soundCol));
 		setActiveWeapon(megaBuster);
-		atomicFire = new AtomicFire(sprite, t, soundCol);
-		leafShield = new LeafShield(sprite, t, soundCol);
-		bubbleLead = new BubbleLead(sprite, t, soundCol);
-		metalBlade = new MetalBlade(sprite, t, soundCol);
-		quickBoomerang = new QuickBoomerang(sprite, t, soundCol);
-		timeStopper = new TimeStopper(t);
-		item1 = new Item1(sprite, t);
+		atomicFire = shared_ptr<AtomicFire>(new AtomicFire(sprite, t, soundCol));
+		leafShield = shared_ptr< LeafShield>(new  LeafShield(sprite, t, soundCol));
+		bubbleLead = shared_ptr<BubbleLead>(new BubbleLead(sprite, t, soundCol));
+		metalBlade = shared_ptr<MetalBlade>(new MetalBlade(sprite, t, soundCol));
+		quickBoomerang = shared_ptr<QuickBoomerang>(new QuickBoomerang(sprite, t, soundCol));
+		timeStopper = shared_ptr<TimeStopper>(new TimeStopper(t));
+		crashBomb = shared_ptr<CrashBomb>(new CrashBomb(sprite, t, soundCol));
+		item1 = shared_ptr<Item1>(new Item1(sprite, t));
 
 		//Define ammo bars here
-		Texture* aB = new Texture();
+		shared_ptr<Texture> aB = shared_ptr<Texture> (new Texture());
 		aB->loadFromFile("assets\\bars\\atomic fire.png");
-		ammoBar = new AmmoBar(aB, ammoPos);
+		ammoBar = shared_ptr<AmmoBar>(new AmmoBar(aB, ammoPos));
 		ammoBar->setVertical();
 
 		//health->increaseAmount(-27);
@@ -164,9 +174,9 @@ public:
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
 
-		damageB = new SoundBuffer();
+		damageB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		damageB->loadFromFile("assets\\sound\\hit.wav");
-		damageSound = new Sound();
+		damageSound = shared_ptr<Sound> (new Sound());
 		damageSound->setBuffer(*damageB);
 
 		
@@ -203,13 +213,14 @@ public:
 		metalBlade->eachFrame(t);
 		quickBoomerang->eachFrame(t);
 		timeStopper->eachFrame(t);
+		delete t;
 	}
 
 	Vector2f getPosition() {
 		return sprite->getPosition();
 	}
 
-	void ladderJumpExtend(list<tile*> tiles) {
+	void ladderJumpExtend(list<shared_ptr<tile>> tiles) {
 		if ((controls->isJumping() && ladderNotBelow(tiles) )|| (controls->getOnLadder() && ladderNotBelow(tiles))) {
 			ladderHit->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 0 * sprite->getScale().y));
 			ladderAbove->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, -3 * sprite->getScale().y));
@@ -222,13 +233,13 @@ public:
 		}
 	}
 
-	objectHitbox* getBelowBox() {
+	shared_ptr<objectHitbox> getBelowBox() {
 		return belowBox;
 	}
 
-	bool ladderNotBelow(list<tile*> tiles) {
+	bool ladderNotBelow(list<shared_ptr<tile>> tiles) {
 		belowBox->updatePos();
-		for (tile* t : tiles) {
+		for (shared_ptr<tile> t : tiles) {
 			if (t->getLadder() != NULL) {
 				if (hitboxDetect::hitboxDetection(t->getLadder(), belowBox)) {
 					return false;
@@ -255,7 +266,7 @@ public:
 		return display;
 	}
 
-	objectHitbox* getFoot() {
+	shared_ptr<objectHitbox> getFoot() {
 		return foot;
 	}
 
@@ -263,7 +274,7 @@ public:
 		return ETanks;
 	}
 
-	pController* getController() {
+	shared_ptr<pController> getController() {
 		return controls->getController();
 	}
 
@@ -285,6 +296,10 @@ public:
 		gotTimeStopper = b;
 	}
 
+	void setBomb(bool b) {
+		gotBomb = b;
+	}
+
 	void setETanks(int e) {
 		ETanks = e;
 	}
@@ -297,7 +312,7 @@ public:
 		health->reset();
 	}
 
-	void setActiveWeapon(Weapon* w) {
+	void setActiveWeapon(shared_ptr<Weapon> w) {
 		active = w;
 		controls->setWeapon(active);
 		loadPallete();
@@ -306,9 +321,9 @@ public:
 		}
 		else {
 			displayAmmo = true;
-			Texture* temp = new Texture();
+			shared_ptr<Texture> temp = shared_ptr<Texture> (new Texture());
 			temp->loadFromFile("assets\\bars\\" + active->getName() + ".png");
-			ammoBar = new AmmoBar(temp, ammoPos);
+			ammoBar = shared_ptr<AmmoBar>(new AmmoBar(temp, ammoPos));
 			ammoBar->update(active->getAmmo());
 			ammoBar->setVertical();
 		}
@@ -323,25 +338,30 @@ public:
 		return palette;
 	}
 
-	MegaBuster* getMegaBuster() {
+	shared_ptr<MegaBuster> getMegaBuster() {
 		return megaBuster;
 	}
-	AtomicFire* getAtomicFire() {
+	shared_ptr<AtomicFire> getAtomicFire() {
 		return atomicFire;
 	}
-	TimeStopper* getTimeStopper() {
+	shared_ptr<TimeStopper> getTimeStopper() {
 		return timeStopper;
 	}
-	Item1* getItem1() {
+
+	shared_ptr<CrashBomb> getCrashBomb() {
+		return crashBomb;
+	}
+
+	shared_ptr<Item1> getItem1() {
 		return item1;
 	}
-	BubbleLead* getBubbleLead() {
+	shared_ptr<BubbleLead> getBubbleLead() {
 		return bubbleLead;
 	}
-	MetalBlade* getMetalBlade() {
+	shared_ptr<MetalBlade> getMetalBlade() {
 		return metalBlade;
 	}
-	QuickBoomerang* getBoomerang() {
+	shared_ptr<QuickBoomerang> getBoomerang() {
 		return quickBoomerang;
 	}
 
@@ -349,7 +369,7 @@ public:
 		lives = l;
 	}
 
-	Weapon* getShield() {
+	shared_ptr<Weapon> getShield() {
 		gotShield = true;
 		return leafShield;
 	}
@@ -373,9 +393,9 @@ public:
 		return false;
 	}
 
-	void iniSplash(Texture* miscT) {
-		delete splash;
-		splash = new Splash(miscT);
+	void iniSplash(shared_ptr<Texture> miscT) {
+	
+		splash = shared_ptr<Splash>(new Splash(miscT));
 	}
 
 	bool setDead() {
@@ -383,49 +403,45 @@ public:
 		invincibilityTime_left = 0;
 		display = true;
 		if (deathAnim == NULL) {
-			deathAnim = new DeathAnim(sprite, palette);
+			deathAnim = shared_ptr<DeathAnim>(new DeathAnim(sprite, palette));
 			return true;
 		}
 		else if (deathTime_left <= deathTime - 0.75 && deathAnim1 == NULL) {
-			deathAnim1 = new DeathAnim(sprite, palette);
+			deathAnim1 = shared_ptr<DeathAnim>(new DeathAnim(sprite, palette));
 		}
 		else if (deathTime_left <= deathTime - 1.5 && deathAnim2 == NULL) {
-			deathAnim2 = new DeathAnim(sprite, palette);
+			deathAnim2 = shared_ptr<DeathAnim>(new DeathAnim(sprite, palette));
 		}
 		return false;
 	}
 	void setNotDead() {
-		delete deathAnim;
-		delete deathAnim2;
-		delete deathAnim1;
+
 		deathAnim = NULL;
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
 	}
 
 	void setDeathNull() {
-		delete deathAnim;
-		delete deathAnim2;
-		delete deathAnim1;
+
 		deathAnim = NULL;
 		deathAnim1 = NULL;
 		deathAnim2 = NULL;
 	}
 
-	objectHitbox* getBelow() {
+	shared_ptr<objectHitbox> getBelow() {
 		return ladderBelow;
 	}
-	objectHitbox* getAbove() {
+	shared_ptr<objectHitbox> getAbove() {
 		return ladderAbove;
 	}
 
 	void start(int startHeight) {
-		delete tele;
-		tele = new teleport(sprite, startHeight);
+
+		tele = shared_ptr<teleport>(new teleport(sprite, startHeight));
 		//setPosition(Vector2f(pos.x, pos.y));
 	}
 
-	Weapon* getActiveWeapon() {
+	shared_ptr<Weapon> getActiveWeapon() {
 		return active;
 	}
 
@@ -448,19 +464,27 @@ public:
 	}
 
 
-	void eachFrame(float* deltaT, list<tile*> tiles, list<ItemBullet*>* IBullets) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets) {
 
 		splash->eachFrame(deltaT);
 		
-			if (deathAnim == NULL) {
+		if (deathAnim == NULL) {
+			if (movable) {
 				alive(deltaT, tiles, IBullets);
 				ladderJumpExtend(tiles);
+				
 			}
 			else {
-				dead(deltaT);
+				display = true;
+				invincibilityTime_left = 0;
 			}
 
-			debugStuff();
+		}
+		else {
+			dead(deltaT);
+		}
+
+		debugStuff();
 		
 	}
 
@@ -500,28 +524,28 @@ public:
 	}
 
 	void resetBullets() {
-		for (bullet* b : megaBuster->getBullets()) {
+		for (shared_ptr<bullet> b : megaBuster->getBullets()) {
 			b->shootReset();
 		}
-		for (bullet* b : atomicFire->getBullets()) {
+		for (shared_ptr<bullet> b : atomicFire->getBullets()) {
 			b->shootReset();
 		}
-		for (bullet* b : metalBlade->getBullets()) {
+		for (shared_ptr<bullet> b : metalBlade->getBullets()) {
 			b->shootReset();
 		}
-		for (bullet* b : quickBoomerang->getBullets()) {
+		for (shared_ptr<bullet> b : quickBoomerang->getBullets()) {
 			b->shootReset();
 		}
-		for (bullet* b : timeStopper->getBullets()) {
+		for (shared_ptr<bullet> b : timeStopper->getBullets()) {
 			b->uniqueReset();
 		}
-		for (bullet* b : bubbleLead->getBullets()) {
+		for (shared_ptr<bullet> b : bubbleLead->getBullets()) {
 			b->shootReset();
 		}
 	}
 
 
-	void alive(float* deltaT, list<tile*> tiles, list<ItemBullet*>* IBullets) {
+	void alive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets) {
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
@@ -545,13 +569,14 @@ public:
 				
 
 				if (controls->checkTeleport()) {
-					tele = new teleport(sprite, sprite->getPosition().x);
+					tele = shared_ptr<teleport>(new teleport(sprite, sprite->getPosition().x));
 				}
 
 			}
 			else {
+				//hit->setRelativePosition(Vector2i(-9999, -9999));
 				if (tele->eachFrame(deltaT, tiles, foot)) {
-					delete tele;
+
 					tele = NULL;
 					pAnim->resetIdle();
 					pAnim->getIdle()->thisFrame();
@@ -585,13 +610,15 @@ public:
 			//foot->setSize(Vector2i(4, 20));
 		}
 
-		
-		if (inControl) {
+		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//This checks if the player should be invincible
+		if (inControl && tele == NULL) {
 			updateHitbox();
 		}
 		else {
 			moveHitbox();
 		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		invincibilityTime_left -= *deltaT;
 		if (invincibilityTime_left > 0) {
@@ -612,6 +639,10 @@ public:
 
 	void enableControls(bool e) {
 		inControl = e;
+	}
+
+	void enableMoving(bool e) {
+		movable = e;
 	}
 
 	int beforeHold = 0;
@@ -645,7 +676,7 @@ public:
 		sprite->updateLighting();
 	}
 
-	list<RectangleShape*> getLightPixels() {
+	list<shared_ptr<RectangleShape>> getLightPixels() {
 		return sprite->getPixels();
 	}
 
@@ -661,7 +692,7 @@ public:
 		}
 	}
 
-	teleport* getTeleport() {
+	shared_ptr<teleport> getTeleport() {
 		return tele;
 	}
 
@@ -708,29 +739,29 @@ public:
 		return tele != NULL;
 	}
 
-	objectHitbox* getHitbox() {
+	shared_ptr<objectHitbox> getHitbox() {
 		return hit;
 	}
-	objectHitbox* getLadderHitbox() {
+	shared_ptr<objectHitbox> getLadderHitbox() {
 		return ladderHit;
 	}
 
-	objectHitbox* getHead() {
+	shared_ptr<objectHitbox> getHead() {
 		return head;
 	}
 
-	physicsObject* getSprite() {
+	shared_ptr<physicsObject> getSprite() {
 		return sprite;
 		
 
 	}
 
-	list<objectSprite*> getSprites() {
+	list<shared_ptr<objectSprite>> getSprites() {
 
-		list<objectSprite*> temp;
+		list<shared_ptr<objectSprite>> temp;
 
 		if (deathAnim == NULL) {
-			temp = list<objectSprite*> {sprite};
+			temp = list<shared_ptr<objectSprite>> {sprite};
 		}
 		else {
 			temp = {deathAnim->getSprite()};
@@ -749,7 +780,7 @@ public:
 		return temp;
 	}
 
-	object* getDamEffect() {
+	shared_ptr<object> getDamEffect() {
 		if (deathAnim == NULL) {
 			return dam;
 		}
@@ -757,26 +788,30 @@ public:
 		
 	}
 
-	list<UISprite*> getUI() {
+	list<shared_ptr<UISprite>> getUI() {
 		if (displayAmmo) {
-			list<UISprite*> temp = ammoBar->getSprites();
+			list<shared_ptr<UISprite>> temp = ammoBar->getSprites();
 			temp.push_back(health->getSprite());
 			return temp;
 		}
 		else {
-			return list<UISprite*> {health->getSprite()};
+			return list<shared_ptr<UISprite>> {health->getSprite()};
 		}
 	}
 
-	list<objectSprite*> getBullets() {
-		return controls->getBullets();
+	list<shared_ptr<bullet>> getBullets() {
+		return controls->getRealBullets();
 	}
 
-	list<UISprite*> getUIBullets() {
+	list<shared_ptr<bullet>> getRealBullets() {
+		return controls->getRealBullets();
+	}
+
+	list<shared_ptr<UISprite>> getUIBullets() {
 		return controls->getUIBullets();
 	};
 
-	list<objectHitbox*> getBulletHitboxes() {
+	list<shared_ptr<objectHitbox>> getBulletHitboxes() {
 		return controls->getBulletHitboxes();
 	}
 
@@ -786,10 +821,10 @@ public:
 			this->controls->setGrounded(b);
 		}
 	}
-	playerAnimation* getAnimation() {
+	shared_ptr<playerAnimation> getAnimation() {
 		return pAnim;
 	}
-	pControls* getControls() {
+	shared_ptr<pControls> getControls() {
 		return controls;
 	}
 
@@ -811,18 +846,18 @@ public:
 	}
 
 	string getBulletType() {
-		bullet* b = controls->getBulletObject();
+		shared_ptr<bullet> b = controls->getBulletObject();
 		return b->getSprite()->getType();
 	}
 
 
 	void loadPallete() {
-		Weapon* temp = getWeapon();
+		shared_ptr<Weapon> temp = getWeapon();
 		this->texture = temp->getTexture();
 		sprite->setTexture(texture);
 	}
 
-	Weapon* getWeapon() {
+	shared_ptr<Weapon> getWeapon() {
 		return getControls()->getWeapon();
 	}
 
@@ -833,7 +868,7 @@ public:
 
 
 private:
-	void takingDamage(float* deltaT, list<tile*> tileList) {
+	void takingDamage(float* deltaT, list<shared_ptr<tile>> tileList) {
 		tempDTime = tempDTime - *deltaT;
 		if (tempDTime <= 0) {
 			tempDTime = damageTime;
@@ -852,8 +887,8 @@ private:
 		
 	}
 
-	void tileCollide(list<tile*> tiles) {
-		for (tile* t : tiles) {
+	void tileCollide(list<shared_ptr<tile>> tiles) {
+		for (shared_ptr<tile> t : tiles) {
 			if (t->getLeft() != NULL) {
 				if (hitboxDetect::hitboxDetection(hit, t->getLeft())) {
 					sprite->setPosition(Vector2f(t->getPosition().x - hit->getSize().x, sprite->getPosition().y));
@@ -880,7 +915,7 @@ private:
 		return gotBlade;
 	}
 	bool checkBomb() {
-		return false;
+		return gotBomb;
 	}
 	bool checkStopper() {
 		return gotTimeStopper;

@@ -9,22 +9,22 @@
 
 class Item :public GameObject {
 protected:
-	objectHitbox* hit;
-	animation* anim;
-	animTimer* timer = NULL;
-	physicsObject* phys;
+	shared_ptr<objectHitbox> hit;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer = NULL;
+	shared_ptr<physicsObject> phys;
 	bool grounded = false;
 
-	objectHitbox* gHit = NULL;
+	shared_ptr<objectHitbox> gHit = NULL;
 
 	bool hC = false;
 	
-	Sound* colSound = NULL;
+	shared_ptr<Sound> colSound = NULL;
 
 public:
 
 
-	objectHitbox* getHitbox() {
+	shared_ptr<objectHitbox> getHitbox() {
 		return hit;
 	}
 
@@ -38,7 +38,7 @@ public:
 	}
 
 
-	virtual void eachFrame(float* deltaT, objectSprite* p, list<tile*>* tiles) {
+	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> p, list<shared_ptr<tile>>* tiles) {
 		hit->updatePos();
 		if (timer != NULL) {
 			timer->run(deltaT);
@@ -49,19 +49,19 @@ public:
 		}
 	}
 
-	void gravLoop(list<tile*>* tiles, float* deltaT) {
+	void gravLoop(list<shared_ptr<tile>>* tiles, float* deltaT) {
 		phys->enableGravity(true);
 		phys->eachFrame(deltaT);
-		for (tile* t : *tiles) {
+		for (shared_ptr<tile> t : *tiles) {
 			if (t->getGround() != NULL) {
 				groundCheck(t);
 			}
 		}
 	}
 
-	void groundCheck(tile* t) {
+	void groundCheck(shared_ptr<tile> t) {
 		if (!hC) {
-			//gHit = new objectHitbox(IntRect(hit->getRelativeRect().getPosition(), Vector2i(hit->getRelativeRect().getSize().x, hit->getRelativeRect().getPosition().y + 16)), phys);
+			//gHit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(hit->getRelativeRect().getPosition(), Vector2i(hit->getRelativeRect().getSize().x, hit->getRelativeRect().getPosition().y + 16)), phys);
 			hC = true;
 		}
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
@@ -72,7 +72,7 @@ public:
 		}
 	}
 
-	void setSoundPointer(Sound* sou) {
+	void setSoundPointer(shared_ptr<Sound> sou) {
 		colSound = sou;
 	}
 };

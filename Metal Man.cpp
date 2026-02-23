@@ -7,12 +7,12 @@ class MetalMan : public Master {
 	using Master::Master;
 	IntRect idle = IntRect(1, 27, 24, 24);
 	IntRect jumpFrame = IntRect(173, 19, 23, 28);
-	animation* jumpAnim;
-	animation* walkAnim;
-	animTimer* walkTimer;
+	shared_ptr<animation> jumpAnim;
+	shared_ptr<animation> walkAnim;
+	shared_ptr<animTimer> walkTimer;
 
-	animation* throwAnim;
-	animTimer* throwTimer;
+	shared_ptr<animation> throwAnim;
+	shared_ptr<animTimer> throwTimer;
 
 
 
@@ -36,38 +36,38 @@ class MetalMan : public Master {
 	float throwDelay = 0.4;
 	float throwDelay_left = throwDelay;
 
-	Sound* throwSound = NULL;
+	shared_ptr<Sound> throwSound = NULL;
 
 	void ini() {
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\metal man.png");
 		phys->setTexture(t);
 
 		phys->setRect(jumpFrame);
 		sprite = phys;
 
-		introAnim = new animation(list<IntRect>{idle, IntRect(34, 28, 28, 23), IntRect(64, 27, 23, 24)}, sprite);
+		introAnim = shared_ptr<animation>(new animation(list<IntRect>{idle, IntRect(34, 28, 28, 23), IntRect(64, 27, 23, 24)}, sprite));
 		//introAnim->setOffsetList(list<Vector2f>{});
-		introTimer = new animTimer(introAnim, 8, false);
+		introTimer = shared_ptr<animTimer> (new animTimer(introAnim, 8, false));
 
-		walkAnim = new animation(list<IntRect>{IntRect(97, 29, 24, 22), IntRect(127, 28, 16, 23), IntRect(145, 29, 21, 22), IntRect(127, 28, 16, 23)}, sprite);
+		walkAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(97, 29, 24, 22), IntRect(127, 28, 16, 23), IntRect(145, 29, 21, 22), IntRect(127, 28, 16, 23)}, sprite));
 		walkAnim->setOffsetList(list<Vector2f>{Vector2f(-1 * 4, 2 * 4), Vector2f(4 * 4, 1 * 4), Vector2f(3 * 4, 2 * 4), Vector2f(4 * 4, 1 * 4)});
-		walkTimer = new animTimer(walkAnim, 8, true);
+		walkTimer = shared_ptr<animTimer> (new animTimer(walkAnim, 8, true));
 
-		throwAnim = new animation(list<IntRect>{IntRect(208, 11, 21, 36), IntRect(236, 20, 21, 27)}, sprite);
+		throwAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(208, 11, 21, 36), IntRect(236, 20, 21, 27)}, sprite));
 		throwAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, -8 * 4), Vector2f(0 * 4, 0 * 4)});
-		throwTimer = new animTimer(throwAnim, 8, false);
+		throwTimer = shared_ptr<animTimer> (new animTimer(throwAnim, 8, false));
 		convRight = false;
 		State state = walk;
 
 		code = "metal man";
 		acrossAngle = 180;
 
-		jumpAnim = new animation(list<IntRect>{IntRect(jumpFrame)}, phys);
+		jumpAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(jumpFrame)}, phys));
 		jumpAnim->setOffsetList(list<Vector2f>{Vector2f(0 * 4, -4 * 4)});
 		masterInitial("metal blade");
 
-		hit = new objectHitbox(IntRect(0,0, 24, 24), phys);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0,0, 24, 24), phys));
 		hurt = hit;
 
 		deathAnim->setSprite(sprite);
@@ -90,15 +90,15 @@ class MetalMan : public Master {
 	float acrossShootDelay_left = acrossShootDelay;
 	bool acrossShot = false;
 
-	void swapConveyors(list<tile*>* tileList) {
+	void swapConveyors(list<shared_ptr<tile>>* tileList) {
 		convRight = !convRight;
-		for (tile* t : *tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			t->setMoveRight(convRight);
 		}
 
 	}
 
-	void conveyorCheck(float* deltaT, list<tile*>* tileList) {
+	void conveyorCheck(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		swap_left -= *deltaT;
 		if (swap_left <= 0) {
 			swap_left = conveyorSwap;
@@ -114,7 +114,7 @@ class MetalMan : public Master {
 	}
 
 	bool firstFrame = true;
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		
 
@@ -232,11 +232,11 @@ class MetalMan : public Master {
 		faceRight = r;
 	}
 
-	void throwBlade(list<EnemyBullet*>* bList, objectSprite* p) {
+	void throwBlade(list<shared_ptr<EnemyBullet>>* bList, shared_ptr<objectSprite> p) {
 		throwSound->play();
 		phys->setVVelocity(bounceForce);
 
-		BossBlade* temp = new BossBlade(sprite->getTexture(), sprite->getPosition(), p->getMiddlePos());
+		shared_ptr<BossBlade> temp = shared_ptr<BossBlade>(new BossBlade(sprite->getTexture(), sprite->getPosition(), p->getMiddlePos()));
 		bList->push_back(temp);
 
 	}
@@ -247,7 +247,7 @@ class MetalMan : public Master {
 		throwNum = jumpType + 1;
 	}
 
-	bool distanceCheck(objectSprite* p) {
+	bool distanceCheck(shared_ptr<objectSprite> p) {
 		if (fabs(p->getMiddlePos().x - sprite->getMiddlePos().x) < (48 * 4)) {
 			return true;
 		}

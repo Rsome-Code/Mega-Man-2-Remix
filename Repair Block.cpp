@@ -10,10 +10,10 @@ class RepairBlock : public EnemyBullet {
 	float yTarget;
 
 public:
-	RepairBlock(Texture* t, Vector2f pos, float yTarget) {
-		mov = new movable(t, IntRect(567, 76, 16, 16), pos, Vector2f(4, 4));
+	RepairBlock(shared_ptr<Texture> t, Vector2f pos, float yTarget) {
+		mov = shared_ptr<movable>(new movable(t, IntRect(567, 76, 16, 16), pos, Vector2f(4, 4)));
 		sprite = mov;
-		hit = new objectHitbox(IntRect(0, 0, 16, 16), mov);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), mov));
 
 
 		this->yTarget = yTarget;
@@ -21,7 +21,7 @@ public:
 
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		mov->move(angle, deltaT, moveSpeed);
 		if (mov->getPosition().y <= yTarget) {
 			mov->setPosition(Vector2f(-9999, -9999));

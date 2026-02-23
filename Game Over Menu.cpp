@@ -11,16 +11,16 @@
 
 class GameOverMenu {
 
-	UISprite* background;
-	UISprite* arrow;
-	Music* music;
+	shared_ptr<UISprite> background;
+	shared_ptr<UISprite> arrow;
+	shared_ptr<Music> music;
 
 	Vector2f contPos = Vector2f(198 * 4, 97 * 4);
 	Vector2f stagePos = Vector2f(contPos.x, contPos.y + (16 * 4));
 	Vector2f passPos = Vector2f(stagePos.x, stagePos.y + (16 * 4));
 	
 
-	pController* control;
+	shared_ptr<pController> control;
 	bool upPressed = true;
 	bool downPressed = true;
 	bool startPressed = true;
@@ -29,31 +29,36 @@ class GameOverMenu {
 	float flashTime_left = arrowFlashTime;
 	bool arrowDisplay = true;
 
-	SoundBuffer* optionB;
-	Sound* optionSound;
+	shared_ptr<SoundBuffer> optionB;
+	shared_ptr<Sound> optionSound;
 
 
 public:
+
+	virtual ~GameOverMenu() {
+
+	}
+
 	enum Option {
 		Continue, StageSelect, Password
 	};
 	Option option = Continue;
 
 	GameOverMenu() {
-		//control = new pController();
-		Texture* t = new Texture();
+		//control = shared_ptr<pController>(new pController();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\NES - Mega Man 2 - Miscellaneous - Menus.png");
-		background = new UISprite(t, IntRect(1045, 282, 520, 288), Vector2f(0, 0), Vector2f(4, 4));
-		music = new Music();
+		background = shared_ptr<UISprite>(new UISprite(t, IntRect(1045, 282, 520, 288), Vector2f(0, 0), Vector2f(4, 4)));
+		music = shared_ptr<Music>(new Music());
 		music->openFromFile("Assets\\sound\\music\\password.wav");
 		music->setLoop(true);
 		music->setLoopPoints({ seconds(0), seconds(6.4) });
-		arrow = new UISprite(t, IntRect(1711, 693, 5, 8), passPos, Vector2f(4, 4));
+		arrow = shared_ptr<UISprite>(new UISprite(t, IntRect(1711, 693, 5, 8), passPos, Vector2f(4, 4)));
 
-		optionB = new SoundBuffer();
+		optionB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		optionB->loadFromFile("Assets\\sound\\cursor_move.wav");
 
-		optionSound = new Sound();
+		optionSound = shared_ptr<Sound>(new Sound());
 		optionSound->setBuffer(*optionB);
 
 		music->setVolume(50);
@@ -124,10 +129,10 @@ public:
 
 	}
 
-	Option loop(renderer* instance, float targetRate) {
-		timer* time = new timer();
+	Option loop(shared_ptr<renderer> instance, float targetRate) {
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
-		control = new pController(instance->getWindow());
+		control = shared_ptr<pController>(new pController(instance->getWindow()));
 
 		auto start = time->timerStart();
 		auto* startP = &start;

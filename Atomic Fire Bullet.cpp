@@ -8,8 +8,8 @@
 class AtomicFireB : public bullet {
 public:
 
-	animation* anim;
-	animTimer* aTimer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> aTimer;
 
 	float holdTime = 0;
 	float maxHold = 2;
@@ -26,46 +26,46 @@ public:
 	float yPosAdd = 0;
 	float maxYPos = 32;
 
-	SoundBuffer* startHoldB;
-	SoundBuffer* midHoldB;
-	SoundBuffer* fullHoldB;
-	Sound* holdSound;
+	shared_ptr<SoundBuffer> startHoldB;
+	shared_ptr<SoundBuffer> midHoldB;
+	shared_ptr<SoundBuffer> fullHoldB;
+	shared_ptr<Sound> holdSound;
 
-	SoundBuffer* shootB;
-	Sound* shootSound;
+	shared_ptr<SoundBuffer> shootB;
+	shared_ptr<Sound> shootSound;
 
 	
-	AtomicFireB(objectSprite* o, Texture* t, SoundCollection* soundCol) {
+	AtomicFireB(shared_ptr<objectSprite> o, shared_ptr<Texture> t, shared_ptr<SoundCollection> soundCol) {
 		shootTime = 1;
 		shootTemp = shootTime;
 
 		origin = o;
-		sprite = new movable("buster", t, Vector2i(347, 42), Vector2i(24, 24), Vector2f(0, 0), Vector2f(2, 2), 1);
+		sprite = shared_ptr<movable>(new movable("buster", t, Vector2i(347, 42), Vector2i(24, 24), Vector2f(0, 0), Vector2f(2, 2), 1));
 
-		hitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(24, 24)), true, sprite);
+		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(24, 24)), sprite));
 
-		anim = new animation(list<IntRect>{IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20)}, sprite);
-		aTimer = new animTimer(anim, 10, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(347, 42, 24, 24), IntRect(374, 44, 20, 20)}, sprite));
+		aTimer = shared_ptr<animTimer> (new animTimer(anim, 10, true));
 		list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0, 0), Vector2f(8, 8) };
 		anim->setOffsetList(testOffset);
 
-		holdSound = new Sound();
-		startHoldB = new SoundBuffer();
+		holdSound = shared_ptr<Sound>(new Sound());
+		startHoldB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		startHoldB->loadFromFile("assets\\sound\\atomic_fire_charge.wav");
 
-		midHoldB = new SoundBuffer();
+		midHoldB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		midHoldB->loadFromFile("assets\\sound\\atomic_fire_charge_mid.wav");
 
-		fullHoldB = new SoundBuffer();
+		fullHoldB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		fullHoldB->loadFromFile("assets\\sound\\atomic_fire_full.wav");
 
 		holdSound->setBuffer(*startHoldB);
 		holdSound->setLoop(true);
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		shootB->loadFromFile("assets\\sound\\atomic_fire.wav");
 
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound> (new Sound());
 		shootSound->setBuffer(*shootB);
 
 		dinkSetup(soundCol);
@@ -97,16 +97,17 @@ public:
 		
 	}
 
-	int checkDamage(object* en) {
+	int checkDamage(shared_ptr<object> en) {
 		return (en->atomicDam() * power);
 	}
 
 	void holdSoundTime(float* deltaT) {
-		if (holdTime >= maxHold && holdSound->getBuffer() == midHoldB) {
+
+		if (holdTime >= maxHold && holdSound->getBuffer() == midHoldB.get()) {
 			holdSound->setBuffer(*fullHoldB);
 			holdSound->play();
 		}
-		else if (holdTime >= (maxHold/ 2) && holdSound->getBuffer() == startHoldB) {
+		else if (holdTime >= (maxHold/ 2) && holdSound->getBuffer() == startHoldB.get()) {
 			holdSound->setBuffer(*midHoldB);
 			holdSound->play();
 		}

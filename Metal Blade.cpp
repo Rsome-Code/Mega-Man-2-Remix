@@ -5,7 +5,7 @@
 
 class MetalBlade : public Weapon {
 
-	list<MetalBladeBullet*> bullets;
+	list<shared_ptr<MetalBladeBullet>> bullets;
 
 	enum Direction {
 		right, downRight, down, downLeft, left, upLeft, up, upRight, neutral
@@ -13,23 +13,23 @@ class MetalBlade : public Weapon {
 
 	Direction direct;
 public:
-	MetalBlade(objectSprite* p, Texture* tex, SoundCollection* soundCol) {
+	MetalBlade(shared_ptr<objectSprite> p, shared_ptr<Texture> tex, shared_ptr<SoundCollection> soundCol) {
 		direct = neutral;
 
 		for (int i = 0; i < 3; i++) {
-			MetalBladeBullet* temp = new MetalBladeBullet(p, tex, soundCol);
+			shared_ptr<MetalBladeBullet> temp = shared_ptr<MetalBladeBullet>(new MetalBladeBullet(p, tex, soundCol));
 			bullets.push_back(temp);
 		}
 
-		colourP = new Texture();
+		colourP = shared_ptr<Texture> (new Texture());
 		colourP->loadFromFile("Assets\\player\\metal blade.png");
 
 		ammoDecrease = 0.25;
 		name = "Metal Blade";
 
-		shootB = new SoundBuffer();
+		shootB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		shootB->loadFromFile("assets\\sound\\metal_blade.wav");
-		shootSound = new Sound();
+		shootSound = shared_ptr<Sound>(new Sound());
 		shootSound->setBuffer(*shootB);
 
 		name = "metal blade";
@@ -37,7 +37,7 @@ public:
 
 
 
-	Sound* getSound() {
+	shared_ptr<Sound> getSound() {
 		return shootSound;
 	}
 
@@ -47,7 +47,7 @@ public:
 
 		if (checkAmmo()) {
 
-			for (MetalBladeBullet* b : bullets) {
+			for (shared_ptr<MetalBladeBullet> b : bullets) {
 				if (!b->getShooting()) {
 					b->start(checkAngle(right), right);
 					shootSound->play();
@@ -73,7 +73,7 @@ public:
 	}
 
 	void eachFrame(float* deltaT) {
-		for (MetalBladeBullet* b : bullets) {
+		for (shared_ptr<MetalBladeBullet> b : bullets) {
 			if (b->eachFrame(deltaT)) {
 
 				weaponCount--;
@@ -142,10 +142,10 @@ public:
 		return true;
 	}
 
-	virtual list<bullet*> getBullets() {
-		list<bullet*> b;
+	virtual list<shared_ptr<bullet>> getBullets() {
+		list<shared_ptr<bullet>> b;
 
-		for (bullet* bul : bullets) {
+		for (shared_ptr<bullet> bul : bullets) {
 			b.push_back(bul);
 		}
 

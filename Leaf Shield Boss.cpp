@@ -5,8 +5,8 @@ class LeafShieldBoss : public EnemyBullet {
 
 	
 
-	LeafShieldBoss(Texture* t, Vector2f pos) {
-		mov = new movable(string("eBullet"), t, IntRect(3, 389, 47, 47), pos, Vector2f(4, 4));
+	LeafShieldBoss(shared_ptr<Texture> t, Vector2f pos) {
+		mov = shared_ptr<movable>(new movable(string("eBullet"), t, IntRect(3, 389, 47, 47), pos, Vector2f(4, 4)));
 
 	}
 };

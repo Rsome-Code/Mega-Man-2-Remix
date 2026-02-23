@@ -15,15 +15,15 @@ class LeafFloat : public EnemyBullet {
 
 public:
 
-	LeafFloat(Texture* t, Vector2f pos) {
-		mov = new movable(string("eBullet"), t, IntRect(337, 335, 15, 15), Vector2f(pos), Vector2f(4, 4));
+	LeafFloat(shared_ptr<Texture> t, Vector2f pos) {
+		mov = shared_ptr<movable>(new movable(string("eBullet"), t, IntRect(337, 335, 15, 15), Vector2f(pos), Vector2f(4, 4)));
 		sprite = mov;
-		hit = new objectHitbox(IntRect(0, 0, 15, 15), mov);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 15, 15), mov));
 		speed = 300;
 		damage = 4;
 	}
 
-	void eachFrame(float* deltaT, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 		if (state == LEFT) {
 			floatLeft(deltaT);
 		}

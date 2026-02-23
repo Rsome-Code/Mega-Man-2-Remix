@@ -13,35 +13,35 @@
 class Door : public GameObject {
 
 protected:
-	animation* anim;
-	animTimer* aTimer;
-	animation* revAnim;
-	animTimer* revTimer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> aTimer;
+	shared_ptr<animation> revAnim;
+	shared_ptr<animTimer> revTimer;
 	int section;
-	timer* time;
+	shared_ptr<timer> time;
 	bool checkpoint = false;
 
-	SoundBuffer* soundB;
-	Sound* sound;
+	shared_ptr<SoundBuffer> soundB;
+	shared_ptr<Sound> sound;
 
 	bool firstOpen = true;
 
 public:
 
 	Door(string levelName, Vector2f pos, int section) {
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\Door\\" + levelName + ".png");
-		sprite = new objectSprite("door", t, IntRect(0, 0, 16, 64), pos, Vector2f(4, 4));
-		anim = new animation(list<IntRect>{IntRect(0, 0, 16, 64), IntRect(0, 0, 16, 48), IntRect(0, 0, 16, 32), IntRect(0, 0, 16, 16), IntRect(0, 0, 0,0)}, sprite);
-		revAnim = new animation(list<IntRect>{IntRect(0, 0, 0,0), IntRect(0, 0, 16, 16), IntRect(0, 0, 16, 32), IntRect(0, 0, 16, 48), IntRect(0, 0, 16, 64)}, sprite);
-		aTimer = new animTimer(anim, 6, false);
-		revTimer = new animTimer(revAnim, 6, false);
+		sprite = shared_ptr<objectSprite>(new objectSprite("door", t, IntRect(0, 0, 16, 64), pos, Vector2f(4, 4)));
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(0, 0, 16, 64), IntRect(0, 0, 16, 48), IntRect(0, 0, 16, 32), IntRect(0, 0, 16, 16), IntRect(0, 0, 0,0)}, sprite));
+		revAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(0, 0, 0,0), IntRect(0, 0, 16, 16), IntRect(0, 0, 16, 32), IntRect(0, 0, 16, 48), IntRect(0, 0, 16, 64)}, sprite));
+		aTimer = shared_ptr<animTimer> (new animTimer(anim, 6, false));
+		revTimer = shared_ptr<animTimer> (new animTimer(revAnim, 6, false));
 		this->section = section;
 		setCode();
 
-		soundB = new SoundBuffer();
+		soundB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		soundB->loadFromFile("assets\\sound\\boss_door.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*soundB);
 
 	}
@@ -87,7 +87,7 @@ public:
 
 	virtual void animate(float* deltaT) {};
 
-	void loop(renderer* instance, camera* cam, float targetRate, player* player, objectSprite* oDoor, list<tile*> tileList, list<tile*> z2List, list<tile*> z3List, list<tile*> z4List, list<GameObject*> bObjects, bool open) {
+	void loop(shared_ptr<renderer> instance, shared_ptr<camera> cam, float targetRate, shared_ptr<player> player, shared_ptr<objectSprite> oDoor, list<shared_ptr<tile>> tileList, list<shared_ptr<tile>> z2List, list<shared_ptr<tile>> z3List, list<shared_ptr<tile>> z4List, list<shared_ptr<GameObject>> bObjects, bool open) {
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;
@@ -120,23 +120,23 @@ public:
 				}
 			}
 
-			for (GameObject* bObject : bObjects) {
+			for (shared_ptr<GameObject> bObject : bObjects) {
 				instance->bObjectDisplay(bObject->getSprite(), cam);
 			}
 
-			for (tile* t : z4List) {
+			for (shared_ptr<tile> t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z3List) {
+			for (shared_ptr<tile> t : z3List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
-			for (tile* t : z2List) {
+			for (shared_ptr<tile> t : z2List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
 
 
 
-			for (tile* t : tileList) {
+			for (shared_ptr<tile> t : tileList) {
 
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);

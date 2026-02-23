@@ -3,10 +3,10 @@
 
 class ConveyorTile : public TileWithObject {
 
-	list<movable*> yellows;
-	list<movable*> reds;
+	list<shared_ptr<movable>> yellows;
+	list<shared_ptr<movable>> reds;
 
-	list<objectSprite*> copies;
+	list<shared_ptr<objectSprite>> copies;
 
 	int speed = 100;
 
@@ -14,50 +14,55 @@ class ConveyorTile : public TileWithObject {
 
 	float size;
 
-	movable* reserveYellow;
-	movable* reserveRed;
+	shared_ptr<movable> reserveYellow;
+	shared_ptr<movable> reserveRed;
 
 	float dist = 9;
 	float startDist = 1.5;
 	bool moveRight;
 
 protected:
-	objectHitbox* groundHitbox;
-	objectHitbox* leftHitbox;
-	objectHitbox* rightHitbox;
-	objectHitbox* ceilingHitbox;
+	shared_ptr<objectHitbox> groundHitbox;
+	shared_ptr<objectHitbox> leftHitbox;
+	shared_ptr<objectHitbox> rightHitbox;
+	shared_ptr<objectHitbox> ceilingHitbox;
 
 public:
+
+	void deleteInt() {
+
+	}
+
 	void reset() {
 
 		copies.clear();
 
 		int i = 0;
 	
-		for (objectSprite* sp : yellows) {
+		for (shared_ptr<objectSprite> sp : yellows) {
 			sp->setPosition(Vector2f(sprite->getPosition().x + (((i * dist) + startDist) * 4), sprite->getPosition().y + 3 * 4));
 
 			i++;
 
-			copies.push_back(new objectSprite(sp));
+			copies.push_back(shared_ptr<movable>(new movable(sp)));
 		}
 		i = 0;
-		for (objectSprite* sp : reds) {
+		for (shared_ptr<objectSprite> sp : reds) {
 			sp->setPosition(Vector2f(sprite->getPosition().x + ((((i * dist) + (dist / 2)) + startDist) * 4), sprite->getPosition().y + 3 * 4));
 
 			i++;
-			copies.push_back(new objectSprite(sp));
+			copies.push_back(shared_ptr<movable>(new movable(sp)));
 		}
 		
 		/*else {
-			for (objectSprite* sp : yellows) {
+			for (shared_ptr<objectSprite> sp : yellows) {
 				sp->setPosition(Vector2f(sprite->getPosition().x + (((i * dist) - startDist) * 4), sprite->getPosition().y + 3 * 4));
 
 				i++;
 
 			}
 			i = 0;
-			for (objectSprite* sp : reds) {
+			for (shared_ptr<objectSprite> sp : reds) {
 				sp->setPosition(Vector2f(sprite->getPosition().x + ((((i * dist) - (dist / 2)) - startDist) * 4), sprite->getPosition().y + 3 * 4));
 
 				i++;
@@ -67,14 +72,14 @@ public:
 
 
 	}
-	ConveyorTile(Vector2f loc, Texture* t, float z, bool right) {
+	ConveyorTile(Vector2f loc, shared_ptr<Texture> t, float z, bool right) {
 		this->z = z;
 
 		location = loc;
 
 		moveRight = right;
 
-		sprite = new objectSprite("Tile", t, Vector2i(204, 121), Vector2i(16, 16), Vector2f(loc.x * (16*4), loc.y * (16 * 4)), Vector2f(4, 4), 1);
+		sprite = shared_ptr<objectSprite>(new objectSprite("Tile", t, Vector2i(204, 121), Vector2i(16, 16), Vector2f(loc.x * (16*4), loc.y * (16 * 4)), Vector2f(4, 4), 1));
 		if (right) {
 			type = "conveyor anim-right";
 		}
@@ -83,31 +88,31 @@ public:
 		}
 		
 		for (int i = 0; i < 3; i++) {
-			movable* temp = new movable(t, IntRect(129, 85, 3, 9), Vector2f(sprite->getPosition().x + (((i*dist) + startDist)*4), sprite->getPosition().y + 3*4), Vector2f(4, 4));
+			shared_ptr<movable> temp = shared_ptr<movable>(new movable(t, IntRect(129, 85, 3, 9), Vector2f(sprite->getPosition().x + (((i*dist) + startDist)*4), sprite->getPosition().y + 3*4), Vector2f(4, 4)));
 			yellows.push_back(temp);
 			objects.push_back(temp);
 			size = temp->getSize().x;
 			if (i == 2) {
 				reserveYellow = temp;
 			}
-			copies.push_back(new objectSprite(temp));
+			copies.push_back(shared_ptr<movable>(new movable(temp)));
 		}
 		for (int i = 0; i < 3; i++) {
-			movable* temp = new movable(t, IntRect(133, 85, 3, 9), Vector2f(sprite->getPosition().x + ((((i * dist) + (dist/2)) + startDist) * 4), sprite->getPosition().y + 3 * 4), Vector2f(4, 4));
+			shared_ptr<movable> temp = shared_ptr<movable>(new movable(t, IntRect(133, 85, 3, 9), Vector2f(sprite->getPosition().x + ((((i * dist) + (dist/2)) + startDist) * 4), sprite->getPosition().y + 3 * 4), Vector2f(4, 4)));
 			reds.push_back(temp);
 			objects.push_back(temp);
 			if (i == 2) {
 				reserveRed = temp;
 
 			}
-			copies.push_back(new objectSprite(temp));
+			copies.push_back(shared_ptr<movable>(new movable(temp)));
 		}
 
 
-		groundHitbox = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite);
-		ceilingHitbox = new objectHitbox(IntRect(Vector2i(0, sprite->getSize().y), Vector2i(16, 1)), true, sprite);
-		leftHitbox = new objectHitbox(IntRect(Vector2i(0, 4), Vector2i(1, 16)), true, sprite);
-		rightHitbox = new objectHitbox(IntRect(Vector2i(sprite->getSize().x, 4), Vector2i(1, 16)), true, sprite);
+		groundHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite));
+		ceilingHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, sprite->getSize().y), Vector2i(16, 1)), true, sprite));
+		leftHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 4), Vector2i(1, 16)), true, sprite));
+		rightHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(sprite->getSize().x, 4), Vector2i(1, 16)), true, sprite));
 
 		//if (right) {
 		angle = 0;
@@ -117,16 +122,16 @@ public:
 		//}
 	}
 
-	objectHitbox* getGround() {
+	shared_ptr<objectHitbox> getGround() {
 		return groundHitbox;
 	}
-	objectHitbox* getCeiling() {
+	shared_ptr<objectHitbox> getCeiling() {
 		return ceilingHitbox;
 	}
-	objectHitbox* getLeft() {
+	shared_ptr<objectHitbox> getLeft() {
 		return leftHitbox;
 	}
-	objectHitbox* getRight() {
+	shared_ptr<objectHitbox> getRight() {
 		return rightHitbox;
 	}
 
@@ -150,7 +155,7 @@ public:
 	}
 
 	/*void leftLoop(float* deltaT) {
-		for (movable* mov : yellows) {
+		for (shared_ptr<movable> mov : yellows) {
 			mov->move(angle, deltaT, speed);
 			if (mov->getEndPosition().x < sprite->getPosition().x ) {
 				reserveYellow->setPosition(Vector2f(sprite->getEndPosition().x , mov->getPosition().y));
@@ -160,7 +165,7 @@ public:
 			}
 			leftScaling(mov, sprite->getPosition().x, sprite->getEndPosition().x, true);
 		}
-		for (movable* mov : reds) {
+		for (shared_ptr<movable> mov : reds) {
 			mov->move(angle, deltaT, speed);
 			if (mov->getEndPosition().x < sprite->getPosition().x ) {
 				reserveRed->setPosition(Vector2f(sprite->getEndPosition().x , mov->getPosition().y));
@@ -173,7 +178,7 @@ public:
 	}*/
 
 	void rightLoop(float* deltaT) {
-		for (movable* mov : yellows) {
+		for (shared_ptr<movable> mov : yellows) {
 			mov->move(angle, deltaT, speed);
 			if (mov->getPosition().x > sprite->getEndPosition().x - (1 * 4)) {
 				reserveYellow->setPosition(Vector2f(sprite->getPosition().x - mov->getSize().x - (3 * 4), mov->getPosition().y));
@@ -183,7 +188,7 @@ public:
 			}
 			scaling(mov, sprite->getPosition().x, sprite->getEndPosition().x, true);
 		}
-		for (movable* mov : reds) {
+		for (shared_ptr<movable> mov : reds) {
 			mov->move(angle, deltaT, speed);
 			if (mov->getPosition().x > sprite->getEndPosition().x - (1 * 4)) {
 				reserveRed->setPosition(Vector2f(sprite->getPosition().x - mov->getSize().x - (3 * 4), mov->getPosition().y));
@@ -196,7 +201,7 @@ public:
 	}
 
 
-	/*void leftScaling(movable* s, float leftTarget, float rightTarget, bool yell) {
+	/*void leftScaling(shared_ptr<movable> s, float leftTarget, float rightTarget, bool yell) {
 	//s->setScale(Vector2f(4, 4));
 	//Diff between right of sprite and right of tile
 		float xDif = s->getEndPosition().x - (rightTarget - (3 * 4));
@@ -244,7 +249,7 @@ public:
 		}
 	}*/
 
-	void scaling(movable* s, float leftTarget, float rightTarget, bool yell) {
+	void scaling(shared_ptr<movable> s, float leftTarget, float rightTarget, bool yell) {
 		//s->setScale(Vector2f(4, 4));
 		//Diff between right of sprite and right of tile
 		float xDif = s->getEndPosition().x - (rightTarget - (3*4));
@@ -293,22 +298,22 @@ public:
 	}
 
 
-	list<objectSprite*>::iterator spriteIt;
+	list<shared_ptr<objectSprite>>::iterator spriteIt;
 
-	list<objectSprite*> getInternalSprites() {
+	list<shared_ptr<objectSprite>> getInternalSprites() {
 		if (moveRight) {
 			return objects;
 		}
 		
-		//list<objectSprite*> tempList;
+		//list<shared_ptr<objectSprite>> tempList;
 
 		spriteIt = objects.begin();
 
-		for (objectSprite* temp : copies) {
+		for (shared_ptr<objectSprite> temp : copies) {
 			
-			objectSprite* trueOb = *spriteIt;
+			shared_ptr<objectSprite> trueOb = *spriteIt;
 
-			//objectSprite* temp = new objectSprite(ob);
+			//shared_ptr<objectSprite> temp = shared_ptr<objectSprite>(new objectSprite(ob);
 			temp->setVisualOffset(Vector2f(-trueOb->getVisualOffset().x, trueOb->getVisualOffset().y));
 
 
@@ -336,4 +341,6 @@ public:
 	void setMoveRight(bool right) {
 		moveRight = right;
 	}
+
+
 };

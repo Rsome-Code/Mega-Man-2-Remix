@@ -5,7 +5,7 @@
 
 class camera {
 	Vector2f position;
-	objectSprite* following;
+	shared_ptr<objectSprite> following;
 	Vector2f offset; //This will allow the object the camera is following to be uncentered if you wish
 	float fAmount;
 	Vector2f xLimit = Vector2f(NULL, NULL);
@@ -29,7 +29,7 @@ public:
 		position = v;
 	}
 
-	camera(objectSprite* following, Vector2f offset) {
+	camera(shared_ptr<objectSprite> following, Vector2f offset) {
 		this->position = Vector2f(0, 0);
 		this->following = following;
 		this->offset = offset;
@@ -45,7 +45,7 @@ public:
 		return zoom;
 	}
 
-	camera(objectSprite* following) {
+	camera(shared_ptr<objectSprite> following) {
 		this->position = Vector2f(0, 0);
 		this->following = following;
 		this->offset = Vector2f(-960, -800);
@@ -211,7 +211,7 @@ public:bool checkFlip(){
 	return following->getFlipped();
 }
 
-public: objectSprite* getFollowing() {
+public: shared_ptr<objectSprite> getFollowing() {
 	return following;
 }
 public: int getFlipInc() {

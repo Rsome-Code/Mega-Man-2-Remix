@@ -22,24 +22,29 @@ class Shrink : public TempEnemy {
 	float fallTime = 1;
 	float fallTime_left = 0;
 
-	animation* moveAnim;
-	animTimer* moveTimer;
+	shared_ptr<animation> moveAnim;
+	shared_ptr<animTimer> moveTimer;
 
-	animation* fallAnim;
-	animTimer* fallTimer;
+	shared_ptr<animation> fallAnim;
+	shared_ptr<animTimer> fallTimer;
 
 public:
-	Shrink(Texture* t, Vector2f i) {
 
-		mov = new movable(t);
+	virtual ~Shrink() {
+
+	}
+
+	Shrink(shared_ptr<Texture> t, Vector2f i) {
+
+		mov = shared_ptr<movable>(new movable(t));
 		sprite = mov;
-		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
+		//deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite));
 
-		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
+		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite));
 
 		offSetList();
 
-		deathTimer = new animTimer(deathAnim, 16, false);
+		deathTimer = shared_ptr<animTimer> (new animTimer(deathAnim, 16, false));
 		initialPos = i;
 		act = false;
 		display = false;
@@ -58,25 +63,25 @@ public:
 		hp = 3;
 		damage = 2;
 
-		hit = new objectHitbox(IntRect(0, 0, 27, 30), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 27, 30), sprite));
 		hurt = hit;
 		offSetList();
 		state = idle;
 
 		setCode("shrink");
 		
-		fallAnim = new animation(list<IntRect>{IntRect(72, 660, 27, 30), IntRect(105, 660, 27, 30)}, sprite);
-		fallTimer = new animTimer(fallAnim, 8, true);
+		fallAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(72, 660, 27, 30), IntRect(105, 660, 27, 30)}, sprite));
+		fallTimer = shared_ptr<animTimer> (new animTimer(fallAnim, 8, true));
 
-		moveAnim = new animation(list<IntRect>{IntRect(39, 660, 27, 30), IntRect(72, 660, 27, 30), IntRect(1, 663, 27, 24)}, sprite);
-		moveTimer = new animTimer(moveAnim, 8, false);
+		moveAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(39, 660, 27, 30), IntRect(72, 660, 27, 30), IntRect(1, 663, 27, 24)}, sprite));
+		moveTimer = shared_ptr<animTimer> (new animTimer(moveAnim, 8, false));
 	}
 
 	int metalDam() {
 		return 10;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		spawned = true;
 		checkDirection(p->getSprite());
 
@@ -114,7 +119,7 @@ public:
 		faceRight = r;
 	}
 
-	void moveStart(objectSprite* pl) {
+	void moveStart(shared_ptr<objectSprite> pl) {
 		angle = Maths::getAngle(sprite->getMiddlePos(), pl->getMiddlePos());
 	}
 };

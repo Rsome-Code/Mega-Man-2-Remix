@@ -5,37 +5,41 @@
 #pragma once
 
 class AnimationTest {
-	objectSprite* grid;
-	objectSprite* object;
-	animation* anim;
-	timer* time;
+	shared_ptr<objectSprite> grid;
+	shared_ptr<objectSprite> object;
+	shared_ptr<animation> anim;
+	shared_ptr<timer> time;
 
 	bool flipped = false;
 
 	bool leftPressed = false;
 	bool rightPressed = false;
 
+	virtual ~AnimationTest(){
+
+	}
+
 public:
-	AnimationTest(list<IntRect> animList, list<Vector2f> offsetList, Texture* t, bool flipped) {
+	AnimationTest(list<IntRect> animList, list<Vector2f> offsetList, shared_ptr<Texture> t, bool flipped) {
 		
 		IntRect start = *animList.begin();
-		object = new objectSprite("o", t, start, Vector2f(100, 100), Vector2f(4,4), 1);
-		this->anim = new animation(animList, object);
+		object = shared_ptr<objectSprite>(new objectSprite("o", t, start, Vector2f(100, 100), Vector2f(4,4), 1));
+		this->anim = shared_ptr<animation>(new animation(animList, object));
 		anim->setOffsetList(offsetList);
-		Texture* bT = new Texture();
+		shared_ptr<Texture> bT = shared_ptr<Texture> (new Texture());
 		bT->loadFromFile("Assets\\grid.png");
-		grid = new objectSprite("b",bT, IntRect(0,0,600,600), Vector2f(0,0), Vector2f(4,4), 1);
-		time = new timer();
+		grid = shared_ptr<objectSprite>(new objectSprite("b",bT, IntRect(0,0,600,600), Vector2f(0,0), Vector2f(4,4), 1));
+		time = shared_ptr<timer>(shared_ptr<timer>(new timer()));
 
 		if (flipped) {
 			anim->swapAll();
 		}
 	}
 
-	void run(renderer* instance, float targetRate) {
-		camera* cam = new camera();
+	void run(shared_ptr<renderer> instance, float targetRate) {
+		shared_ptr<camera> cam = shared_ptr<camera>(new camera());
 		cam->setZoom(2);
-		pController* p = new pController(instance->getWindow());
+		shared_ptr<pController> p = shared_ptr<pController>(new pController(instance->getWindow()));
 		auto start = time->timerStart();
 		auto* startP = &start;
 		float deltaT = 0;

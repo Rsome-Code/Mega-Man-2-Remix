@@ -18,19 +18,19 @@ using namespace sf;
 
 class pController {
 
-    TController* controller0;
+    shared_ptr<TController> controller0;
     //Deadzone effects x and y
     int stickDeadzone = 5000;
 
-    Window* window;
+    shared_ptr<Window> window;
     
-public:pController(int n, Window* win) {
+public:pController(int n, shared_ptr<Window> win) {
     window = win;
-    controller0 = new TController(n);
+    controller0 = shared_ptr<TController>(new TController(n));
 }
-public:pController(Window* win) {
+public:pController(shared_ptr<Window> win) {
     window = win;
-    controller0 = new TController(0);
+    controller0 = shared_ptr<TController>(new TController(0));
 }
 
 public:Vector2f checkLSTICK() {

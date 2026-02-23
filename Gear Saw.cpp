@@ -4,8 +4,8 @@
 class GearSaw : public TempPhysicsEnemy {
 	using TempPhysicsEnemy::TempPhysicsEnemy;
 
-	animation* anim;
-	animTimer* timer;
+	shared_ptr<animation> anim;
+	shared_ptr<animTimer> timer;
 
 	int speed = 400;
 	int angle;
@@ -14,15 +14,19 @@ class GearSaw : public TempPhysicsEnemy {
 	bool firstFrame = false;
 
 public:
+
+
+	
+
 	void initial() {
 		phys->setRect(IntRect(399, 491, 32, 32));
 		sprite = phys;
 
-		hit = new objectHitbox(IntRect(0, 0, 32, 32), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 32, 32), sprite));
 		hurt = hit;
 
-		anim = new animation(list<IntRect>{IntRect(399, 491, 32, 32), IntRect(432, 491, 32, 32)}, sprite);
-		timer = new animTimer(anim, 8, true);
+		anim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(399, 491, 32, 32), IntRect(432, 491, 32, 32)}, sprite));
+		timer = shared_ptr<animTimer> (new animTimer(anim, 8, true));
 		phys->enableGravity(true);
 		grounded = false;
 
@@ -48,7 +52,7 @@ public:
 		firstFrame = true;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		timer->run(deltaT);
 		
 		if (firstFrame) {

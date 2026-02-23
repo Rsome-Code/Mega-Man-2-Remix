@@ -14,20 +14,21 @@ using namespace sf;
 class UISprite {
 
 protected:Sprite thisOne;
-	Texture* texture;
+	shared_ptr<Texture> texture;
 	Vector2i tRect;
 	Vector2i rectSize;
 	Vector2f scale;
 	Vector2f cameraPosition;
 	string type;
-	list<UISprite*>::iterator i;
+	list<shared_ptr<UISprite>>::iterator i;
 	Vector2f cameraScale;
 
 	Vector2f visualOffset = Vector2f(0,0);
 
 
 
-public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
+
+public: UISprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
 	this->texture = texture;
 	this->type = type;
 	loadTexture();
@@ -35,7 +36,7 @@ public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize
 	setScale(scale);
 	setCameraPosition(position);
 }
-public: UISprite(Texture* texture) {
+public: UISprite(shared_ptr<Texture> texture) {
 	this->texture = texture;
 	this->type = "eh";
 	loadTexture();
@@ -44,7 +45,7 @@ public: UISprite(Texture* texture) {
 	setScale(Vector2f(1,1));
 	setCameraPosition(Vector2f(0,0));
 }
-public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize, Vector2f position) {
+public: UISprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position) {
 	this->texture = texture;
 	this->type = type;
 	loadTexture();
@@ -52,7 +53,7 @@ public: UISprite(string type, Texture* texture, Vector2i rect, Vector2i rectSize
 	setCameraPosition(position);
 	setScale(Vector2f(1, 1));
 }
-public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position) {
+public: UISprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position) {
 	this->texture = texture;
 	this->type = type;
 	loadTexture();
@@ -60,7 +61,7 @@ public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position)
 	setCameraPosition(position);
 	setScale(Vector2f(1, 1));
 }
-public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+public: UISprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 	this->texture = texture;
 	this->type = type;
 	loadTexture();
@@ -68,7 +69,7 @@ public: UISprite(string type, Texture* texture, IntRect rect, Vector2f position,
 	setCameraPosition(position);
 	setScale(scale);
 }
-public: UISprite(Texture* texture, IntRect rect, Vector2f position, Vector2f scale) {
+public: UISprite(shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 	this->texture = texture;
 
 	loadTexture();
@@ -82,7 +83,7 @@ public: UISprite() {
 protected: void loadTexture() {
 	thisOne.setTexture(*texture);
 }
-public: Texture* getTexture() {
+public: shared_ptr<Texture> getTexture() {
 	return texture;
 }
 	  void loadSprite() {
@@ -98,6 +99,7 @@ public: Texture* getTexture() {
 	  }
 	  void setCameraPosition(Vector2f c) {
 		  this->cameraPosition = c;
+		  Vector2i actCamPos = Vector2i(c);
 		  thisOne.setPosition(c);
 	  }
 
@@ -135,7 +137,7 @@ public: Vector2f getScale() {
 public: string getType() {
 	return type;
 }
-	  virtual void setIterator(list<UISprite*>::iterator j) {
+	  virtual void setIterator(list<shared_ptr<UISprite>>::iterator j) {
 		  this->i = j;
 	  }
 
@@ -165,7 +167,7 @@ public: string getType() {
 		  return cameraScale;
 	  }
 
-	  void setTexture(Texture* t) {
+	  void setTexture(shared_ptr<Texture> t) {
 		  this->texture = t;
 		  loadTexture();
 	  }

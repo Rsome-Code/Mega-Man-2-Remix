@@ -10,9 +10,9 @@
 #pragma once
 
 class pControls {
-	pController* p1;
-	physicsObject* sprite;
-	playerAnimation* pAnim;
+	shared_ptr<pController> p1;
+	shared_ptr<physicsObject> sprite;
+	shared_ptr<playerAnimation> pAnim;
 	float maxSpeed = 450;
 	
 	float standardAccel = 10000;
@@ -47,28 +47,28 @@ class pControls {
 	bool ladderAbove = true;
 
 
-	//list<bullet*> bullets;
-	Weapon* weapon;
-	Texture* bT;
+	//list<shared_ptr<bullet>> bullets;
+	shared_ptr<Weapon> weapon;
+	shared_ptr<Texture> bT;
 	//int weapon = 0;
 
 	bool holding = false;
 
-	Sound* landSound;
-	SoundBuffer* landB;
+	shared_ptr<Sound> landSound;
+	shared_ptr<SoundBuffer> landB;
 
 	
 public:
-	pControls(pController* p, physicsObject* s, playerAnimation* a) {
+	pControls(shared_ptr<pController> p, shared_ptr<physicsObject> s, shared_ptr<playerAnimation> a) {
 		p1 = p;
 		sprite = s;
 		pAnim = a;
-		bT = new Texture();
+		bT = shared_ptr<Texture> (new Texture());
 		bT->loadFromFile("Assets\\Weapons.png");
 
-		landB = new SoundBuffer();
+		landB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		landB->loadFromFile("assets\\sound\\land.wav");
-		landSound = new Sound();
+		landSound = shared_ptr<Sound>(new Sound());
 		landSound->setBuffer(*landB);
 		
 	}
@@ -81,7 +81,7 @@ public:
 		groundAccel = ac;
 	}
 
-	Weapon* getWeapon() {
+	shared_ptr<Weapon> getWeapon() {
 		return weapon;
 	}
 
@@ -93,7 +93,7 @@ public:
 		return onLadder;
 	}
 
-	pController* getController() {
+	shared_ptr<pController> getController() {
 		return p1;
 	}
 
@@ -112,17 +112,21 @@ public:
 		metalBlade = t;
 	}
 
-	list<objectSprite*> getBullets() {
-		list<objectSprite*> bul;
-		for (bullet* b : weapon->getBullets()) {
+	list<shared_ptr<objectSprite>> getBullets() {
+		list<shared_ptr<objectSprite>> bul;
+		for (shared_ptr<bullet> b : weapon->getBullets()) {
 			bul.push_back(b->getSprite());
 		}
 		return bul;
 	}
 
-	list<UISprite*> getUIBullets() {
-		list<UISprite*> bul;
-		for (bullet* b : weapon->getBullets()) {
+	list<shared_ptr<bullet>> getRealBullets() {
+		return weapon->getBullets();
+	}
+
+	list<shared_ptr<UISprite>> getUIBullets() {
+		list<shared_ptr<UISprite>> bul;
+		for (shared_ptr<bullet> b : weapon->getBullets()) {
 			bul = b->getUISprites();
 		}
 		return bul;
@@ -207,7 +211,7 @@ public:
 		
 	}
 
-	void checkControls(float* deltaT, list<ItemBullet*>* IBullets, float frictD) {
+	void checkControls(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, float frictD) {
 		teleport = false;
 
 		shooting = pAnim->getShooting();
@@ -421,7 +425,7 @@ public:
 		}
 	}
 
-	void setWeapon(Weapon* weap) {
+	void setWeapon(shared_ptr<Weapon> weap) {
 		weapon = weap;
 	}
 
@@ -432,7 +436,7 @@ public:
 	}
 
 
-	void shoot(float* deltaT, list<ItemBullet*>* IBullets) {
+	void shoot(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets) {
 		if (p1->checkB() && !BPressed) {
 			BPressed = true;
 			if (weapon->fire(pAnim->getFacingRight()) || weapon->fire(pAnim->getFacingRight(), IBullets)) {
@@ -458,15 +462,15 @@ public:
 	}
 
 
-	list<bullet*> getBulletObjects() {
+	list<shared_ptr<bullet>> getBulletObjects() {
 		return weapon->getBullets();
 	}
 
-	bullet* getBulletObject() {
+	shared_ptr<bullet> getBulletObject() {
 		return *weapon->getBullets().begin();
 	}
 
-	void shootEachFrame(float* deltaT, list<tile*> tileList, list<ItemBullet*> ibuls) {
+	void shootEachFrame(float* deltaT, list<shared_ptr<tile>> tileList, list<shared_ptr<ItemBullet>> ibuls) {
 		weapon->tileColl(tileList);
 		weapon->eachFrame(deltaT);
 		weapon->checkCount(ibuls);
@@ -553,9 +557,9 @@ public:
 		return jumping;
 	}
 
-	list<objectHitbox*> getBulletHitboxes() {
-		list<objectHitbox*> hits;
-		for (bullet* b : weapon->getBullets()) {
+	list<shared_ptr<objectHitbox>> getBulletHitboxes() {
+		list<shared_ptr<objectHitbox>> hits;
+		for (shared_ptr<bullet> b : weapon->getBullets()) {
 			hits.push_back(b->getHitbox());
 		}
 		return hits;

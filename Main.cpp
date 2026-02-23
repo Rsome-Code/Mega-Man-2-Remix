@@ -60,6 +60,7 @@
 #include "quick man.cpp"
 #include "flash door.cpp"
 #include "crazy cannon.cpp"
+#include "flash man.cpp"
 #include "cannon right.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
@@ -85,7 +86,7 @@ vector<int> split(const string& str, char sep)
 
 	return tokens;
 }
-Weapon* updatePlayer(player* p, string levelName) {
+shared_ptr<Weapon> updatePlayer(shared_ptr<player> p, string levelName) {
 	if (levelName == "wood man") {
 		
 		return p->getShield();
@@ -119,7 +120,7 @@ void beforeLevelCheck(string name) {
 	}
 }
 
-Weapon* checkItem(player* p, string levelName) {
+shared_ptr<Weapon> checkItem(shared_ptr<player> p, string levelName) {
 	if (levelName == "heat man") {
 		
 		return p->getItem1();
@@ -131,7 +132,7 @@ Weapon* checkItem(player* p, string levelName) {
 
 int main() {
 
-	SoundCollection* soundCol = new SoundCollection();
+	shared_ptr<SoundCollection> soundCol (new SoundCollection());
 	bool run = true;
 
 	//Set the framerate here
@@ -143,91 +144,93 @@ int main() {
 
 	int horiRes = verticalRes * (float(1920) / float(1080));
 
-	RenderWindow window(VideoMode(horiRes, verticalRes), "Executable", Style::Default);
-	pController* p1 = new pController(&window);
+	shared_ptr <RenderWindow> window = shared_ptr <RenderWindow>(new RenderWindow(VideoMode(horiRes, verticalRes), "Executable", Style::Default));
+	shared_ptr<pController> p1 = shared_ptr<pController>(new pController(window));
 
-	Texture* enemyT = new Texture();
+	shared_ptr<Texture> enemyT = shared_ptr<Texture> (new Texture());
 	enemyT->loadFromFile("Assets\\enemy.png");
 
-	Texture* miscT = new Texture();
+	shared_ptr<Texture> miscT = shared_ptr<Texture> (new Texture());
 	miscT->loadFromFile("Assets\\misc\\mega buster.png");
 
-	player* col = new player(p1, soundCol);
-	Load* load = new Load();
+	shared_ptr<player> col = shared_ptr<player>(new player(p1, soundCol));
+	shared_ptr<Load> load = shared_ptr<Load>(new Load());
 	load->loadSaveFile(col);
 
-	delete(load);
+
 
 	//woodManStage* wood = new woodManStage(enemyT, miscT);
 
 
 	
-	Font* font = new Font();
+	shared_ptr<Font> font = shared_ptr<Font>(new Font());
 	font->loadFromFile("assets//font.otf");
 
 
-	RenderWindow* w = &window;
-	renderer* instance = new renderer(w, false);
+	shared_ptr<RenderWindow> w = move(window);
+	shared_ptr<renderer> instance = shared_ptr<renderer> (new renderer(w, false));
 
-	Texture* wT = new Texture();
+	shared_ptr<Texture> wT = shared_ptr<Texture> (new Texture());
 
-	Texture* bg;
-	bg = new Texture();
+	shared_ptr<Texture> bg;
+	bg = shared_ptr<Texture> (new Texture());
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
-	string bossName = "flash man";
+	string bossName = "wood man";
 	
 	
 
-	Texture* bossT;
-	bossT = new Texture ();
+	shared_ptr<Texture> bossT;
+	bossT = shared_ptr<Texture>(new Texture());
 	bossT->loadFromFile("assets\\" + bossName + ".png");
 
 	
 
 	wT->loadFromFile("assets\\stage\\" + bossName + ".png");
-	//levelEditor* l = new levelEditor(wT, bossName, font);
+	levelEditor* l = new levelEditor(wT, bossName, font);
 
-	Texture* misc = new Texture();
+	shared_ptr<Texture> misc = shared_ptr<Texture> (new Texture());
 	misc->loadFromFile("assets\\misc\\mega buster.png");
 
-	Texture* woodBossT = new Texture();
+	shared_ptr<Texture> woodBossT = shared_ptr<Texture> (new Texture());
 	woodBossT->loadFromFile("assets\\wood man.png");
 
-	Texture* heatBossT = new Texture();
+	shared_ptr<Texture> heatBossT = shared_ptr<Texture> (new Texture());
 	heatBossT->loadFromFile("assets\\heat man.png");;
 
-	Texture* bubbleBossT = new Texture();
+	shared_ptr<Texture> bubbleBossT = shared_ptr<Texture> (new Texture());
 	bubbleBossT->loadFromFile("assets\\bubble man.png");
+
+	shared_ptr<Texture> flashBossT = shared_ptr<Texture>(new Texture());
+	flashBossT->loadFromFile("assets\\bubble man.png");
 	
-	Texture* beamT = new Texture();
+	shared_ptr<Texture> beamT = shared_ptr<Texture> (new Texture());
 	beamT->loadFromFile("assets\\beam.png");
 
 //Object Placer setup
-	list<GameObject*> woodManObList = { new Background(Color::Color(0, 232, 216)), new WoodMan(Vector2f(0,0)), new SpawnPoint(string("chicken")),new SpawnPoint(string("bird")), new Wolf(enemyT, Vector2f(0,0)), new Gorilla(enemyT, Vector2f(0,0)), new Rabbit(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new SmallAmmo(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new SmallHealth(misc, Vector2f(0,0)) , new BigHealth(misc, Vector2f(0,0)),  new bat(enemyT, Vector2f(600, 600)), new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0)};
-	list <GameObject*> heatManList = { new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	list <GameObject*> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), new SpawnPoint(string("snapper")), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), new Background(Color::Color(0, 112, 236)), new FallPlatform(enemyT, Vector2f(0,0)), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	list <GameObject*> metalList = {new MetalMan(Vector2f(0,0)),new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), new SpawnPoint(string("drill")),  new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0), new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
-	list <GameObject*> quickList = {new ETank(misc, Vector2f(0,0)), new BigHealth(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new ExtraLife(misc, Vector2f(0,0)), new QuickMan(Vector2f(0,0)), new ScwormSpawn(enemyT, Vector2f(0,0)), new TorchGuy (enemyT, Vector2f(0,0)), new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new Door(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	list <GameObject*> flashList = { new CannonRight(enemyT, Vector2f(0,0)), new CrazyCannon(enemyT, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new BigHealth(misc, Vector2f(0,0)), new BigAmmo(misc, Vector2f(0,0)), new ExtraLife(misc, Vector2f(0,0)), new FlashDoor(bossName, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), 0), new EndFlag(enemyT, Vector2f(0,0), UP,0),  new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new BreakWall(enemyT, Vector2f(0,0))};
+	//list<shared_ptr<GameObject>> woodManObList = { shared_ptr<GameObject>(new Background((Color::Color(0, 232, 216)))), shared_ptr<GameObject>(new WoodMan(Vector2f(0,0))), shared_ptr<GameObject>(new SpawnPoint(string("chicken"))),shared_ptr<GameObject>(new SpawnPoint(string("bird"))), shared_ptr<GameObject>(new Wolf(enemyT, Vector2f(0,0))), shared_ptr<GameObject> (new Gorilla(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(new Rabbit(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0)), shared_ptr<GameObject>(shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0))), shared_ptr<GameObject>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<SmallAmmo> (new SmallAmmo(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<BigAmmo> (new BigAmmo(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<SmallHealth> (new SmallHealth(misc, Vector2f(0,0))) , shared_ptr<GameObject>(shared_ptr<BigHealth> (new BigHealth(misc, Vector2f(0,0))),  new bat(enemyT, Vector2f(600, 600)), shared_ptr<GameObject> (new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100)), shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0))};
+	//list <shared_ptr<GameObject>> heatManList = { shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	//list <shared_ptr<GameObject>> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), shared_ptr<SpawnPoint> (new SpawnPoint(string("snapper"))), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), shared_ptr<GameObject>(new Background(Color::Color(0, 112, 236))), new FallPlatform(enemyT, Vector2f(0,0)), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	//list <shared_ptr<GameObject>> metalList = {new MetalMan(Vector2f(0,0)),shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), shared_ptr<SpawnPoint> (new SpawnPoint(string("drill"))),  shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
+	//list <shared_ptr<GameObject>> quickList = {new ETank(misc, Vector2f(0,0)), shared_ptr<BigHealth> (new BigHealth(misc, Vector2f(0,0)), shared_ptr<BigAmmo> (new BigAmmo(misc, Vector2f(0,0)), shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new QuickMan(Vector2f(0,0)), new ScwormSpawn(enemyT, Vector2f(0,0)), shared_ptr<TorchGuy> (new TorchGuy (enemyT, Vector2f(0,0))), new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
 
-
-	for (GameObject* o : flashList) {
+	for (shared_ptr<GameObject> o : flashList) {
 		o->initial();
 	}
-	//ObjectPlacer* o = new ObjectPlacer(wT, bossName, flashList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, flashList);
 	
 
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(374, 581, 31, 22), IntRect(407, 580, 31, 23), IntRect(440, 581, 31, 22), IntRect(473, 580, 31, 23), IntRect(508, 577, 29, 26), IntRect(541, 577, 29, 26) };
-	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0, 0), Vector2f(0 * 4,-1 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, -1 * 4), Vector2f(2 * 4, -4 * 4), Vector2f(2 * 4, -4 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(565, 241, 16, 16), IntRect(584, 243, 12, 12), IntRect(602, 244, 10, 10), IntRect(618, 247, 4, 4) };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(-6 * 4, -6 * 4), Vector2f(-4 * 4, -4 * 4), Vector2f(-3 * 4, -3 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
 
-	Texture* testT = new Texture();
-	testT->loadFromFile("Assets\\enemy.png");
+	shared_ptr<Texture> testT = shared_ptr<Texture> (new Texture());
+	testT->loadFromFile("Assets\\weapons.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, false);
 
 	////////////////////////////////
@@ -244,20 +247,22 @@ int main() {
 	//
 	//o->loop(instance, targetFPS);
 
+
+
 	//delete l;
 	//delete o;
 
-	bg = new Texture();
+	bg = shared_ptr<Texture> (new Texture());
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 	bool hold;
-	LevelSelect* levelMenu;
+	unique_ptr<LevelSelect> levelMenu;
 	
 	bool restart = false;
 
 
 
 	while (run) {
-		levelMenu = new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb());
+		levelMenu = unique_ptr<LevelSelect>(new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb()));
 		
 		if (!restart) {
 			bossName = levelMenu->loop(instance, targetFPS, bg);
@@ -268,6 +273,7 @@ int main() {
 			//intro->loop(instance, targetFPS);
 			//delete intro;
 		}
+
 		restart = false;
 		
 
@@ -282,11 +288,11 @@ int main() {
 		//col->setLives(0);
 
 
-		abstractStage* stage = new abstractStage(bossName, soundCol);
+		unique_ptr<abstractStage> stage = unique_ptr<abstractStage>(new abstractStage(bossName, soundCol));
 
 		//stage->reload(string(bossName), string("0"));
-
-		scene* area = new scene(col, stage, enemyT);
+			
+		unique_ptr<scene> area = unique_ptr<scene>(new scene(col, move(stage), enemyT));
 
 		beforeLevelCheck(bossName);
 
@@ -294,31 +300,31 @@ int main() {
 
 		//if (true){
 		
-			Weapon* newW = updatePlayer(col, bossName);
+			shared_ptr<Weapon> newW = updatePlayer(col, bossName);
 
 			if (newW != NULL) {
-				EquipAnim* equip = new EquipAnim(newW, true);
+				unique_ptr<EquipAnim> equip = unique_ptr<EquipAnim>(new EquipAnim(newW, true));
 				equip->loop(instance, targetFPS);
 
-				Weapon* newI = checkItem(col, bossName);
-				EquipAnim* equip1 = NULL;
+				shared_ptr<Weapon> newI = checkItem(col, bossName);
+				unique_ptr<EquipAnim> equip1 = NULL;
 				if (newI != NULL) {
 
 					DLMessage* mess = new DLMessage(equip->getTexture(), equip->getSprites(), newI);
 					mess->loop(instance, targetFPS);
 
 
-					equip1 = new EquipAnim(newI, false);
+					equip1 = unique_ptr<EquipAnim>(new EquipAnim(newI, false));
 					equip1->loop(instance, targetFPS);
 
-
+					delete mess;
 				}
-				EquipMenu* eMenu;
+				unique_ptr<EquipMenu> eMenu;
 				if (equip1 == NULL) {
-					eMenu = new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650));
+					eMenu = unique_ptr<EquipMenu>(new EquipMenu(equip->getTexture(), equip->getSprites(), equip->getText(), Vector2f(500, 650)));
 				}
 				else {
-					eMenu = new EquipMenu(equip->getTexture(), equip1->getSprites(), equip1->getText(), Vector2f(500, 650));
+					eMenu = unique_ptr<EquipMenu>(new EquipMenu(equip->getTexture(), equip1->getSprites(), equip1->getText(), Vector2f(500, 650)));
 				}
 				bool eLoop = true;
 				while (eLoop) {
@@ -327,17 +333,19 @@ int main() {
 						//This is where the password screen will be run
 					}
 				}
-				delete equip;
-				delete eMenu;
-				delete equip1;
+				equip.reset();
+				eMenu.reset();
+				equip1.reset();
+				newI.reset();
+				newW.reset();
 			}
 		}
 		else {
 			bool gLoop = true;
 			while (gLoop) {
-				GameOver* gO = new GameOver();
+				unique_ptr<GameOver> gO = unique_ptr<GameOver>(new GameOver());
 				gO->loop(instance, targetFPS);
-				GameOverMenu* gMenu = new GameOverMenu();
+				unique_ptr<GameOverMenu> gMenu = unique_ptr<GameOverMenu>(new GameOverMenu());
 				
 				GameOverMenu::Option option = gMenu->loop(instance, targetFPS);
 				if (option == GameOverMenu::Option::Password) {
@@ -352,17 +360,25 @@ int main() {
 						//???
 					}
 				}
-				delete gO;
+				gO.reset();
+				gMenu.reset();
 			}
 		}
-		delete area;
-		delete stage;
+		area.reset();
+		stage.reset();
+		levelMenu.reset();
+
 		run = instance->getWindow()->isOpen();
+
+		//soundCol.reset();
 		
 	}
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
+	
+	
+	
 	//cout << "hi";
 
 }

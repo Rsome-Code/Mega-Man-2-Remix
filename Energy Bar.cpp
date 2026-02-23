@@ -4,32 +4,37 @@
 
 class energyBar {
 protected:
-	UISprite* sprite;
+	shared_ptr<UISprite> sprite;
 	int amount;
 	int max = 28;
 
-	SoundBuffer* soundB;
-	Sound* sound;
+	shared_ptr<SoundBuffer> soundB;
+	shared_ptr<Sound> sound;
 
 
 public:
-	energyBar(Texture* t, Vector2f loc, int ini) {
+
+	virtual ~energyBar() {
+
+	}
+
+	energyBar(shared_ptr<Texture> t, Vector2f loc, int ini) {
 		amount = ini;
-		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4));
+		sprite = shared_ptr<UISprite>(new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4)));
 		setAmount();
-		soundB = new SoundBuffer();
+		soundB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		soundB->loadFromFile("assets\\sound\\refill.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*soundB);
 	}
-	energyBar(Texture* t, Vector2f loc) {
+	energyBar(shared_ptr<Texture> t, Vector2f loc) {
 		amount = max;
 
-		sprite = new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4));
+		sprite = shared_ptr<UISprite>(new UISprite("Bar", t, Vector2i(1, 1), Vector2i(9, 56), loc, Vector2f(4, 4)));
 		setAmount();
-		soundB = new SoundBuffer();
+		soundB = shared_ptr<SoundBuffer> (new SoundBuffer());
 		soundB->loadFromFile("assets\\sound\\refill.wav");
-		sound = new Sound();
+		sound = shared_ptr<Sound>(new Sound());
 		sound->setBuffer(*soundB);
 	}
 
@@ -73,7 +78,7 @@ public:
 		amount = max;
 		setAmount();
 	}
-	UISprite* getSprite() {
+	shared_ptr<UISprite> getSprite() {
 		return sprite;
 	}
 };

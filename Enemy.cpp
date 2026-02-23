@@ -19,12 +19,12 @@
 class enemy:public GameObject{
 protected:
 
-	objectHitbox* hit;
-	objectHitbox* hurt;
+	shared_ptr<objectHitbox> hit;
+	shared_ptr<objectHitbox> hurt;
 	int hp;
 	int damage;
-	animation* deathAnim;
-	animTimer* deathTimer;
+	shared_ptr<animation> deathAnim;
+	shared_ptr<animTimer> deathTimer;
 	bool offScreen = true;
 	bool initOffScreen = true;
 	Vector2f initialPos;
@@ -34,8 +34,8 @@ protected:
 
 	bool faceRight = false;
 
-	SoundBuffer* hitB;
-	Sound* hitSound;
+	shared_ptr<SoundBuffer> hitB;
+	shared_ptr<Sound> hitSound;
 
 	bool damaged = false;
 	float flashTime = 0.04;
@@ -43,21 +43,29 @@ protected:
 
 	bool frozen = false;
 
-	movable* mov;
+	shared_ptr<movable> mov;
 
 public:
-	enemy(){}
-	enemy(Texture* t, Vector2f i) {
 
-		mov = new movable(t);
+	virtual ~enemy() {
+
+		//delete mov;
+		//delete sprite;
+
+	}
+public:
+	enemy(){}
+	enemy(shared_ptr<Texture> t, Vector2f i) {
+
+		mov = shared_ptr<movable>(new movable(t));
 		sprite = mov;
-		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
+		//deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite));
 		
-		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
+		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite));
 
 		offSetList();
 
-		deathTimer = new animTimer(deathAnim, 16, false);
+		deathTimer = shared_ptr<animTimer> (new animTimer(deathAnim, 16, false));
 		initialPos = i;
 		act = false;
 		display = false;
@@ -70,15 +78,15 @@ public:
 
 	enemy(Vector2f i) {
 
-		mov = new movable();
+		mov = shared_ptr<movable>(new movable());
 		sprite = mov;
-		//deathAnim = new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite);
+		//deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite));
 
-		deathAnim = new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite);
+		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite));
 
 		offSetList();
 
-		deathTimer = new animTimer(deathAnim, 16, false);
+		deathTimer = shared_ptr<animTimer> (new animTimer(deathAnim, 16, false));
 		initialPos = i;
 		act = false;
 		display = false;
@@ -97,16 +105,16 @@ public:
 		return true;
 	}
 
-	virtual void loadSound(SoundCollection* soundCol) {}
+	virtual void loadSound(shared_ptr<SoundCollection> soundCol) {}
 
 	virtual void playerHit(){}
 
-	void setHitB(SoundBuffer* sB) {
+	void setHitB(shared_ptr<SoundBuffer> sB) {
 		hitB = sB;
-		hitSound = new Sound();
+		hitSound = shared_ptr<Sound> (new Sound());
 		hitSound->setBuffer(*hitB);
 	}
-	void setHitSound(Sound* s) {
+	void setHitSound(shared_ptr<Sound> s) {
 		hitSound = s;
 	}
 
@@ -140,10 +148,10 @@ public:
 	int getDamage() {
 		return damage;
 	}
-	objectHitbox* getHitbox() {
+	shared_ptr<objectHitbox> getHitbox() {
 		return hit;
 	}
-	objectHitbox* getHurtbox() {
+	shared_ptr<objectHitbox> getHurtbox() {
 		return hurt;
 	}
 
@@ -156,10 +164,10 @@ public:
 		hurt->updatePos();
 	}
 
-	bool checkHit(objectHitbox* pHit) {
+	bool checkHit(shared_ptr<objectHitbox> pHit) {
 		return hitboxDetect::hitboxDetection(pHit, hit);
 	}
-	bool checkHurt(objectHitbox* bullet) {
+	bool checkHurt(shared_ptr<objectHitbox> bullet) {
 		return hitboxDetect::hitboxDetection(bullet, hurt);
 	}
 
@@ -167,7 +175,7 @@ public:
 		frozen = b;
 	}
 
-	virtual bool eachFrame(float* deltaT, player* p, list<tile*>* tileList, list<enemy*>* enemyList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {
+	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
 		flashTime_left -= *deltaT;
 		if (hp > 0) {
 			if (damaged) {
@@ -207,21 +215,21 @@ public:
 		hp = hp - h;
 	}
 
-	virtual objectSprite* getDamSprite() { return NULL; };
+	virtual shared_ptr<objectSprite> getDamSprite() { return NULL; };
 
 	virtual bool checkInvincible() {
 		return false;
 	}
 
-	virtual bool freezeDam(player* p) {
+	virtual bool freezeDam(shared_ptr<player> p) {
 		return false;
 	}
 
-	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {};
+	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {};
 
-	virtual void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList, SoundCollection* soundCol) {};
+	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {};
 
-	void checkDirection(objectSprite* player) {
+	void checkDirection(shared_ptr<objectSprite> player) {
 		if (player->getPosition().x > sprite->getPosition().x) {
 			setFacing(true);
 		}
@@ -232,7 +240,7 @@ public:
 
 	virtual void setFacing(bool right) {};
 
-	virtual bool death(float* deltaT, list<enemy*>* tempEList) {
+	virtual bool death(float* deltaT, list<shared_ptr<enemy>>* tempEList) {
 		if (!dead) {
 			sprite->setPosition(Vector2f(sprite->getMiddlePos().x - (12*4), sprite->getMiddlePos().y - (12 * 4)));
 			dead = true;
@@ -253,14 +261,14 @@ public:
 		return false;
 	}
 
-	virtual bool isDead(list<enemy*>* tempEList) {
+	virtual bool isDead(list<shared_ptr<enemy>>* tempEList) {
 		act = false;
 		display = false;
 		sprite->setPosition(Vector2f(-1100, -1000));
 		return false;
 	}
 
-	virtual bool yDeath(list<enemy*>* enemies) {
+	virtual bool yDeath(list<shared_ptr<enemy>>* enemies) {
 		return false;
 	}
 
@@ -315,30 +323,30 @@ public:
 		return offScreen;
 	}
 
-	virtual void spawnItem(list<Item*>* obList, Texture* t, Vector2f pos, SoundCollection* soundCol) {
+	virtual void spawnItem(list<shared_ptr<Item>>* obList, shared_ptr<Texture> t, Vector2f pos, shared_ptr<SoundCollection> soundCol) {
 		int itemChance = rand();
 		itemChance = itemChance % 100;
 
-		Item* item = NULL;
+		shared_ptr<Item> item = NULL;
 
 		if (itemChance > 25 && itemChance <= 50) {
-			item = new SmallAmmo(t, pos);
+			item = shared_ptr<SmallAmmo> (new SmallAmmo(t, pos));
 		}
 		else if (itemChance > 50 && itemChance <= 75) {
-			item = new SmallHealth(t, pos);
+			item = shared_ptr<SmallHealth> (new SmallHealth(t, pos));
 		}
 		else if (itemChance > 75 && itemChance <= 85) {
-			item = new BigHealth(t, pos);
+			item = shared_ptr<BigHealth> (new BigHealth(t, pos));
 		}
 		else if (itemChance > 85 && itemChance <= 95) {
-			item = new BigAmmo(t, pos);
+			item = shared_ptr<BigAmmo> (new BigAmmo(t, pos));
 		}
 		else if (itemChance > 95) {
-			item = new ExtraLife(t, pos);
+			item = shared_ptr<ExtraLife> (new ExtraLife(t, pos));
 			item->setSoundPointer(soundCol->getLifeGet());
 		}
 
-		//item = new BigAmmo(t, pos);
+		//item = shared_ptr<BigAmmo> (new BigAmmo(t, pos);
 
 		if (item != NULL) {
 			item->getSprite()->setPosition(Vector2f(item->getSprite()->getPosition().x + (item->getSprite()->getSize().x / 4), item->getSprite()->getPosition().y + (item->getSprite()->getSize().y / 4)));
@@ -346,7 +354,7 @@ public:
 		}
 	}
 
-	bool groundCheck(tile* t) {
+	bool groundCheck(shared_ptr<tile> t) {
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			return true;
 		}
@@ -354,15 +362,15 @@ public:
 	}
 
 
-	virtual AmmoBar** getBar() {
+	virtual shared_ptr<AmmoBar>* getBar() {
 		return NULL;
 	}
 
-	virtual vector<DeathAnim**> getDeathAnims() {
-		return vector<DeathAnim**>{NULL, NULL, NULL};
+	virtual vector<shared_ptr<DeathAnim>*> getDeathAnims() {
+		return vector<shared_ptr<DeathAnim>*>{NULL, NULL, NULL};
 	}
 
-	virtual void spawnEnemy(list<enemy*>* enemies, SoundCollection* soundCol) {
+	virtual void spawnEnemy(list<shared_ptr<enemy>>* enemies, shared_ptr<SoundCollection> soundCol) {
 
 	}
 

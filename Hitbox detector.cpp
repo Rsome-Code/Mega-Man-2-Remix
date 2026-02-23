@@ -2,7 +2,7 @@
 #pragma once
 class hitboxDetect {
 public:
-	static bool hitboxDetection(objectHitbox* hit, objectHitbox* hit1) {
+	static bool hitboxDetection(shared_ptr<objectHitbox> hit, shared_ptr<objectHitbox> hit1) {
 		if (hit->getPosition().x > hit1->getPosition().x + hit1->getSize().x) {
 
 		}
@@ -22,7 +22,7 @@ public:
 	
 	}
 
-	static bool hitboxDetection(Vector2f point, objectHitbox* hit1) {
+	static bool hitboxDetection(Vector2f point, shared_ptr<objectHitbox> hit1) {
 		if (point.x > hit1->getPosition().x + hit1->getSize().x) {
 
 		}
@@ -41,7 +41,7 @@ public:
 		return false;
 	}
 
-	static bool hitboxYDetection(Vector2f point, objectHitbox* hit1) {
+	static bool hitboxYDetection(Vector2f point, shared_ptr<objectHitbox> hit1) {
 
 		if (point.y > hit1->getPosition().y + hit1->getSize().y) {
 
@@ -55,7 +55,7 @@ public:
 		return false;
 	}
 
-	static bool hitboxXDetection(Vector2f point, objectHitbox* hit1) {
+	static bool hitboxXDetection(Vector2f point, shared_ptr<objectHitbox> hit1) {
 		if (point.x > hit1->getPosition().x + hit1->getSize().x) {
 
 		}

@@ -11,8 +11,8 @@
 
 class DLMessage {
 
-	list<UISprite*> sprites;
-	UISprite* light;
+	list<shared_ptr<UISprite>> sprites;
+	shared_ptr<UISprite> light;
 
 
 	bool rectDisplay;
@@ -27,9 +27,9 @@ class DLMessage {
 	float flashTime_left = flashTime;
 
 	string alertText;
-	Text* alertT;
+	shared_ptr<Text> alertT;
 	string messageText;
-	Text* messageT;
+	shared_ptr<Text> messageT;
 
 	float textTime = 0.2;
 	float textTime_left = textTime;
@@ -39,18 +39,18 @@ class DLMessage {
 	bool delay = false;
 	float delayTime = 0.7;
 	float delayTime_left = delayTime;
-	UISprite* background;
+	shared_ptr<UISprite> background;
 
 public:
-	DLMessage(Texture* t, list<UISprite*> sprites, Weapon* weap) {
+	DLMessage(shared_ptr<Texture> t, list<shared_ptr<UISprite>> sprites, shared_ptr<Weapon> weap) {
 		this->sprites = sprites;
 
 
 
-		Font* font = new Font();
+		shared_ptr<Font> font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
-		alertT = new Text();
-		messageT = new Text();
+		alertT = shared_ptr<Text> (new Text());
+		messageT = shared_ptr<Text> (new Text());
 		alertT->setFont(*font);
 		messageT->setFont(*font);
 
@@ -66,8 +66,8 @@ public:
 		messageText = weap->getName() + " \nCompleted! \nGet your \nWeapons Ready!";
 		rectDisplay = false;
 
-		UISprite* toD;
-		for (UISprite* s : sprites) {
+		shared_ptr<UISprite> toD;
+		for (shared_ptr<UISprite> s : sprites) {
 			if (s->getType() == "mega") {
 				toD = s;
 			}
@@ -78,16 +78,16 @@ public:
 			
 		}
 		this->sprites.remove(toD);
-		light = new UISprite(t, IntRect(1733, 707, 32, 32), Vector2f(toD->getCameraPosition().x, 300) , Vector2f(4, 4));
-		delete toD;
+		light = shared_ptr<UISprite>(new UISprite(t, IntRect(1733, 707, 32, 32), Vector2f(toD->getCameraPosition().x, 300) , Vector2f(4, 4)));
+		
 
 		
 	}
 
 
-	void loop(renderer* instance, float targetRate) {
+	void loop(shared_ptr<renderer> instance, float targetRate) {
 
-		timer* time = new timer();
+		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
 
 		auto start = time->timerStart();

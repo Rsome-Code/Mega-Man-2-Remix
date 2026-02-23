@@ -3,18 +3,18 @@
 #pragma once
 
 class transition :public object {
-	objectHitbox* hit;
+	shared_ptr<objectHitbox> hit;
 	bool active;
 	int type;
 
 public:
 	transition(Vector2f pos, int t) {
 		type = t;
-		sprite = new objectSprite(Vector2f((pos.x * 16) * 4, (pos.y * 16) * 4));
-		hit = new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(5, 1080)), true, sprite);
+		sprite = shared_ptr<objectSprite>(new objectSprite(Vector2f((pos.x * 16) * 4, (pos.y * 16) * 4)));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(5, 1080)), true, sprite));
 	}
 
-	objectHitbox* getHitbox() {
+	shared_ptr<objectHitbox> getHitbox() {
 		return hit;
 	}
 

@@ -12,22 +12,22 @@ class EndFlag : public GameObject {
 	bool checkpoint = false;
 
 public:
-	EndFlag(Texture* t, Vector2f pos, int section) {
-		sprite = new objectSprite("Flag", t, IntRect(288, 685,17,27), pos, Vector2f(4,4), 1);
+	EndFlag(shared_ptr<Texture> t, Vector2f pos, int section) {
+		sprite = shared_ptr<objectSprite>(new objectSprite("Flag", t, IntRect(288, 685,17,27), pos, Vector2f(4,4), 1));
 		angle = RIGHT;
 		this->section = section;
 		setCode();
 	}
 
-	EndFlag(Texture* t, Vector2f pos, enum transitionAngle ang, int section) {
+	EndFlag(shared_ptr<Texture> t, Vector2f pos, enum transitionAngle ang, int section) {
 		if (ang == RIGHT) {
-			sprite = new objectSprite("Flag", t, IntRect(288, 685, 17, 27), pos, Vector2f(4, 4), 1);
+			sprite = shared_ptr<objectSprite>(new objectSprite("Flag", t, IntRect(288, 685, 17, 27), pos, Vector2f(4, 4), 1));
 		}
 		else if (ang == UP) {
-			sprite = new objectSprite("Flag", t, IntRect(310, 685, 18, 27), pos, Vector2f(4, 4), 1);
+			sprite = shared_ptr<objectSprite>(new objectSprite("Flag", t, IntRect(310, 685, 18, 27), pos, Vector2f(4, 4), 1));
 		}
 		else if (ang == DOWN) {
-			sprite = new objectSprite("Flag", t, IntRect(342, 685, 17, 27), pos, Vector2f(4, 4), 1);
+			sprite = shared_ptr<objectSprite>(new objectSprite("Flag", t, IntRect(342, 685, 17, 27), pos, Vector2f(4, 4), 1));
 		}
 		angle = ang;
 		setCode();

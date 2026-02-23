@@ -10,7 +10,7 @@ using namespace sf;
 #pragma once
 
 class animation {
-	UISprite* sprite;
+	shared_ptr<UISprite> sprite;
 	list<IntRect> frameIndexes;
 	//bool repeat;
 	list<IntRect>::iterator current;
@@ -23,8 +23,9 @@ class animation {
 	bool swapped = false;
 
 
+
 public: 
-	animation(list<IntRect> indexes, UISprite* sprite) {
+	animation(list<IntRect> indexes, shared_ptr<UISprite> sprite) {
 	this->frameIndexes = indexes;
 		this->sprite = sprite;
 		//this->repeat = repeat;
@@ -38,7 +39,7 @@ public:
 		offsetI = offsetList.begin();
 
 	}
-	animation(IntRect index, UISprite* sprite) {
+	animation(IntRect index, shared_ptr<UISprite> sprite) {
 		this->frameIndexes = list<IntRect>{ index };
 		this->sprite = sprite;
 		//this->repeat = repeat;
@@ -221,7 +222,7 @@ public:void reset() {
 		  display = b;
 	  }
 
-	  void setSprite(UISprite* s) {
+	  void setSprite(shared_ptr<UISprite> s) {
 		  sprite = s;
 	  }
 	  int getFrameSize() {

@@ -6,8 +6,8 @@
 
 class FallPlatform : public GameObject {
 
-	ObTile* tile1;
-	ObTile* tile2;
+	shared_ptr<ObTile> tile1;
+	shared_ptr<ObTile> tile2;
 	Vector2f initialPos;
 
 	float fallSpeed = 500;
@@ -18,7 +18,7 @@ class FallPlatform : public GameObject {
 
 	State state = still;
 
-	physicsObject* phys;
+	shared_ptr<physicsObject> phys;
 
 	bool done = false;
 
@@ -31,11 +31,11 @@ class FallPlatform : public GameObject {
 
 public:
 
-	FallPlatform(Texture* tex, Vector2f pos) {
-		tile1 = new ObTile(Vector2f(pos.x / 16, pos.y / 16), tex, 0);
+	FallPlatform(shared_ptr<Texture> tex, Vector2f pos) {
+		tile1 = shared_ptr<ObTile>(new ObTile(Vector2f(pos.x / 16, pos.y / 16), tex, 0));
 		tile1->getSprite()->setRect(IntRect(638, 115, 16, 16));
 
-		tile2 = new ObTile(Vector2f((pos.x / 16) + 1, pos.y / 16), tex, 0);
+		tile2 = shared_ptr<ObTile>(new ObTile(Vector2f((pos.x / 16) + 1, pos.y / 16), tex, 0));
 		tile2->getSprite()->setRect(IntRect(638, 115, 16, 16));
 
 		initialPos = pos;
@@ -44,7 +44,7 @@ public:
 
 		sprite = tile1->getSprite();
 
-		phys = new physicsObject();
+		phys = shared_ptr<physicsObject> (new physicsObject());
 		//phys->setPosition(tile1->getSprite()->getPosition());
 	}
 
@@ -63,7 +63,7 @@ public:
 		
 	}
 
-	void eachFrame(float* deltaT, player* player, camera* cam, list<tile*>* tileList) {
+	void eachFrame(float* deltaT, shared_ptr<player> player, shared_ptr<camera> cam, list<shared_ptr<tile>>* tileList) {
 
 		tile1->update();
 		tile2->update();
@@ -126,8 +126,8 @@ public:
 		
 	}
 
-	bool waterCheck(list<tile*>* tileList) {
-		for (tile* t : *tileList) {
+	bool waterCheck(list<shared_ptr<tile>>* tileList) {
+		for (shared_ptr<tile> t : *tileList) {
 			if (t->getWaterBox() != NULL) {
 				if (hitboxDetect::hitboxDetection(t->getWaterBox(), tile1->getGround())) {
 					return true;
@@ -137,7 +137,7 @@ public:
 		return false;
 	}
 
-	void camCheck(camera* cam) {
+	void camCheck(shared_ptr<camera> cam) {
 		if (sprite->getCameraPosition().x < 0 || sprite->getCameraPosition().x > 1920) {
 			initial();
 		}
@@ -148,5 +148,5 @@ public:
 	}
 
 
-	list<tile*> getTiles() { return list<tile*> {tile1, tile2}; }
+	list<shared_ptr<tile>> getTiles() { return list<shared_ptr<tile>> {tile1, tile2}; }
 };

@@ -21,13 +21,13 @@ class WoodMan : public Master {
 	IntRect throw1 = IntRect(187, 26, 29, 27);
 	IntRect throw2 = IntRect(221, 21, 36, 32);
 
-	animation* beatAnim;
-	animTimer* beatTimer;
+	shared_ptr<animation> beatAnim;
+	shared_ptr<animTimer> beatTimer;
 
-	animation* throwAnim;
-	animTimer* throwTimer;
+	shared_ptr<animation> throwAnim;
+	shared_ptr<animTimer> throwTimer;
 
-	animation* idleAnim;
+	shared_ptr<animation> idleAnim;
 
 	float jumpForce = 1000;
 
@@ -52,39 +52,39 @@ class WoodMan : public Master {
 	float idleTime = 4;
 	float idleTime_left = idleTime;
 
-	LeafUpShot* lastShot = NULL;
+	shared_ptr<LeafUpShot> lastShot = NULL;
 
 	vector<Vector2f> corners;
 	State state = BEATING;
 
-	vector<LeafShieldBullet*> shield;
+	vector<shared_ptr<LeafShieldBullet>> shield;
 
 	bool newState = true;
 
 public:
 	void initial() {
 
-		deathAnimation = new DeathAnim(sprite, "Leaf Shield");
+		deathAnimation = shared_ptr<DeathAnim>(new DeathAnim(sprite, "Leaf Shield"));
 
-		Texture* t = new Texture();
+		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\wood man.png");
 		phys->setTexture(t);
 
 		phys->setRect(IntRect(295, 22, 32, 29));
 
-		introAnim = new animation(list<IntRect>{idle, beatRight, beatLeft, beatRight, beatLeft, beatRight, beatLeft, beatRight, beatLeft}, sprite);
-		introTimer = new animTimer(introAnim, 12, false);
+		introAnim = shared_ptr<animation>(new animation(list<IntRect>{idle, beatRight, beatLeft, beatRight, beatLeft, beatRight, beatLeft, beatRight, beatLeft}, sprite));
+		introTimer = shared_ptr<animTimer> (new animTimer(introAnim, 12, false));
 
-		beatAnim = new animation(list<IntRect>{beatRight, beatLeft}, sprite);
-		beatTimer = new animTimer(beatAnim, 12, true);
+		beatAnim = shared_ptr<animation>(new animation(list<IntRect>{beatRight, beatLeft}, sprite));
+		beatTimer = shared_ptr<animTimer> (new animTimer(beatAnim, 12, true));
 
-		hit = new objectHitbox(IntRect(0, 0, 32, 31), sprite);
-		hurt = new objectHitbox(IntRect(0, 0, 32, 31), sprite);
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 32, 31), sprite));
+		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 32, 31), sprite));
 
-		idleAnim = new animation(list<IntRect> {idle}, sprite);
+		idleAnim = shared_ptr<animation>(new animation(list<IntRect> {idle}, sprite));
 
-		throwAnim = new animation(list <IntRect>{ throw1, throw2 }, sprite);
-		throwTimer = new animTimer(throwAnim, 4, false);
+		throwAnim = shared_ptr<animation>(new animation(list <IntRect>{ throw1, throw2 }, sprite));
+		throwTimer = shared_ptr<animTimer> (new animTimer(throwAnim, 4, false));
 
 		masterInitial(string("wood man"));
 		
@@ -94,7 +94,7 @@ public:
 		floatPos = phys->getPosition().x - 400;
 	}
 
-	void alive(player* p, float* deltaT, list<tile*>* tileList, list<enemy*>* objectList, list<EnemyBullet*>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 
 		checkDirection(p->getSprite());
 
@@ -162,7 +162,7 @@ public:
 		faceRight = right;
 	}
 
-	bool idleShootLoop(float* deltaT, list<EnemyBullet*>* bList) {
+	bool idleShootLoop(float* deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 		delayBeforeShot_left -= *deltaT;
 		if (delayBeforeShot_left <= 0){
 			delayBeforeShot_left = delayBeforeShot;
@@ -174,12 +174,12 @@ public:
 		return false;
 	}
 
-	bool shootLoop(float* deltaT, list<EnemyBullet*>* bList) {
+	bool shootLoop(float* deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 
 		throwTimer->run(deltaT);
 		if (throwTimer->isFinished()) {
 
-			for (LeafShieldBullet* b : shield) {
+			for (shared_ptr<LeafShieldBullet> b : shield) {
 				b->shoot();
 				b->setRight(faceRight);
 			}
@@ -188,7 +188,7 @@ public:
 		return false;
 	}
 
-	bool idleLoop(float* deltaT, list<EnemyBullet*>* bList) {
+	bool idleLoop(float* deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 		idleAnim->thisFrame();
 		return bList->empty();
 
@@ -205,7 +205,7 @@ public:
 		}
 	}
 
-	bool jumpLoop(float* deltaT, list<tile*>* tileList) {
+	bool jumpLoop(float* deltaT, list<shared_ptr<tile>>* tileList) {
 
 			phys->eachFrame(deltaT);
 
@@ -217,7 +217,7 @@ public:
 		return false;
 	}
 
-	bool beatLoop(float* deltaT, list<EnemyBullet*>* bList) {
+	bool beatLoop(float* deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 		if (upShots < maxUpshots) {
 			shootUpwards(*deltaT, bList);
 		}
@@ -231,25 +231,25 @@ public:
 		return false;
 	}
 
-	void shootUpwards(float deltaT, list<EnemyBullet*>* bList) {
+	void shootUpwards(float deltaT, list<shared_ptr<EnemyBullet>>* bList) {
 		upShotDelay_left -= deltaT;
 		if (upShotDelay_left <= 0) {
 			upShotDelay_left = upShotDelay;
-			lastShot = new LeafUpShot(sprite->getTexture(), sprite->getPosition());
+			lastShot = shared_ptr<LeafUpShot> (new LeafUpShot(sprite->getTexture(), sprite->getPosition()));
 			bList->push_back(lastShot);
 			upShots++;
 		}
 	}
 
-	void spawnFloatLeaves(list<EnemyBullet*>* bList) {
+	void spawnFloatLeaves(list<shared_ptr<EnemyBullet>>* bList) {
 		for (int i = 0; i < 4; i++) {
-			bList->push_back(new LeafFloat(sprite->getTexture(), Vector2f(floatPos + (i * floatMult), sprite->getPosition().y - 600)));
+			bList->push_back(shared_ptr<LeafFloat> (new LeafFloat(sprite->getTexture(), Vector2f(floatPos + (i * floatMult), sprite->getPosition().y - 600))));
 		}
 	}
 
-	void deployShield(list<EnemyBullet*>* bList) {
+	void deployShield(list<shared_ptr<EnemyBullet>>* bList) {
 		for (int i = 0; i < 4; i++) {
-			LeafShieldBullet* bull = new LeafShieldBullet(sprite->getTexture(), corners[i]);
+			shared_ptr<LeafShieldBullet> bull = shared_ptr<LeafShieldBullet>(new  LeafShieldBullet(sprite->getTexture(), corners[i]));
 			bull->setCorner(i);
 			bList->push_back(bull);
 			shield.push_back(bull);
