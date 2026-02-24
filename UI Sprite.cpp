@@ -80,6 +80,16 @@ public: UISprite(shared_ptr<Texture> texture, IntRect rect, Vector2f position, V
 public: UISprite() {
 	//cout << "huh?";
 }
+
+	  UISprite(shared_ptr<UISprite> copy) {
+		  this->texture = copy->getTexture();
+		  this->type = copy->getType();
+		  loadTexture();
+		  setRect(copy->getRect());
+		  setCameraPosition(copy->getCameraPosition());
+		  setScale(copy->getScale());
+	  }
+
 protected: void loadTexture() {
 	thisOne.setTexture(*texture);
 }

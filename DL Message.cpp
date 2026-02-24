@@ -27,9 +27,9 @@ class DLMessage {
 	float flashTime_left = flashTime;
 
 	string alertText;
-	shared_ptr<Text> alertT;
+	shared_ptr<text> alertT;
 	string messageText;
-	shared_ptr<Text> messageT;
+	shared_ptr<text> messageT;
 
 	float textTime = 0.2;
 	float textTime_left = textTime;
@@ -49,17 +49,17 @@ public:
 
 		shared_ptr<Font> font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
-		alertT = shared_ptr<Text> (new Text());
-		messageT = shared_ptr<Text> (new Text());
-		alertT->setFont(*font);
-		messageT->setFont(*font);
+		alertT = shared_ptr<text> (new text());
+		messageT = shared_ptr<text> (new text());
+		alertT->setFont(font);
+		messageT->setFont(font);
 
-		alertT->setPosition(766, 300);
-		alertT->setCharacterSize(34);
+		alertT->setPosition(Vector2f(766, 300));
+		alertT->setSize(34);
 		alertT->setLineSpacing(2);
 
-		messageT->setPosition(766, 200);
-		messageT->setCharacterSize(36);
+		messageT->setPosition(Vector2f(766, 200));
+		messageT->setSize(36);
 		messageT->setLineSpacing(2);
 
 		alertText = "Message from \nDr. Light.";

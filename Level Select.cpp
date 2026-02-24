@@ -90,54 +90,63 @@ public:
 
 	void winIconSetup(bool bubble, bool heat, bool metal, bool wood, bool air, bool quick, bool flash, bool crash) {
 		
-		shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite());
+		shared_ptr<UISprite> templateS = shared_ptr<UISprite>(new UISprite());
 
-		temp->setTexture(background->getTexture());
-		temp->setRect(IntRect(729, 280, 45, 47));
-		temp->setScale(Vector2f(4, 4));
+		templateS->setTexture(background->getTexture());
+		templateS->setRect(IntRect(729, 280, 45, 47));
+		templateS->setScale(Vector2f(4, 4));
 
 		if (bubble) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((299-150) * 4, (33-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(0);
 		}
 		if (heat) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((299-150) * 4, (97-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(3);
 		}
 		if (metal) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((299 - 150) * 4, (161-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(6);
 		}
 		if (wood) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((427 - 150) * 4, (97-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(5);
 		}
 		if (air) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((363 - 150) * 4, (33-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(1);
 		}
 		if (quick) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((427 - 150) * 4, (33-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(2);
 		}
 		if (flash) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((363 - 150) * 4, (161-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(7);
 		}
 		if (crash) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setCameraPosition(Vector2f((427 - 150) * 4, (161-2) * 4));
 			winIcons.push_back(temp);
 			won.push_back(8);
 		}
 
 		if (wood && crash && flash && air && quick && metal && bubble && heat) {
+			shared_ptr<UISprite> temp = shared_ptr<UISprite>(new UISprite(templateS));
 			temp->setTexture(background->getTexture());
 			temp->setRect(IntRect(777, 282, 45, 45));
 			temp->setCameraPosition(Vector2f((363 - 150) * 4, 97 * 4));

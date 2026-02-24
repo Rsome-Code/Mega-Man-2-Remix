@@ -107,6 +107,10 @@ shared_ptr<Weapon> updatePlayer(shared_ptr<player> p, string levelName) {
 		p->setBoomerang(true);
 		return p->getBoomerang();
 	}
+	else if (levelName == "flash man") {
+		p->setTimeStopper(true);
+		return p->getTimeStopper();
+	}
 	return NULL;
 }
 
@@ -379,6 +383,6 @@ int main() {
 	
 	
 	
-	//cout << "hi";
+	cout << "hi";
 
 }

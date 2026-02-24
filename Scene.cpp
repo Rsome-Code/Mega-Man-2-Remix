@@ -264,7 +264,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 10;
+		section = 0;
 
 		p->enableControls(true);
 
@@ -626,7 +626,7 @@ public:
 				for (shared_ptr<bullet> b : bList) {
 					instance->objectDisplay(b->getSprites(), cam);
 					instance->objectDisplay(b->getSprite(), cam);
-					instance->objectHitboxDisplay(b->getHitbox(), cam);
+					//instance->objectHitboxDisplay(b->getHitbox(), cam);
 				}
 
 			}
@@ -1780,6 +1780,8 @@ public:
 		newZ2List.clear();
 		newZ3List.clear();
 		newZ4List.clear();
+
+		eBullets.clear();
 	}
 
 	void deleteObjects() {

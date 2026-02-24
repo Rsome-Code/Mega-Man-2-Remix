@@ -11,6 +11,10 @@ class FlashDoor : public Door {
 	int beat = 1;
 
 
+	void resetAnim() {
+		beat = 1;
+	}
+
 	void animate(float* deltaT) {
 
 		flashTime_left -= *deltaT;

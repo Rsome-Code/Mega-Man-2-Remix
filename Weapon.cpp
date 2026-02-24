@@ -148,7 +148,7 @@ public:
 
 	virtual bool fire(bool right, list<shared_ptr<ItemBullet>>* allItems) {
 		return false;
-	}
+	};
 
 	virtual void checkCount(list<shared_ptr<ItemBullet>> allItems) {}
 

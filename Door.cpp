@@ -59,7 +59,11 @@ public:
 		return section;
 	}
 
+	virtual void resetAnim() {};
+
 	bool openAnim(float* deltaT){
+
+		resetAnim();
 
 		if (aTimer->run(deltaT)) {
 			if (firstOpen) {

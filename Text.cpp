@@ -29,9 +29,9 @@ public:
 
 		render = shared_ptr<Text> (new Text());
 		render->setFont(*font);
-		render->setCharacterSize(size); // in pixels
-		render->setFillColor(colour); // set the text color
-		//render->setStyle(sf::Text::Bold | sf::Text::Underlined); // set text style
+		render->setCharacterSize(size); 
+		render->setFillColor(colour); 
+		
 		render->setString(content);
 		render->setPosition(position);
 	}
@@ -48,6 +48,34 @@ public:
 		render->setFillColor(colour); // set the text color
 		//render->setStyle(sf::Text::Bold | sf::Text::Underlined); // set text style
 		render->setString(this->content);
+		render->setPosition(position);
+	}
+
+	text() {
+		render = shared_ptr<Text>(new Text());
+	}
+
+	void setLineSpacing(float newLineSpacing) {
+		render->setLineSpacing(newLineSpacing);
+	}
+
+	void setFillColour(Color newColour) {
+		colour = newColour;
+		render->setFillColor(colour);
+	}
+
+	void setFont(shared_ptr<Font> newFont) {
+		font = newFont;
+		render->setFont(*font);
+	}
+
+	void setString(string newString) {
+		content = newString;
+		render->setString(content);
+	}
+
+	void setPosition(Vector2f newPos) {
+		position = newPos;
 		render->setPosition(position);
 	}
 

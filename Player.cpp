@@ -292,6 +292,7 @@ public:
 		gotBoomerang = b;
 	}
 
+
 	void setTimeStopper(bool b) {
 		gotTimeStopper = b;
 	}

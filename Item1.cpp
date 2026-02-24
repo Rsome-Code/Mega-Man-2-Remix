@@ -22,7 +22,7 @@ public:
 		bulCode = "item 1";
 	}
 
-	bool fire(bool right, list<shared_ptr<Item1Bullet>>* allItems) {
+	bool fire(bool right, list<shared_ptr<ItemBullet>>* allItems) {
 
 		if (ammo > 0 && weaponCount < maxWeaponCount) {
 			float offset;

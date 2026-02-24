@@ -12,13 +12,13 @@
 class EquipAnim {
 
 	enum State {
-		Fading, Texting, Flashing, Done
+		Fading, texting, Flashing, Done
 	};
 
-	string symbolText;
-	shared_ptr<Text> symbol;
-	string getEquipText;
-	shared_ptr<Text> getEquip;
+	string symboltext;
+	shared_ptr<text> symbol;
+	string getEquiptext;
+	shared_ptr<text> getEquip;
 
 	float textTime = 0.2;
 	float textTime_left = textTime;
@@ -49,16 +49,24 @@ class EquipAnim {
 public:
 
 	void init(shared_ptr<Weapon> weapon){
-		symbol = shared_ptr<Text> (new Text());
-		getEquip = shared_ptr<Text> (new Text());
+		symbol = shared_ptr<text> (new text());
 
-		symbolText = ("-"+weapon->getSymbol()+"- ");
-		getEquipText = ("Get Equipped \nwith \n" + weapon->getTextName());
+
+		symbol->setFillColour(Color::White);
+
+		symbol->setString("");
+		
+
+
+		getEquip = shared_ptr<text> (new text());
+
+		symboltext = ("-"+weapon->getSymbol()+"- ");
+		getEquiptext = ("Get Equipped \nwith \n" + weapon->getTextName());
 
 		shared_ptr<Font> font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
-		symbol->setFont(*font);
-		getEquip->setFont(*font);
+		symbol->setFont(font);
+		getEquip->setFont(font);
 
 		shared_ptr<Texture> t = shared_ptr<Texture> (new Texture());
 		t->loadFromFile("assets\\NES - Mega Man 2 - Miscellaneous - Menus.png");
@@ -70,9 +78,9 @@ public:
 		megaMan = shared_ptr<UISprite>(new UISprite("mega", mega, oldColour, Vector2f(600, 200), Vector2f(4, 4)));
 
 		symbol->setPosition(Vector2f(766, 200));
-		symbol->setCharacterSize(34);
-		getEquip->setPosition(800, 260);
-		getEquip->setCharacterSize(34);
+		symbol->setSize(34);
+		getEquip->setPosition(Vector2f(800, 260));
+		getEquip->setSize(34);
 		getEquip->setLineSpacing(2);
 		
 		rectangle = shared_ptr<RectangleShape>(new RectangleShape());
@@ -117,12 +125,12 @@ public:
 		charaNum++;
 		string temp;
 		for (int i = 0; i < charaNum; i++) {
-			temp = temp + symbolText[i];
+			temp = temp + symboltext[i];
 		}
 
 		symbol->setString(temp);
 
-		return (charaNum == symbolText.size());
+		return (charaNum == symboltext.size());
 
 	}
 
@@ -130,12 +138,12 @@ public:
 		charaNum++;
 		string temp;
 		for (int i = 0; i < charaNum; i++) {
-			temp = temp + getEquipText[i];
+			temp = temp + getEquiptext[i];
 		}
 
 		getEquip->setString(temp);
 
-		return (charaNum == getEquipText.size());
+		return (charaNum == getEquiptext.size());
 
 	}
 	
@@ -202,6 +210,8 @@ public:
 			music->play();
 		}
 
+
+
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
 			while (instance->getWindow()->pollEvent(event))
@@ -219,11 +229,11 @@ public:
 
 			if (state == Fading) {
 				if (fadeLoop(&deltaT)) {
-					state = Texting;
+					state = texting;
 				}
 			}
 
-			else if (state == Texting) {
+			else if (state == texting) {
 				if (textLoop(&deltaT)) {
 					state = Flashing;
 				}
@@ -257,8 +267,8 @@ public:
 		list<shared_ptr<UISprite>> sprites = { background, megaMan };
 		return sprites;
 	}
-	list<shared_ptr<Text>> getText() {
-		list<shared_ptr<Text>> texts = { symbol, getEquip };
+	list<shared_ptr<text>> getText() {
+		list<shared_ptr<text>> texts = { symbol, getEquip };
 		return texts;
 	}
 

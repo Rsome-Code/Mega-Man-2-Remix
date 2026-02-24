@@ -11,7 +11,7 @@
 
 class EquipMenu {
 	list<shared_ptr<UISprite>> sprites;
-	list<shared_ptr<Text>> texts;
+	list<shared_ptr<text>> texts;
 
 	shared_ptr<UISprite> passwordS;
 	shared_ptr<UISprite> stageSelectS;
@@ -35,7 +35,7 @@ class EquipMenu {
 
 public:
 
-	EquipMenu(shared_ptr<Texture> t, list<shared_ptr<UISprite>> sprites, list<shared_ptr<Text>> texts, Vector2f menuPos) {
+	EquipMenu(shared_ptr<Texture> t, list<shared_ptr<UISprite>> sprites, list<shared_ptr<text>> texts, Vector2f menuPos) {
 		this->sprites = sprites;
 		this->texts = texts;
 		//control = shared_ptr<pController>(new pController();
@@ -154,7 +154,7 @@ public:
 
 			instance->UIDisplay(sprites);
 
-			for (shared_ptr<Text> t : texts) {
+			for (shared_ptr<text> t : texts) {
 				instance->textDisplay(t);
 			}
 

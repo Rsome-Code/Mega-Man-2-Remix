@@ -40,6 +40,8 @@ public:
 		speed = 200;
 
 		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 8, 8), phys));
+
+		damage = 3;
 	}
 
 	void setUp(bool u) {
