@@ -12,12 +12,13 @@
 #include "bubble man.cpp"
 #include "metal man.cpp"
 #include "quick man.cpp"
+#include "flash man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
 class StageIntro{
 	bool run;
-	shared_ptr<Text> text;
+	shared_ptr<text> Text;
 	list<shared_ptr<movable>> particles;
 	shared_ptr<UISprite> background;
 	string textBuffer;
@@ -86,11 +87,11 @@ public:
 
 		floor = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 430, 1, 1), floorContainer));
 
-		text = shared_ptr<Text> (new Text());
+		Text = shared_ptr<text> (new text());
 		shared_ptr<Font> font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
-		text->setFont(*font);
-		text->setPosition(850, 570);
+		Text->setFont(font);
+		Text->setPosition(Vector2f(850, 570));
 
 		music = shared_ptr<Music>(new Music());
 		music->openFromFile("assets\\sound\\music\\5 - Enemy Chosen.mp3");
@@ -122,6 +123,10 @@ public:
 		}
 		else if (name == "quick man") {
 			boss = shared_ptr<Master>(new QuickMan(bossT, pos));
+			boss->initial();
+		}
+		else if (name == "flash man") {
+			boss = shared_ptr<Master>(new FlashMan(bossT, pos));
 			boss->initial();
 		}
 	}
@@ -217,7 +222,7 @@ public:
 				temp = temp + textBuffer[i];
 			}
 			
-			text->setString(temp);
+			Text->setString(temp);
 
 			textFin = (charaNum == textBuffer.size());
 			
@@ -268,7 +273,7 @@ public:
 			music->play();
 		}
 
-
+		boss->tauntStart();
 		
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;
@@ -327,7 +332,7 @@ public:
 
 			instance->UIDisplay(background);
 			instance->objectDisplay(boss->getSprite(), cam);
-			instance->textDisplay(text);
+			instance->textDisplay(Text);
 
 			instance->getWindow()->display();
 			instance->getWindow()->clear();

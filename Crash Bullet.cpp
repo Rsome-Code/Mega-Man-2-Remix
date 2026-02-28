@@ -307,4 +307,12 @@ public:
 		}
 
 	}
+
+	void uniqueReset() {
+		state = FLYING;
+		explodeTime_left = explodeTime;
+		activeTime_left = activeTime;
+
+		explosion.reset();
+	}
 };

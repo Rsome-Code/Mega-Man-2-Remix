@@ -6,5 +6,5 @@ Bubble Man,n
 Metal Man,n
 Quick Man,n
 Flash Man,n
-Crash Man,y
+Crash Man,n
 Air Man,n

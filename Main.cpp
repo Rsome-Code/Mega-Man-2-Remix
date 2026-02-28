@@ -182,7 +182,7 @@ int main() {
 
 	
 	//string bossName = levelMenu->loop(instance, targetFPS, bg);
-	string bossName = "wood man";
+	string bossName = "crash man";
 	
 	
 
@@ -253,8 +253,8 @@ int main() {
 
 
 
-	//delete l;
-	//delete o;
+	delete l;
+	delete o;
 
 	bg = shared_ptr<Texture> (new Texture());
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
@@ -273,9 +273,9 @@ int main() {
 
 			hold = levelMenu->checkA();
 
-			//StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
+			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 			//intro->loop(instance, targetFPS);
-			//delete intro;
+			delete intro;
 		}
 
 		restart = false;
@@ -289,7 +289,7 @@ int main() {
 			col->setLives(2);
 		}
 		//col->heal(-27);
-		//col->setLives(0);
+	
 
 
 		unique_ptr<abstractStage> stage = unique_ptr<abstractStage>(new abstractStage(bossName, soundCol));

@@ -92,7 +92,7 @@ public:
 		direction = num;
 	}
 
-	virtual void shootReset() {
+	void shootReset() {
 		sprite->setPosition(Vector2f(0, 0));
 		hitbox->updatePos();
 		shooting = false;

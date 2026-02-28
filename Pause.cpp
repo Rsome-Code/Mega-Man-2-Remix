@@ -127,12 +127,13 @@ public:
 			addP2Option(&timeStopper, 2, p->getTimeStopper());
 		}
 
-		if (p->checkBomb()) {
-			addP2Option(&crashBomb, 3, p->getCrashBomb());
-		}
+		
 
 		if (p->checkBlade()) {
-			addP2Option(&metalBlade, 2, p->getMetalBlade());
+			addP2Option(&metalBlade, 3, p->getMetalBlade());
+		}
+		if (p->checkBomb()) {
+			addP2Option(&crashBomb, 4, p->getCrashBomb());
 		}
 
 		if (p->checkAtomicFire()) {
@@ -263,6 +264,7 @@ public:
 		defaultOption();
 
 		openSound->play();
+
 
 		while (instance->getWindow()->isOpen() && run) {
 			Event event;

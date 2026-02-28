@@ -436,6 +436,7 @@ public:
 			cam->followX();
 
 
+
 			Vector2f flagPos = stage->getFlagPos(section);
 
 			enum transitionAngle ang = stage->getAngle();
@@ -675,8 +676,6 @@ public:
 
 			instance->getWindow()->display();
 			instance->getWindow()->clear();
-
-
 
 		}
 
@@ -2369,6 +2368,8 @@ public:
 			if (t->checkDist()) {
 				tileDistanceCheck(instance, t);
 			}
+
+			
 		}
 
 		if (inWater) {

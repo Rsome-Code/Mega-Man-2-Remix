@@ -91,14 +91,18 @@ public:
 		return false;
 	}
 
+	void tauntStart() {
+		grounded = false;
+	}
+
 	bool titleLoop(float* deltaT, shared_ptr<objectHitbox> floor) {
 			
 		if (!grounded) {
 			phys->eachFrame(deltaT);
 			hit->updatePos();
-			if (hit->getPosition().y > floor->getCameraPos().y) {
+			if (hit->getPosition().y > floor->getPosition().y) {
 				grounded = true;
-				phys->setPosition(Vector2f(phys->getPosition().x, floor->getCameraPos().y));
+				phys->setPosition(Vector2f(phys->getPosition().x, floor->getPosition().y));
 			}
 		}
 		else {

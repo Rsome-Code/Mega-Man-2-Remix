@@ -543,6 +543,9 @@ public:
 		for (shared_ptr<bullet> b : bubbleLead->getBullets()) {
 			b->shootReset();
 		}
+		for (shared_ptr<bullet> b : crashBomb->getBullets()) {
+			b->shootReset();
+		}
 	}
 
 
@@ -715,6 +718,7 @@ public:
 		quickBoomerang->setAmmo(28);
 		metalBlade->setAmmo(28);
 		bubbleLead->setAmmo(28);
+		crashBomb->setAmmo(28);
 	}
 
 	void updateHitbox() {
