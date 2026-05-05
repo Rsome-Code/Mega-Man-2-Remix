@@ -222,6 +222,10 @@ public:
 		return sprite->getPosition();
 	}
 
+	Vector2f getMiddlePos() {
+		return Vector2f(sprite->getPosition().x + (sprite->getSize().x / 2), sprite->getPosition().y + (sprite->getSize().y / 2));
+	}
+
 	void ladderJumpExtend(list<shared_ptr<tile>> tiles) {
 		if ((controls->isJumping() && ladderNotBelow(tiles) )|| (controls->getOnLadder() && ladderNotBelow(tiles))) {
 			ladderHit->setRelativePosition(Vector2i(ladderHit->getRelativePosition().x, 0 * sprite->getScale().y));

@@ -186,6 +186,7 @@
     <Media Include="Assets\Sound\yoku.wav" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Boss Crash Bomb.cpp" />
     <ClCompile Include="checkDown.cpp" />
     <ClCompile Include="checkLeft.cpp" />
     <ClCompile Include="checkRight.cpp" />

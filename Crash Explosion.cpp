@@ -42,6 +42,24 @@ public:
 		startExplo();
 	}
 
+	CrashExplosion(shared_ptr<Texture> t, Vector2f startPos, shared_ptr<Sound> sound, IntRect tRect, IntRect tRect1, IntRect tRect2, IntRect tRect3) {
+		position = startPos;
+
+		for (int i = 0; i < 4; i++) {
+			sprites.push_back(shared_ptr<objectSprite>(new objectSprite("crash", t, tRect, Vector2f(0, 0), Vector2f(4, 4))));
+
+			anims.push_back(shared_ptr<animation>(new animation(list<IntRect>{tRect, tRect1, tRect2, tRect3}, sprites[i])));
+
+			anims[i]->setOffsetList(list<Vector2f>{Vector2f(-6 * 4, -6 * 4), Vector2f(-4 * 4, -4 * 4), Vector2f(-3 * 4, -3 * 4), Vector2f(0 * 4, 0 * 4)});
+
+			timers.push_back(shared_ptr<animTimer>(new animTimer(anims[i], 38, false)));
+		}
+
+		explodeSound = sound;
+
+		startExplo();
+	}
+
 	void startExplo() {
 		for (shared_ptr<animTimer> t : timers) {
 			t->reset();
@@ -59,6 +77,7 @@ public:
 
 	}
 
+	//Returns true when explosion is finished
 	bool eachFrame(float* deltaT) {
 
 		for (shared_ptr<animTimer> t : timers) {

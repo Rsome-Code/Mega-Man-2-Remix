@@ -62,7 +62,9 @@ public:
 		offsetList = l;
 		offsetI = offsetList.begin();
 
-		for (int i = 1; i < currentIndex; i++) {
+
+		//Not sure if i should be 0 or 1
+		for (int i = 0; i < currentIndex; i++) {
 			offsetI = next(offsetI);
 		}
 	}

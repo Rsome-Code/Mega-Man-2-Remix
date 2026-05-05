@@ -96,6 +96,7 @@
 #include "checkLeft.cpp"
 #include "checkRight.cpp"
 #include "rail platform.cpp"
+#include "crash man.cpp"
 #pragma once
 
 using namespace std;
@@ -337,7 +338,12 @@ public:
 
 
 					if (flag->getAngle() == RIGHT || flag->getAngle() == LEFT) {
-						flag->setPosition(Vector2f(flag->getPosition().x, lastFlag->getPosition().y));
+						if (lastFlag->getAngle() != UP) {
+							flag->setPosition(Vector2f(flag->getPosition().x, lastFlag->getPosition().y));
+						}
+						else {
+							flag->setPosition(Vector2f(flag->getPosition().x, lastFlag->getPosition().y - 1080));
+						}
 					}
 				}
 			}
@@ -375,10 +381,12 @@ public:
 			if (lastVFlag->getAngle() == DOWN) {
 				thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y));
 			}
+			
 			else {
 				thisFlag->getSprite()->setPosition(Vector2f(thisFlag->getSprite()->getPosition().x, lastVFlag->getSprite()->getPosition().y - 1080));
 			}
 		}
+
 
 	}
 
@@ -796,6 +804,11 @@ public:
 
 		else if (type == "pie robot") {
 			*enem = shared_ptr<enemy>(new PieRobot(t, worldPos));
+		}
+
+		else if (type == "crash man") {
+			*enem = shared_ptr<enemy>(new CrashMan(worldPos));
+
 		}
 
 		else if (type == "beam left") {

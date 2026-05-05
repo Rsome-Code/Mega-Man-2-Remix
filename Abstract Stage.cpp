@@ -114,6 +114,9 @@ public:
 		else if (levelName == "flash man") {
 			music->setLoopPoints({ sf::seconds(25.5629), seconds(1000) });
 		}
+		else if (levelName == "crash man") {
+			music->setLoopPoints({ sf::seconds(12.77), seconds(1000) });
+		}
 		else {
 			music->setLoopPoints({ sf::seconds(0), seconds(1000) });
 		}

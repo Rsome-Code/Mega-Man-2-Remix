@@ -94,6 +94,8 @@ public:
 	virtual LightSource* getLightSource() { return NULL; };
 	virtual void setInitOffScreen(bool o) {};
 
+	virtual list<shared_ptr<objectSprite>> getSprites() { return list<shared_ptr<objectSprite>>{NULL}; };
+
 	virtual bool getInitOffScreen() {
 		return NULL;
 	}

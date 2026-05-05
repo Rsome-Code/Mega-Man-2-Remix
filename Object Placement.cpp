@@ -51,6 +51,7 @@ class ObjectPlacer {
 	Vector2i dragStart;
 	bool mouse1Pressed;
 	bool mouse2Pressed;
+	bool mouse3Pressed = true;
 	bool mouseX1Pressed;
 	bool xButton2Pressed = false;
 	bool leftPressed = false;
@@ -563,8 +564,14 @@ public:
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
-			save();
+			if (mouse3Pressed == false) {
+				save();
+			}
+			mouse3Pressed = true;
 
+		}
+		else {
+			mouse3Pressed = false;
 		}
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::XButton2) && !xButton2Pressed) {

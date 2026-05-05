@@ -271,7 +271,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 3;
+		section = 20;
 
 		p->enableControls(true);
 
@@ -383,8 +383,12 @@ public:
 			}
 
 
-
-			p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos);
+			if (door1->getSection() == section || door2->getSection() == section) {
+				p->eachFrame(&deltaT, tileList, &itemBullets, 300);
+			}
+			else {
+				p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos);
+			}
 
 			checkFall();
 
@@ -619,6 +623,7 @@ public:
 
 			for (shared_ptr<object> o : eBullets) {
 				instance->objectAccess(o, cam);
+				instance->objectDisplay(o->getSprites(), cam);
 			}
 
 			for (shared_ptr<GameObject> g : foregroundObjects) {
