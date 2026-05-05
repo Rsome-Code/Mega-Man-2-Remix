@@ -9,6 +9,8 @@ protected:
 	shared_ptr<SoundBuffer> soundB;
 	shared_ptr<Sound> sound;
 
+	int section = NULL;
+
 public:
 
 	virtual ~GameObject() {
@@ -79,6 +81,9 @@ public:
 	virtual void eachFrame(float* deltaT, shared_ptr<player> player, shared_ptr<camera> cam, list<shared_ptr<tile>>* tileList) {};
 	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player){};
 	virtual void eachFrame(float* deltaT, shared_ptr<objectSprite> player, list<shared_ptr<GameObject>> enemies) {};
+	virtual void eachFrame(float* deltaT, shared_ptr<player> p, shared_ptr<camera> cam, list<shared_ptr<GameObject>> objects) {};
+	virtual void eachFrame() {};
+
 
 	virtual void setSoundPointer(shared_ptr<Sound> sou) {
 
@@ -92,7 +97,14 @@ public:
 
 	virtual void deleteInt() {
 
+	}
+
+	virtual void setSection(int sect) {
+		section = sect;
+	}
+	virtual int getSection() {
+		return section;
+	}
 
 	
-	}
 };

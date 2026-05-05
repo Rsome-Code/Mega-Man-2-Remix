@@ -4,6 +4,7 @@
 #include <thread>
 #include <iterator>
 #include <list>
+#include "colour.cpp"
 #pragma once
 
 
@@ -135,7 +136,7 @@ public: Sprite* getSprite() {
 
 
 	  void setTransparency(int tra) {
-		  thisOne.setColor(sf::Color(thisOne.getColor().r, thisOne.getColor().g, thisOne.getColor().g, tra));
+		  thisOne.setColor(Colour(thisOne.getColor().r, thisOne.getColor().g, thisOne.getColor().g, tra).getColour());
 	  }
 
 public: Vector2f getCameraPosition() {

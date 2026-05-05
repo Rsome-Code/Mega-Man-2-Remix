@@ -91,6 +91,11 @@
 #include "bottom left corner w.cpp"
 #include "flash door.cpp"
 #include "crazy cannon.cpp"
+#include "checkDown.cpp"
+#include "checkUp.cpp"
+#include "checkLeft.cpp"
+#include "checkRight.cpp"
+#include "rail platform.cpp"
 #pragma once
 
 using namespace std;
@@ -884,7 +889,7 @@ public:
 		
 		
 		else if (type == "trch-R") {
-			*add = shared_ptr<GameObject> (new Torch(t, Vector2f(worldX, worldY), Color::Red, 300, 210));
+			*add = shared_ptr<GameObject> (new Torch(t, Vector2f(worldX, worldY), Colour::Red(), 300, 210));
 		}
 		/*else if (type == "flag") {
 			add = shared_ptr<EndFlag> (new EndFlag(t, Vector2f(worldX, worldY));
@@ -919,6 +924,23 @@ public:
 			*item = shared_ptr<Item>(new ExtraLife(misc, Vector2f(worldX, worldY)));
 
 		}
+
+		else if (type == "rail platform") {
+			*add = shared_ptr<GameObject>(new RailPlatform(t, Vector2f(worldX, worldY)));
+		}
+		else if (type == "rail checkpoint-down") {
+			*add = shared_ptr<GameObject>(new CheckDown(Vector2f(worldX, worldY)));
+		}
+		else if (type == "rail checkpoint-up") {
+			*add = shared_ptr<GameObject>(new CheckUp(Vector2f(worldX, worldY)));
+		}
+		else if (type == "rail checkpoint-left") {
+			*add = shared_ptr<GameObject>(new CheckLeft(Vector2f(worldX, worldY)));
+		}
+		else if (type == "rail checkpoint-right") {
+			*add = shared_ptr<GameObject>(new CheckRight(Vector2f(worldX, worldY)));
+		}
+
 
 		//Checks variable codes
 		else {

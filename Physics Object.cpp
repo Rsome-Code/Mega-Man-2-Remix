@@ -1,6 +1,8 @@
 #include "Movable Object.cpp"
 #pragma once
 
+//Note: Accidentally got acceleration and velocity mixed up. Force should be added as a variable if you want to store acceleration.
+
 class physicsObject :public movable {
 	using movable::movable;
 	float horizontalAcc;

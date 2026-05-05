@@ -82,7 +82,7 @@ public:
 
 		rectangle = shared_ptr<RectangleShape>(new RectangleShape);
 
-		rectangle->setFillColor(Color(255,255,255,220));
+		rectangle->setFillColor(Colour(255,255,255,220).getColour());
 		rectangle->setPosition(0, 0);
 		rectangle->setSize(Vector2f(1920, 1080));
 		
@@ -276,6 +276,9 @@ public:
 		}
 		else if (selection == 7) {
 			r = "flash man";
+		}
+		else if (selection == 8) {
+			r = "crash man";
 		}
 		music->stop();
 		return r;

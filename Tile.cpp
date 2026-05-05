@@ -33,6 +33,11 @@ public:
 		type = "0";
 	}
 
+	void setLocation(Vector2f loc) {
+		location = loc;
+		sprite->setPosition(Vector2f(loc.x * size, loc.y * size));
+	}
+
 	shared_ptr<objectSprite> getSprite(){
 		return sprite;
 	}
@@ -66,6 +71,35 @@ public:
 	virtual shared_ptr<objectHitbox> getWaterBox() {return NULL;};
 	virtual void animate(float* deltaT) {};
 	virtual void reset() {};
+
+	virtual void setAbove(bool b) {
+		
+	}
+	virtual void setRight(bool b) {
+		
+	}
+	virtual void setLeft(bool b) {
+		
+	}
+	virtual void setBelow(bool b) {
+		
+	}
+
+	virtual bool getAbove() {
+		return false;
+	}
+	virtual bool getRightB() {
+		return false;
+	}
+	virtual bool getBelow() {
+		return false;
+	}
+	virtual bool getLeftB() {
+		return false;
+	}
+
+	virtual void hitboxCopy(shared_ptr<tile> t) {
+	}
 
 	virtual list<shared_ptr<objectSprite>> getInternalSprites() {
 		return list<shared_ptr<objectSprite>> {};
@@ -108,5 +142,11 @@ public:
 	virtual void deleteInt() {
 		
 	}
+
+	virtual bool checkCrash() {
+		return false;
+	}
+
+	virtual void crashSetup() {};
 
 };

@@ -164,7 +164,7 @@ public:
 		string numString = to_string(p->getLives());
 
 	
-		lifeText = shared_ptr<text>(new text(string(": 0" + numString), Vector2f(iconX + 32*4, position.y + (64 * 4) * 2), float(38), font, Color::White));
+		lifeText = shared_ptr<text>(new text(string(": 0" + numString), Vector2f(iconX + 32*4, position.y + (64 * 4) * 2), float(38), font, Colour::White()));
 
 		lifeSprite = shared_ptr<UISprite>(new UISprite("ui", miscT, IntRect(139, 2, 16, 15), Vector2f(iconX + (16 * 4), position.y + (62 * 4) * 2), Vector2f(4,4)));
 

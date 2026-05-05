@@ -23,7 +23,7 @@
 #include <sfml/audio.hpp>
 #include "sound collection.cpp"
 #include "item bullets.cpp"
-
+#include "colour.cpp"
 #include "debug menu.cpp"
 #pragma once
 
@@ -35,7 +35,7 @@ class scene {
 	//grid* background;
 
 	bool onLadder = false;
-	bool ground = false;
+
 
 	bool interpolating = false;
 	Vector2f newCamPos;
@@ -122,6 +122,7 @@ class scene {
 
 	list<shared_ptr<ItemBullet>> itemBullets;
 
+	int maxTelePos;
 
 public:
 
@@ -162,7 +163,7 @@ public:
 
 
 
-		readyText = shared_ptr<text>(new text(string("READY"), Vector2f(900, 500), float(22), font, Color::White));
+		readyText = shared_ptr<text>(new text(string("READY"), Vector2f(900, 500), float(22), font, Colour::White()));
 
 		loadFlag();
 
@@ -185,6 +186,7 @@ public:
 		victoryMusic->openFromFile("assets\\sound\\music\\15 - Victory.mp3");
 
 		teleExit = shared_ptr<TeleportOut> (new TeleportOut(p->getSprite()));
+		maxTelePos = stage->getTelePos();
 
 	}
 
@@ -235,7 +237,12 @@ public:
 	vector<bool> beforeTileList;
 
 	void checkObBefore() {
-		obBeforeTile = beforeTileList[section];
+		if (!beforeTileList.empty()) {
+			obBeforeTile = beforeTileList[section];
+		}
+		else {
+			obBeforeTile = false;
+		}
 	}
 
 	void debugCheck(shared_ptr<DebugMenu> dMenu, shared_ptr<player> p, shared_ptr<renderer> instance, double* targetRate) {
@@ -264,7 +271,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 0;
+		section = 3;
 
 		p->enableControls(true);
 
@@ -377,7 +384,7 @@ public:
 
 
 
-			p->eachFrame(&deltaT, tileList, &itemBullets);
+			p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos);
 
 			checkFall();
 
@@ -387,6 +394,8 @@ public:
 				o->eachFrame(&deltaT, p, cam, &tileList);
 				o->eachFrame(&deltaT, p, cam);
 				o->eachFrame(&deltaT, p->getSprite());
+				o->eachFrame(&deltaT, p, cam, objects);
+				o->eachFrame();
 
 				list<shared_ptr<GameObject>> temp;
 				for (shared_ptr<GameObject> g : enemies) {
@@ -398,7 +407,7 @@ public:
 			}
 
 			if (!p->isTeleporting()) {
-				ground = false;
+				p->setTempGround(false);
 
 
 				if (!unPaused) {
@@ -507,8 +516,10 @@ public:
 
 
 			itemBulletLoop(deltaT);
-			p->setGrounded(ground);
 
+			if (!p->getGroundedOverride()) {
+				p->setGrounded(p->getTempGround());
+			}
 
 
 			for (shared_ptr<tile> t : z4List) {
@@ -707,7 +718,7 @@ public:
 				if (hitboxCheck(iBul->getHit(), p->getFoot())) {
 					p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x, iBul->getHit()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
 					//cam->follow();
-					ground = true;
+					p->setTempGround(true);
 				}
 			}
 		}
@@ -2268,7 +2279,7 @@ public:
 
 					float currentX = p->getSprite()->getPosition().x;
 					if (t->getGround() != NULL) {
-						if (!ground) {
+						if (!p->getTempGround()) {
 							if (hitboxCheck(p->getFoot(), t->getGround())) {
 								movement = t->getMovement();
 								frictionDecrease = t->getFrictionDecrease();
@@ -2276,7 +2287,7 @@ public:
 									p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
 									//cam->follow();
 
-									ground = true;
+									p->setTempGround(true);
 									thisGround = true;
 								}
 							}

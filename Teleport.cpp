@@ -76,11 +76,11 @@ public:
 
 	}
 
-	bool eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, shared_ptr<objectHitbox> foot) {
+	bool eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, shared_ptr<objectHitbox> foot, int maxPos) {
 		teleportAnim->thisFrame();
 		//if (sprite->getPosition().y < targetLoc->y) {
 
-		if (looped && sprite->getCameraPosition().y > 300) {
+		if (looped && sprite->getCameraPosition().y > maxPos) {
 
 			
 			if (floorCheck(tiles, foot)) {

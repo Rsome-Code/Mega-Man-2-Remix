@@ -24,10 +24,7 @@
 #include "E tank.cpp"
 #include "door.cpp"
 #include "Extra life.cpp"
-#include "gorilla.cpp"
-#include "wolf.cpp"
 #include "spawn point.cpp"
-#include "wood man.cpp"
 #include "get equipped.cpp"
 #include "equip menu.cpp"
 #include "game over.cpp"
@@ -40,7 +37,6 @@
 #include "springer.cpp"
 #include "break wall.cpp"
 #include "sniper armour.cpp"
-#include "heat man.cpp"
 #include "sound collection.cpp"
 #include "falling platform.cpp"
 #include "crabbot.cpp"
@@ -62,6 +58,11 @@
 #include "crazy cannon.cpp"
 #include "flash man.cpp"
 #include "cannon right.cpp"
+#include "checkDown.cpp"
+#include "checkUp.cpp"
+#include "checkLeft.cpp"
+#include "checkRight.cpp"
+#include "rail platform.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -120,7 +121,7 @@ void beforeLevelCheck(string name) {
 		beforeTileList = { true, true, false, false, false };
 	}
 	else {
-		beforeTileList = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+		beforeTileList = {};
 	}
 }
 
@@ -214,32 +215,33 @@ int main() {
 	beamT->loadFromFile("assets\\beam.png");
 
 //Object Placer setup
-	//list<shared_ptr<GameObject>> woodManObList = { shared_ptr<GameObject>(new Background((Color::Color(0, 232, 216)))), shared_ptr<GameObject>(new WoodMan(Vector2f(0,0))), shared_ptr<GameObject>(new SpawnPoint(string("chicken"))),shared_ptr<GameObject>(new SpawnPoint(string("bird"))), shared_ptr<GameObject>(new Wolf(enemyT, Vector2f(0,0))), shared_ptr<GameObject> (new Gorilla(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(new Rabbit(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0)), shared_ptr<GameObject>(shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0))), shared_ptr<GameObject>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<SmallAmmo> (new SmallAmmo(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<BigAmmo> (new BigAmmo(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<SmallHealth> (new SmallHealth(misc, Vector2f(0,0))) , shared_ptr<GameObject>(shared_ptr<BigHealth> (new BigHealth(misc, Vector2f(0,0))),  new bat(enemyT, Vector2f(600, 600)), shared_ptr<GameObject> (new Torch(enemyT, Vector2f(0,0), Color::Red, 1000, 100)), shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0))};
+	//list<shared_ptr<GameObject>> woodManObList = { shared_ptr<GameObject>(new Background((Colour::Colour(0, 232, 216)))), shared_ptr<GameObject>(new WoodMan(Vector2f(0,0))), shared_ptr<GameObject>(new SpawnPoint(string("chicken"))),shared_ptr<GameObject>(new SpawnPoint(string("bird"))), shared_ptr<GameObject>(new Wolf(enemyT, Vector2f(0,0))), shared_ptr<GameObject> (new Gorilla(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(new Rabbit(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0)), shared_ptr<GameObject>(shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0))), shared_ptr<GameObject>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<SmallAmmo> (new SmallAmmo(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<BigAmmo> (new BigAmmo(misc, Vector2f(0,0))), shared_ptr<GameObject>(shared_ptr<SmallHealth> (new SmallHealth(misc, Vector2f(0,0))) , shared_ptr<GameObject>(shared_ptr<BigHealth> (new BigHealth(misc, Vector2f(0,0))),  new bat(enemyT, Vector2f(600, 600)), shared_ptr<GameObject> (new Torch(enemyT, Vector2f(0,0), Colour::Red, 1000, 100)), shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<GameObject>(shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0))};
 	//list <shared_ptr<GameObject>> heatManList = { shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	//list <shared_ptr<GameObject>> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), shared_ptr<SpawnPoint> (new SpawnPoint(string("snapper"))), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), shared_ptr<GameObject>(new Background(Color::Color(0, 112, 236))), new FallPlatform(enemyT, Vector2f(0,0)), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
+	//list <shared_ptr<GameObject>> bubbleList = {new BubbleMan(Vector2f(0,0)), new Anko(enemyT, Vector2f(0,0)), new Shrink(enemyT, Vector2f(0,0)), shared_ptr<SpawnPoint> (new SpawnPoint(string("snapper"))), new Croaker(enemyT, Vector2f(0,0)), new Crabbot(enemyT, Vector2f(0,0)), shared_ptr<GameObject>(new Background(Colour::Colour(0, 112, 236))), new FallPlatform(enemyT, Vector2f(0,0)), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	//list <shared_ptr<GameObject>> metalList = {new MetalMan(Vector2f(0,0)),shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new ETank(misc, Vector2f(0,0)), new PieRobot(enemyT, Vector2f(0,0)), new Blocky(enemyT, Vector2f(0,0)), shared_ptr<SpawnPoint> (new SpawnPoint(string("drill"))),  shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0), new Press(enemyT, Vector2f(0,0))};
 	//list <shared_ptr<GameObject>> quickList = {new ETank(misc, Vector2f(0,0)), shared_ptr<BigHealth> (new BigHealth(misc, Vector2f(0,0)), shared_ptr<BigAmmo> (new BigAmmo(misc, Vector2f(0,0)), shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new QuickMan(Vector2f(0,0)), new ScwormSpawn(enemyT, Vector2f(0,0)), shared_ptr<TorchGuy> (new TorchGuy (enemyT, Vector2f(0,0))), new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
-	list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
+	//list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
+	list <shared_ptr<GameObject>> crashList = { shared_ptr<CheckLeft>(new CheckLeft(Vector2f(0,0))), shared_ptr<CheckRight>(new CheckRight(Vector2f(0,0))), shared_ptr<CheckUp>(new CheckUp(Vector2f(0,0))), shared_ptr<CheckDown>(new CheckDown(Vector2f(0,0))), shared_ptr<RailPlatform>(new RailPlatform(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)), shared_ptr<FlyGuySpawner>(new FlyGuySpawner(enemyT, Vector2f(0,0))), shared_ptr<TellySpawner>(new TellySpawner(enemyT, Vector2f(0,0))) };
 
-	for (shared_ptr<GameObject> o : flashList) {
+	for (shared_ptr<GameObject> o : crashList) {
 		o->initial();
 	}
-	ObjectPlacer* o = new ObjectPlacer(wT, bossName, flashList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, crashList);
 	
 
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ IntRect(565, 241, 16, 16), IntRect(584, 243, 12, 12), IntRect(602, 244, 10, 10), IntRect(618, 247, 4, 4) };
-	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(-6 * 4, -6 * 4), Vector2f(-4 * 4, -4 * 4), Vector2f(-3 * 4, -3 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ IntRect(0, 29, 31, 24), IntRect(191, 21, 29, 31) };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0,0), Vector2f(0 * 4, -7 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0* 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
 
 	shared_ptr<Texture> testT = shared_ptr<Texture> (new Texture());
-	testT->loadFromFile("Assets\\weapons.png");
+	testT->loadFromFile("Assets\\crash man.png");
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, false);
 
 	////////////////////////////////
 	//Uncomment this if you want to use the animation tester
-	//test->run(instance, targetFPS);
+	test->run(instance, targetFPS);
 
 
 	//Un-comment this if you want to use the level editor
@@ -273,9 +275,9 @@ int main() {
 
 			hold = levelMenu->checkA();
 
-			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
+			//StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 			//intro->loop(instance, targetFPS);
-			delete intro;
+			//delete intro;
 		}
 
 		restart = false;
@@ -383,6 +385,6 @@ int main() {
 	
 	
 	
-	cout << "hi";
+	//cout << "hi";
 
 }

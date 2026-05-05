@@ -47,7 +47,7 @@ public:
 				done = true;
 			}
 
-			Color colour = light->getColour();
+			Colour colour = light->getColour();
 			float red = colour.r;
 			float green = colour.g;
 			float blue = colour.b;
@@ -64,10 +64,10 @@ public:
 				if (newTransparency > defaultTransparency) {
 					newTransparency = defaultTransparency;
 				}
-				pixel->setFillColor(Color(newRed, newGreen, newBlue, newTransparency));
+				pixel->setFillColor(Colour(newRed, newGreen, newBlue, newTransparency).getColour());
 			}
 			else {
-				pixel->setFillColor(Color(0, 0, 0, defaultTransparency));
+				pixel->setFillColor(Colour(0, 0, 0, defaultTransparency).getColour());
 			}
 
 

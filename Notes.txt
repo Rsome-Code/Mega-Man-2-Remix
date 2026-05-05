@@ -1,20 +1,31 @@
-Rework hitboxes on the engine level to be more intuitive
+Rework engine to allow for a layer of abstraction to make porting easier
 
-Rework Player - anims - hitboxes
-	Physics feel perfect, though
+Rework hitboxes on the engine level to be more intuitive
+	Better naming conventions
+	Make it clear whether a parameter is relative to object size
+	Make separate object for hitboxes that scale with object they are assigned to
+
+Rework Player - anims - hitboxes - streamline physics to make parameter changing easier
+	Physics themselves feel perfect, though
 
 USE SMART POINTERS
 
 Each animation frame should be its own object
 	This is to ensure consistency with the visual offset
-Anim frames should be stored in Vector
+Anim frames should be stored in Vectors, not linked lists
 
-All collision should take place in the same for loop
-
-Setup robust system for certain objects to go behind tiles
+Set up robust system for certain objects to go behind tiles
 
 Make adding weapons/abilities more streamlined
 
 Experiment with binary tree to store collision
 
+All collision should take place in the same "for" loop
+	Improves performance and consistency
+
 Store collision pointers in separate lists from tiles
+	(I don't remember why)
+
+Store level-specific parameters inside a Json file, not in "if" statements
+
+Compress images and sounds

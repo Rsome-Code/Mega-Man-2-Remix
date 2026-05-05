@@ -6,7 +6,7 @@ class Torch : public GameObject {
 	LightSource* light;
 	shared_ptr<Texture> t;
 	Vector2f pos;
-	Color col;
+	Colour col;
 	float range;
 	float brightness;
 
@@ -17,7 +17,7 @@ public:
 		
 	}
 
-	Torch(shared_ptr<Texture> t, Vector2f pos, Color col, float range, float brightness) {
+	Torch(shared_ptr<Texture> t, Vector2f pos, Colour col, float range, float brightness) {
 		sprite = shared_ptr<objectSprite>(new objectSprite("ob-1", t, IntRect(832, 23, 26, 16), pos, Vector2f(4,4), 1));
 		light = new LightSource(col, range, brightness);
 		this->t = t;

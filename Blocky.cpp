@@ -72,11 +72,14 @@ public:
 			blinkLoop(deltaT);
 			timer->run(deltaT);
 			phys->move(angle, deltaT, moveSpeed);
-			phys->eachFrame(deltaT);
+			
 			tileCollision(tileList);
 
 			if (grounded) {
 				phys->setVVelocity(0);
+			}
+			else {
+				phys->eachFrame(deltaT);
 			}
 
 			
@@ -93,8 +96,15 @@ public:
 		}
 
 		else if (state == stunned) {
-			phys->eachFrame(deltaT);
+			
 			tileCollision(tileList);
+
+			if (!grounded) {
+				phys->eachFrame(deltaT);
+			}
+			else {
+				phys->setVVelocity(0);
+			}
 
 			stunTime_left -= *deltaT;
 			if (stunTime_left <= 0) {

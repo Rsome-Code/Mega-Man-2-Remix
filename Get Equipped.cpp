@@ -52,7 +52,7 @@ public:
 		symbol = shared_ptr<text> (new text());
 
 
-		symbol->setFillColour(Color::White);
+		symbol->setFillColour(Colour::White());
 
 		symbol->setString("");
 		
@@ -84,7 +84,7 @@ public:
 		getEquip->setLineSpacing(2);
 		
 		rectangle = shared_ptr<RectangleShape>(new RectangleShape());
-		rectangle->setFillColor(Color(0,0,0, 255));
+		rectangle->setFillColor(Colour(0,0,0, 255).getColour());
 		rectangle->setPosition(megaMan->getCameraPosition());
 		rectangle->setSize(megaMan->getSize());
 
@@ -114,10 +114,10 @@ public:
 
 		if (transparency <= 0) {
 			transparency = 0;
-			rectangle->setFillColor(Color(0,0,0, transparency));
+			rectangle->setFillColor(Colour(0,0,0, transparency).getColour());
 			return true;
 		}
-		rectangle->setFillColor(Color(0,0,0, transparency));
+		rectangle->setFillColor(Colour(0,0,0, transparency).getColour());
 		return false;
 	}
 

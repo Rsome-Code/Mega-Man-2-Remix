@@ -1,0 +1,102 @@
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <iterator>
+#include <list>
+#include "Vector2f.cpp"
+#include "intRect.cpp"
+#pragma once
+
+
+using namespace std;
+
+class Maths {
+
+public:
+	static float getDistance(Vector2f pos1, Vector2f pos2) {
+
+		float xDistance = getDistance(pos1.x, pos2.x);
+		float yDistance = getDistance(pos1.y, pos2.y);
+
+		float total = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
+		return total;
+	}
+
+	static float getDistance(float pos1, float pos2) {
+		float distance = pos1 - pos2;
+
+		distance = fabs(distance);
+		return distance;
+	}
+
+	static float map(float startMin, float startMax, float endMin, float endMax, float number) {
+		if (endMin == endMax) {
+			return endMin;
+		}
+		float startDiff = startMax - startMin;
+		float endDiff = endMax - endMin;
+		float numDiff = number - startMin;
+		float decimal = numDiff / startDiff;
+
+		float endNumDiff = decimal * endDiff;
+		return (endNumDiff + endMin);
+		
+	}
+
+	static float getAngle(Vector2f pos, Vector2f pos1) {
+		float xDiff = fabs(pos.x - pos1.x);
+		float yDiff = fabs(pos.y - pos1.y);
+
+		float angle = (atan(yDiff / xDiff)) * 57.295779513082320876798154814105;
+
+		if (pos1.x > pos.x) {
+			
+			if (pos1.y < pos.y) {
+				angle -= (angle * 2);
+				angle += 0;
+			}
+		}
+		if (pos1.x < pos.x) {
+			if (pos1.y < pos.y) {
+				angle += 180;
+			}
+			else if (pos1.y > pos.y) {
+				angle -= (angle * 2);
+				angle += 180;
+			}
+		}
+
+		return angle;
+	}
+
+
+	static Vector2f add(Vector2f pos1, Vector2f pos2) {
+		return Vector2f(pos1.x + pos2.x, pos1.y + pos2.y);
+	}
+
+	static Vector2f sub(Vector2f pos1, Vector2f pos2) {
+		return Vector2f(pos1.x - pos2.x, pos1.y - pos2.y);
+	}
+	static Vector2f mult(Vector2f pos1, Vector2f pos2) {
+		return Vector2f(pos1.x * pos2.x, pos1.y * pos2.y);
+	}
+
+	static Vector2f mult(Vector2f pos1, float f) {
+		return Vector2f(pos1.x * f, pos1.y * f);
+	}
+
+	static Vector2f div(Vector2f pos1, Vector2f pos2) {
+		return Vector2f(pos1.x / pos2.x, pos1.y / pos2.y);
+	}
+	static Vector2f div (Vector2f pos1, float f) {
+		return Vector2f(pos1.x / f, pos1.y / f);
+	}
+
+	static bool equals(Vector2f pos1, Vector2f pos2) {
+		return pos1.x == pos2.x && pos1.y == pos2.y;
+	}
+	static bool equals(IntRect pos1, IntRect pos2) {
+		return pos1.getPosition().x == pos2.getPosition().x && pos1.getPosition().y == pos2.getPosition().y && pos1.getSize().x == pos2.getSize().x && pos1.getSize().y == pos2.getSize().y;
+	}
+};

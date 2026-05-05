@@ -97,7 +97,7 @@ public:
 		music->openFromFile("assets\\sound\\music\\5 - Enemy Chosen.mp3");
 		music->setVolume(50);
 
-		rectangle.setFillColor(Color::Black);
+		rectangle.setFillColor(Colour::Black().getColour());
 		rectangle.setPosition(0, 0);
 		rectangle.setSize(Vector2f(1920, 1080));
 		
@@ -258,7 +258,7 @@ public:
 		
 		currentTrans -= fadeRate * deltaT;
 		if (currentTrans > 0) {
-			rectangle.setFillColor(Color(0, 0, 0, currentTrans));
+			rectangle.setFillColor(Colour(0, 0, 0, currentTrans).getColour());
 		}
 	}
 

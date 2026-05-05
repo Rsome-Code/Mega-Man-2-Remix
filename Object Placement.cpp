@@ -416,7 +416,11 @@ public:
 	void upFlagYPos(shared_ptr<object> thisFlag) {
 		shared_ptr<EndFlag> lastFlag = getFlag(section - 1);
 
-		if (lastFlag->getCode() == "flag-down") {
+		if (lastFlag == NULL) {
+
+		}
+
+		else if (lastFlag->getCode() == "flag-down") {
 			if (thisFlag->getSprite()->getPosition().y > lastFlag->getSprite()->getPosition().y) {
 				shared_ptr<EndFlag> lastVFlag = getLastFlagOfAngle(thisFlag, DOWN);
 
@@ -620,8 +624,12 @@ public:
 			door1->setCheckpoint();
 		}
 
-		for (shared_ptr<object> o : objects) {
+		for (shared_ptr<GameObject> o : objects) {
 			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up" || o->getCode() == "flag-left" || o->getCode() == "door") {
+				if (o->getSection() == NULL) {
+					cout << "???";
+					o->setSection(section);
+				}
 				bool skip = false;
 				if (o->getCode() == "flag") {
 					if (door1 != NULL && door2 != NULL) {
@@ -703,7 +711,7 @@ public:
 	}
 
 
-	void checkFlagDuplicates(shared_ptr<object> o) {
+	void checkFlagDuplicates(shared_ptr<GameObject> o) {
 
 
 		string line;
@@ -721,6 +729,9 @@ public:
 				vector<string> values = splitString(line, sep);
 				vector<string>::iterator valI = values.begin();
 				string current = *valI;
+				if (stoi(current) == 0) {
+					cout << "here";
+				}
 				if (stoi(current) == o->getSection()) {
 					flagfile->close();
 					eraseFileLine(saveFile + "\\flags.txt", line);

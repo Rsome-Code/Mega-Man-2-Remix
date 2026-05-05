@@ -54,6 +54,7 @@ class levelEditor {
 	shared_ptr<UISprite> tab;
 	shared_ptr<UISprite> typeTab;
 	list<shared_ptr<tile>> tileList;
+
 	list<shared_ptr<tile>> z2List;
 	list<shared_ptr<tile>> z3List;
 	list<shared_ptr<tile>> z4List;
@@ -152,14 +153,14 @@ public:
 
 
 		//worldHighlight.setPosition(selectedTile->getSprite()->getPosition());
-		worldHighlight.setFillColor(sf::Color(0, 255, 0, 128));
+		worldHighlight.setFillColor(Colour(0, 255, 0, 128).getColour());
 		worldHighlight.setSize(Vector2f(16 * 2, 16 * 2));
 
-		textureHighlight.setFillColor(sf::Color(0, 255, 0, 128));
+		textureHighlight.setFillColor(Colour(0, 255, 0, 128).getColour());
 		textureHighlight.setSize(Vector2f(16 * 4, 16 * 4));
 		textureHighlight.setPosition(Vector2f((((selectedTexture % 4) * 20) * 4) + 20, (((selectedTexture / 4) * 20) * 4) + 20));
 
-		typeHighlight.setFillColor(sf::Color(0, 255, 0, 128));
+		typeHighlight.setFillColor(Colour(0, 255, 0, 128).getColour());
 		typeHighlight.setSize(Vector2f(16 * 4, 16 * 4));
 
 		m = new mouse();
@@ -169,7 +170,7 @@ public:
 		beatText->setFont(*f);
 		beatText->setString("Beat: " + to_string(beatSet + 1));
 		beatText->setPosition(Vector2f(20, 900));
-		beatText->setFillColor(Color::Black);
+		beatText->setFillColor(Colour::Black().getColour());
 
 		font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
@@ -234,7 +235,10 @@ public:
 					mouseCheck(&z4List, instance, mousePos);
 				}
 			}
-			keyBoardCheck();
+
+			if (instance->getWindow()->hasFocus()) {
+				keyBoardCheck();
+			}
 
 
 			if (zoomed) {
@@ -319,10 +323,10 @@ public:
 					}
 					if (z == 1) {
 						if (t->getWaterBox() != NULL) {
-							instance->objectHitboxSetup(t->getWaterBox(), cam, Color::Cyan);
+							instance->objectHitboxSetup(t->getWaterBox(), cam, Colour::Cyan());
 						}
 						if (t->getDeathBox() != NULL) {
-							instance->objectHitboxSetup(t->getDeathBox(), cam, Color::Red);
+							instance->objectHitboxSetup(t->getDeathBox(), cam, Colour::Red());
 						}
 					}
 				}
@@ -523,8 +527,7 @@ public:
 			selectedTile = NULL;
 			worldHighlight.setSize(Vector2f(0, 0));
 
-			cout << del;
-			cout << ", ";
+
 		}
 		else if (!sf::Mouse::isButtonPressed(sf::Mouse::XButton1)) {
 			xButton1Pressed = false;
@@ -576,43 +579,52 @@ public:
 
 		list<shared_ptr<tile>> tempList;
 
-		for (int i = 0; i < (size.x); i++) {
-			for (int j = 0; j < (size.y ); j++) {
-				tI = tileList->begin();
-				bool check = false;
+		int repeat = 1;
 
-				//Checks for tiles in the same location
-				if (tileList->size() > 0) {
-					for (shared_ptr<tile> t : *tileList) {
-						check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
-						if (check) {
-							break;
+		//if (levelName == "crash man") {
+		//	repeat = 2;
+		//}
+
+		for (int r = 0; r < repeat; r++) {
+			for (int i = 0; i < (size.x); i++) {
+				for (int j = 0; j < (size.y); j++) {
+					tI = tileList->begin();
+					bool check = false;
+
+					//Checks for tiles in the same location
+					if (tileList->size() > 0) {
+						for (shared_ptr<tile> t : *tileList) {
+							check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
+							if (check) {
+								break;
+							}
+							tI = next(tI);
 						}
-						tI = next(tI);
+
+						if (check) {
+							tileList->erase(tI);
+						}
 					}
+					tI = tileList->begin();
 
-					if (check) {
-						tileList->erase(tI);
+					if (!del) {
+						shared_ptr<tile> temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
+
+						//temp->getSprite()->setZ(z);
+						tileList->push_back(temp);
+
+						tempList.push_back(temp);
 					}
+					selectedTile = NULL;
 				}
-				tI = tileList->begin();
-
-				if (!del) {
-					shared_ptr<tile> temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
-					//temp->getSprite()->setZ(z);
-					tileList->push_back(temp);
-
-					tempList.push_back(temp);
-				}
-				selectedTile = NULL;
 			}
-		}
 
-		if (levelName == "flash man" && selectedType == 20) {
-			for (shared_ptr<tile> t : tempList) {
-				FlashTile temp = *flashTileCheck(t->getLocation());
-				temp.setTiming(beatSet);
-				*t = temp;
+			if (levelName == "flash man" && selectedType == 20) {
+				for (shared_ptr<tile> t : tempList) {
+					FlashTile temp = *flashTileCheck(t->getLocation());
+					temp.setTiming(beatSet);
+					*t = temp;
+				}
 			}
 		}
 		
@@ -789,13 +801,129 @@ public:
 		myfile->close();
 	}
 
+	void worldInteraction(Vector2i mousePos) {
 
+		Vector2f worldPos = Vector2f(int((mousePos.x + cam->getPosition().x / 2) / (4 * 8)), int((mousePos.y + cam->getPosition().y / 2) / (4 * 8)));
+
+
+
+		if (worldPos.x <= 0) {
+			worldPos.x -= 1;
+		}
+		if (worldPos.y <= 0) {
+			worldPos.y -= 1;
+		}
+
+		Vector2f screenPos = Vector2f(worldPos.x / (4 * 8), worldPos.y / (4 * 8));
+		if (!worldCheck(worldPos)) {
+			//selectedTile = NULL;
+			selectedTile = tileCreation(worldPos, selectedType, selectedTexture);
+			created = true;
+
+			selectedTile->getSprite()->setZ(z);
+			tileList.push_back(selectedTile);
+
+		}
+		else {
+
+
+			if (del) {
+
+				selectedTile = *worldI;
+				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+				tileList.erase(worldI);
+
+			}
+			else {
+				selectedTile = *worldI;
+
+
+				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
+			}
+		}
+	}
+
+	bool worldCheck(Vector2f worldPos) {
+		worldI = tileList.begin();
+
+		for (shared_ptr<tile> t : tileList) {
+			Vector2f loc = t->getLocation();
+
+
+			if (worldPos.x == loc.x && worldPos.y == loc.y) {
+				return true;
+			}
+			worldI = next(worldI);
+		}
+
+		return false;
+	}
+
+
+
+
+	bool UITextureCheck(Vector2i mousePos) {
+
+		menuI = tileSelect.begin();
+		for (shared_ptr<menuSelect> m : tileSelect) {
+			if (UIHitboxCheck(mousePos, m->getHitbox())) {
+				return true;
+			}
+			menuI = next(menuI);
+		}
+		if (mousePos.x < tab->getCameraPosition().x + tab->getSize().x && mousePos.x > tab->getCameraPosition().x) {
+			if (mousePos.y < tab->getCameraPosition().y + tab->getSize().y && mousePos.y > tab->getCameraPosition().y) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool UITypeCheck(Vector2i mousePos) {
+
+		menuI = typeSelect.begin();
+		typeHover = 0;
+		for (shared_ptr<menuSelect> m : typeSelect) {
+			if (UIHitboxCheck(mousePos, m->getHitbox())) {
+
+				return true;
+			}
+			menuI = next(menuI);
+			typeHover++;
+		}
+		if (mousePos.x < typeTab->getCameraPosition().x + typeTab->getSize().x && mousePos.x > typeTab->getCameraPosition().x) {
+			if (mousePos.y < typeTab->getCameraPosition().y + typeTab->getSize().y && mousePos.y > typeTab->getCameraPosition().y) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool UIHitboxCheck(Vector2i mousePos, shared_ptr<UIHitbox> hit) {
+
+		if (hit->getCameraPos().x + hit->getSize().x > mousePos.x && mousePos.x > hit->getCameraPos().x) {
+			if (hit->getCameraPos().y + hit->getSize().y > mousePos.y && mousePos.y > hit->getCameraPos().y) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Awfully written
+	//Never do the "name check" if statement list again
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	shared_ptr<tile> tileCreation(Vector2f worldPos, int selectedType, int selectedTexture) {
 
 
 		if (levelName == "flash man") {
 			return flashCheck(worldPos);
 		}
+
+		
 
 		else if (selectedType == 0) {
 			return shared_ptr<tile>(new tile(worldPos, tex, selectedTexture, z));
@@ -825,6 +953,11 @@ public:
 		else if (levelName == "wood man" || levelName == "bubble man" || levelName == "heat man") {
 			return bubbleCheck(worldPos);
 		}
+
+		else if (levelName == "crash man") {
+			return crashCheck(worldPos);
+		}
+
 		else if (levelName == "metal man") {
 			return metalCheck(worldPos);
 		}
@@ -832,6 +965,25 @@ public:
 		else {
 			return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
 		}
+	}
+
+	//Ugh
+
+	shared_ptr<tile> crashCheck(Vector2f worldPos) {
+		/*if (selectedType == 10) {
+			
+			shared_ptr<CrashTile> newTile = shared_ptr<CrashTile>(new Crash1(worldPos, tex, selectedTexture));
+
+			for (shared_ptr<CrashTile> t : cList) {
+				//if (t->checkCrash()) {
+				CrashCheck::checkCrash(&newTile, &t, worldPos, tex);
+				//}
+			}
+			cList.push_back(newTile);
+			return newTile;
+			
+		}*/
+		return NULL;
 	}
 
 	shared_ptr<tile> bubbleCheck(Vector2f worldPos) {
@@ -1124,96 +1276,6 @@ public:
 		return shared_ptr<SquareFlash>(new SquareFlash(pos, tex));
 	}
 
-	void worldInteraction(Vector2i mousePos) {
 
-		Vector2f worldPos = Vector2f(int((mousePos.x + cam->getPosition().x/2) / (4 * 8)), int((mousePos.y + cam->getPosition().y/2) / (4 * 8)));
-
-
-		Vector2f screenPos = Vector2f(worldPos.x / (4 * 8), worldPos.y / (4 * 8));
-		if (!worldCheck(worldPos, screenPos)) {
-			//selectedTile = NULL;
-			selectedTile = tileCreation(worldPos, selectedType, selectedTexture);
-			created = true;
-			
-			selectedTile->getSprite()->setZ(z);
-			tileList.push_back(selectedTile);
-			
-		}
-		else {
-			
-
-			if (del) {
-				
-				selectedTile = *worldI;
-				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
-				tileList.erase(worldI);
-				
-			}
-			else {
-				selectedTile = *worldI;
-				
-
-				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
-			}
-		}
-	}
-
-	bool worldCheck(Vector2f worldPos, Vector2f screenPos) {
-
-		worldI = tileList.begin();
-
-		for (shared_ptr<tile> t : tileList) {
-			Vector2f loc = t->getLocation();
-
-			if (worldPos.x == loc.x && worldPos.y == loc.y) {
-				return true;
-			}
-			worldI = next(worldI);
-		}
-
-		return false;
-	}
-
-
-
-
-	bool UITextureCheck(Vector2i mousePos) {
-
-		menuI = tileSelect.begin();
-		for (shared_ptr<menuSelect> m : tileSelect) {
-			if (UIHitboxCheck(mousePos, m->getHitbox())) {
-				return true;
-			}
-			menuI = next(menuI);
-		}
-		return false;
-	}
-
-	bool UITypeCheck(Vector2i mousePos) {
-
-		menuI = typeSelect.begin();
-		typeHover = 0;
-		for (shared_ptr<menuSelect> m : typeSelect) {
-			if (UIHitboxCheck(mousePos, m->getHitbox())) {
-				
-				return true;
-			}
-			menuI = next(menuI);
-			typeHover++;
-		}
-		return false;
-	}
-
-	bool UIHitboxCheck(Vector2i mousePos, shared_ptr<UIHitbox> hit) {
-
-		if (hit->getCameraPos().x + hit->getSize().x > mousePos.x && mousePos.x > hit->getCameraPos().x) {
-			if (hit->getCameraPos().y + hit->getSize().y > mousePos.y && mousePos.y > hit->getCameraPos().y) {
-				return true;
-			}
-		}
-
-		return false;
-
-	}
 	
 };

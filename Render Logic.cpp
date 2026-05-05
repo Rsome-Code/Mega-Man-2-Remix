@@ -357,7 +357,7 @@ public:
 		//if (hit->isVisible()) {
 		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 		rectangle.setPosition(hit->getCameraPos());
-		rectangle.setFillColor(sf::Color(0, 255, 0, 255));
+		rectangle.setFillColor(Colour(0, 255, 0, 255).getColour());
 		
 		resolutionFix(hit);
 		w->draw(rectangle);
@@ -371,7 +371,7 @@ public:
 		//if (hit->isVisible()) {
 		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 		rectangle.setPosition(hit->getCameraPos());
-		rectangle.setFillColor(sf::Color(0, 255, 0, 255));
+		rectangle.setFillColor(Colour(0, 255, 0, 255).getColour());
 		rectangle.setScale(Vector2f(zoom, zoom));
 		resolutionFix(hit);
 		w->draw(rectangle);
@@ -379,26 +379,26 @@ public:
 
 	}
 
-	void hitboxDisplay(shared_ptr<objectHitbox> hit, Color col) {
+	void hitboxDisplay(shared_ptr<objectHitbox> hit, Colour col) {
 
 
 		//if (hit->isVisible()) {
 		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 		rectangle.setPosition(hit->getCameraPos());
-		rectangle.setFillColor(col);
+		rectangle.setFillColor(col.getColour());
 		resolutionFix(hit);
 		w->draw(rectangle);
 		//}
 
 	}
 
-	void hitboxDisplay(shared_ptr<objectHitbox> hit, Color col, float zoom) {
+	void hitboxDisplay(shared_ptr<objectHitbox> hit, Colour col, float zoom) {
 
 
 		//if (hit->isVisible()) {
 		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 		rectangle.setPosition(hit->getCameraPos());
-		rectangle.setFillColor(col);
+		rectangle.setFillColor(col.getColour());
 		rectangle.setScale(Vector2f(zoom, zoom));
 		resolutionFix(hit);
 		w->draw(rectangle);
@@ -424,7 +424,7 @@ public:
 		hitboxDisplay(hit, cam->getZoom());
 	}
 
-	void objectHitboxSetup(shared_ptr<objectHitbox> hit, shared_ptr<camera> cam, Color col) {
+	void objectHitboxSetup(shared_ptr<objectHitbox> hit, shared_ptr<camera> cam, Colour col) {
 
 		Vector2f camPosition = cam->getPosition();
 

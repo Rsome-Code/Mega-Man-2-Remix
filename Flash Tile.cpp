@@ -47,7 +47,7 @@ public:
 
 		beatText = shared_ptr<Text> (new Text());
 		beatText->setString(to_string(timing + 1));
-		beatText->setFillColor(Color::Black);
+		beatText->setFillColor(Colour::Black().getColour());
 		beatText->setPosition(sprite->getCameraPosition());
 		beatText->setFont(*font);
 		beatText->setCharacterSize(20);

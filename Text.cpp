@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "Colour.cpp"
 #pragma once
 using namespace sf;
 using namespace std;
@@ -10,7 +11,7 @@ class text {
 	float size;
 	Vector2f position;
 	shared_ptr<Font> font;
-	Color colour;
+	Colour colour;
 
 public:
 
@@ -20,7 +21,7 @@ public:
 		//delete colour;
 	}
 
-	text(string content, Vector2f position, float size, shared_ptr<Font> font, Color colour) {
+	text(string content, Vector2f position, float size, shared_ptr<Font> font, Colour colour) {
 		this->content = content;
 		this->position = position;
 		this->size = size;
@@ -30,12 +31,12 @@ public:
 		render = shared_ptr<Text> (new Text());
 		render->setFont(*font);
 		render->setCharacterSize(size); 
-		render->setFillColor(colour); 
+		render->setFillColor(colour.getColour()); 
 		
 		render->setString(content);
 		render->setPosition(position);
 	}
-	text(int content, Vector2f position, float size, shared_ptr<Font> font, Color colour) {
+	text(int content, Vector2f position, float size, shared_ptr<Font> font, Colour colour) {
 		numContent = content;
 		this->content = to_string(content);
 		this->position = position;
@@ -45,7 +46,7 @@ public:
 
 		render->setFont(*font);
 		render->setCharacterSize(size); // in pixels
-		render->setFillColor(colour); // set the text color
+		render->setFillColor(colour.getColour()); // set the text color
 		//render->setStyle(sf::Text::Bold | sf::Text::Underlined); // set text style
 		render->setString(this->content);
 		render->setPosition(position);
@@ -59,9 +60,9 @@ public:
 		render->setLineSpacing(newLineSpacing);
 	}
 
-	void setFillColour(Color newColour) {
+	void setFillColour(Colour newColour) {
 		colour = newColour;
-		render->setFillColor(colour);
+		render->setFillColor(colour.getColour());
 	}
 
 	void setFont(shared_ptr<Font> newFont) {

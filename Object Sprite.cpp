@@ -6,6 +6,7 @@
 #include "UI Sprite.cpp"
 #include "light source.cpp"
 #include "Maths.cpp"
+#include "colour.cpp"
 #pragma once
 
 using namespace std;
@@ -226,7 +227,7 @@ public:
 
 		for (int y = startY; y < endY; y++) {
 			for (int x = startX; x < endX; x++) {
-				Color col = image.getPixel(x, y);
+				Colour col = image.getPixel(x, y);
 				auto alpha = col.a;
 				if (alpha == 255) {
 					shared_ptr<RectangleShape> r = shared_ptr<RectangleShape>(new RectangleShape());
@@ -257,7 +258,7 @@ public:
 
 	void updateLighting() {
 		//pixelSetup();
-		setFullColour(new Color(0, 0, 0, defaultTransparency));
+		setFullColour(Colour(0, 0, 0, defaultTransparency));
 	}
 
 	void lightingCheck(LightSource* light) {
@@ -269,7 +270,7 @@ public:
 				done = true;
 			}
 
-			Color colour = light->getColour();
+			Colour colour = light->getColour();
 			float red = colour.r;
 			float green = colour.g;
 			float blue = colour.b;
@@ -286,7 +287,7 @@ public:
 				if (newTransparency > defaultTransparency) {
 					newTransparency = defaultTransparency;
 				}
-				pixel->setFillColor(Color(newRed, newGreen, newBlue, newTransparency));
+				pixel->setFillColor(Colour(newRed, newGreen, newBlue, newTransparency).getColour());
 			}
 
 
@@ -305,14 +306,16 @@ public:
 		}
 	}*/
 
-	void setFullColour(const Color* c) {
+	void setFullColour(Colour c) {
+
 		for (shared_ptr<RectangleShape> r : pixels) {
-			r->setFillColor(*c);
+			r->setFillColor(c.getColour());
 		}
 	}
 
-	void setColour(const Color c) {
-		thisOne.setColor(c);
+	void setColour(Colour c) {
+	
+		thisOne.setColor(c.getColour());
 	}
 
 public: void setPosition(Vector2f position) {

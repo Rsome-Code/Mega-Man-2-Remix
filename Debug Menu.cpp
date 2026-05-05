@@ -37,8 +37,8 @@ public:
 		options.push_back(shared_ptr<DebugOption>(new FullscreenOption(instance)));
 
 		background = shared_ptr<RectangleShape>(new RectangleShape());
-		background->setFillColor(Color::Black);
-		background->setOutlineColor(Color::White);
+		background->setFillColor(Colour::Black().getColour());
+		background->setOutlineColor(Colour::White().getColour());
 		background->setOutlineThickness(4);
 		background->setPosition(position);
 		background->setSize(Vector2f(720, 480));
@@ -65,7 +65,7 @@ public:
 			//t->setOrigin(pos);
 			t->setPosition(pos);
 			pos = Vector2f(pos.x, pos.y + 64);
-			t->setFillColor(Color::White);
+			t->setFillColor(Colour::White().getColour());
 			texts.push_back(t);
 		}
 

@@ -15,13 +15,13 @@ class LightingRect : public GameObject {
 
 	int changeSpeed = 150;
 
-	//Color* col = new Color(0, 0, 0, 0);
+	//Colour* col = new Colour(0, 0, 0, 0);
 
 public:
 	LightingRect() {
 
 		sprite = shared_ptr<objectSprite>(new objectSprite());
-		sprite->getSprite()->setColor(sf::Color::Black);
+		sprite->getSprite()->setColor(Colour::Black().getColour());
 		sprite->setRect(IntRect(0, 0, 1, 1));
 		sprite->setScale(Vector2f(200, 200));
 
@@ -29,7 +29,7 @@ public:
 
 		setCode("lighting rect");
 
-		//sprite->setColour(&sf::Color::Red);
+		//sprite->setColour(&Colour::Red);
 
 		
 
@@ -69,7 +69,7 @@ public:
 		
 
 		//sprite->setTransparency(transparency);
-		sprite->setColour(Color(red, 0, 0, transparency));
+		sprite->setColour(Colour(red, 0, 0, transparency));
 	};
 
 	bool checkEnemies(list<shared_ptr<GameObject>> enemies) {

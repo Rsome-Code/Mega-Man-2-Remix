@@ -63,5 +63,9 @@ public:
 		return section;
 	}
 
+	void setSection(int sect) {
+		section = sect;
+	}
+
 
 };

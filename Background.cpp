@@ -8,10 +8,10 @@ class Background:public GameObject {
 	shared_ptr<camera> cam;
 
 public:
-	Background(Color col) {
+	Background(Colour col) {
 
 		sprite = shared_ptr<objectSprite>(new objectSprite());
-		sprite->getSprite()->setColor(col);
+		sprite->setColour(col);
 		sprite->setRect(IntRect(0,0,1, 1));
 		sprite->setScale(Vector2f(200, 200));
 
@@ -24,7 +24,7 @@ public:
 	Background(int col) {
 
 		sprite = shared_ptr<objectSprite>(new objectSprite());
-		sprite->getSprite()->setColor(Color::Color(col));
+		sprite->setColour(Colour::Colour(col));
 		sprite->setRect(IntRect(0, 0, 1, 1));
 		sprite->setScale(Vector2f(200, 200));
 

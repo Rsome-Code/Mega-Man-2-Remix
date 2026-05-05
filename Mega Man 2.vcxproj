@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,6 +107,7 @@
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\include;D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +125,7 @@
       <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\romaa\source\repos\Mega-Man-2-Remix\SFML-2.6.1\include;D:\programming\Mega Man 2\SFML-2.6.1\include</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,6 +186,21 @@
     <Media Include="Assets\Sound\yoku.wav" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="checkDown.cpp" />
+    <ClCompile Include="checkLeft.cpp" />
+    <ClCompile Include="checkRight.cpp" />
+    <ClCompile Include="checkUp.cpp" />
+    <ClCompile Include="Crash Check.cpp" />
+    <ClCompile Include="Crash Man.cpp" />
+    <ClCompile Include="Crash1.cpp" />
+    <ClCompile Include="Crash10.cpp" />
+    <ClCompile Include="Crash11.cpp" />
+    <ClCompile Include="Crash12.cpp" />
+    <ClCompile Include="Crash13.cpp" />
+    <ClCompile Include="Crash14.cpp" />
+    <ClCompile Include="Crash15.cpp" />
+    <ClCompile Include="Crash16.cpp" />
+    <ClCompile Include="Crash2.cpp" />
     <ClCompile Include="Bottom Edge.cpp" />
     <ClCompile Include="Bottom Left Corner w.cpp" />
     <ClCompile Include="Bottom Left Corner.cpp" />
@@ -190,14 +209,25 @@
     <ClCompile Include="Bottom right w.cpp" />
     <ClCompile Include="Cannon Bullet.cpp" />
     <ClCompile Include="Cannon Right.cpp" />
+    <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Crash Bomb.cpp" />
     <ClCompile Include="Crash Bullet.cpp" />
     <ClCompile Include="Crash Explosion.cpp" />
+    <ClCompile Include="Crash Tile.cpp" />
+    <ClCompile Include="Crash3.cpp" />
+    <ClCompile Include="Crash4.cpp" />
+    <ClCompile Include="Crash5.cpp" />
+    <ClCompile Include="Crash6.cpp" />
+    <ClCompile Include="Crash7.cpp" />
+    <ClCompile Include="Crash8.cpp" />
+    <ClCompile Include="Crash9.cpp" />
     <ClCompile Include="Crazy Cannon.cpp" />
     <ClCompile Include="Flash Door.cpp" />
     <ClCompile Include="Flash Man.cpp" />
     <ClCompile Include="H Tube Tile.cpp" />
     <ClCompile Include="Left Edge.cpp" />
+    <ClCompile Include="Rail Platform Checkpoint.cpp" />
+    <ClCompile Include="Rail Platform.cpp" />
     <ClCompile Include="Right Edge.cpp" />
     <ClCompile Include="Square Flash.cpp" />
     <ClCompile Include="Abstract Stage.cpp" />

@@ -1,0 +1,5 @@
+rail platform,2899,-2068,1
+rail checkpoint-up,3415,-2034,1
+rail checkpoint-left,3412,-2419,1
+rail checkpoint-down,2705,-2412,1
+rail checkpoint-right,2709,-2028,1

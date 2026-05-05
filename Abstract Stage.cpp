@@ -422,4 +422,13 @@ public:
 
 		return tokens;
 	}
+
+	int getTelePos() {
+		if (levelName == "crash man") {
+			return 700;
+		}
+		else {
+			return 300;
+		}
+	}
 };

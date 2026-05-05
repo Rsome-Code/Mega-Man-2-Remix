@@ -29,7 +29,9 @@ class player {
 	shared_ptr<physicsObject> sprite;
 	shared_ptr<Texture> texture;
 	shared_ptr<pControls> controls;
+	bool tempGround = false;
 	bool grounded = true;
+	bool groundedOverride = false;
 	shared_ptr<teleport> tele;
 
 	int maxHP = 28;
@@ -125,7 +127,7 @@ public:
 		//shared_ptr<Image> image = shared_ptr<Image> (&texture->copyToImage());
 		sprite = shared_ptr<physicsObject> (new physicsObject("player", texture, IntRect(2, 21, 22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1));
 
-		sprite->setFullColour(&Color::Red);
+		sprite->setFullColour(Colour::Red());
 
 		pAnim = shared_ptr<playerAnimation> (new playerAnimation(sprite));
 		controls = shared_ptr<pControls>(new pControls(p1, sprite, pAnim));
@@ -465,13 +467,13 @@ public:
 	}
 
 
-	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos) {
 
 		splash->eachFrame(deltaT);
 		
 		if (deathAnim == NULL) {
 			if (movable) {
-				alive(deltaT, tiles, IBullets);
+				alive(deltaT, tiles, IBullets, maxTelePos);
 				ladderJumpExtend(tiles);
 				
 			}
@@ -549,7 +551,7 @@ public:
 	}
 
 
-	void alive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets) {
+	void alive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos) {
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
@@ -579,7 +581,7 @@ public:
 			}
 			else {
 				//hit->setRelativePosition(Vector2i(-9999, -9999));
-				if (tele->eachFrame(deltaT, tiles, foot)) {
+				if (tele->eachFrame(deltaT, tiles, foot, maxTelePos)) {
 
 					tele = NULL;
 					pAnim->resetIdle();
@@ -826,6 +828,12 @@ public:
 			this->controls->setGrounded(b);
 		}
 	}
+	void setGroundedOverride(bool b) {
+		groundedOverride = b;
+	}
+	bool getGroundedOverride() {
+		return groundedOverride;
+	}
 	shared_ptr<playerAnimation> getAnimation() {
 		return pAnim;
 	}
@@ -932,7 +940,12 @@ private:
 		return gotBoomerang;
 	}
 
-	
+	bool getTempGround() {
+		return tempGround;
+	}
+	void setTempGround(bool b) {
+		tempGround = b;
+	}
 
 	
 };

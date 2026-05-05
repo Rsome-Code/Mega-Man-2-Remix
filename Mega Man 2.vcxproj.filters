@@ -118,6 +118,15 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Flash Man">
       <UniqueIdentifier>{86e0eb56-5271-4cdb-afd4-33d80625f90c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Tiles\Crash Tiles">
+      <UniqueIdentifier>{291a404a-e51e-4507-bdba-6d13ccacddef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Objects\Rail Platform">
+      <UniqueIdentifier>{8b7a0f0d-979f-4aae-b44a-3f522944fa20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Crash Man">
+      <UniqueIdentifier>{5a6b0828-d2e1-4178-9dec-7acdfdab0ae5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -933,6 +942,84 @@
     </ClCompile>
     <ClCompile Include="Crash Explosion.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash Tile.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash1.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash2.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash3.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash4.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash5.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash6.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash7.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash8.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash9.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash10.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash11.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash12.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash13.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash14.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash15.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash16.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Colour.cpp">
+      <Filter>Source Files\Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash Check.cpp">
+      <Filter>Source Files\Game Files\Tiles\Crash Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Rail Platform Checkpoint.cpp">
+      <Filter>Source Files\Game Files\Objects\Rail Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Rail Platform.cpp">
+      <Filter>Source Files\Game Files\Objects\Rail Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="checkLeft.cpp">
+      <Filter>Source Files\Game Files\Objects\Rail Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="checkRight.cpp">
+      <Filter>Source Files\Game Files\Objects\Rail Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="checkUp.cpp">
+      <Filter>Source Files\Game Files\Objects\Rail Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="checkDown.cpp">
+      <Filter>Source Files\Game Files\Objects\Rail Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Crash Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Crash Man</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

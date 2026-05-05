@@ -1,18 +1,19 @@
 #include <SFML/Graphics.hpp>
+#include "colour.cpp"
 #pragma once
 
 using namespace sf;
 using namespace std;
 
 class LightSource {
-	Color colour;
+	Colour colour;
 	float range;
 	float brightness;
 	Vector2f position;
 
 
 public:
-	LightSource(Color col, float range, float brightness) {
+	LightSource(Colour col, float range, float brightness) {
 		colour = col;
 		this->range = range;
 		this->brightness = brightness;
@@ -21,7 +22,7 @@ public:
 	void updatePos(Vector2f pos) {
 		position = pos;
 	}
-	Color getColour() {
+	Colour getColour() {
 		return colour;
 	}
 	float getRange() {
