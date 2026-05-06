@@ -86,141 +86,173 @@ public:
     }
 
 public:bool checkA() {
-    
+    if (window->hasFocus()) {
 
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
-    {
-        //controller0->vibrate(65535, 0);
-        return true;
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_A)
+        {
+            //controller0->vibrate(65535, 0);
+            return true;
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::Z)) {
+            return true;
+        }
+        return false;
     }
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::Z)) {
-        return true;
-    }
-    return false;
+	return false;
 }
 
 public:bool checkB() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B || controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
-    {
-        //controller0->vibrate(0, 65535);
-        return true;
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B || controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
+        {
+            //controller0->vibrate(0, 65535);
+            return true;
 
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::X)) {
-        return true;
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::X)) {
+            return true;
+        }
+        return false;
     }
     return false;
 }
 
 public:bool checkX()
 {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
-    {
-        return true;
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
+        {
+            return true;
+        }
+        return false;
     }
     return false;
 }
 public:bool checkY()
 {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_Y)
-      {
-        //controller0->vibrate();
-        return true;
-        //controller0->vibrate();
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_Y)
+        {
+            //controller0->vibrate();
+            return true;
+            //controller0->vibrate();
+        }
+        return false;
     }
-      return false;
+    return false;
 }
 public:bool checkUP() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) {
-        return true;
-    }
-    else if (checkLSTICK().y > 20000) {
-        return true;
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::Up)) {
-        return true;
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) {
+            return true;
+        }
+        else if (checkLSTICK().y > 20000) {
+            return true;
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::Up)) {
+            return true;
+        }
+        return false;
     }
     return false;
 }
 public:bool checkDOWN() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
-        return true;
-    }
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) {
+            return true;
+        }
 
-    else if (checkLSTICK().y < -20000) {
-        return true;
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::Down)) {
-        return true;
+        else if (checkLSTICK().y < -20000) {
+            return true;
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::Down)) {
+            return true;
+        }
+        return false;
     }
     return false;
 }
 public:bool checkLEFT() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
-        return true;
-    }
-    else if (checkLSTICK().x < -20000) {
-        return true;
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
-        return true;
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) {
+            return true;
+        }
+        else if (checkLSTICK().x < -20000) {
+            return true;
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
+            return true;
+        }
+        return false;
     }
     return false;
 }
 public:
     bool checkRIGHT() {
-        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
-            return true;
-        }
-        else if (checkLSTICK().x > 20000) {
-            return true;
-        }
-        else if (Keyboard::isKeyPressed(Keyboard::Scan::Right)) {
-            return true;
+        if (window->hasFocus()) {
+            if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) {
+                return true;
+            }
+            else if (checkLSTICK().x > 20000) {
+                return true;
+            }
+            else if (Keyboard::isKeyPressed(Keyboard::Scan::Right)) {
+                return true;
+            }
+            return false;
         }
         return false;
     }
     bool checkL() {
-        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-            return true;
-        }
-        else if (Keyboard::isKeyPressed(Keyboard::Scan::Space)) {
-            return true;
+        if (window->hasFocus()) {
+            if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+                return true;
+            }
+            else if (Keyboard::isKeyPressed(Keyboard::Scan::Space)) {
+                return true;
+            }
+            return false;
         }
         return false;
     }
     bool checkR() {
-        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
-            return true;
-        }
-        else if (Keyboard::isKeyPressed(Keyboard::Scan::C)) {
-            return true;
+        if (window->hasFocus()) {
+            if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+                return true;
+            }
+            else if (Keyboard::isKeyPressed(Keyboard::Scan::C)) {
+                return true;
+            }
+            return false;
         }
         return false;
     }
 
-
-
-
 public:bool checkSELECT() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
-    {
-        return true;
-    }
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_BACK)
+        {
+            return true;
+        }
 
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::Escape)) {
-        return true;
-    }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::Escape)) {
+            return true;
+        }
 
+        return false;
+    }
     return false;
 }
 public:bool checkSTART() {
-    if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
-    {
-        return true;
-    }
-    else if (Keyboard::isKeyPressed(Keyboard::Scan::Enter)) {
-        return true;
+    if (window->hasFocus()) {
+        if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_START)
+        {
+            return true;
+        }
+        else if (Keyboard::isKeyPressed(Keyboard::Scan::Enter)) {
+            return true;
+        }
+        return false;
     }
     return false;
 }

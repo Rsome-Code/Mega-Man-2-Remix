@@ -185,9 +185,9 @@ public:
 			if (z == 1) {
 				tileList->push_back(tileCreation(Vector2f(worldX, worldY), type, tex));
 
-				if (*prev(tileList->end()) == NULL) {
-					cout << "here";
-				}
+				//if (*prev(tileList->end()) == NULL) {
+				//	cout << "here";
+				//}
 			}
 			else if (z == 2) {
 				z2List->push_back(tileCreation(Vector2f(worldX, worldY), type, tex));

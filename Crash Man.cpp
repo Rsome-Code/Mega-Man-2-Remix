@@ -189,4 +189,8 @@ class CrashMan : public Master {
 	int airDam() {
 		return 8;
 	}
+
+	int genericDam() {
+		return 100;
+	}
 };

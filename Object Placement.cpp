@@ -262,7 +262,7 @@ public:
 				obj = shared_ptr<CannonRight> (new CannonRight(obj->getSprite()->getTexture(), obj->getPosition()));
 				//delete temp;
 				
-				cout << "hey";
+				//cout << "hey";
 			}
 		}
 	}
@@ -634,7 +634,7 @@ public:
 		for (shared_ptr<GameObject> o : objects) {
 			if (o->getCode() == "flag" || o->getCode() == "flag-down" || o->getCode() == "flag-up" || o->getCode() == "flag-left" || o->getCode() == "door") {
 				if (o->getSection() == NULL) {
-					cout << "???";
+					//cout << "???";
 					o->setSection(section);
 				}
 				bool skip = false;
@@ -736,9 +736,9 @@ public:
 				vector<string> values = splitString(line, sep);
 				vector<string>::iterator valI = values.begin();
 				string current = *valI;
-				if (stoi(current) == 0) {
-					cout << "here";
-				}
+				//if (stoi(current) == 0) {
+					//cout << "here";
+				//}
 				if (stoi(current) == o->getSection()) {
 					flagfile->close();
 					eraseFileLine(saveFile + "\\flags.txt", line);

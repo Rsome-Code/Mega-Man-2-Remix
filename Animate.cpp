@@ -55,7 +55,7 @@ public:
 	}
 public:
 	animation() {
-		cout << "AY";
+		//cout << "AY";
 	}
 
 	void setOffsetList(list<Vector2f> l) {

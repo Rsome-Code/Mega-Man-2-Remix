@@ -271,9 +271,7 @@ public:
 
 	void load(string name, string section, shared_ptr<SoundCollection> soundCol) {
 
-		if (section == "3") {
-			cout << "here";
-		}
+		
 		
 		l->load(name, section, tileTexture, &tileList, &z2List, &z3List, &z4List);
 		zCorrection();

@@ -356,6 +356,7 @@
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Splash Effect.cpp" />
     <ClCompile Include="Springer.cpp" />
+    <ClCompile Include="Star.cpp" />
     <ClCompile Include="Teleport Out.cpp" />
     <ClCompile Include="Telly Spawner.cpp" />
     <ClCompile Include="Telly.cpp" />

@@ -359,6 +359,10 @@ public:
 		return crashBomb;
 	}
 
+	void setCrashBomb(bool b) {
+		gotBomb = b;
+	}
+
 	shared_ptr<Item1> getItem1() {
 		return item1;
 	}

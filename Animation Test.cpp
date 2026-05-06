@@ -74,7 +74,7 @@ public:
 			if (p->checkRIGHT() && !rightPressed) {
 				rightPressed = true;
 				anim->nextFrame(false);
-				cout << "1";
+				//cout << "1";
 				//anim->displayNextFrame();
 			}
 			else if (rightPressed && !p->checkRIGHT()) {

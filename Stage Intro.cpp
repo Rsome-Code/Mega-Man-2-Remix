@@ -13,6 +13,7 @@
 #include "metal man.cpp"
 #include "quick man.cpp"
 #include "flash man.cpp"
+#include "crash man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -129,6 +130,10 @@ public:
 			boss = shared_ptr<Master>(new FlashMan(bossT, pos));
 			boss->initial();
 		}
+		else if (name == "crash man") {
+			boss = shared_ptr<Master>(new CrashMan(bossT, pos));
+			boss->initial();
+		}
 	}
 
 	void dotSetup(shared_ptr<Texture> bg, IntRect startFrame) {
@@ -240,7 +245,7 @@ public:
 				fadeIn->setSprite(ob);
 				fadeIn->setFrame();
 			}
-			cout << "f";
+			//cout << "f";
 		}
 		if (fin) {
 			fadeNum++;

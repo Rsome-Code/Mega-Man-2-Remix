@@ -91,6 +91,12 @@ public:
 	int toInteger() {
 		//Convert red, green, blue, alpha to binary
 		//Then order them as above and translate to a single integer
+
+		int c = r;
+		c = (c << 8) | g;
+		c = (c << 8) | b;
+		c = (c << 8) | a;
+		return c;
 	}
 
 
@@ -99,4 +105,3 @@ public:
 	}
 
 };
-

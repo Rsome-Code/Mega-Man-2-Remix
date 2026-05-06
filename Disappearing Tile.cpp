@@ -93,9 +93,9 @@ public:
 					if (sound->getStatus() != Sound::Playing) {
 						sound->play();
 					}
-					else {
-						cout << "playing\n";
-					}
+					//else {
+						//cout << "playing\n";
+					//}
 					
 				}
 			}
