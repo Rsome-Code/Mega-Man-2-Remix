@@ -13,7 +13,7 @@ class pControls {
 	shared_ptr<pController> p1;
 	shared_ptr<physicsObject> sprite;
 	shared_ptr<playerAnimation> pAnim;
-	float maxSpeed = 450;
+	float maxSpeed = 420;
 	
 	float standardAccel = 10000;
 	float groundAccel = standardAccel;

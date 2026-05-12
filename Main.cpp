@@ -257,7 +257,7 @@ int main() {
 
 
 	//Un-comment this if you want to use the level editor
-	//l->loop(instance, targetFPS);
+	l->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
 	// There must be a flag in the section that comes before the start
