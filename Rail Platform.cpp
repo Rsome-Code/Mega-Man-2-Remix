@@ -10,7 +10,7 @@ class RailPlatform : public GameObject {
 		Left, Right, Up, Down
 	};
 
-	Direction dir = Right;
+	Direction dir = Down;
 
 	int speed = 200;
 

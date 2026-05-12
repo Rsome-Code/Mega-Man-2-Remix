@@ -1,0 +1,3 @@
+Extra Life,3590,-13584,1
+fly guy-spawn,4358,-14048,1
+fly guy-spawn,4820,-13998,1

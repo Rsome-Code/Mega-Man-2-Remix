@@ -97,6 +97,7 @@
 #include "checkRight.cpp"
 #include "rail platform.cpp"
 #include "crash man.cpp"
+#include "neo mettool.cpp"
 #pragma once
 
 using namespace std;
@@ -468,6 +469,10 @@ public:
 				p->setBomb(*valI == "y");
 			}
 
+			else if (type == "Air Man") {
+				p->setAir(*valI == "y");
+			}
+
 		}
 
 
@@ -796,6 +801,10 @@ public:
 			*enem = shared_ptr<enemy>(new Press(t, worldPos));
 			shared_ptr<enemy> temp = *enem;
 			temp->setCode();
+		}
+
+		else if (type == "neo mettool") {
+			*enem = shared_ptr<NeoMettool>(new NeoMettool(t, worldPos));
 		}
 
 		else if (type == "blocky") {

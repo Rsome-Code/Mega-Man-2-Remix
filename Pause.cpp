@@ -36,6 +36,7 @@ class Pause {
 	shared_ptr<WeaponOption> item1;
 	shared_ptr<WeaponOption> quickBoomerang;
 	shared_ptr<WeaponOption> timeStopper;
+	shared_ptr<WeaponOption> airShooter;
 	shared_ptr<WeaponOption> crashBomb;
 
 
@@ -127,7 +128,9 @@ public:
 			addP2Option(&timeStopper, 2, p->getTimeStopper());
 		}
 
-		
+		if (p->checkAir()) {
+			addP1Option(&airShooter, 4, p->getAirShooter());
+		}
 
 		if (p->checkBlade()) {
 			addP2Option(&metalBlade, 3, p->getMetalBlade());
@@ -201,6 +204,13 @@ public:
 		if (p->checkBomb()) {
 			crashBomb->getBar()->update(p->getCrashBomb()->getAmmo());
 		}
+		if (p->checkAir()) {
+			airShooter->getBar()->update(p->getAirShooter()->getAmmo());
+		}
+		if (p->checkBoomerang()) {
+			quickBoomerang->getBar()->update(p->getBoomerang()->getAmmo());
+		}
+
 		startAnim->reset();
 		startTime->reset();
 		startAnim->thisFrame();
@@ -402,6 +412,9 @@ public:
 		}
 		if (p->checkBoomerang()) {
 			instance->UIDisplay(quickBoomerang->getSprites());
+		}
+		if (p->checkAir()) {
+			instance->UIDisplay(airShooter->getSprites());
 		}
 		instance->UIDisplay(eTanks->getSprites());
 		

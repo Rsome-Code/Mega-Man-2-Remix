@@ -161,6 +161,9 @@ public:
 		float increaseV = i.y * *deltaT;
 		verticalAcc = increaseV;
 	}
+
+
+
 	Vector2f getAcceleration() {
 		return Vector2f(horizontalAcc, verticalAcc);
 	}

@@ -21,6 +21,7 @@
 #include "quick boomerang.cpp"
 #include "time stopper.cpp"
 #include "crash bomb.cpp"
+#include "air shooter.cpp"
 #pragma once
 
 class player {
@@ -51,6 +52,7 @@ class player {
 	bool gotBoomerang = false;
 	bool gotTimeStopper = false;
 	bool gotBomb = false;
+	bool gotAir = false;
 
 	int holdAdd = 0;
 	float holdTime = 0.2;
@@ -77,6 +79,7 @@ class player {
 	shared_ptr<QuickBoomerang> quickBoomerang;
 	shared_ptr<TimeStopper> timeStopper;
 	shared_ptr<CrashBomb> crashBomb;
+	shared_ptr<AirShooter> airShooter;
 	shared_ptr<Item1> item1;
 
 	shared_ptr<Weapon> active = megaBuster;
@@ -162,6 +165,7 @@ public:
 		timeStopper = shared_ptr<TimeStopper>(new TimeStopper(t));
 		crashBomb = shared_ptr<CrashBomb>(new CrashBomb(sprite, t, soundCol));
 		item1 = shared_ptr<Item1>(new Item1(sprite, t));
+		airShooter = shared_ptr<AirShooter>(new AirShooter(sprite, t, soundCol));
 
 		//Define ammo bars here
 		shared_ptr<Texture> aB = shared_ptr<Texture> (new Texture());
@@ -307,6 +311,10 @@ public:
 		gotBomb = b;
 	}
 
+	void setAir(bool b) {
+		gotAir = b;
+	}
+
 	void setETanks(int e) {
 		ETanks = e;
 	}
@@ -359,6 +367,10 @@ public:
 		return crashBomb;
 	}
 
+	shared_ptr<AirShooter> getAirShooter() {
+		return airShooter;
+	}
+
 	void setCrashBomb(bool b) {
 		gotBomb = b;
 	}
@@ -366,6 +378,7 @@ public:
 	shared_ptr<Item1> getItem1() {
 		return item1;
 	}
+
 	shared_ptr<BubbleLead> getBubbleLead() {
 		return bubbleLead;
 	}
@@ -930,8 +943,13 @@ private:
 		return gotShield;
 	}
 	bool checkTornado() {
-		return false;
+		return gotAir;
 	}
+
+	bool checkAir() {
+		return gotAir;
+	}
+
 	bool checkBlade() {
 		return gotBlade;
 	}

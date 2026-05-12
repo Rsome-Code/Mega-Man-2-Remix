@@ -1,4 +1,4 @@
-rail platform,3166,-4566,1
+rail platform,3376,-4439,1
 rail checkpoint-left,3413,-4003,1
 rail checkpoint-down,3415,-4529,1
 rail checkpoint-right,2965,-4531,1
@@ -41,4 +41,7 @@ rail checkpoint-left,2965,-4403,1
 rail checkpoint-down,2699,-4393,1
 rail checkpoint-left,2709,-4193,1
 rail checkpoint-up,2973,-4459,1
-background-540601599,3686,-4352,1
+background-540601599,0,0,1
+telly-spawn,2591,-4288,1
+telly-spawn,3485,-4480,1
+telly-spawn,3485,-4308,1

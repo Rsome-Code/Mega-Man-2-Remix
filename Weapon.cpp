@@ -33,9 +33,7 @@ public:
 		}
 	}
 
-	int getMaxAmmo() {
-		return maxAmmo;
-	}
+
 	string getName() {
 		return name;
 	}
@@ -133,6 +131,9 @@ public:
 	}
 
 	int getMAxAmmo() {
+		return maxAmmo;
+	}
+	int getMaxAmmo() {
 		return maxAmmo;
 	}
 

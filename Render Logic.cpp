@@ -357,7 +357,7 @@ public:
 		//if (hit->isVisible()) {
 		sf::RectangleShape rectangle(Vector2f(hit->getSize().x * ratio, hit->getSize().y * ratio));
 		rectangle.setPosition(hit->getCameraPos());
-		rectangle.setFillColor(Colour(0, 255, 0, 255).getColour());
+		rectangle.setFillColor(Colour(0, 255, 0, 150).getColour());
 		
 		resolutionFix(hit);
 		w->draw(rectangle);

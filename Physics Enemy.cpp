@@ -10,6 +10,8 @@ protected:
 	shared_ptr<physicsObject> phys;
 	bool grounded = true;
 
+	//shared_ptr<objectHitbox> ground;
+
 public:
 
 
@@ -33,7 +35,7 @@ public:
 		display = false;
 		initial();
 
-
+	//	makeGroundBox();
 		setCode();
 	}
 
@@ -54,11 +56,18 @@ public:
 		display = false;
 		initial();
 
+		//makeGroundBox();
 		setCode();
 
 	}
 
-	void tileCollision(list<shared_ptr<tile>>* tileList) {
+	//void makeGroundBox() {
+		//if (hit != NULL) {
+		//	ground = shared_ptr<objectHitbox>(new objectHitbox(IntRect(hit->getRelativeRect().getPosition().x, hit->getRelativeRect().height, hit->getRelativeRect().width, 2), sprite));
+		//}
+	//}
+
+	void tileCollision(list<shared_ptr<tile>>* tileList, float* deltaT) {
 		//grounded = false;
 		bool groundCon;
 		bool alreadyGround = grounded;
@@ -75,6 +84,7 @@ public:
 				if (t->getGround() != NULL){
 					//thisGround = groundConfirm(t);
 					if (groundConfirm(t)) {
+						thisGround = true;
 						groundCon = true;
 					}
 				}
@@ -106,6 +116,66 @@ public:
 			if (!groundCon) {
 				grounded = false;
 			}
+			else {
+								
+				//phys->setVVelocity(0);
+				//phys->addVerticalForce(-phys->getGravity(), deltaT);
+			}
+		}
+		else if (grounded) {
+			//phys->setVVelocity(0);
+			//phys->addVerticalForce(-phys->getGravity(), deltaT);
+		}
+	}
+	void tileCollision(list<shared_ptr<tile>>* tileList) {
+		//grounded = false;
+		bool groundCon;
+		bool alreadyGround = grounded;
+		if (grounded) {
+			groundCon = false;
+		}
+		for (shared_ptr<tile> t : *tileList) {
+			bool thisSide = false;
+			bool thisGround = false;
+			if (t->getGround() != NULL && phys->getVVelocity() < 0 && !grounded) {
+				thisGround = groundCheck(t);
+			}
+			else if (alreadyGround) {
+				if (t->getGround() != NULL) {
+					//thisGround = groundConfirm(t);
+					if (groundConfirm(t)) {
+						groundCon = true;
+					}
+				}
+			}
+
+			if (!thisGround) {
+
+
+				if (t->getRight() != NULL) {
+					if (checkRight(t)) {
+						thisSide = true;
+					}
+
+				}
+				if (t->getLeft() != NULL) {
+					if (checkLeft(t)) {
+						thisSide = true;
+					}
+				}
+				if (t->getCeiling() != NULL && !thisSide) {
+					checkCeiling(t);
+				}
+			}
+
+
+		}
+
+		if (alreadyGround) {
+			if (!groundCon) {
+				grounded = false;
+			}
+
 		}
 	}
 
@@ -148,13 +218,15 @@ public:
 
 
 	bool groundConfirm(shared_ptr<tile> t) {
-		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
+		if (hitboxDetect::hitboxDetection(t->getGround(), shared_ptr<objectHitbox>(new objectHitbox(IntRect(hit->getRelativePosition().x, hit->getRelativePosition().y + hit->getRelativeRect().height * 4, hit->getRelativeRect().width, 2), sprite)))) {
+		//if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
 			//grounded = true;
 			return true;
 		}
 		return false;
 		
 	}
+
 
 	bool groundCheck(shared_ptr<tile> t) {
 		if (hitboxDetect::hitboxDetection(t->getGround(), hit)) {
@@ -175,4 +247,8 @@ public:
 		}
 	}
 
+
+	//shared_ptr<objectHitbox> getGround() {
+	//	return ground;
+	//}
 };

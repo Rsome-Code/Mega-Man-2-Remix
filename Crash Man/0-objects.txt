@@ -1,1 +1,4 @@
 background-540601599,0,0,1
+telly-spawn,1758,894,1
+telly-spawn,2272,768,1
+telly-spawn,2090,576,1

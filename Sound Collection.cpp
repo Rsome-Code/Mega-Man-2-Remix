@@ -40,6 +40,9 @@ class SoundCollection {
 	shared_ptr<SoundBuffer>crashB;
 	shared_ptr<Sound> crash;
 
+	shared_ptr<SoundBuffer>airB;
+	shared_ptr<Sound> air;
+
 public:
 
 	SoundCollection(shared_ptr<SoundCollection> sou) {
@@ -106,6 +109,11 @@ public:
 		crashB->loadFromFile("assets\\sound\\crash_bomber.wav");
 		crash = shared_ptr<Sound>(new Sound());
 		crash->setBuffer(*crashB);
+
+		airB = shared_ptr<SoundBuffer>(new SoundBuffer());
+		airB->loadFromFile("assets\\sound\\air_shooter.wav");
+		air = shared_ptr<Sound>(new Sound());
+		air->setBuffer(*airB);
 	}
 
 	shared_ptr<Sound> getCrash() {
@@ -146,5 +154,9 @@ public:
 
 	shared_ptr<Sound> getPlayerShoot() {
 		return pshootSound;
+	}
+
+	shared_ptr<Sound> getAir() {
+		return air;
 	}
 };

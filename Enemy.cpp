@@ -374,4 +374,8 @@ public:
 
 	}
 
+	shared_ptr<objectHitbox> getGround() {
+		return NULL;
+	}
+
 };

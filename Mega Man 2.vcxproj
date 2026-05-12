@@ -186,6 +186,8 @@
     <Media Include="Assets\Sound\yoku.wav" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Air Bullet.cpp" />
+    <ClCompile Include="Air Shooter.cpp" />
     <ClCompile Include="Boss Crash Bomb.cpp" />
     <ClCompile Include="checkDown.cpp" />
     <ClCompile Include="checkLeft.cpp" />
@@ -227,6 +229,7 @@
     <ClCompile Include="Flash Man.cpp" />
     <ClCompile Include="H Tube Tile.cpp" />
     <ClCompile Include="Left Edge.cpp" />
+    <ClCompile Include="Neo Mettool.cpp" />
     <ClCompile Include="Rail Platform Checkpoint.cpp" />
     <ClCompile Include="Rail Platform.cpp" />
     <ClCompile Include="Right Edge.cpp" />
@@ -356,7 +359,6 @@
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Splash Effect.cpp" />
     <ClCompile Include="Springer.cpp" />
-    <ClCompile Include="Star.cpp" />
     <ClCompile Include="Teleport Out.cpp" />
     <ClCompile Include="Telly Spawner.cpp" />
     <ClCompile Include="Telly.cpp" />

@@ -271,7 +271,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 0;
+		section = 20;
 
 		p->enableControls(true);
 
@@ -595,6 +595,10 @@ public:
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
 						//instance->hitboxDisplay(t->getHitbox());
 
+						if (t->getGround() != NULL) {
+							instance->objectHitboxSetup(t->getGround(), cam);
+							instance->hitboxDisplay(t->getGround());
+						}
 
 					}
 				}

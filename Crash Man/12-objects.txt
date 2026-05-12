@@ -1,0 +1,3 @@
+health-big,3839,-11150,1
+bird-spawn,3138,-11583,1
+bird-spawn,4612,-11613,1

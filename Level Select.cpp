@@ -262,7 +262,10 @@ public:
 		if (selection == 0) {
 			r = "bubble man";
 		}
-		if (selection == 3) {
+		else if (selection == 1) {
+			r = "air man";
+		}
+		else if (selection == 3) {
 			r = "heat man";
 		}
 		else if (selection == 5) {

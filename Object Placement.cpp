@@ -98,6 +98,7 @@ public:
 		for (shared_ptr<object> o : obList) {
 			o->setCode();
 			o->setDisplay(true);
+			o->getSprite()->setScale(Vector2f(2,2));
 		}
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 
@@ -204,7 +205,7 @@ public:
 				}
 			}
 
-			keyBoardCheck();
+			keyBoardCheck(instance.get());
 
 			Vector2i mousePos = m->getPosition(instance, wSize);
 			if (m->checkActive()) {
@@ -233,25 +234,27 @@ public:
 		}
 	}
 
-	void keyBoardCheck() {
-		if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
-			section++;
-			
-			reload();
-			rightPressed = true;
-		}
-		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Right)) {
-			rightPressed = false;
-		}
+	void keyBoardCheck(renderer* instance) {
+		if (instance->getWindow()->hasFocus()) {
+			if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
+				section++;
 
-		if (Keyboard::isKeyPressed(Keyboard::Scan::Left) && !leftPressed) {
-			section--;
-			
-			reload();
-			leftPressed = true;
-		}
-		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
-			leftPressed = false;
+				reload();
+				rightPressed = true;
+			}
+			else if (!Keyboard::isKeyPressed(Keyboard::Scan::Right)) {
+				rightPressed = false;
+			}
+
+			if (Keyboard::isKeyPressed(Keyboard::Scan::Left) && !leftPressed) {
+				section--;
+
+				reload();
+				leftPressed = true;
+			}
+			else if (!Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
+				leftPressed = false;
+			}
 		}
 	}
 
@@ -348,6 +351,8 @@ public:
 			objects.push_back(tempLoc);
 			objectIt = prev(objects.end());
 			selectedPlaced = *objectIt;
+
+			selectedPlaced->getSprite()->setScale(Vector2f(4, 4));
 			
 			
 

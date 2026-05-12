@@ -3,7 +3,7 @@ Rework engine to allow for a layer of abstraction to make porting easier
 Rework hitboxes on the engine level to be more intuitive
 	Better naming conventions
 	Make it clear whether a parameter is relative to object size
-	Make separate object for hitboxes that scale with object they are assigned to
+	Make separate (child) object for hitboxes that scale with object they are assigned to
 
 Rework Player - anims - hitboxes - streamline physics to make parameter changing easier
 	Physics themselves feel perfect, though
@@ -18,7 +18,7 @@ Set up robust system for certain objects to go behind tiles
 
 Make adding weapons/abilities more streamlined
 
-Experiment with binary tree to store collision
+Experiment with binary tree to store collision???
 
 All collision should take place in the same "for" loop
 	Improves performance and consistency
@@ -29,3 +29,6 @@ Store collision pointers in separate lists from tiles
 Store level-specific parameters inside a Json file, not in "if" statements
 
 Compress images and sounds
+
+Standardise tile collision logic for all objects.
+	Exceptions should be very rare!

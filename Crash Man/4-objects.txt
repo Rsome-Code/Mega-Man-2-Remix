@@ -1,16 +1,19 @@
-rail platform,3156,-3475,1
-rail checkpoint-up,3419,-3058,1
-rail checkpoint-left,3417,-3574,1
-rail checkpoint-down,2956,-3567,1
-rail checkpoint-left,2960,-3427,1
-rail checkpoint-down,2700,-3431,1
-rail checkpoint-right,2711,-3300,1
-rail checkpoint-up,3099,-3314,1
-rail checkpoint-right,3093,-3446,1
-rail checkpoint-down,3291,-3434,1
-rail checkpoint-left,3277,-3300,1
-rail checkpoint-down,3153,-3304,1
-rail checkpoint-left,3157,-3174,1
-rail checkpoint-down,2957,-3176,1
-rail checkpoint-right,2966,-3043,1
-background-540601599,3694,-3446,1
+rail checkpoint-up,2954,-3052,1
+rail checkpoint-right,3158,-3322,1
+rail checkpoint-right,2966,-3194,1
+background-540601599,0,0,1
+rail checkpoint-up,3294,-3312,1
+rail checkpoint-left,3284,-3448,1
+rail checkpoint-down,3080,-3440,1
+rail checkpoint-left,3414,-3040,1
+rail checkpoint-down,3422,-3564,1
+rail checkpoint-right,2964,-3576,1
+rail checkpoint-up,2976,-3438,1
+rail checkpoint-right,2708,-3448,1
+rail platform,3374,-3516,1
+rail checkpoint-up,2698,-3308,1
+rail checkpoint-left,3094,-3296,1
+rail checkpoint-up,3168,-3182,1
+telly-spawn,2563,-3266,1
+telly-spawn,3519,-3508,1
+telly-spawn,3523,-3356,1

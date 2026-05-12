@@ -449,6 +449,14 @@ public:
 		}
 		else {
 			tileSelection = false;
+
+			if (UIHitboxCheck(mousePos, zSelect->getHitbox())) {
+				onZ = true;
+			}
+			else {
+				onZ = false;
+			}
+			
 			if (UITypeCheck(mousePos)) {
 				
 				typeSelection = true;
@@ -456,13 +464,8 @@ public:
 			}
 			else {
 				typeSelection = false;
-				if (UIHitboxCheck(mousePos, zSelect->getHitbox())) {
-					onZ = true;
-				}
-				else {
-					onZ = false;
-				}
 			}
+			
 
 		}
 		
@@ -682,6 +685,17 @@ public:
 					worldI = prev(tileList->end());
 				}
 			}
+			else if (onZ) {
+				z++;
+				if (z >= 5) {
+					z = 1;
+				}
+
+				selectedType = 0;
+
+				changeZ();
+
+			}
 		}
 		else if (tileSelection) {
 			if (selectedTile == NULL) {
@@ -702,17 +716,7 @@ public:
 			}
 
 		}
-		else if (onZ) {
-			z++;
-			if (z >= 5) {
-				z = 1;
-			}
-
-			selectedType = 0;
-
-			changeZ();
-
-		}
+		
 		else {
 			worldInteraction(mousePos);
 		}
