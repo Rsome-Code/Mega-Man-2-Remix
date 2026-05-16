@@ -382,12 +382,17 @@ public:
 				}
 			}
 
-
-			if (door1->getSection() == section || door2->getSection() == section) {
-				p->eachFrame(&deltaT, tileList, &itemBullets, 300);
+			if (door1 != NULL) {
+				if (door1->getSection() == section || door2->getSection() == section) {
+					//300 is to standardise the minimum distance for teleporting in pre boss rooms.
+					p->eachFrame(&deltaT, tileList, &itemBullets, 300, cam);
+				}
+				else {
+					p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos, cam);
+				}
 			}
 			else {
-				p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos);
+				p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos, cam);
 			}
 
 			checkFall();
@@ -446,8 +451,8 @@ public:
 			}
 
 
-			cam->followX();
-
+			
+			p->cameraLogic(cam, &deltaT);
 
 
 			Vector2f flagPos = stage->getFlagPos(section);
@@ -545,10 +550,13 @@ public:
 				for (shared_ptr<enemy> t : enemies) {
 					if (t->getDamSprite() != NULL) {
 						instance->objectDisplay(t->getDamSprite(), cam);
+						
 					}
 					if (t->getSprite() != NULL) {
 
 						instance->objectAccess(t, cam);
+						instance->objectDisplay(t->getExtraSprites(), cam);
+						
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
 						//instance->hitboxDisplay(t->getHitbox());
 
@@ -568,9 +576,11 @@ public:
 				}
 			}
 
-
-			door1->animate(&deltaT);
-			door2->animate(&deltaT);
+			if (door1 != NULL) {
+				door1->animate(&deltaT);
+				door2->animate(&deltaT);
+			}
+			
 			if (door1 != NULL) {
 				instance->objectAccess(door1, cam);
 			}
@@ -579,6 +589,7 @@ public:
 			}
 
 			for (shared_ptr<object> t : objects) {
+				instance->objectSetup(t->getSprite(), cam);
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
@@ -592,13 +603,15 @@ public:
 					if (t->getSprite() != NULL) {
 
 						instance->objectAccess(t, cam);
+						instance->objectDisplay(t->getExtraSprites(), cam);
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
 						//instance->hitboxDisplay(t->getHitbox());
 
-						if (t->getGround() != NULL) {
+						/*if (t->getGround() != NULL) {
 							instance->objectHitboxSetup(t->getGround(), cam);
+							
 							instance->hitboxDisplay(t->getGround());
-						}
+						}*/
 
 					}
 				}
@@ -897,12 +910,17 @@ public:
 		if (p->setDead()) {
 
 			list<shared_ptr<GameObject>> tempL = objects;
-			tempL.push_back(door1);
-			tempL.push_back(door2);
+			if (door1 != NULL) {
+				tempL.push_back(door1);
+			}
+			if (door2 != NULL) {
+				tempL.push_back(door2);
+			}
 			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
 
 			masterDeathSound->play();
 
+		
 			paused = true;
 		}
 		return p->checkDeathFinish();
@@ -1088,6 +1106,8 @@ public:
 		bossDeath = NULL;
 
 		p->setPosition(Vector2f(cam->getPosition().x + ((1920 / 2) - 8 * 4), cam->getPosition().y));
+		
+		p->getSprite()->updateCameraPosition(cam->getPosition());
 		p->start(cam->getPosition().y + (16 * 4));
 		p->swapDirection();
 
@@ -1171,6 +1191,7 @@ public:
 									spawnItemFromEnemy(enemy, soundCol);
 
 									enemy->spawnEnemy(&enemies, soundCol);
+									enemy->spawnObject(&objects, soundCol);
 								}
 
 								else {

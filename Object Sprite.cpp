@@ -7,6 +7,7 @@
 #include "light source.cpp"
 #include "Maths.cpp"
 #include "colour.cpp"
+
 #pragma once
 
 using namespace std;
@@ -335,6 +336,13 @@ public: void setPosition(Vector2f position) {
 
 
 public: 
+
+	void updateCameraPosition(Vector2f cam) {
+
+		cameraPosition = position - cam;
+
+	}
+
 	Vector2f getPosition() {
 		return position;
 	}

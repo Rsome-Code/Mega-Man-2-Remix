@@ -112,6 +112,8 @@ class player {
 
 	bool movable = true;
 
+	bool shootem = false;
+
 public:
 
 	virtual ~player() {
@@ -487,15 +489,24 @@ public:
 		ammoBar->updateWithSound(active->getAmmo());
 	}
 
+	void setShootemControls(bool b) {
+		pAnim->resetIdle();
+		shootem = b;
+	}
 
-	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos) {
+	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos, shared_ptr<camera> cam) {
 
 		splash->eachFrame(deltaT);
 		
 		if (deathAnim == NULL) {
 			if (movable) {
-				alive(deltaT, tiles, IBullets, maxTelePos);
-				ladderJumpExtend(tiles);
+				if (!shootem) {
+					alive(deltaT, tiles, IBullets, maxTelePos);
+					ladderJumpExtend(tiles);
+				}
+				else {
+					shootemAlive(deltaT, tiles, IBullets, cam);
+				}
 				
 			}
 			else {
@@ -511,6 +522,9 @@ public:
 		debugStuff();
 		
 	}
+
+
+	
 
 	void debugStuff() {
 		if (controls->getController()->checkR()) {
@@ -540,6 +554,8 @@ public:
 	bool checkDeathFinish() {
 		if (deathTime_left <= 0) {
 			deathTime_left = deathTime;
+
+			
 
 			return true;
 		}
@@ -571,8 +587,38 @@ public:
 		}
 	}
 
+	void cameraLogic(shared_ptr<camera> cam, float* deltaT) {
+		if (!shootem) {
+			cam->followX();
+		}
+		else {
+			cam->move(Angle::right, deltaT, controls->getAutoSpeed());
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Do this
+	void shootemAlive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
+		ammoBar->update(active->getAmmo());
+		if (inControl) {
+			controls->shootemEachFrame(deltaT, IBullets, cam);
+		}
+		else {
+			//controls->shootemNoControl(deltaT);
+		}
+		hit->updatePos();
+		foot->updatePos();
+
+		controls->shootEachFrame(deltaT, tiles, *IBullets);
+
+
+
+		pAnim->shootDecide(deltaT);
+
+	}
 
 	void alive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos) {
+		
 		ammoBar->update(active->getAmmo());
 
 		if (!damage) {
@@ -662,6 +708,8 @@ public:
 			controls->shootEachFrame(deltaT, tiles, *IBullets);
 		}
 
+		
+
 	}
 
 	void enableControls(bool e) {
@@ -693,7 +741,9 @@ public:
 		return beforeHold;
 	}
 
-
+	int getAutoSpeed() {
+		return controls->getAutoSpeed();
+	}
 
 	int getHoldAdd() {
 		return holdAdd;

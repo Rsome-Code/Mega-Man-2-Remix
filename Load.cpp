@@ -98,6 +98,9 @@
 #include "rail platform.cpp"
 #include "crash man.cpp"
 #include "neo mettool.cpp"
+#include "lightning lord.cpp"
+#include "fly platform.cpp"
+#include "flight exit.cpp"
 #pragma once
 
 using namespace std;
@@ -818,6 +821,18 @@ public:
 		else if (type == "crash man") {
 			*enem = shared_ptr<enemy>(new CrashMan(worldPos));
 
+		}
+
+		else if (type == "lightning lord") {
+			*enem = shared_ptr<LightningLord>(new LightningLord(t, worldPos));
+		}
+
+		else if (type == "fly platform") {
+			*add = shared_ptr<FlyPlatform>(new FlyPlatform(t, worldPos));
+		}
+
+		else if (type == "flight exit") {
+			*add = shared_ptr<FlightExit>(new FlightExit(Vector2f(worldX, worldY)));
 		}
 
 		else if (type == "beam left") {

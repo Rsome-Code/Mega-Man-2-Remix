@@ -127,6 +127,9 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Crash Man">
       <UniqueIdentifier>{5a6b0828-d2e1-4178-9dec-7acdfdab0ae5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Air Man">
+      <UniqueIdentifier>{b251ab42-1acc-4c27-af2d-648132037fa9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -1032,6 +1035,21 @@
     </ClCompile>
     <ClCompile Include="Neo Mettool.cpp">
       <Filter>Source Files\Game Files\Enemies\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightning Lord.cpp">
+      <Filter>Source Files\Game Files\Enemies\Air Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Fly platform.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightning Lord Anticlock.cpp">
+      <Filter>Source Files\Game Files\Enemies\Air Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightning.cpp">
+      <Filter>Source Files\Game Files\Enemies\Air Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Flight Exit.cpp">
+      <Filter>Source Files\Game Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

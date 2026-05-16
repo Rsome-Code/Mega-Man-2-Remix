@@ -18,6 +18,7 @@ public:
 
 	void eachFrame() {
 		display = false;
+
 	}
 
 	shared_ptr<objectHitbox> getHitbox() {

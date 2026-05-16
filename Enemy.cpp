@@ -195,7 +195,11 @@ public:
 				alive(p, deltaT, tileList, enemyList, bList, soundCol);
 			}
 		}
-		else { return death(deltaT, enemyList); }
+		else {
+			uniqueDeathLoop(deltaT);
+			
+			return death(deltaT, enemyList);
+		}
 		return false;
 	}
 
@@ -265,8 +269,15 @@ public:
 		act = false;
 		display = false;
 		sprite->setPosition(Vector2f(-1100, -1000));
+
+		uniqueDeath();
+
 		return false;
 	}
+
+	virtual void uniqueDeath() {};
+
+	virtual void uniqueDeathLoop(float* deltaT) {};
 
 	virtual bool yDeath(list<shared_ptr<enemy>>* enemies) {
 		return false;
@@ -374,8 +385,15 @@ public:
 
 	}
 
+	virtual void spawnObject(list<shared_ptr<GameObject>>* objects, shared_ptr<SoundCollection> soundCol) {
+
+	}
+
 	shared_ptr<objectHitbox> getGround() {
 		return NULL;
 	}
 
+	virtual list<shared_ptr<objectSprite>> getExtraSprites() {
+		return list<shared_ptr<objectSprite>>{};
+	}
 };

@@ -98,7 +98,9 @@ public:
 		for (shared_ptr<object> o : obList) {
 			o->setCode();
 			o->setDisplay(true);
-			o->getSprite()->setScale(Vector2f(2,2));
+			if (o->getSprite()->getScale() == Vector2f(4, 4)) {
+				o->getSprite()->setScale(Vector2f(2, 2));
+			}
 		}
 		tab = new Tab(obList, Vector2f(1920 - 414, 0));
 

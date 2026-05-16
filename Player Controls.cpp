@@ -5,6 +5,7 @@
 #include "Mega Buster.cpp"
 #include "weapon.cpp"
 #include "atomic fire.cpp"
+#include "angles.cpp"
 #include <SFML\Audio.hpp>
 
 #pragma once
@@ -209,6 +210,104 @@ public:
 		}
 
 		
+	}
+
+	int flightSpeed = 600;
+	Vector2f stickFly(float* deltaT) {
+		
+		float distance = flightSpeed * *deltaT;
+
+		int maxX = 32767;
+		int maxY = 32767;
+
+		Vector2f stick = p1->checkLSTICK();
+
+		float xDistance = Maths::map(-maxX, maxX, -flightSpeed, flightSpeed, stick.x);
+		float yDistance = Maths::map(-maxY, maxY, -flightSpeed, flightSpeed, stick.y);
+
+		sprite->setPosition(Vector2f(sprite->getPosition().x + xDistance, sprite->getPosition().y + yDistance));
+		
+		return Vector2f(xDistance, yDistance);
+
+	}
+
+	void dPadFly(float* deltaT) {
+
+		
+
+		if (p1->checkUP()) {
+
+			if (p1->checkLEFT()) {
+				sprite->move(Angle::upLeft, deltaT, flightSpeed);
+			}
+			else if (p1->checkRIGHT()) {
+				sprite->move(Angle::upRight, deltaT, flightSpeed);
+			}
+
+			else {
+				sprite->move(Angle::up, deltaT, flightSpeed);
+			}
+		}
+
+		else if (p1->checkDOWN()) {
+			if (p1->checkLEFT()) {
+				sprite->move(Angle::downLeft, deltaT, flightSpeed);
+			}
+			else if (p1->checkRIGHT()) {
+				sprite->move(Angle::downRight, deltaT, flightSpeed);
+			}
+			else {
+				sprite->move(Angle::down, deltaT, flightSpeed);
+			}
+		}
+
+		else if (p1->checkLEFT()) {
+			sprite->move(Angle::left, deltaT, flightSpeed);
+		}
+		else if (p1->checkRIGHT()) {
+			sprite->move(Angle::right, deltaT, flightSpeed);
+		}
+
+	}
+
+	int autoSpeed = 300;
+
+	int getAutoSpeed() {
+		return autoSpeed;
+	}
+
+	void shootemEachFrame(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
+		positionCheck(cam);
+
+		sprite->move(0, deltaT, autoSpeed);
+
+		if (stickFly(deltaT) == Vector2f(0,0)) {
+			dPadFly(deltaT);
+		}
+
+
+		shoot(deltaT, IBullets);
+		
+	}
+
+
+	//This ensures the player can't move off the screen during a shotem up segment.
+	void positionCheck(shared_ptr<camera> cam) {
+
+		if (sprite->getCameraPosition().x + sprite->getSize().x > 1920) {
+			sprite->setPosition(Vector2f(cam->getPosition().x + 1920 - sprite->getSize().x, sprite->getPosition().y));
+		}
+		else if (sprite->getCameraPosition().x < 0) {
+			sprite->setPosition(Vector2f(cam->getPosition().x + 0, sprite->getPosition().y));
+		}
+
+		if (sprite->getCameraPosition().y + sprite->getSize().y > 1080) {
+			sprite->setPosition(Vector2f(sprite->getPosition().x, cam->getPosition().y + 1080 - sprite->getSize().y));
+		}
+		else if (sprite->getCameraPosition().y < 0) {
+			sprite->setPosition(Vector2f(sprite->getPosition().x, cam->getPosition().y + 0));
+		}
+
 	}
 
 	void checkControls(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, float frictD) {

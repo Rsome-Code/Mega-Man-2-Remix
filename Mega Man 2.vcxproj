@@ -227,8 +227,13 @@
     <ClCompile Include="Crazy Cannon.cpp" />
     <ClCompile Include="Flash Door.cpp" />
     <ClCompile Include="Flash Man.cpp" />
+    <ClCompile Include="Flight Exit.cpp" />
+    <ClCompile Include="Fly platform.cpp" />
     <ClCompile Include="H Tube Tile.cpp" />
     <ClCompile Include="Left Edge.cpp" />
+    <ClCompile Include="Lightning Lord Anticlock.cpp" />
+    <ClCompile Include="Lightning Lord.cpp" />
+    <ClCompile Include="Lightning.cpp" />
     <ClCompile Include="Neo Mettool.cpp" />
     <ClCompile Include="Rail Platform Checkpoint.cpp" />
     <ClCompile Include="Rail Platform.cpp" />
