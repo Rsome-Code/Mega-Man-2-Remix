@@ -25,7 +25,7 @@ protected:
 	float throwReel_left = throwReel;
 
 	int angleChange = 80;
-	float angle = 270;
+	float angle;
 	int speed = 300;
 
 	void initial() {
@@ -51,9 +51,13 @@ protected:
 
 		hp = 3;
 
-		code = "lightning lord";
+		setCode();
+		angle = 270;
 	}
 
+	void setCode() {
+		code = "lightning lord";
+	}
 	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
 
 		move(deltaT);
@@ -85,7 +89,7 @@ protected:
 		platform->setPosition(Vector2f(mov->getPosition().x + 14 * 4, mov->getPosition().y + 24 * 4));
 	}
 
-	void move(float* deltaT) {
+	virtual void move(float* deltaT) {
 		angle = angle + (angleChange * *deltaT);
 
 		mov->move(angle, deltaT, speed);

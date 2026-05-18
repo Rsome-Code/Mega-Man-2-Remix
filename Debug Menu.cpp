@@ -177,6 +177,7 @@ public:
 
 		if (controller->checkA() && APressed != true) {
 			options[currentOption]->action(p, instance, targetFPS);
+			controller->updateWindow(instance->getWindow());
 			APressed = true;
 			textUpdate();
 		}

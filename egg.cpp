@@ -38,7 +38,15 @@ public:
 		}
 	}
 
-
+	void killedNoSound() {
+		
+		
+		
+		damaged = true;
+		flashTime_left = flashTime;
+		
+		hp = 0;
+	}
 
 	void spawnBirds(list<shared_ptr<enemy>>* objectList, shared_ptr<SoundCollection> soundCol) {
 		for (int i = 0; i < 8; i++) {

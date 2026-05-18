@@ -492,6 +492,11 @@ public:
 	void setShootemControls(bool b) {
 		pAnim->resetIdle();
 		shootem = b;
+		pAnim->setFacingRight(true);
+	}
+
+	bool getShootemControls() {
+		return shootem;
 	}
 
 	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos, shared_ptr<camera> cam) {
@@ -606,15 +611,41 @@ public:
 		else {
 			//controls->shootemNoControl(deltaT);
 		}
-		hit->updatePos();
-		foot->updatePos();
+		updateFlightHitboxes();
 
 		controls->shootEachFrame(deltaT, tiles, *IBullets);
 
 
 
+		invincibilityTime_left -= *deltaT;
+
+		if (damage) {
+		takingDamage(deltaT, tiles);
+		dam->flicker(deltaT);
+		}
+
+		if (invincibilityTime_left > 0) {
+			flash(deltaT);
+
+		}
+		else {
+			display = true;
+		}
+
 		pAnim->shootDecide(deltaT);
 
+		if (pAnim->getShootTime() <= 0) {
+			pAnim->idleAnim(deltaT);
+
+		}
+
+	}
+
+	void updateFlightHitboxes() {
+		hit->updatePos();
+		//ladderHit->updatePos();
+		foot->updatePos();
+		head->updatePos();
 	}
 
 	void alive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos) {
@@ -951,15 +982,16 @@ public:
 
 
 
+
 private:
-	void takingDamage(float* deltaT, list<shared_ptr<tile>> tileList) {
+	bool takingDamage(float* deltaT, list<shared_ptr<tile>> tileList) {
 		tempDTime = tempDTime - *deltaT;
 		if (tempDTime <= 0) {
 			tempDTime = damageTime;
 			damage = false;
 			sprite->setMovable(true);
 			dam->reset();
-			
+			return true;
 		}
 
 		if (pAnim->getFacingRight()) {
@@ -968,6 +1000,8 @@ private:
 		else {
 			sprite->move(0, deltaT, 200);
 		}
+
+		return false;
 		
 	}
 

@@ -1,0 +1,7 @@
+background-1019018495,0,0,1
+giant head,2212,1163,1
+giant head,2837,1225,1
+giant head,3445,959,1
+giant head,4063,1085,1
+giant head,4629,1091,1
+lightning lord,5252,974,1

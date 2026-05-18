@@ -84,6 +84,12 @@ public:
 	virtual void eachFrame(float* deltaT, shared_ptr<player> p, shared_ptr<camera> cam, list<shared_ptr<GameObject>> objects) {};
 	virtual void eachFrame() {};
 
+	list<shared_ptr<objectSprite>> getExtraSprites() {
+		return list<shared_ptr<objectSprite>> {};
+	}
+
+	virtual void follow(shared_ptr<player> player) {};
+
 
 	virtual void setSoundPointer(shared_ptr<Sound> sou) {
 

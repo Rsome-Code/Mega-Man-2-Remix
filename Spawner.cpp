@@ -21,7 +21,7 @@ public:
 
 
 
-	void eachFrame(float* deltaT, shared_ptr<objectSprite> player, list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
+	virtual void eachFrame(float* deltaT, shared_ptr<player> player, list<shared_ptr<enemy>>* enemyList, shared_ptr<camera> cam, shared_ptr<SoundCollection> soundCol) {
 		if (spawned == NULL) {
 			spawnTime_left -= *deltaT;
 			if (spawnTime_left <= 0) {
@@ -42,7 +42,12 @@ public:
 			}
 		}
 
+		display = false;
+
 	}
+
+
+
 	virtual void spawn(list<shared_ptr<enemy>>* enemyList, shared_ptr<SoundCollection> soundCol) {
 
 

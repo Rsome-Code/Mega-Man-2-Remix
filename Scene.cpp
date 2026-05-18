@@ -405,6 +405,7 @@ public:
 				o->eachFrame(&deltaT, p->getSprite());
 				o->eachFrame(&deltaT, p, cam, objects);
 				o->eachFrame();
+				
 
 				list<shared_ptr<GameObject>> temp;
 				for (shared_ptr<GameObject> g : enemies) {
@@ -505,7 +506,8 @@ public:
 
 				spawn->getSprite()->setCameraPosition(Vector2f(spawn->getSprite()->getPosition().x - cam->getPosition().x, spawn->getSprite()->getPosition().y));
 				if (spawn->getSprite()->getCameraPosition().x > 0 && spawn->getSprite()->getCameraPosition().x < 1920) {
-					spawn->eachFrame(&deltaT, p->getSprite(), &enemies, cam, soundCol);
+
+					spawn->eachFrame(&deltaT, p, &enemies, cam, soundCol);
 				}
 			}
 
@@ -555,7 +557,9 @@ public:
 					if (t->getSprite() != NULL) {
 
 						instance->objectAccess(t, cam);
-						instance->objectDisplay(t->getExtraSprites(), cam);
+						if (t->getDisplay()) {
+							instance->objectDisplay(t->getExtraSprites(), cam);
+						}
 						
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
 						//instance->hitboxDisplay(t->getHitbox());
@@ -603,7 +607,9 @@ public:
 					if (t->getSprite() != NULL) {
 
 						instance->objectAccess(t, cam);
-						instance->objectDisplay(t->getExtraSprites(), cam);
+						if (t->getDisplay()) {
+							instance->objectDisplay(t->getExtraSprites(), cam);
+						}
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
 						//instance->hitboxDisplay(t->getHitbox());
 
@@ -614,6 +620,12 @@ public:
 						}*/
 
 					}
+				}
+			}
+
+			for (shared_ptr<Spawner> s : spawners) {
+				if (s->getDisplay()) {
+					instance->objectDisplay(s->getSprite(), cam);
 				}
 			}
 
@@ -704,6 +716,10 @@ public:
 				instance->hitboxDisplay(list<shared_ptr<objectHitbox>> { e->getHitbox()});
 			}
 			*/
+
+			//instance->objectHitboxDisplay(p->getHitbox(), cam);
+			//instance->objectHitboxDisplay(p->getHead(), cam);
+			
 
 
 
@@ -916,7 +932,10 @@ public:
 			if (door2 != NULL) {
 				tempL.push_back(door2);
 			}
-			Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
+			for (shared_ptr<Spawner> s : spawners) {
+				tempL.push_back(s);
+			}
+			Freeze::stop(obBeforeTile, instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
 
 			masterDeathSound->play();
 
@@ -1147,8 +1166,11 @@ public:
 		list<shared_ptr<GameObject>> tempL = objects;
 		tempL.push_back(door1);
 		tempL.push_back(door2);
+		for (shared_ptr<Spawner> s : spawners) {
+			tempL.push_back(s);
+		}
 		enemy->forceDamSprite();
-		Freeze::stop(instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
+		Freeze::stop(obBeforeTile, instance, tRate, p, tileList, z2List, z3List, z4List, tempL, enemies, eBullets, backgroundObjects, foregroundObjects, cam, 0.75);
 		enemy->forceDamSpriteOff();
 		paused = true;
 		levelEndCheck(enemy, music);
@@ -1999,6 +2021,12 @@ public:
 				}
 			}
 
+			for (shared_ptr<Spawner> s : spawners) {
+				if (s->getDisplay()) {
+					instance->objectDisplay(s->getSprite(), cam);
+				}
+			}
+
 			for (shared_ptr<object> item : items) {
 				instance->objectAccess(item, cam);
 			}
@@ -2317,8 +2345,20 @@ public:
 									p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
 									//cam->follow();
 
-									p->setTempGround(true);
-									thisGround = true;
+									if (!p->getShootemControls()) {
+										p->setTempGround(true);
+										thisGround = true;
+									}
+									else {
+										p->getSprite()->setPosition(Vector2f(currentX, t->getGround()->getPosition().y - (p->getHitbox()->getSize().y + (5 * 4))));
+										p->updateFlightHitboxes();
+
+										for (shared_ptr<GameObject> ob: objects) {
+											if (ob->getCode() == "fly platform") {
+												ob->follow(p);
+											}
+										}
+									}
 								}
 							}
 						}
@@ -2326,6 +2366,19 @@ public:
 					if (!thisGround) {
 						if (t->getCeiling() != NULL) {
 							if (hitboxCheck(p->getHead(), t->getCeiling())) {
+
+								if (p->getShootemControls()){
+									p->getSprite()->setPosition(Vector2f(currentX, t->getCeiling()->getPosition().y + t->getCeiling()->getSize().y + (0 * 4)));
+									p->updateFlightHitboxes();
+									for (shared_ptr<GameObject> ob : objects) {
+										
+										if (ob->getCode() == "fly platform") {
+											
+											ob->follow(p);
+										}
+
+									}
+								}
 								p->getControls()->jumpCancel();
 								thisC = true;
 							}

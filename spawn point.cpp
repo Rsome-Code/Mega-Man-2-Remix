@@ -26,7 +26,7 @@ public:
 
 		setCode(objectName + "-spawn");
 		
-
+		display = false;
 
 	}
 	

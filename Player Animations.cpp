@@ -29,7 +29,7 @@ class playerAnimation {
 
 
 	float shootTime = 0.3;
-	float shootTemp = 0.3;
+	float shootTemp = shootTime;
 	
 
 	shared_ptr<physicsObject> sprite;
@@ -47,6 +47,11 @@ class playerAnimation {
 	int currentAnim = 0;
 
 public:
+
+	float getShootTime() {
+		return shootTemp;
+	}
+
 	playerAnimation(shared_ptr<physicsObject> s) {
 		sprite = s;
 		idle = shared_ptr<animation>(new animation(list<IntRect> {IntRect(Vector2i(3, 20), Vector2i(21, 25)), IntRect(Vector2i(54, 20), Vector2i(21, 25)) }, sprite));
@@ -157,10 +162,17 @@ public:
 		return facingRight;
 	}
 
+	void setFacingRight(bool b) {
+		facingRight = b;
+	}
+
 	shared_ptr<animation> getIdle(){
 		return idle;
 	}
 
+	float getIdleTime() {
+		return idleTime;
+	}
 
 	void idleAnim(float* deltaT) {
 		

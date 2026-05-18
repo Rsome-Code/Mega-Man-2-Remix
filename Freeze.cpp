@@ -8,7 +8,7 @@
 class Freeze {
 	
 public:
-	static void stop(shared_ptr<renderer> instance, float targetRate, shared_ptr<player> player, list<shared_ptr<tile>> tileList, list<shared_ptr<tile>> z2List, list<shared_ptr<tile>> z3List, list<shared_ptr<tile>> z4List, list<shared_ptr<GameObject>> obList, list<shared_ptr<enemy>> eList, list<shared_ptr<EnemyBullet>> eBList, list<shared_ptr<GameObject>> backgroundObjects, list<shared_ptr<GameObject>> foregroundObjects, shared_ptr<camera> cam, float timeLeft) {
+	static void stop(bool obBefore, shared_ptr<renderer> instance, float targetRate, shared_ptr<player> player, list<shared_ptr<tile>> tileList, list<shared_ptr<tile>> z2List, list<shared_ptr<tile>> z3List, list<shared_ptr<tile>> z4List, list<shared_ptr<GameObject>> obList, list<shared_ptr<enemy>> eList, list<shared_ptr<EnemyBullet>> eBList, list<shared_ptr<GameObject>> backgroundObjects, list<shared_ptr<GameObject>> foregroundObjects, shared_ptr<camera> cam, float timeLeft) {
 
 		shared_ptr<timer> time = shared_ptr<timer>(new timer());
 
@@ -37,6 +37,30 @@ public:
 				instance->objectAccess(ob, cam);
 			}
 
+			
+			for (shared_ptr<GameObject> ob : obList) {
+				if (ob->getDisplay() && ob->getSprite() != NULL) {
+					instance->objectDisplay(ob->getSprite(), cam);
+					instance->bObjectDisplay(ob->getExtraSprites(), cam);
+				}
+			}
+
+			if (obBefore) {
+				for (shared_ptr<enemy> e : eList) {
+					if (e->getDisplay()) {
+						if (e->getDamSprite() != NULL) {
+							instance->objectDisplay(e->getDamSprite(), cam);
+						}
+						instance->objectAccess(e, cam);
+						if (e->getBar() != NULL) {
+							shared_ptr<AmmoBar> bar = *e->getBar();
+							instance->UIDisplay(bar->getSprites());
+						}
+					}
+				}
+			}
+			
+
 			for (shared_ptr<tile> t : z4List) {
 				instance->bObjectDisplay(t->getSprite(), cam);
 			}
@@ -58,24 +82,29 @@ public:
 				}
 			}
 
-			for (shared_ptr<object> ob : obList) {
+			if (!obBefore) {
+				for (shared_ptr<enemy> e : eList) {
+					if (e->getDisplay()) {
+						if (e->getDamSprite() != NULL) {
+							instance->objectDisplay(e->getDamSprite(), cam);
+						}
+						instance->objectAccess(e, cam);
+						if (e->getBar() != NULL) {
+							shared_ptr<AmmoBar> bar = *e->getBar();
+							instance->UIDisplay(bar->getSprites());
+						}
+					}
+				}
+			}
+			
+			for (shared_ptr<GameObject> ob : obList) {
 				if (ob->getDisplay() && ob->getSprite() != NULL) {
-					instance->objectAccess(ob, cam);
+					instance->objectDisplay(ob->getSprite(), cam);
+					instance->bObjectDisplay(ob->getExtraSprites(), cam);
 				}
 			}
+			
 
-			for (shared_ptr<enemy> e : eList) {
-				if (e->getDisplay()) {
-					if (e->getDamSprite() != NULL) {
-						instance->objectDisplay(e->getDamSprite(), cam);
-					}
-					instance->objectAccess(e, cam);
-					if (e->getBar() != NULL) {
-						shared_ptr<AmmoBar> bar = *e->getBar();
-						instance->UIDisplay(bar->getSprites());
-					}
-				}
-			}
 
 			for (shared_ptr<EnemyBullet> eB : eBList) {
 				if (eB->getDisplay()) {

@@ -55,6 +55,7 @@ public:
 		//delete w;
 		w->close();
 		
+		
 		if (fullscreen) {
 			w = shared_ptr<RenderWindow>(new RenderWindow(VideoMode(size.x, size.y), "Executable", Style::Fullscreen));
 		}

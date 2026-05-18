@@ -227,9 +227,13 @@
     <ClCompile Include="Crazy Cannon.cpp" />
     <ClCompile Include="Flash Door.cpp" />
     <ClCompile Include="Flash Man.cpp" />
+    <ClCompile Include="Flight Bird.cpp" />
     <ClCompile Include="Flight Exit.cpp" />
     <ClCompile Include="Fly platform.cpp" />
+    <ClCompile Include="Giant Head.cpp" />
+    <ClCompile Include="Gremlin.cpp" />
     <ClCompile Include="H Tube Tile.cpp" />
+    <ClCompile Include="Head Spike.cpp" />
     <ClCompile Include="Left Edge.cpp" />
     <ClCompile Include="Lightning Lord Anticlock.cpp" />
     <ClCompile Include="Lightning Lord.cpp" />

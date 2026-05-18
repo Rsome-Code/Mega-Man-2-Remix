@@ -34,3 +34,5 @@ Standardise tile collision logic for all objects.
 	Exceptions should be very rare!
 
 Grounded Override should be reverted to false at the end of every loop
+
+Standardise player collision for all objects.

@@ -6,6 +6,7 @@
 
 class Bird : public TempEnemy {
 	using TempEnemy::TempEnemy;
+protected:
 	shared_ptr<Egg> egg;
 
 	shared_ptr<movable> mov;
@@ -44,7 +45,7 @@ public:
 
 		flap = shared_ptr<animation>(new animation(list<IntRect>{IntRect(539, 420, 18, 16), IntRect(520, 420, 18, 16)}, sprite));
 		flapTimer = shared_ptr<animTimer> (new animTimer(flap, 15, true));
-		setCode("bird");
+		setCode();
 		deathAnim->setSprite(sprite);
 	}
 	void initial(Vector2f pos, shared_ptr<SoundCollection> soundCol) {
@@ -76,7 +77,7 @@ public:
 		deathAnim->setSprite(sprite);
 	}
 
-	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
+	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 		mov->move(180, deltaT, speed);
 		if (state == NotDropped) {
 			eggFollow();
@@ -105,8 +106,13 @@ public:
 	void lowerHP(int h) {
 		if (h > 0) {
 			hitSound->play();
+			egg->killedNoSound();
 		}
 		hp = hp - h;
-		egg->lowerHP(h);
+		
+	}
+
+	void setCode() {
+		code = "bird";
 	}
 };

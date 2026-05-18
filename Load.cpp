@@ -99,8 +99,11 @@
 #include "crash man.cpp"
 #include "neo mettool.cpp"
 #include "lightning lord.cpp"
+#include "lightning lord anticlock.cpp"
 #include "fly platform.cpp"
+#include "flight bird.cpp"
 #include "flight exit.cpp"
+#include "giant head.cpp"
 #pragma once
 
 using namespace std;
@@ -833,6 +836,18 @@ public:
 
 		else if (type == "flight exit") {
 			*add = shared_ptr<FlightExit>(new FlightExit(Vector2f(worldX, worldY)));
+		}
+
+		else if (type == "flight bird") {
+			*enem = shared_ptr<FlightBird>(new FlightBird(t, worldPos));
+		}
+
+		else if (type == "lightning lord anticlock") {
+			*enem = shared_ptr<LightningLordAnticlock>(new LightningLordAnticlock(t, worldPos));
+		}
+
+		else if (type == "giant head") {
+			*spawnAdd = shared_ptr<GiantHead>(new GiantHead(t, worldPos));
 		}
 
 		else if (type == "beam left") {

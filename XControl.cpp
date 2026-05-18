@@ -22,16 +22,20 @@ class pController {
     //Deadzone effects x and y
     int stickDeadzone = 5000;
 
-    shared_ptr<Window> window;
+    shared_ptr<RenderWindow> window;
     
-public:pController(int n, shared_ptr<Window> win) {
+public:pController(int n, shared_ptr<RenderWindow> win) {
     window = win;
     controller0 = shared_ptr<TController>(new TController(n));
 }
-public:pController(shared_ptr<Window> win) {
+public:pController(shared_ptr<RenderWindow> win) {
     window = win;
     controller0 = shared_ptr<TController>(new TController(0));
 }
+
+      void updateWindow(shared_ptr<RenderWindow> win) {
+          window = win;
+	  }
 
 public:Vector2f checkLSTICK() {
     int x = controller0->GetState().Gamepad.sThumbLX;

@@ -130,6 +130,9 @@
     <Filter Include="Source Files\Game Files\Enemies\Air Man">
       <UniqueIdentifier>{b251ab42-1acc-4c27-af2d-648132037fa9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Objects\Spawners\Giant Head">
+      <UniqueIdentifier>{f4fe9e30-79fc-463d-9808-d09a82d8f45d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -1050,6 +1053,18 @@
     </ClCompile>
     <ClCompile Include="Flight Exit.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Flight Bird.cpp">
+      <Filter>Source Files\Game Files\Enemies\Air Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Giant Head.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners\Giant Head</Filter>
+    </ClCompile>
+    <ClCompile Include="Gremlin.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners\Giant Head</Filter>
+    </ClCompile>
+    <ClCompile Include="Head Spike.cpp">
+      <Filter>Source Files\Game Files\Objects\Spawners\Giant Head</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
