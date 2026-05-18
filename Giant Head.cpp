@@ -67,10 +67,10 @@ public:
 
 		if (hitboxDetect::hitboxDetection(p->getHitbox(), hit)) {
 			if (p->getSprite()->getHVelocity() > 0) {
-				p->getSprite()->setPosition(Vector2f(hit->getPosition().x - p->getHitbox()->getSize().x, p->getSprite()->getPosition().y));
+				p->getSprite()->setPosition(Vector2f(hit->getPosition().x - p->getHitbox()->getSize().x - (5 * 4), p->getSprite()->getPosition().y));
 			}
 			else if (p->getSprite()->getHVelocity() < 0) {
-				p->getSprite()->setPosition(Vector2f(hit->getPosition().x + hit->getSize().x, p->getSprite()->getPosition().y));
+				p->getSprite()->setPosition(Vector2f(hit->getPosition().x + hit->getSize().x - (4 * 4), p->getSprite()->getPosition().y));
 			}
 		}
 
