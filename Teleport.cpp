@@ -110,6 +110,14 @@ public:
 		return false;
 	}
 
+	bool justAnimate(float* deltaT) {
+		teleportAnim->thisFrame();
+		timer->run(deltaT);
+
+		return timer->isFinished(deltaT);
+		
+	}
+
 	void forceEnd(Vector2f pos) {
 		sprite->setPosition(pos);
 		teleSound->play();

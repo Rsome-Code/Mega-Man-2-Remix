@@ -542,12 +542,16 @@ public:
 
 		if ((sf::Mouse::isButtonPressed(sf::Mouse::XButton1) && mouseX1Pressed != true )|| sf::Keyboard::isKeyPressed(sf::Keyboard::D)) //specifies
 		{
-			if (objectIt != objects.end()) {
-				shared_ptr<GameObject> ob = *objectIt;
-				objects.erase(objectIt);
+			if (selectedPlaced != NULL) {
+				if (objectIt != objects.end()) {
+					shared_ptr<GameObject> ob = *objectIt;
 
-				selectedPlaced = NULL;
-				objectIt = objects.end();
+					objects.erase(objectIt);
+
+
+					selectedPlaced = NULL;
+					objectIt = objects.end();
+				}
 			}
 		}
 

@@ -492,7 +492,18 @@ public:
 	void setShootemControls(bool b) {
 		pAnim->resetIdle();
 		shootem = b;
-		pAnim->setFacingRight(true);
+
+		if (b) {
+			pAnim->swapDirection(true);
+			sprite->setVVelocity(-1);
+
+			setGrounded(false);
+			setTempGround(false);
+		}
+
+		pAnim->resetIdle();
+
+		//pAnim->setFacingRight(true);
 	}
 
 	bool getShootemControls() {
@@ -597,16 +608,34 @@ public:
 			cam->followX();
 		}
 		else {
+			if (health->getAmount() > 0) {
 			cam->move(Angle::right, deltaT, controls->getAutoSpeed());
 		}
+		}
+	}
+
+
+
+	void setFlightPush(bool b) {
+		controls->setFlightPush(b);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Do this
+
+	float shootemTele = 0.2;
+	float shootemTele_left = shootemTele;
+
+	int getFlightSpeed() {
+		return controls->getAutoSpeed();
+	}
+
 	void shootemAlive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
 		ammoBar->update(active->getAmmo());
 		if (inControl) {
-			controls->shootemEachFrame(deltaT, IBullets, cam);
+			if (controls->shootemEachFrame(deltaT, IBullets, cam)) {
+				takeDamage(100);
+			}
 		}
 		else {
 			//controls->shootemNoControl(deltaT);
@@ -620,8 +649,8 @@ public:
 		invincibilityTime_left -= *deltaT;
 
 		if (damage) {
-		takingDamage(deltaT, tiles);
-		dam->flicker(deltaT);
+			takingDamage(deltaT, tiles);
+			dam->flicker(deltaT);
 		}
 
 		if (invincibilityTime_left > 0) {
@@ -637,6 +666,18 @@ public:
 		if (pAnim->getShootTime() <= 0) {
 			pAnim->idleAnim(deltaT);
 
+		}
+
+		if (unPaused) {
+			
+			if (tele->justAnimate(deltaT)) {
+				
+				pAnim->resetIdle();
+				unPaused = false;
+
+				
+			}
+			
 		}
 
 	}
@@ -804,6 +845,15 @@ public:
 		return tele;
 	}
 
+	bool unPaused = false;
+	void teleportForceEnd(Vector2f prevPos) {
+		if (tele != NULL) {
+			tele->forceEnd(prevPos);
+			unPaused = true;
+			
+		}
+	}
+
 	bool getDamage() {
 		return damage;
 	}
@@ -951,6 +1001,9 @@ public:
 			pAnim->hurtAnim();
 			sprite->setHVelocity(0);
 			sprite->setVVelocity(0);
+			if (getShootemControls()) {
+				sprite->setVVelocity(-1);
+			}
 			invincibilityTime_left = invincibilityTime;
 			damageSound->play();
 		}

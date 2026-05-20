@@ -6,6 +6,8 @@
 class Anko : public enemy {
 	using enemy::enemy;
 
+protected:
+
 	float spawnDelay = 2;
 	float spawnDelay_left = 0;
 
@@ -27,7 +29,7 @@ public:
 		mov->setRect(IntRect(0, 795, 112, 80));
 		mov->setPosition(initialPos);
 		mov->setVisualOffset(Vector2f(0, 0));
-		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(18*4, 16*4, 112, (80 - 16)), sprite));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(18*4, 17*4, 112, (80 - 17)), sprite));
 		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(25*4, 0, 30, 14), sprite));
 		hp = 15;
 		damage = 5;
@@ -51,7 +53,7 @@ public:
 		
 	}
 
-	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
+	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<enemy>>* obList, list<shared_ptr<EnemyBullet>>* bList) {
 		if (checkShrinks(objectList)) {
 			spawnDelay_left -= *deltaT;
 			if (spawnDelay_left <= 0) {

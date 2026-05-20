@@ -4,4 +4,16 @@ giant head,2837,1225,1
 giant head,3445,959,1
 giant head,4063,1085,1
 giant head,4629,1091,1
-lightning lord,5252,974,1
+lightning lord anticlock,5613,1051,1
+flight bird,6997,747,1
+flight bird,7075,751,1
+flight bird,7159,751,1
+flight bird,7243,753,1
+flight bird,7691,1284,1
+flight bird,7776,1285,1
+flight bird,7857,1286,1
+flight bird,7937,1286,1
+lightning lord anticlock,8840,1030,1
+lightning lord,9791,1052,1
+flight exit,13753,1163,1
+flight bird,10863,1032,1

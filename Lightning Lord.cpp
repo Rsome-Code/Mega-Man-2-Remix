@@ -24,9 +24,9 @@ protected:
 	float throwReel = 0.25;
 	float throwReel_left = throwReel;
 
-	int angleChange = 80;
+	int angleChange = 50;
 	float angle;
-	int speed = 300;
+	int speed = 200;
 
 	void initial() {
 
@@ -104,7 +104,7 @@ protected:
 	}
 
 
-	void spawnObject(list<shared_ptr<GameObject>>* objects, shared_ptr<SoundCollection> soundCol) {
+	virtual void spawnObject(list<shared_ptr<GameObject>>* objects, shared_ptr<SoundCollection> soundCol) {
 
 		bool spawn = true;
 

@@ -222,8 +222,10 @@ public:
 
 		Vector2f stick = p1->checkLSTICK();
 
-		float xDistance = Maths::map(-maxX, maxX, -flightSpeed, flightSpeed, stick.x);
-		float yDistance = Maths::map(-maxY, maxY, -flightSpeed, flightSpeed, stick.y);
+		float xDistance = Maths::map(-maxX, maxX, -1, 1, stick.x);
+		xDistance = xDistance * distance;
+		float yDistance = Maths::map(-maxY, maxY, 1, -1, stick.y);
+		yDistance = yDistance * distance;
 
 		sprite->setPosition(Vector2f(sprite->getPosition().x + xDistance, sprite->getPosition().y + yDistance));
 		
@@ -270,16 +272,22 @@ public:
 
 	}
 
-	int autoSpeed = 300;
+	int autoSpeed = 200;
 
 	int getAutoSpeed() {
 		return autoSpeed;
 	}
 
-	void shootemEachFrame(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
-		positionCheck(cam);
+	bool flightPush = false;
+	void setFlightPush(bool b) {
+		flightPush = b;
+	}
 
-		sprite->move(0, deltaT, autoSpeed);
+	bool shootemEachFrame(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
+		
+		
+
+		sprite->move(Angle::right, deltaT, autoSpeed);
 
 		if (stickFly(deltaT) == Vector2f(0,0)) {
 			dPadFly(deltaT);
@@ -287,18 +295,24 @@ public:
 
 
 		shoot(deltaT, IBullets);
+
+		return positionCheck(cam);
 		
 	}
 
 
 	//This ensures the player can't move off the screen during a shotem up segment.
-	void positionCheck(shared_ptr<camera> cam) {
+	bool positionCheck(shared_ptr<camera> cam) {
 
 		if (sprite->getCameraPosition().x + sprite->getSize().x > 1920) {
 			sprite->setPosition(Vector2f(cam->getPosition().x + 1920 - sprite->getSize().x, sprite->getPosition().y));
 		}
 		else if (sprite->getCameraPosition().x < 0) {
-			sprite->setPosition(Vector2f(cam->getPosition().x + 0, sprite->getPosition().y));
+			sprite->setPosition(Vector2f(cam->getPosition().x + 4, sprite->getPosition().y));
+
+			if (flightPush) {
+				return true;
+			}
 		}
 
 		if (sprite->getCameraPosition().y + sprite->getSize().y > 1080) {
@@ -307,6 +321,10 @@ public:
 		else if (sprite->getCameraPosition().y < 0) {
 			sprite->setPosition(Vector2f(sprite->getPosition().x, cam->getPosition().y + 0));
 		}
+
+		sprite->updateCameraPosition(cam->getPosition());
+
+		return false;
 
 	}
 

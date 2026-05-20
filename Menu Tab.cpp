@@ -21,6 +21,13 @@ public:
 		tab = shared_ptr<UISprite>(new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), pos, Vector2f(1, 1)));
 	}
 
+	menuTab(Vector2f pos, string levelName) {
+		shared_ptr<Texture> tabT = shared_ptr<Texture>(new Texture);
+		tabT->loadFromFile("Assets\\Tab\\" + levelName + ".png");
+		position = pos;
+		tab = shared_ptr<UISprite>(new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), pos, Vector2f(1, 1)));
+	}
+
 	
 
 };

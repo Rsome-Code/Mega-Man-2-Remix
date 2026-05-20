@@ -129,6 +129,9 @@ public:
 		tex = T;
 
 		tabT->loadFromFile("Assets\\Tab.png");
+		if (levelN == "air man") {
+			tabT->loadFromFile("Assets\\Tab\\air man.png");
+		}
 		tab = shared_ptr<UISprite>(new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), Vector2f(0, 0), Vector2f(1, 1)));
 		typeTab = shared_ptr<UISprite>(new UISprite("UI", tabT, Vector2i(0, 0), Vector2i(414, 1080), Vector2f(1920 - 414, 0), Vector2f(1, 1)));
 
@@ -954,7 +957,7 @@ public:
 		else if (selectedType == 5 || selectedType == 6 ||selectedType == 7) {
 			return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
 		}
-		else if (levelName == "wood man" || levelName == "bubble man" || levelName == "heat man") {
+		else if (levelName == "wood man" || levelName == "bubble man" || levelName == "heat man" || levelName == "air man") {
 			return bubbleCheck(worldPos);
 		}
 

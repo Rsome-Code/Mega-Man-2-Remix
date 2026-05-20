@@ -1,0 +1,28 @@
+flight exit,30253,1156,1
+background-1019018495,0,0,1
+flight bird,16927,735,1
+flight bird,16903,1473,1
+flight bird,17651,1114,1
+flight bird,17733,1114,1
+flight bird,18857,636,1
+flight bird,18853,850,1
+flight bird,18831,1384,1
+flight bird,18913,1384,1
+lightning lord anticlock,20145,1329,1
+flight bird,21691,1060,1
+flight bird,21769,1064,1
+flight bird,21853,1064,1
+flight bird,21941,1064,1
+lightning lord,22749,1366,1
+flight bird,24113,1302,1
+flight bird,24211,1302,1
+flight bird,24938,874,1
+flight bird,24944,704,1
+flight bird,25030,704,1
+flight bird,25028,878,1
+flight anko,25331,969,1
+lightning lord anticlock,26544,1020,1
+lightning lord,27750,1009,1
+lightning lord anticlock,15819,1098,1
+lightning lord,18328,1027,1
+lightning lord,24537,1328,1

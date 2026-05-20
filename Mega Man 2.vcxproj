@@ -227,6 +227,7 @@
     <ClCompile Include="Crazy Cannon.cpp" />
     <ClCompile Include="Flash Door.cpp" />
     <ClCompile Include="Flash Man.cpp" />
+    <ClCompile Include="Flight Anko.cpp" />
     <ClCompile Include="Flight Bird.cpp" />
     <ClCompile Include="Flight Exit.cpp" />
     <ClCompile Include="Fly platform.cpp" />

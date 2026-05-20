@@ -1066,5 +1066,8 @@
     <ClCompile Include="Head Spike.cpp">
       <Filter>Source Files\Game Files\Objects\Spawners\Giant Head</Filter>
     </ClCompile>
+    <ClCompile Include="Flight Anko.cpp">
+      <Filter>Source Files\Game Files\Enemies\Air Man</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

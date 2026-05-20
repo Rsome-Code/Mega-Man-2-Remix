@@ -104,6 +104,7 @@
 #include "flight bird.cpp"
 #include "flight exit.cpp"
 #include "giant head.cpp"
+#include "flight anko.cpp"
 #pragma once
 
 using namespace std;
@@ -859,6 +860,10 @@ public:
 			shared_ptr<BeamRight> b = shared_ptr<BeamRight>(new BeamRight(beamT, worldPos));
 			collectionCheck(b, objects, beamCol);
 			*enem = b;
+		}
+
+		else if (type == "flight anko") {
+			*enem = shared_ptr<FlightAnko>(new FlightAnko(t, worldPos));
 		}
 
 		else if (type == "scworm spawn") {

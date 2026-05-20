@@ -271,7 +271,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 0;
+		section = 10;
 
 		p->enableControls(true);
 
@@ -345,7 +345,8 @@ public:
 				}
 				Vector2f prevPosition = p->getSprite()->getPosition();
 				p->start(p->getSprite()->getPosition().x);
-				p->getTeleport()->forceEnd(prevPosition);
+				p->teleportForceEnd(prevPosition);
+
 				unPaused = true;
 			}
 			if (!p->isTeleporting()) {
@@ -972,6 +973,9 @@ public:
 
 	void startAnim(shared_ptr<renderer> instance, float targetRate, shared_ptr<Music> music, shared_ptr<SoundCollection> soundCol) {
 
+		p->setGroundedOverride(false);
+
+		p->setShootemControls(false);
 		
 		eBullets.clear();
 		p->setDeathNull();
@@ -1239,7 +1243,7 @@ public:
 				
 			}
 
-			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets, soundCol) || enemyYCheck(enemy)) {
+			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets, &objects, soundCol) || enemyYCheck(enemy)) {
 				toDelete = enemy;
 			}
 
@@ -2326,6 +2330,8 @@ public:
 
 		float frictionDecrease = 0;
 
+		p->setFlightPush(false);
+
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		for (shared_ptr<tile> t : tileList) {
 			if (!p->getControls()->getOnLadder()) {
@@ -2397,6 +2403,8 @@ public:
 									//p->getSprite()->setVVelocity(0);
 									p->getSprite()->setPosition(Vector2f(t->getLeft()->getPosition().x - t->getLeft()->getSize().x - p->getHitbox()->getSize().x - 16, p->getSprite()->getPosition().y));
 									p->updateHitbox();
+
+									p->setFlightPush(true);
 								}
 							}
 						}

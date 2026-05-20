@@ -81,7 +81,7 @@ public:
 		return 10;
 	}
 
-	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
+	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<GameObject>>* obList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
 		spawned = true;
 		checkDirection(p->getSprite());
 
@@ -109,8 +109,21 @@ public:
 			}
 			mov->move(90, deltaT, fallSpeed);
 		}
+
+		checkExit(obList, deltaT);
 	}
 
+	int exitSpeed = 500;
+
+	void checkExit(list<shared_ptr<GameObject>>* objectList, float* deltaT) {
+		for (shared_ptr<GameObject> o : *objectList) {
+			if (o->getCode() == "flight exit") {
+				if (o->getSprite()->getCameraPosition().x < 1920) {
+					mov->move(Angle::down, deltaT, exitSpeed);
+				}
+			}
+		}
+	}
 	void setFacing(bool r) {
 		if (r != faceRight) {
 			moveAnim->swapAll();

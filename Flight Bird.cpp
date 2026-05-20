@@ -32,6 +32,8 @@ class FlightBird : public Bird {
 		damage = 3;
 
 		spawned = false;
+
+		speed = 400;
 	}
 
 	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
