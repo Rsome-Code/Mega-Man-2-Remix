@@ -133,6 +133,9 @@
     <Filter Include="Source Files\Game Files\Objects\Spawners\Giant Head">
       <UniqueIdentifier>{f4fe9e30-79fc-463d-9808-d09a82d8f45d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Air man">
+      <UniqueIdentifier>{fb2209a3-d97a-4b6b-b992-3fc7908632c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -1068,6 +1071,21 @@
     </ClCompile>
     <ClCompile Include="Flight Anko.cpp">
       <Filter>Source Files\Game Files\Enemies\Air Man</Filter>
+    </ClCompile>
+    <ClCompile Include="Air Man.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Air man</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss Air Bullet.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Air man</Filter>
+    </ClCompile>
+    <ClCompile Include="Air Target.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Air man</Filter>
+    </ClCompile>
+    <ClCompile Include="Air Target 1.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Air man</Filter>
+    </ClCompile>
+    <ClCompile Include="Air Target 2.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Air man</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

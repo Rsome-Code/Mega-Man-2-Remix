@@ -105,6 +105,10 @@
 #include "flight exit.cpp"
 #include "giant head.cpp"
 #include "flight anko.cpp"
+#include "air target.cpp"
+#include "air target 1.cpp"
+#include "air target 2.cpp"
+#include "air man.cpp"
 #pragma once
 
 using namespace std;
@@ -930,6 +934,21 @@ public:
 
 		else if (type == "fall platform") {
 			*add = shared_ptr<GameObject> (new FallPlatform(t, Vector2f(worldX, worldY)));
+		}
+
+		else if (type == "air target-0") {
+			*add = shared_ptr<AirTarget>(new AirTarget(Vector2f(worldX, worldY)));
+		}
+
+		else if (type == "air target-1") {
+			*add = shared_ptr<AirTarget1>(new AirTarget1(Vector2f(worldX, worldY)));
+		}
+		else if (type == "air target-2") {
+				*add = shared_ptr<AirTarget2>(new AirTarget2(Vector2f(worldX, worldY)));
+		}
+
+		else if (type == "air man") {
+			*enem = shared_ptr<AirMan>(new AirMan(Vector2f(worldX, worldY)));
 		}
 
 		else if (type == "lighting rect") {

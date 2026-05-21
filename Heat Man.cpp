@@ -9,7 +9,7 @@ class HeatMan : public Master {
 		shooting, charging, moving
 	};
 	
-	State state = shooting;
+	State state;
 
 	IntRect fall = IntRect(199, 21, 24, 29);
 
@@ -72,6 +72,7 @@ public:
 	}
 
 	void initial() {
+		state = shooting;
 
 		introSetup();
 

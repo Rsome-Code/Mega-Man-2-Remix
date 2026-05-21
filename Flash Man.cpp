@@ -64,7 +64,7 @@ class FlashMan : public Master {
 		damage = 5;
 
 		grounded = false;
-		
+		state = walking;
 	}
 
 	void loadSound(shared_ptr<SoundCollection> sb) {
@@ -74,7 +74,7 @@ class FlashMan : public Master {
 	enum State {
 		walking, flashing, shooting
 	};
-	State state = walking;
+	State state;
 
 	bool freezing = false;
 

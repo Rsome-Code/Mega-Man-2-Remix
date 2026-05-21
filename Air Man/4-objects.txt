@@ -1,1 +1,22 @@
 background-1019018495,0,0,1
+air target-0,34629,1338,1
+air target-0,34819,1210,1
+air target-0,34987,1334,1
+air target-1,34583,1181,1
+air target-1,34755,1335,1
+air target-1,34887,1334,1
+air target-1,35071,1167,1
+air target-0,34501,973,1
+air target-0,35083,957,1
+air target-1,35079,959,1
+air target-1,34499,967,1
+air target-2,34505,1061,1
+air target-2,34587,1065,1
+air target-2,35063,1067,1
+air target-2,35143,1065,1
+air target-2,34817,1247,1
+air target-2,34823,1173,1
+air target-2,34829,1105,1
+air target-2,35005,1319,1
+air target-2,34631,1329,1
+air man,35098,706,1

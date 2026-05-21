@@ -55,7 +55,7 @@ class WoodMan : public Master {
 	shared_ptr<LeafUpShot> lastShot = NULL;
 
 	vector<Vector2f> corners;
-	State state = BEATING;
+	State state;
 
 	vector<shared_ptr<LeafShieldBullet>> shield;
 
@@ -63,6 +63,8 @@ class WoodMan : public Master {
 
 public:
 	void initial() {
+
+		state = BEATING;
 
 		deathAnimation = shared_ptr<DeathAnim>(new DeathAnim(sprite, "Leaf Shield"));
 

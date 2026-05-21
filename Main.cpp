@@ -71,6 +71,10 @@
 #include "flight bird.cpp"
 #include "giant head.cpp"
 #include "flight anko.cpp"
+#include "air target.cpp"
+#include "air target 1.cpp"
+#include "air target 2.cpp"
+#include "air man.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -123,6 +127,10 @@ shared_ptr<Weapon> updatePlayer(shared_ptr<player> p, string levelName) {
 	else if (levelName == "crash man") {
 		p->setCrashBomb(true);
 		return p->getCrashBomb();
+	}
+	else if (levelName == "air man") {
+		p->setAir(true);
+		return p->getAirShooter();
 	}
 	return NULL;
 }
@@ -238,7 +246,7 @@ int main() {
 	//list <shared_ptr<GameObject>> quickList = {new ETank(misc, Vector2f(0,0)), shared_ptr<BigHealth> (new BigHealth(misc, Vector2f(0,0)), shared_ptr<BigAmmo> (new BigAmmo(misc, Vector2f(0,0)), shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new QuickMan(Vector2f(0,0)), new ScwormSpawn(enemyT, Vector2f(0,0)), shared_ptr<TorchGuy> (new TorchGuy (enemyT, Vector2f(0,0))), new BeamRight(beamT, Vector2f(0,0)), new BeamLeft(beamT, Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
 	//list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
 	list <shared_ptr<GameObject>> crashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<NeoMettool>(new NeoMettool(enemyT, Vector2f(0,0))),  shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))),  shared_ptr<SpawnPoint>(new SpawnPoint(string("bird"))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(new Background((Colour::Colour(36, 24, 140)))), shared_ptr<GameObject>(new Background((Colour::Colour(32, 56, 236)))), shared_ptr<CrashMan>(new CrashMan(Vector2f(0,0))), shared_ptr<CheckLeft>(new CheckLeft(Vector2f(0,0))), shared_ptr<CheckRight>(new CheckRight(Vector2f(0,0))), shared_ptr<CheckUp>(new CheckUp(Vector2f(0,0))), shared_ptr<CheckDown>(new CheckDown(Vector2f(0,0))), shared_ptr<RailPlatform>(new RailPlatform(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)), shared_ptr<FlyGuySpawner>(new FlyGuySpawner(enemyT, Vector2f(0,0))), shared_ptr<TellySpawner>(new TellySpawner(enemyT, Vector2f(0,0))) };
-	list <shared_ptr<GameObject>> airList = { shared_ptr<FlightAnko>(new FlightAnko(enemyT, Vector2f(0,0))), shared_ptr<GiantHead>(new GiantHead(enemyT, Vector2f(0,0))), shared_ptr<FlightBird>(new FlightBird(enemyT, Vector2f(0,0))), shared_ptr<LightningLordAnticlock>(new LightningLordAnticlock(enemyT, Vector2f(0,0))), shared_ptr<FlightExit>(new FlightExit(Vector2f(0,0))), shared_ptr<Background>(new Background(Colour::Colour(60, 188, 252))), shared_ptr <LightningLord>(new LightningLord(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)) };
+	list <shared_ptr<GameObject>> airList = {shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<AirMan>(new AirMan(Vector2f(0,0))), shared_ptr<AirTarget2>(new AirTarget2(Vector2f(0,0))), shared_ptr<AirTarget1>(new AirTarget1(Vector2f(0,0))), shared_ptr<AirTarget>(new AirTarget(Vector2f(0,0))), shared_ptr<FlightAnko>(new FlightAnko(enemyT, Vector2f(0,0))), shared_ptr<GiantHead>(new GiantHead(enemyT, Vector2f(0,0))), shared_ptr<FlightBird>(new FlightBird(enemyT, Vector2f(0,0))), shared_ptr<LightningLordAnticlock>(new LightningLordAnticlock(enemyT, Vector2f(0,0))), shared_ptr<FlightExit>(new FlightExit(Vector2f(0,0))), shared_ptr<Background>(new Background(Colour::Colour(60, 188, 252))), shared_ptr <LightningLord>(new LightningLord(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0))};
 
 
 	for (shared_ptr<GameObject> o : airList) {
@@ -250,12 +258,12 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ list<IntRect>{	IntRect(1, 300, 39, 24), IntRect(128, 306, 35, 23)} };
-	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0 * 4, 0 * 4), Vector2f(4 * 4, 6 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 1 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ list<IntRect>{	IntRect(1, 23, 32, 30), IntRect(83, 25, 37, 28), IntRect(124, 25, 37, 28), IntRect(40, 25, 38, 28)} };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(-5 * 4, 2 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
 	bool facingRight = false;
 
 	shared_ptr<Texture> testT = shared_ptr<Texture> (new Texture());
-	testT->loadFromFile("Assets\\enemy.png");
+	testT->loadFromFile("Assets\\air man.png");
 	
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, facingRight);
 
@@ -295,10 +303,10 @@ int main() {
 
 			hold = levelMenu->checkA();
 
-			//StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
+			StageIntro* intro = new StageIntro(bossName, hold, bg, bossT);
 			//Comment this out to skip the intro scene
 			//intro->loop(instance, targetFPS);
-			//delete intro;
+			delete intro;
 		}
 
 		restart = false;

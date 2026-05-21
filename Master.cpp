@@ -135,7 +135,9 @@ public:
 		return false;
 	}
 
-	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {
+
+	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, list<shared_ptr<GameObject>>* objectList, shared_ptr<SoundCollection> soundCol) {
+	
 		damPos = Vector2f(sprite->getPosition().x + (1 * 4), sprite->getPosition().y + (1 * 4));
 		if (introDone) {
 			if (hp > 0) {
@@ -143,6 +145,8 @@ public:
 					hit->updatePos();
 					hurt->updatePos();
 					alive(p, deltaT, tileList, enemyList, bList);
+					alive(p, deltaT, tileList, enemyList, objectList, bList, soundCol);
+					
 				}
 			}
 			else { return death(deltaT, enemyList); }
@@ -163,6 +167,8 @@ public:
 
 		return false;
 	}
+
+
 
 	void invincibleLoop(float* deltaT) {
 		invincibleTime_left -= *deltaT;

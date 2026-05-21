@@ -285,7 +285,7 @@ public:
 
 	bool shootemEachFrame(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
 		
-		
+		shootem = true;
 
 		sprite->move(Angle::right, deltaT, autoSpeed);
 
@@ -295,6 +295,8 @@ public:
 
 
 		shoot(deltaT, IBullets);
+
+		weapon->checkDirection(p1->checkUP(), p1->checkRIGHT(), p1->checkDOWN(), p1->checkLEFT());
 
 		return positionCheck(cam);
 		
@@ -329,6 +331,8 @@ public:
 	}
 
 	void checkControls(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, float frictD) {
+		shootem = false;
+
 		teleport = false;
 
 		shooting = pAnim->getShooting();
@@ -553,11 +557,21 @@ public:
 	}
 
 
+	bool shootem = false;
 	void shoot(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets) {
 		if (p1->checkB() && !BPressed) {
 			BPressed = true;
-			if (weapon->fire(pAnim->getFacingRight()) || weapon->fire(pAnim->getFacingRight(), IBullets)) {
-				pAnim->shootStart();
+
+			
+			if (!shootem) {
+				if (weapon->fire(pAnim->getFacingRight()) || weapon->fire(pAnim->getFacingRight(), IBullets)) {
+					pAnim->shootStart();
+				}
+			}
+			else {
+				if (weapon->fire(pAnim->getFacingRight())) {
+					pAnim->shootStart();
+				}
 			}
 
 		}

@@ -5,7 +5,7 @@
 class CrashMan : public Master {
 	using Master::Master;
 
-	list<IntRect> poseList = { IntRect(0, 29, 31, 24), IntRect(38, 23, 31, 30), IntRect(73, 29, 29, 24)};
+	list<IntRect> poseList = { IntRect(1, 29, 31, 24), IntRect(38, 23, 31, 30), IntRect(73, 29, 29, 24)};
 
 	shared_ptr<animation> walkAnim;
 	shared_ptr<animTimer> walkTimer;
@@ -61,6 +61,7 @@ class CrashMan : public Master {
 
 		grounded = false;
 		damage = 5;
+		state = walk;
 	}
 
 	enum State {
@@ -68,7 +69,7 @@ class CrashMan : public Master {
 		jumping,
 	};
 
-	State state = walk;
+	State state;
 
 	void jump(shared_ptr<player> p) {
 

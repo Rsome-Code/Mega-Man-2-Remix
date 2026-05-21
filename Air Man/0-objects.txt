@@ -15,5 +15,15 @@ flight bird,7857,1286,1
 flight bird,7937,1286,1
 lightning lord anticlock,8840,1030,1
 lightning lord,9791,1052,1
-flight exit,13753,1163,1
-flight bird,10863,1032,1
+flight exit,13151,1159,1
+flight bird,11402,1075,1
+lightning lord,10576,1059,1
+lightning lord anticlock,10752,1063,1
+flight bird,11402,1273,1
+flight bird,11526,995,1
+flight bird,11302,1177,1
+flight bird,11520,1327,1
+flight bird,11410,1177,1
+flight bird,11520,1175,1
+flight bird,11632,1175,1
+flight bird,11736,1171,1

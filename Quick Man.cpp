@@ -29,7 +29,7 @@ class QuickMan : public Master {
 	enum State {
 		running, jumping
 	};
-	State state = running;
+	State state;
 	float runTime = 3;
 	float runTime_left = runTime;
 
@@ -69,7 +69,7 @@ class QuickMan : public Master {
 
 		damage = 4;
 
-		
+		state = running;
 
 	}
 

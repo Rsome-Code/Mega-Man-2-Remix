@@ -59,6 +59,7 @@ class MetalMan : public Master {
 		throwTimer = shared_ptr<animTimer> (new animTimer(throwAnim, 8, false));
 		convRight = false;
 		State state = walk;
+		jumpType = low;
 
 		code = "metal man";
 		acrossAngle = 180;

@@ -71,7 +71,7 @@ class BubbleMan : public Master{
 	enum State {
 		wait, standing, swimming, floating
 	};
-	State state = standing;
+	State state;
 
 	void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList) {
 

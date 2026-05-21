@@ -26,3 +26,7 @@ lightning lord,27750,1009,1
 lightning lord anticlock,15819,1098,1
 lightning lord,18328,1027,1
 lightning lord,24537,1328,1
+health-big,14755,892,1
+ammo-big,15074,911,1
+ammo-big,22598,913,1
+Extra Life,21189,639,1

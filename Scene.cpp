@@ -271,7 +271,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 10;
+		section = 1;
 
 		p->enableControls(true);
 
@@ -386,13 +386,16 @@ public:
 			if (door1 != NULL) {
 				if (door1->getSection() == section || door2->getSection() == section) {
 					//300 is to standardise the minimum distance for teleporting in pre boss rooms.
+					p->cameraLogic(cam, &deltaT);
 					p->eachFrame(&deltaT, tileList, &itemBullets, 300, cam);
 				}
 				else {
+					p->cameraLogic(cam, &deltaT);
 					p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos, cam);
 				}
 			}
 			else {
+				p->cameraLogic(cam, &deltaT);
 				p->eachFrame(&deltaT, tileList, &itemBullets, maxTelePos, cam);
 			}
 
@@ -454,7 +457,7 @@ public:
 
 
 			
-			p->cameraLogic(cam, &deltaT);
+			
 
 
 			Vector2f flagPos = stage->getFlagPos(section);

@@ -14,6 +14,7 @@
 #include "quick man.cpp"
 #include "flash man.cpp"
 #include "crash man.cpp"
+#include "air man.cpp"
 #include <SFML/audio.hpp>
 #pragma once
 
@@ -132,6 +133,10 @@ public:
 		}
 		else if (name == "crash man") {
 			boss = shared_ptr<Master>(new CrashMan(bossT, pos));
+			boss->initial();
+		}
+		else if (name == "air man") {
+			boss = shared_ptr<Master>(new AirMan(bossT, pos));
 			boss->initial();
 		}
 	}

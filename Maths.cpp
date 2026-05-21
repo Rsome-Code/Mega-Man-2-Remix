@@ -68,4 +68,26 @@ public:
 		return angle;
 	}
 
+	static bool inProximity(Vector2f pos, Vector2f pos1, float range) {
+
+		bool xTrue = false;
+
+		if (pos.x < pos1.x + range) {
+			if (pos.x > pos1.x - range) {
+				xTrue = true;
+			}
+		}
+
+		bool yTrue = false;
+
+		if (pos.y < pos1.y + range) {
+			if (pos.y > pos1.y - range) {
+				yTrue = true;
+			}
+		}
+
+		return (xTrue && yTrue);
+
+	}
+
 };

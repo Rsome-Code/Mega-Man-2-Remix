@@ -631,6 +631,8 @@ public:
 	}
 
 	void shootemAlive(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
+		sprite->setVVelocity(-1);
+
 		ammoBar->update(active->getAmmo());
 		if (inControl) {
 			if (controls->shootemEachFrame(deltaT, IBullets, cam)) {
@@ -642,7 +644,7 @@ public:
 		}
 		updateFlightHitboxes();
 
-		controls->shootEachFrame(deltaT, tiles, *IBullets);
+		
 
 
 
@@ -673,12 +675,15 @@ public:
 			if (tele->justAnimate(deltaT)) {
 				
 				pAnim->resetIdle();
+				tele = NULL;
 				unPaused = false;
 
 				
 			}
 			
 		}
+
+		controls->shootEachFrame(deltaT, tiles, *IBullets);
 
 	}
 
@@ -842,7 +847,9 @@ public:
 	}
 
 	shared_ptr<teleport> getTeleport() {
+
 		return tele;
+
 	}
 
 	bool unPaused = false;
@@ -895,7 +902,10 @@ public:
 	}
 
 	bool isTeleporting() {
-		return tele != NULL;
+		if (!shootem) {
+			return tele != NULL;
+		}
+		return NULL;
 	}
 
 	shared_ptr<objectHitbox> getHitbox() {
