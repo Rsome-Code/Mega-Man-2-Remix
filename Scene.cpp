@@ -271,7 +271,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 1;
+		section = 0;
 
 		p->enableControls(true);
 
@@ -420,6 +420,32 @@ public:
 				//instance->bObjectDisplay(g->getSprite(), cam);
 			}
 
+			Vector2f flagPos = stage->getFlagPos(section);
+
+			enum transitionAngle ang = stage->getAngle();
+
+			//if (!p->isTeleporting()) {
+
+			cameraFlagCheck(flagPos);
+			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920 || ((((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920))) {
+
+				flagCorrectedCam();
+			}
+
+			else {
+
+				if (nextFlagActive && lastFlagActive) {
+					if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
+						if (currentFlag->getAngle() != UP && currentFlag->getAngle() != DOWN) {
+							centerCamera();
+						}
+						else {
+							nextFlagCam();
+						}
+					}
+				}
+			}
+
 			if (!p->isTeleporting()) {
 				p->setTempGround(false);
 
@@ -460,32 +486,9 @@ public:
 			
 
 
-			Vector2f flagPos = stage->getFlagPos(section);
+			
 
-			enum transitionAngle ang = stage->getAngle();
 
-			//if (!p->isTeleporting()) {
-
-			cameraFlagCheck(flagPos);
-
-			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920 || ((((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920))) {
-
-				flagCorrectedCam();
-			}
-
-			else {
-
-				if (nextFlagActive && lastFlagActive) {
-					if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) != 1920) {
-						if (currentFlag->getAngle() != UP && currentFlag->getAngle() != DOWN) {
-							centerCamera();
-						}
-						else {
-							nextFlagCam();
-						}
-					}
-				}
-			}
 			//}
 
 			enemyDistanceCheck(instance, enemies);
@@ -725,6 +728,7 @@ public:
 			//instance->objectHitboxDisplay(p->getHead(), cam);
 			
 
+			debugDisplay(instance, cam);
 
 
 			instance->getWindow()->display();
@@ -744,6 +748,30 @@ public:
 		
 
 		return levelEnd;
+	}
+
+
+	void debugDisplay(shared_ptr<renderer> instance, shared_ptr<camera> cam) {
+
+		shared_ptr<RectangleShape> rect = shared_ptr<RectangleShape> (new RectangleShape());
+		rect->setPosition(p->getSprite()->getMiddlePos() - cam->getPosition());
+		rect->setSize(Vector2f(4, 4));
+		rect->setFillColor(Color::Red);
+
+		instance->rectDisplay(rect);
+
+		rect.reset();
+
+		rect = shared_ptr<RectangleShape>(new RectangleShape());
+		rect->setPosition(p->getSprite()->getPosition() - cam->getPosition());
+		rect->setSize(Vector2f(p->getSprite()->getSize()));
+		rect->setOutlineColor(Color::Red);
+		rect->setOutlineThickness(1);
+		rect->setFillColor(Color::Transparent);
+		instance->rectDisplay(rect);
+
+		rect.reset();
+
 	}
 
 	void itemBulletLoop(float deltaT) {
@@ -848,15 +876,26 @@ public:
 
 	bool bulletsCollide(shared_ptr<EnemyBullet> b) {
 		list<shared_ptr<bullet>> bullets = p->getWeapon()->getBullets();
-		if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
-			for (shared_ptr<bullet> playerB : bullets) {
-				shared_ptr<objectHitbox> playerH = playerB->getHitbox();
-				if (hitboxCheck(playerH, b->getHitbox())) {
-					playerB->deflect();
+		if (p->getWeapon()->getName() != "Leaf Shield") {
+			if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
+				for (shared_ptr<bullet> playerB : bullets) {
+					shared_ptr<objectHitbox> playerH = playerB->getHitbox();
+					if (hitboxCheck(playerH, b->getHitbox())) {
+						playerB->deflect();
+					}
+				}
+			}
+			else if (b->getCollType() == EnemyBullet::CollisionType::DESTRUCT) {
+				for (shared_ptr<bullet> playerB : bullets) {
+					shared_ptr<objectHitbox> playerH = playerB->getHitbox();
+					if (hitboxCheck(playerH, b->getHitbox())) {
+						return true;
+					}
 				}
 			}
 		}
-		else if (b->getCollType() == EnemyBullet::CollisionType::DESTROY) {
+		//Leaf Sheild bullets will treak all enemy bullets as destructable
+		else {
 			for (shared_ptr<bullet> playerB : bullets) {
 				shared_ptr<objectHitbox> playerH = playerB->getHitbox();
 				if (hitboxCheck(playerH, b->getHitbox())) {
@@ -2028,10 +2067,16 @@ public:
 				}
 			}
 
+			
+
 			for (shared_ptr<Spawner> s : spawners) {
 				if (s->getDisplay()) {
 					instance->objectDisplay(s->getSprite(), cam);
 				}
+			}
+
+			for (shared_ptr<bullet> b : p->getBullets()) {
+				instance->objectDisplay(b->getSprite(), cam);
 			}
 
 			for (shared_ptr<object> item : items) {

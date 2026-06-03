@@ -25,6 +25,10 @@
 #pragma once
 
 class player {
+
+	Vector2f centrePoint = Vector2f(0,0);
+	Vector2f relativeCPoint = Vector2f(0, 0);
+
 	int lives = 2;
 	int ETanks = 0;
 	shared_ptr<physicsObject> sprite;
@@ -138,7 +142,7 @@ public:
 		controls = shared_ptr<pControls>(new pControls(p1, sprite, pAnim));
 
 
-
+		relativeCPoint = Vector2f(sprite->getSize().x / 2, sprite->getSize().y / 2);
 		
 
 		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(5 * sprite->getScale().x, 2 * sprite->getScale().y), Vector2i(11, 22)), true, sprite));
@@ -160,7 +164,7 @@ public:
 		megaBuster = shared_ptr <MegaBuster>(new MegaBuster(sprite, t, soundCol));
 		setActiveWeapon(megaBuster);
 		atomicFire = shared_ptr<AtomicFire>(new AtomicFire(sprite, t, soundCol));
-		leafShield = shared_ptr< LeafShield>(new  LeafShield(sprite, t, soundCol));
+		leafShield = shared_ptr< LeafShield>(new  LeafShield(sprite, t, soundCol, relativeCPoint));
 		bubbleLead = shared_ptr<BubbleLead>(new BubbleLead(sprite, t, soundCol));
 		metalBlade = shared_ptr<MetalBlade>(new MetalBlade(sprite, t, soundCol));
 		quickBoomerang = shared_ptr<QuickBoomerang>(new QuickBoomerang(sprite, t, soundCol));
@@ -317,6 +321,10 @@ public:
 		gotAir = b;
 	}
 
+	void setLeaf(bool b) {
+		gotShield = b;
+	}
+
 	void setETanks(int e) {
 		ETanks = e;
 	}
@@ -373,6 +381,13 @@ public:
 		return airShooter;
 	}
 
+	shared_ptr<LeafShield> getLeafShield() {
+		return leafShield;
+	}
+	shared_ptr<LeafShield> getShield() {
+		return leafShield;
+	}
+
 	void setCrashBomb(bool b) {
 		gotBomb = b;
 	}
@@ -395,10 +410,6 @@ public:
 		lives = l;
 	}
 
-	shared_ptr<Weapon> getShield() {
-		gotShield = true;
-		return leafShield;
-	}
 
 	bool hasAtomicFire() {
 		return gotAtomicFire;
@@ -510,7 +521,13 @@ public:
 		return shootem;
 	}
 
+	Vector2f getRelativeCentrePoint(){
+		return relativeCPoint;
+	}
+
 	void eachFrame(float* deltaT, list<shared_ptr<tile>> tiles, list<shared_ptr<ItemBullet>>* IBullets, int maxTelePos, shared_ptr<camera> cam) {
+
+		//centrePoint = relativeCPoint + sprite->getPosition();
 
 		splash->eachFrame(deltaT);
 		

@@ -838,7 +838,7 @@ public:
 
 				selectedTile = *worldI;
 				//worldHighlight.setPosition(selectedTile->getSprite()->getCameraPosition());
-				tileList.erase(worldI);
+				//tileList.erase(worldI);
 
 			}
 			else {

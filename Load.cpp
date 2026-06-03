@@ -483,6 +483,10 @@ public:
 			else if (type == "Air Man") {
 				p->setAir(*valI == "y");
 			}
+			
+			else if (type == "Wood Man") {
+				p->setLeaf(*valI == "y");
+			}
 
 		}
 

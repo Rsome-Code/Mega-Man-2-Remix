@@ -192,6 +192,14 @@ public:
 		rectCorrection(rect);
 	}
 
+	void rectDisplay(shared_ptr<RectangleShape> rect, shared_ptr<camera> cam) {
+		resolutionFix(rect);
+		w->draw(*rect);
+		rectCorrection(rect);
+	}
+
+
+
 	void objectDisplay(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
 	
 		objectSetup(object, cam);

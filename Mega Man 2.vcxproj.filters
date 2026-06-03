@@ -853,9 +853,6 @@
     <ClCompile Include="Time Stopper Bullet.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
     </ClCompile>
-    <ClCompile Include="Debug Menu.cpp">
-      <Filter>Source Files\Game Files\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="Debug Option.cpp">
       <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
     </ClCompile>
@@ -1086,6 +1083,12 @@
     </ClCompile>
     <ClCompile Include="Air Target 2.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses\Air man</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaf Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug Menu.cpp">
+      <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

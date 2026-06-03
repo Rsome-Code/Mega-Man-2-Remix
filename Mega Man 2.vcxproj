@@ -303,6 +303,7 @@
     <ClCompile Include="Gremlin.cpp" />
     <ClCompile Include="H Tube Tile.cpp" />
     <ClCompile Include="Head Spike.cpp" />
+    <ClCompile Include="Leaf Bullet.cpp" />
     <ClCompile Include="Left Edge.cpp" />
     <ClCompile Include="Lightning Lord Anticlock.cpp" />
     <ClCompile Include="Lightning Lord.cpp" />

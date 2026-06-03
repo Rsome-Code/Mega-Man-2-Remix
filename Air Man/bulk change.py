@@ -1,11 +1,11 @@
 
 
-xChange = 10
+xChange = -50
 yChange = 0
 
 
 
-for i in range(2, 5):
+for i in range(2, 3):
     file = open(str(i)+".txt", "r")
 
     lineList = []
@@ -23,8 +23,10 @@ for i in range(2, 5):
             x = int(val[1])
             y = int(val[2])
 
-            x = x + xChange
-            y = y + yChange
+
+            if (int (val[4]) >= 2):
+                x = x + xChange
+                y = y + yChange
 
             val[0] = val[0] + ","
             val[1] = str(x) + ","

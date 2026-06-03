@@ -21,7 +21,7 @@ class FlightAnko : public Anko {
 		mov->setVisualOffset(Vector2f(0, 0));
 		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(18 * 4, 16 * 4, 112, (80 - 16)), sprite));
 		hurt = shared_ptr<objectHitbox>(new objectHitbox(IntRect(25 * 4, 0, 30, 14), sprite));
-		hp = 15;
+		hp = 40;
 		damage = 5;
 
 		setCode();

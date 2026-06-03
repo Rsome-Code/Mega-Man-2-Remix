@@ -37,6 +37,7 @@ class Pause {
 	shared_ptr<WeaponOption> quickBoomerang;
 	shared_ptr<WeaponOption> timeStopper;
 	shared_ptr<WeaponOption> airShooter;
+	shared_ptr<WeaponOption> leafShield;
 	shared_ptr<WeaponOption> crashBomb;
 
 
@@ -119,18 +120,27 @@ public:
 			
 			
 		}
+		if (p->checkAir()) {
+			addP1Option(&airShooter, 4, p->getAirShooter());
+		}
+		if (p->checkShield()) {
+			addP1Option(&leafShield, 5, p->getLeafShield());
+		}
 		if (p->checkLead()) {
 			pos = 6;
 			addP1Option(&bubbleLead, pos, p->getBubbleLead());
+		}
+		if (p->checkBoomerang()) {
+			addP1Option(&quickBoomerang, 7, p->getBoomerang());
 		}
 
 		if (p->checkStopper()) {
 			addP2Option(&timeStopper, 2, p->getTimeStopper());
 		}
 
-		if (p->checkAir()) {
-			addP1Option(&airShooter, 4, p->getAirShooter());
-		}
+		
+		
+		
 
 		if (p->checkBlade()) {
 			addP2Option(&metalBlade, 3, p->getMetalBlade());
@@ -143,9 +153,7 @@ public:
 			addP2Option(&item1, 5, p->getItem1());
 		}
 
-		if (p->checkBoomerang()) {
-			addP1Option(&quickBoomerang, 7, p->getBoomerang());
-		}
+		
 
 
 
@@ -206,6 +214,9 @@ public:
 		}
 		if (p->checkAir()) {
 			airShooter->getBar()->update(p->getAirShooter()->getAmmo());
+		}
+		if (p->checkAir()) {
+			leafShield->getBar()->update(p->getLeafShield()->getAmmo());
 		}
 		if (p->checkBoomerang()) {
 			quickBoomerang->getBar()->update(p->getBoomerang()->getAmmo());
@@ -415,6 +426,9 @@ public:
 		}
 		if (p->checkAir()) {
 			instance->UIDisplay(airShooter->getSprites());
+		}
+		if (p->checkShield()) {
+			instance->UIDisplay(leafShield->getSprites());
 		}
 		instance->UIDisplay(eTanks->getSprites());
 		

@@ -43,6 +43,9 @@ class SoundCollection {
 	shared_ptr<SoundBuffer>airB;
 	shared_ptr<Sound> air;
 
+	shared_ptr<SoundBuffer> leafB;
+	shared_ptr<Sound> leaf;
+
 public:
 
 	SoundCollection(shared_ptr<SoundCollection> sou) {
@@ -114,6 +117,11 @@ public:
 		airB->loadFromFile("assets\\sound\\air_shooter.wav");
 		air = shared_ptr<Sound>(new Sound());
 		air->setBuffer(*airB);
+
+		leafB = shared_ptr<SoundBuffer>(new SoundBuffer());
+		leafB->loadFromFile("assets\\sound\\leaf_shield.wav");
+		leaf = shared_ptr<Sound>(new Sound());
+		leaf ->setBuffer(*leafB);
 	}
 
 	shared_ptr<Sound> getCrash() {
@@ -158,5 +166,9 @@ public:
 
 	shared_ptr<Sound> getAir() {
 		return air;
+	}
+
+	shared_ptr<Sound> getLeaf() {
+		return leaf;
 	}
 };
