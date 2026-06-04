@@ -24,10 +24,12 @@ public:
 
 		hitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 22, 2), phys));
 		code = "item 1";
+
+		exploSetup();
 	
 	}
 
-	bool eachFrame(float* deltaT) {
+	bool eachFrame(float* deltaT, list<shared_ptr<tile>> tiles) {
 		hitbox->updatePos();
 		phys->move(270, deltaT, moveSpeed);
 
@@ -40,6 +42,7 @@ public:
 		}
 
 		if (time <= 0) {
+			display = true;
 			return true;
 		}
 		return false;

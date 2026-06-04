@@ -780,13 +780,23 @@ public:
 		
 
 		for (shared_ptr<ItemBullet> iBul : itemBullets) {
-			if (iBul->eachFrame(&deltaT)) {
-				toDelete = iBul;
+			if (!iBul->getExplode()) {
+				if (iBul->eachFrame(&deltaT, tileList)) {
+					iBul->setExplode(true);
+				}
+			}
+			else {
+				if (iBul->explodeLoop(&deltaT)) {
+					toDelete = iBul;
+				}
 			}
 
 			if (p->getSprite()->getVVelocity() <= 0) {
 				if (hitboxCheck(iBul->getHit(), p->getFoot())) {
 					p->getSprite()->setPosition(Vector2f(p->getSprite()->getPosition().x, iBul->getHit()->getPosition().y - (p->getHitbox()->getSize().y + 12)));
+
+					p->getSprite()->setPosition(Vector2f(p->getPosition().x + iBul->getThisframeDistance().x, p->getPosition().y + iBul->getThisframeDistance().y));
+
 					//cam->follow();
 					p->setTempGround(true);
 				}

@@ -1,10 +1,10 @@
 lives,2
 E-tanks,4
 Heat Man,y
-Wood Man,y
-Bubble Man,y
-Metal Man,y
-Quick Man,y
-Flash Man,y
+Wood Man,n
+Bubble Man,n
+Metal Man,n
+Quick Man,n
+Flash Man,n
 Crash Man,n
-Air Man,n
+Air Man,y

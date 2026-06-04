@@ -115,14 +115,16 @@ public:
 		}
 	}
 
-	void move(float angle, float* since, float speed) {
+	Vector2f move(float angle, float* since, float speed) {
 		if (canMove) {
 			float last = *since;
 
 			float thisFrameD = speed * last;
 
 			Vector2f amount = Vector2f(calcXY(angle, thisFrameD));
+			Vector2f dif = amount - position;
 			setPosition(amount);
+			return dif;
 		}
 	}
 	void move(float angle, float dist) {

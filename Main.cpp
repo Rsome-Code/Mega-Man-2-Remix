@@ -151,8 +151,8 @@ shared_ptr<Weapon> checkItem(shared_ptr<player> p, string levelName) {
 		return p->getItem1();
 	}
 	if (levelName == "air man") {
-		//return p->getItem2();
-		return NULL;
+		return p->getItem2();
+		
 	}
 	return NULL;
 }
@@ -258,12 +258,12 @@ int main() {
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ list<IntRect>{	IntRect(1, 23, 32, 30), IntRect(83, 25, 37, 28), IntRect(124, 25, 37, 28), IntRect(40, 25, 38, 28)} };
-	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(0 * 4, 2 * 4), Vector2f(-5 * 4, 2 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ list<IntRect>{	IntRect(449, 287, 32, 8), IntRect(565, 241, 16, 16), IntRect(584, 243, 12, 12), IntRect(602, 244, 10, 10), IntRect(618, 247, 4, 4)} };
+	list<Vector2f> testOffset =  list<Vector2f>{ Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, -6 * 4), Vector2f(2 * 4, -4 * 4), Vector2f(3 * 4, -3 * 4), Vector2f(6 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0* 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
 	bool facingRight = false;
 
 	shared_ptr<Texture> testT = shared_ptr<Texture> (new Texture());
-	testT->loadFromFile("Assets\\air man.png");
+	testT->loadFromFile("Assets\\weapons.png");
 	
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, facingRight);
 

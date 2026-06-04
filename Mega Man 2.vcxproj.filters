@@ -1090,5 +1090,11 @@
     <ClCompile Include="Debug Menu.cpp">
       <Filter>Source Files\Game Files\Debug\Debug Options</Filter>
     </ClCompile>
+    <ClCompile Include="Item2.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Item2 Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items\Bullets</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

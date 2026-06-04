@@ -22,6 +22,7 @@
 #include "time stopper.cpp"
 #include "crash bomb.cpp"
 #include "air shooter.cpp"
+#include "item2.cpp"
 #pragma once
 
 class player {
@@ -85,6 +86,7 @@ class player {
 	shared_ptr<CrashBomb> crashBomb;
 	shared_ptr<AirShooter> airShooter;
 	shared_ptr<Item1> item1;
+	shared_ptr<Item2> item2;
 
 	shared_ptr<Weapon> active = megaBuster;
 
@@ -171,6 +173,7 @@ public:
 		timeStopper = shared_ptr<TimeStopper>(new TimeStopper(t));
 		crashBomb = shared_ptr<CrashBomb>(new CrashBomb(sprite, t, soundCol));
 		item1 = shared_ptr<Item1>(new Item1(sprite, t));
+		item2 = shared_ptr<Item2>(new Item2(sprite, t));
 		airShooter = shared_ptr<AirShooter>(new AirShooter(sprite, t, soundCol));
 
 		//Define ammo bars here
@@ -394,6 +397,10 @@ public:
 
 	shared_ptr<Item1> getItem1() {
 		return item1;
+	}
+
+	shared_ptr<Item2> getItem2() {
+		return item2;
 	}
 
 	shared_ptr<BubbleLead> getBubbleLead() {
@@ -689,13 +696,15 @@ public:
 
 		if (unPaused) {
 			
-			if (tele->justAnimate(deltaT)) {
-				
-				pAnim->resetIdle();
-				tele = NULL;
-				unPaused = false;
+			if (tele != NULL) {
+				if (tele->justAnimate(deltaT)) {
 
-				
+					pAnim->resetIdle();
+					tele = NULL;
+					unPaused = false;
+
+
+				}
 			}
 			
 		}

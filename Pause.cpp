@@ -34,6 +34,7 @@ class Pause {
 	shared_ptr<WeaponOption> bubbleLead;
 	shared_ptr<WeaponOption> metalBlade;
 	shared_ptr<WeaponOption> item1;
+	shared_ptr<WeaponOption> item2;
 	shared_ptr<WeaponOption> quickBoomerang;
 	shared_ptr<WeaponOption> timeStopper;
 	shared_ptr<WeaponOption> airShooter;
@@ -122,6 +123,7 @@ public:
 		}
 		if (p->checkAir()) {
 			addP1Option(&airShooter, 4, p->getAirShooter());
+			
 		}
 		if (p->checkShield()) {
 			addP1Option(&leafShield, 5, p->getLeafShield());
@@ -153,7 +155,9 @@ public:
 			addP2Option(&item1, 5, p->getItem1());
 		}
 
-		
+		if (p->checkAir()) {
+			addP2Option(&item2, 6, p->getItem2());
+		}
 
 
 
@@ -214,8 +218,9 @@ public:
 		}
 		if (p->checkAir()) {
 			airShooter->getBar()->update(p->getAirShooter()->getAmmo());
+			item2->getBar()->update(p->getAirShooter()->getAmmo());
 		}
-		if (p->checkAir()) {
+		if (p->checkShield()) {
 			leafShield->getBar()->update(p->getLeafShield()->getAmmo());
 		}
 		if (p->checkBoomerang()) {

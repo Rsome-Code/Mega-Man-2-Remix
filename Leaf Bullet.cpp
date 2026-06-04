@@ -69,6 +69,7 @@ public:
 		firstFrame = true;
 		state = shield;
 		moveOut = true;
+		deflected = false;
 	}
 
 	void secondFire(int angle) {
@@ -77,6 +78,14 @@ public:
 			state = moving;
 			this->moveAngle = angle;
 		}
+	}
+
+
+	void deflect() {
+		angle = 90;
+
+		dink->play();
+		deflected = true;
 	}
 
 	float circleDist = 80;
@@ -128,14 +137,19 @@ public:
 	bool eachFrame(float* deltaT){
 
 		if (shooting) {
-			circleLoop(deltaT);
+			if (!deflected) {
+				circleLoop(deltaT);
 
-			if (state == shield) {
-				shieldLoop(deltaT);
+				if (state == shield) {
+					shieldLoop(deltaT);
+				}
+
+				else if (state == moving) {
+					sprite->move(moveAngle, deltaT, shotSpeed);
+				}
 			}
-
-			else if (state == moving) {
-				sprite->move(moveAngle, deltaT, shotSpeed);
+			else {
+				sprite->move(angle, deltaT, speed);
 			}
 
 			hitbox->updatePos();
@@ -159,6 +173,7 @@ public:
 			}
 			return false;
 		}
+
 		return false;
 	}
 
