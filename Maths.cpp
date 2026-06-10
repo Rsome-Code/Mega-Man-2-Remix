@@ -68,6 +68,65 @@ public:
 		return angle;
 	}
 
+
+	//a,b,c are for lengths
+	static float getMissingTriangleLength(float angle, float a, float b) {
+		float c;
+		//c = sqrt(cos(angle) * (2 * b * a) - pow(b, 2) - pow(a, 2));
+
+		//c = cos(angle) * (2 * b * a) - pow(b, 2) - pow(a, 2);
+
+		float ang = angle / 57.295779513082320876798154814105;
+
+		c = cos(ang);
+
+		c = c * (2 * b * a);
+
+		c = c - pow(b, 2);
+		c = c - pow(a, 2);
+
+		c = sqrt(-c);
+
+		//c = c;
+
+		return c;
+	}
+
+	static float getAngleInTriagnle(float a, float b, float oppositeLen) {
+
+		double ang;
+
+		//ang = acos((pow(a, 2) + pow(b, 2) - oppositeLen) / 2 * a * b);
+
+		ang = pow(a, 2) + pow(b, 2) - pow(oppositeLen, 2);
+
+		//ang = ang / (2 * a * b);
+
+		float temp = 2 * a * b;
+
+		if (temp != 0) {
+			ang = ang / temp;
+		}
+		else {
+			ang = ang / 0.0000000000000000000000000000000000000000000000000001;
+		}
+
+		ang = ang / 57.295779513082320876798154814105;
+
+		ang = acos(ang);
+
+
+		ang = ang * 57.295779513082320876798154814105;
+
+		return ang;
+
+	}
+
+
+	static float getEndPoint(Vector2f startPos, float angle, float distance) {
+		 
+	}
+
 	static bool inProximity(Vector2f pos, Vector2f pos1, float range) {
 
 		bool xTrue = false;

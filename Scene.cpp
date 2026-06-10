@@ -124,6 +124,8 @@ class scene {
 
 	int maxTelePos;
 
+	bool camInFrontVFlag = false;
+
 public:
 
 	virtual ~scene() {
@@ -255,6 +257,8 @@ public:
 			selectPressed = false;
 		}
 	}
+
+	
 
 	float deltaT = 0.00001;
 	bool loop(shared_ptr<renderer> instance, double targetRate, shared_ptr<SoundCollection> soundCol, vector<bool> beforeTileList) {
@@ -427,9 +431,17 @@ public:
 			//if (!p->isTeleporting()) {
 
 			cameraFlagCheck(flagPos);
-			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920 || ((((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920))) {
+			if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920) {
 
 				flagCorrectedCam();
+			}
+			else if (((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920) {
+				if (!camInFrontVFlag) {
+					flagCorrectedCam();
+				}
+				else {
+					flagRevCorrectedCam();
+				}
 			}
 
 			else {
@@ -600,7 +612,9 @@ public:
 			}
 
 			for (shared_ptr<object> t : objects) {
-				instance->objectSetup(t->getSprite(), cam);
+				if (t->getSprite() != NULL) {
+					instance->objectSetup(t->getSprite(), cam);
+				}
 				if (t->getDisplay() && t->getSprite() != NULL) {
 					instance->objectAccess(t, cam);
 				}
@@ -728,7 +742,7 @@ public:
 			//instance->objectHitboxDisplay(p->getHead(), cam);
 			
 
-			debugDisplay(instance, cam);
+			//debugDisplay(instance, cam);
 
 
 			instance->getWindow()->display();
@@ -799,6 +813,11 @@ public:
 
 					//cam->follow();
 					p->setTempGround(true);
+
+					iBul->setPlayerOn(true);
+				}
+				else {
+					iBul->setPlayerOn(false);
 				}
 			}
 		}
@@ -824,6 +843,15 @@ public:
 	void flagCorrectedCam() {
 		if (currentFlag->getPosition().x > lastFlag->getPosition().x) {
 			cam->setPosition(Vector2f(lastFlag->getPosition().x, cam->getPosition().y));
+		}
+		else {
+			cam->setPosition(Vector2f(lastFlag->getPosition().x - 1920, cam->getPosition().y));
+		}
+	}
+
+	void flagRevCorrectedCam() {
+		if (currentFlag->getPosition().x > lastFlag->getPosition().x) {
+			cam->setPosition(Vector2f(currentFlag->getPosition().x - 1920, cam->getPosition().y));
 		}
 		else {
 			cam->setPosition(Vector2f(lastFlag->getPosition().x - 1920, cam->getPosition().y));
@@ -1059,9 +1087,12 @@ public:
 
 		cameraFlagCheck(flagPos);
 
-		if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920 || ((((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920))) {
+		if (fabs(currentFlag->getPosition().x - lastFlag->getPosition().x) == 1920) {
 
 			flagCorrectedCam();
+		}
+		else if (((lastFlag->getAngle() == DOWN || lastFlag->getAngle() == UP) && currentFlag->getAngle() == RIGHT) && (currentFlag->getPosition().x - lastFlag->getPosition().x) <= 1920) {
+
 		}
 
 		else {
@@ -1524,6 +1555,7 @@ public:
 				fallDeath = false;
 				nextFlagActive = true;
 				lastFlagActive = true;
+				camInFrontVFlag = false;
 			}
 
 			else if ((lastFlag->getAngle() == UP || lastFlag->getAngle() == DOWN) && lastFlag->getPosition().x > getFlag(section - 2)->getPosition().x) {
@@ -1531,6 +1563,7 @@ public:
 					nextFlagActive = (isCameraRightOfFlag(currentFlag->getSprite()->getPosition()));
 
 					lastFlagActive = (isCameraLeftOfFlag(Vector2f(lastFlagPos.x - (1920), cam->getPosition().y)));
+					camInFrontVFlag = true;
 			}
 			
 
@@ -1539,6 +1572,7 @@ public:
 				nextFlagActive = (isCameraRightOfFlag(currentFlag->getSprite()->getPosition()));
 
 				lastFlagActive = (isCameraLeftOfFlag(lastFlagPos));
+				camInFrontVFlag = false;
 			}
 
 		}
@@ -1756,8 +1790,12 @@ public:
 				}
 			}
 
-			instance->objectAccess(door1, cam);
-			instance->objectAccess(door2, cam);
+			if (door1 != NULL) {
+				instance->objectAccess(door1, cam);
+			}
+			if (door2 != NULL) {
+				instance->objectAccess(door2, cam);
+			}
 
 			p->updateHitbox();
 			//p->updateLighting();

@@ -167,7 +167,7 @@ public:
 		setPosition(s->getPosition());
 		setScale(s->getScale());
 		cameraPosition = Vector2f(0, 0);
-		zAxis = s->getZ();;
+		zAxis = s->getZ();
 		setVisualOffset(s->getVisualOffset());
 		  
 	}

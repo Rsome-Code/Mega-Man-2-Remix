@@ -1,0 +1,11 @@
+name,test
+lives,9
+E - tanks,2
+Heat Man,y
+Wood Man,y
+Bubble Man,y
+Metal Man,y
+Quick Man,n
+Flash Man,n
+Crash Man,y
+Air Man,y

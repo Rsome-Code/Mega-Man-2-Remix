@@ -81,9 +81,10 @@ class FlightAnko : public Anko {
 
 	void explosionUpdate() {
 		for (shared_ptr<objectSprite> o : explos) {
-			Vector2i posi = Vector2i(rand() % int(mov->getSize().x), rand() % int(mov->getSize().y));
-			posi = Vector2i(posi.x + sprite->getPosition().x, posi.y + sprite->getPosition().y);
-			o->setPosition(Vector2f(posi));
+			//Vector2i posi = Vector2i(rand() % int(mov->getSize().x), rand() % int(mov->getSize().y));
+			//posi = Vector2i(posi.x + sprite->getPosition().x, posi.y + sprite->getPosition().y);
+			o->setPosition(Vector2f(o->getPosition().x + thisFrameDif.x, o->getPosition().y + thisFrameDif.y));
+			//o->setPosition(Vector2f(posi));
 		}
 	}
 
@@ -107,13 +108,28 @@ class FlightAnko : public Anko {
 		
 		if (mov->getCameraPosition().x < 1920-(112 * 4)) {
 
-			mov->move(Angle::right, deltaT, p->getFlightSpeed());
+			thisFrameDif = mov->move(Angle::right, deltaT, p->getFlightSpeed());
 
 		}
 
 	}
+
+	Vector2f thisFrameDif = Vector2f(0, 0);
+
+	bool firstDeathFrame = true;
 	void uniqueDeathLoop(float* deltaT) {
-		platform->setPosition(Vector2f(-9999999, -99999999));
+		//platform->setPosition(Vector2f(-9999999, -99999999));
+		thisFrameDif = mov->move(Angle::down, deltaT, exitSpeed);
+		platformLoop(deltaT);
+
+		if (firstDeathFrame) {
+			for (shared_ptr<objectSprite> o : explos) {
+				o->setPosition(Vector2f(o->getPosition().x - sprite->getSize().x, o->getPosition().y));
+			}
+			firstDeathFrame = false;
+		}
+
+		explosionUpdate();
 	}
 
 	void setCode() {

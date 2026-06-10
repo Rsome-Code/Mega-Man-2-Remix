@@ -136,6 +136,12 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Air man">
       <UniqueIdentifier>{fb2209a3-d97a-4b6b-b992-3fc7908632c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine Files\Tests">
+      <UniqueIdentifier>{99d88644-cb3c-45ac-8f02-b0c6a5c2f708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Files\Menus\Load Menu">
+      <UniqueIdentifier>{79b73b1f-e27b-4c12-992c-1ed40ff54666}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -426,9 +432,6 @@
     </ClCompile>
     <ClCompile Include="End Flag.cpp">
       <Filter>Source Files\Game Files\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation Test.cpp">
-      <Filter>Source Files\Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="transition angle.cpp">
       <Filter>Source Files\Game Files</Filter>
@@ -1095,6 +1098,33 @@
     </ClCompile>
     <ClCompile Include="Item2 Bullet.cpp">
       <Filter>Source Files\Game Files\Player\Weapons\Items\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Item3 Bullet.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items\Bullets</Filter>
+    </ClCompile>
+    <ClCompile Include="Item3.cpp">
+      <Filter>Source Files\Game Files\Player\Weapons\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation Test.cpp">
+      <Filter>Source Files\Engine Files\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Z Test.cpp">
+      <Filter>Source Files\Engine Files\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="File Menu.cpp">
+      <Filter>Source Files\Game Files\Menus\Load Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="3d circle.cpp">
+      <Filter>Source Files\Game Files\Menus\Load Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>Source Files\Game Files\Menus\Load Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="New Save.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Stationary Fly Platform.cpp">
+      <Filter>Source Files\Game Files\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

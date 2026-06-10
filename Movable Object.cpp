@@ -73,6 +73,7 @@ public:
 		//image = im;
 	}
 public: movable() {
+	scale = Vector2f(1, 1);
 }
 	  movable(shared_ptr< movable> mov) {
 		  this->type = mov->getType();

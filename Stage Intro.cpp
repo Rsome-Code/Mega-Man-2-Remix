@@ -57,7 +57,7 @@ class StageIntro{
 	shared_ptr<objectSprite> floorContainer;
 
 public:
-	StageIntro(string name, bool aHold, shared_ptr<Texture> bg, shared_ptr<Texture> bossT) {
+	StageIntro(string name, bool aHold, shared_ptr<Texture> bg) {
 		birds = aHold;
 		textBuffer = name;
 		transform(textBuffer.begin(), textBuffer.end(), textBuffer.begin(),::toupper);
@@ -82,7 +82,7 @@ public:
 		}
 		aTimer = shared_ptr<animTimer> (new animTimer(fadeIn, 10, false));
 
-		bossSetup(name, bossT);
+		bossSetup(name);
 
 		floorContainer = shared_ptr<objectSprite>(new objectSprite());
 		floorContainer->setPosition(Vector2f(0, 0));
@@ -105,38 +105,38 @@ public:
 		
 	}
 
-	void bossSetup(string name, shared_ptr<Texture> bossT) {
+	void bossSetup(string name) {
 		Vector2f pos = Vector2f(900, 0);
 		if (name == "wood man") {
-			boss = shared_ptr<Master>(new WoodMan(bossT, Vector2f(900, 0)));
+			boss = shared_ptr<Master>(new WoodMan(pos));
 			boss->initial();
 		}
 		else if (name == "heat man") {
-			boss = shared_ptr<Master>(new HeatMan(bossT, Vector2f(900, 0)));
+			boss = shared_ptr<Master>(new HeatMan(pos));
 			boss->initial();
 		}
 		else if (name == "bubble man") {
-			boss = shared_ptr<Master>(new BubbleMan(bossT, Vector2f(900, 0)));
+			boss = shared_ptr<Master>(new BubbleMan(pos));
 			boss->initial();
 		}
 		else if (name == "metal man") {
-			boss = shared_ptr<Master>(new MetalMan(bossT, Vector2f(900, 0)));
+			boss = shared_ptr<Master>(new MetalMan(pos));
 			boss->initial();
 		}
 		else if (name == "quick man") {
-			boss = shared_ptr<Master>(new QuickMan(bossT, pos));
+			boss = shared_ptr<Master>(new QuickMan(pos));
 			boss->initial();
 		}
 		else if (name == "flash man") {
-			boss = shared_ptr<Master>(new FlashMan(bossT, pos));
+			boss = shared_ptr<Master>(new FlashMan(pos));
 			boss->initial();
 		}
 		else if (name == "crash man") {
-			boss = shared_ptr<Master>(new CrashMan(bossT, pos));
+			boss = shared_ptr<Master>(new CrashMan(pos));
 			boss->initial();
 		}
 		else if (name == "air man") {
-			boss = shared_ptr<Master>(new AirMan(bossT, pos));
+			boss = shared_ptr<Master>(new AirMan(pos));
 			boss->initial();
 		}
 	}

@@ -151,7 +151,7 @@ class FlashMan : public Master {
 
 	bool flashingLoop(shared_ptr<player> p, float* deltaT) {
 
-		list<shared_ptr<bullet>> pBullets = p->getRealBullets();
+		//list<shared_ptr<bullet>> pBullets = p->getRealBullets();
 
 		//p->enableControls(false);
 		
@@ -254,5 +254,11 @@ class FlashMan : public Master {
 
 	int crashDam() {
 		return 4;
+	}
+
+	//Not sure if this is needed, or if it will cause the player to move during win animation
+	void uniqueDeathLoop(float* deltaT, shared_ptr<player> p) {
+		//p->enableMoving(true);
+
 	}
 };

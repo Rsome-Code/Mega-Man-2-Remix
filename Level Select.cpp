@@ -171,7 +171,8 @@ public:
 		}
 	}
 
-	string loop(shared_ptr<renderer> instance, double targetRate, shared_ptr<Texture> bg) {
+	bool selected = false;
+	bool loop(shared_ptr<renderer> instance, double targetRate, shared_ptr<Texture> bg) {
 
 		control = shared_ptr<pController>(new pController(instance->getWindow()));
 
@@ -200,7 +201,7 @@ public:
 			animateCursor(deltaT);
 
 			instance->UIDisplay(background);
-			
+
 			for (shared_ptr<UISprite> sprite : winIcons) {
 				instance->UIDisplay(sprite);
 			}
@@ -215,49 +216,56 @@ public:
 
 		run = true;
 
-		if (instance->getWindow()->isOpen()) {
-			selectSound->play();
+		if (selected) {
+			if (instance->getWindow()->isOpen()) {
+				selectSound->play();
+			}
+
+
+			while (instance->getWindow()->isOpen() && run) {
+				Event event;
+				while (instance->getWindow()->pollEvent(event))
+				{
+					if (event.type == sf::Event::Closed)
+						instance->getWindow()->close();
+				}
+				time->frameLimiter(targetRate, startP);
+				deltaT = time->checkTimer(startP);
+				start = time->timerStart();
+				startP = &start;
+
+
+
+
+
+				instance->UIDisplay(background);
+
+				for (shared_ptr<UISprite> sprite : winIcons) {
+					instance->UIDisplay(sprite);
+				}
+
+
+				instance->UIDisplay(cursor);
+
+				if (rectDisplay) {
+					instance->rectDisplay(rectangle);
+				}
+				instance->getWindow()->display();
+				instance->getWindow()->clear();
+
+				flash(deltaT);
+				if (flashes <= 0) {
+					run = false;
+				}
+
+			}
 		}
-		
+		music->stop();
 
-		while (instance->getWindow()->isOpen() && run) {
-			Event event;
-			while (instance->getWindow()->pollEvent(event))
-			{
-				if (event.type == sf::Event::Closed)
-					instance->getWindow()->close();
-			}
-			time->frameLimiter(targetRate, startP);
-			deltaT = time->checkTimer(startP);
-			start = time->timerStart();
-			startP = &start;
+		return selected;
+	}
 
-			
-
-			
-
-			instance->UIDisplay(background);
-
-			for (shared_ptr<UISprite> sprite : winIcons) {
-				instance->UIDisplay(sprite);
-			}
-
-			
-			instance->UIDisplay(cursor);
-			
-			if (rectDisplay) {
-				instance->rectDisplay(rectangle);
-			}
-			instance->getWindow()->display();
-			instance->getWindow()->clear();
-
-			flash(deltaT);
-			if (flashes <= 0) {
-				run = false;
-			}
-
-		}
-
+	string getSelection() {
 		string r;
 		if (selection == 0) {
 			r = "bubble man";
@@ -283,13 +291,36 @@ public:
 		else if (selection == 8) {
 			r = "crash man";
 		}
-		music->stop();
+		else if (selection == 4) {
+			return "dragon";
+		}
+
 		return r;
 	}
 
+
+	bool aPressed = true;
 	bool checkA() {
 		if (control->checkA()) {
-			return true;
+			if (!aPressed) {
+				return true;
+			}
+		}
+		else {
+			aPressed = false;
+		}
+		return false;
+	}
+
+	bool bPressed = true;
+	bool checkB() {
+		if (control->checkB()) {
+			if (!bPressed) {
+				return true;
+			}
+		}
+		else {
+			bPressed = false;
 		}
 		return false;
 	}
@@ -325,6 +356,9 @@ public:
 				return false;
 			}
 		}
+
+		
+
 		return true;
 	}
 
@@ -372,10 +406,15 @@ public:
 			startPressed = true;
 			if (checkValid()) {
 				run = false;
+				selected = true;
 			}
 		}
 		else if (!control->checkSTART()) {
 			startPressed = false;
+		}
+
+		if (checkB()) {
+			run = false;
 		}
 
 	}

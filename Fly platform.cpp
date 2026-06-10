@@ -3,7 +3,7 @@
 #pragma once
 
 class FlyPlatform:public GameObject {
-
+protected:
 	shared_ptr<objectHitbox> hit;
 
 	shared_ptr<animation> anim;
@@ -200,7 +200,7 @@ public:
 
 	}
 
-	void checkColl(shared_ptr<player> player) {
+	virtual void checkColl(shared_ptr<player> player) {
 
 		if (hitboxDetect::hitboxDetection(player->getFoot(), hit)) {
 			state = on;
@@ -209,6 +209,8 @@ public:
 				player->setGroundedOverride(true);
 			}
 			player->setShootemControls(true);
+
+			player->setAutoOn(true);
 			
 		}
 	}

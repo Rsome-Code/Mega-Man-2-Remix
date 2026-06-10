@@ -42,7 +42,7 @@ public:
 	}
 
 	String getSymbol() {
-		return "1";
+		return "2";
 	}
 
 	bool checkThrow() {

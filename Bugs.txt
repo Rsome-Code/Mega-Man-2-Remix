@@ -1,0 +1,56 @@
+Blocky enemy not falling when hit
+Conveyor belts not displaying right during hit-stop
+
+Waterfall not extending high enough in second section of Bubble Man's stage
+Invisible roof needed in bottom section of Bubble Man's stage
+Anko enemy not functioning after player death (may actually be caused by pausing the game) (Glitch does not seem to appear with flight variant)
+Rethink death animation
+
+Second section of Heat Man's stage needs a roof to be consistent with first section
+Frame drops in third section of heat man's stage (maybe put the tile distance check in its own thread??? Then use that thread to only include tiles within range into the game list)
+
+Reset player weapon to mega buster after leaving a stage
+
+Make bats vulnerable to metal blade
+Put invisible walls in wolf sections of Wood Man's stage
+Transitioning to section 7 has a visual glitch
+Background goes too far down in section before last outdoor bit
+
+Delete all enemy projectiles when flight exit appears
+Add transparency to Air Man's doors
+Make Air Man vulnerable to Leaf shield
+Replenish Leaf Shield after leaving a stage
+
+Check animation for Metal blade during ladder climbing is right. He just uses the same anim for jump shooting
+
+Extend hitbox for leaf shield
+
+Make higher ladder at the end of crash man's stage higher.
+Remove one Fly Guy spawner in Crash Man's stage
+
+Make weapon get song quieter
+
+Disable pausing during teleport
+
+Refill Air Shooter after leaving a stage - check the same for all items
+
+Item 2's ammo count is not displaying correctly in pause menu
+
+Second falling section in Flash Man's stage has a visual glitch during transitioning in. 3rd one, too
+
+Make worm spawner vulnerable to metal blades
+
+Flash Man boss is getting stuck on collision
+
+Check if Crash Bomb can collide with enemies before explosion
+
+Pausing during Flash Man's time stop attack soft locks the game.
+
+ETanks are not being saved
+
+Quick Man:
+Darkness effect moves with player, when it should be with the camera. May be because it's being run before the cameraFlagCheck() function
+Add wall in first screen of second laser section
+Add Extra life in falling section
+Add more roof in section before door
+Add black tiles in Door section

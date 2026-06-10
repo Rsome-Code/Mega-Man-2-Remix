@@ -262,6 +262,18 @@ public:
 		resolutionCorrection(object);
 	}
 
+	void bObjectDisplayNoCalc(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
+
+
+
+		//bObjectCalc(object, cam);
+		Sprite* s = object->getSprite();
+
+		resolutionFix(object);
+		w->draw(*s);
+		resolutionCorrection(object);
+	}
+
 	void bObjectDisplay(shared_ptr<objectSprite> object, bool display, shared_ptr<camera> cam) {
 
 		bObjectCalc(object, cam);
@@ -298,6 +310,12 @@ public:
 	void bObjectDisplay(list<shared_ptr<objectSprite>> objects, shared_ptr<camera> cam) {
 		for (shared_ptr<objectSprite> ob : objects) {
 			bObjectDisplay(ob, cam);
+		}
+	}
+
+	void bObjectDisplayNoCalc(list<shared_ptr<objectSprite>> objects, shared_ptr<camera> cam) {
+		for (shared_ptr<objectSprite> ob : objects) {
+			bObjectDisplayNoCalc(ob, cam);
 		}
 	}
 

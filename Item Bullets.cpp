@@ -33,6 +33,10 @@ public:
 
 	}
 
+	virtual void setPlayerOn(bool b) {
+
+	}
+
 	void setExplode(bool b) {
 
 

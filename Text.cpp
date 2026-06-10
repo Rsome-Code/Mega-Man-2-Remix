@@ -70,6 +70,14 @@ public:
 		render->setFont(*font);
 	}
 
+	shared_ptr<Font> getFont() {
+		return font;
+	}
+
+	string getString(){
+		return content;
+	}
+
 	void setString(string newString) {
 		content = newString;
 		render->setString(content);
@@ -84,6 +92,15 @@ public:
 		size = new1;
 		render->setCharacterSize(size); // in pixels
 	}
+
+	void setScale(Vector2f sc) {
+		render->setScale(sc);
+	}
+
+	Vector2f getScale() {
+		return render->getScale();
+	}
+
 	float getSize() {
 		return size;
 	}
@@ -108,5 +125,8 @@ public:
 		render->setString(this->content);
 	}
 
+	FloatRect getRect() {
+		return render->getGlobalBounds();
+	}
 
 };

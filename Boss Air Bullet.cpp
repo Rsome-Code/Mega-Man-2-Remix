@@ -45,6 +45,8 @@ public:
 
 	void eachFrame(float* deltaT, list<shared_ptr<tile>>* tileList) {
 
+		timer->run(deltaT);
+
 		hit->updatePos();
 
 		if (state == starting) {

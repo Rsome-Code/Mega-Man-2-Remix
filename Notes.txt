@@ -36,3 +36,9 @@ Standardise tile collision logic for all objects.
 Grounded Override should be reverted to false at the end of every loop
 
 Standardise player collision for all objects.
+
+Ensure background and foreground objects are not anchored to the top left corner by default
+
+Consider local bounds for sprites
+
+Figure out standardised method for entering text

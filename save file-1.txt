@@ -1,0 +1,11 @@
+name,sfvbgsdf
+lives,2
+E - tanks,0
+Heat Man,n
+Wood Man,y
+Bubble Man,n
+Metal Man,y
+Quick Man,n
+Flash Man,y
+Crash Man,y
+Air Man,n

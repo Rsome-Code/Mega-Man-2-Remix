@@ -957,9 +957,7 @@ public:
 		else if (selectedType == 5 || selectedType == 6 ||selectedType == 7) {
 			return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
 		}
-		else if (levelName == "wood man" || levelName == "bubble man" || levelName == "heat man" || levelName == "air man") {
-			return bubbleCheck(worldPos);
-		}
+		
 
 		else if (levelName == "crash man") {
 			return crashCheck(worldPos);
@@ -968,10 +966,15 @@ public:
 		else if (levelName == "metal man") {
 			return metalCheck(worldPos);
 		}
-		
-		else {
-			return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
+
+		//else if (levelName == "wood man" || levelName == "bubble man" || levelName == "heat man" || levelName == "air man") {
+		else{
+			return bubbleCheck(worldPos);
 		}
+		
+		//else {
+		//	return shared_ptr<tile>(new solidTile(worldPos, tex, selectedTexture));
+		//}
 	}
 
 	//Ugh

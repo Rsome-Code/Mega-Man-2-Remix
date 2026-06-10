@@ -35,6 +35,7 @@ class Pause {
 	shared_ptr<WeaponOption> metalBlade;
 	shared_ptr<WeaponOption> item1;
 	shared_ptr<WeaponOption> item2;
+	shared_ptr<WeaponOption> item3;
 	shared_ptr<WeaponOption> quickBoomerang;
 	shared_ptr<WeaponOption> timeStopper;
 	shared_ptr<WeaponOption> airShooter;
@@ -159,6 +160,10 @@ public:
 			addP2Option(&item2, 6, p->getItem2());
 		}
 
+		if (p->checkStopper()) {
+			addP2Option(&item3, 7, p->getItem3());
+		}
+
 
 
 		controller = p->getControls()->getController();
@@ -212,6 +217,7 @@ public:
 		}
 		if (p->checkStopper()) {
 			timeStopper->getBar()->update(p->getTimeStopper()->getAmmo());
+			item3->getBar()->update(p->getAirShooter()->getAmmo());
 		}
 		if (p->checkBomb()) {
 			crashBomb->getBar()->update(p->getCrashBomb()->getAmmo());
@@ -448,9 +454,13 @@ public:
 		}
 		if (p->checkStopper()) {
 			instance->UIDisplay(timeStopper->getSprites());
+			instance->UIDisplay(item3->getSprites());
 		}
 		if (p->checkBomb()) {
 			instance->UIDisplay(crashBomb->getSprites());
+		}
+		if (p->checkAir()) {
+			instance->UIDisplay(item2->getSprites());
 		}
 		instance->UIDisplay(lifeSprite);
 		instance->textDisplay(lifeText);

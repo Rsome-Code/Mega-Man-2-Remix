@@ -121,6 +121,19 @@ public:bool checkB() {
     return false;
 }
 
+      bool checkBOnlyController() {
+          if (window->hasFocus()) {
+              if (controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_B || controller0->GetState().Gamepad.wButtons & XINPUT_GAMEPAD_X)
+              {
+                  //controller0->vibrate(0, 65535);
+                  return true;
+
+              }
+              return false;
+          }
+      }
+
+
 public:bool checkX()
 {
     if (window->hasFocus()) {

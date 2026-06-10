@@ -198,6 +198,7 @@ public:
 		}
 		else {
 			uniqueDeathLoop(deltaT);
+			uniqueDeathLoop(deltaT, p);
 			
 			return death(deltaT, enemyList);
 		}
@@ -280,6 +281,8 @@ public:
 	virtual void uniqueDeath() {};
 
 	virtual void uniqueDeathLoop(float* deltaT) {};
+
+	virtual void uniqueDeathLoop(float* deltaT, shared_ptr<player> p) {};
 
 	virtual bool yDeath(list<shared_ptr<enemy>>* enemies) {
 		return false;

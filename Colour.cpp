@@ -86,7 +86,9 @@ public:
 
 	static const Colour Yellow;      //!< Yellow predefined color
 	static const Colour Magenta;     //!< Magenta predefined color
-	static const Colour Transparent; //!< Transparent (black) predefined color
+	static const Colour Transparent() {
+		return Colour(0, 0, 0, 0);
+	} 
 
 	int toInteger() {
 		//Convert red, green, blue, alpha to binary

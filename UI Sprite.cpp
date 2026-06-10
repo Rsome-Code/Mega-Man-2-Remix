@@ -22,11 +22,11 @@ protected:Sprite thisOne;
 	Vector2f cameraPosition;
 	string type;
 	list<shared_ptr<UISprite>>::iterator i;
-	Vector2f cameraScale;
+	Vector2f cameraScale = Vector2f(1,1);
 
 	Vector2f visualOffset = Vector2f(0,0);
 
-
+	
 
 
 public: UISprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position, Vector2f scale) {
@@ -36,6 +36,7 @@ public: UISprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector
 	setRect(rect, rectSize);
 	setScale(scale);
 	setCameraPosition(position);
+	setCameraScale(scale);
 }
 public: UISprite(shared_ptr<Texture> texture) {
 	this->texture = texture;
@@ -45,6 +46,7 @@ public: UISprite(shared_ptr<Texture> texture) {
 	setRect(Vector2i(0,0), size);
 	setScale(Vector2f(1,1));
 	setCameraPosition(Vector2f(0,0));
+	setCameraScale(scale);
 }
 public: UISprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector2i rectSize, Vector2f position) {
 	this->texture = texture;
@@ -53,6 +55,7 @@ public: UISprite(string type, shared_ptr<Texture> texture, Vector2i rect, Vector
 	setRect(rect, rectSize);
 	setCameraPosition(position);
 	setScale(Vector2f(1, 1));
+	setCameraScale(scale);
 }
 public: UISprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position) {
 	this->texture = texture;
@@ -61,6 +64,7 @@ public: UISprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2
 	setRect(rect.getPosition(), rect.getSize());
 	setCameraPosition(position);
 	setScale(Vector2f(1, 1));
+	setCameraScale(scale);
 }
 public: UISprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 	this->texture = texture;
@@ -69,6 +73,7 @@ public: UISprite(string type, shared_ptr<Texture> texture, IntRect rect, Vector2
 	setRect(rect.getPosition(), rect.getSize());
 	setCameraPosition(position);
 	setScale(scale);
+	setCameraScale(scale);
 }
 public: UISprite(shared_ptr<Texture> texture, IntRect rect, Vector2f position, Vector2f scale) {
 	this->texture = texture;
@@ -77,6 +82,7 @@ public: UISprite(shared_ptr<Texture> texture, IntRect rect, Vector2f position, V
 	setRect(rect.getPosition(), rect.getSize());
 	setCameraPosition(position);
 	setScale(scale);
+	setCameraScale(scale);
 }
 public: UISprite() {
 	//cout << "huh?";
@@ -89,6 +95,7 @@ public: UISprite() {
 		  setRect(copy->getRect());
 		  setCameraPosition(copy->getCameraPosition());
 		  setScale(copy->getScale());
+		  setCameraScale(scale);
 	  }
 
 protected: void loadTexture() {
@@ -108,6 +115,11 @@ public: shared_ptr<Texture> getTexture() {
 	  Vector2f getSize() {
 		  return Vector2f (rectSize.x * scale.x, rectSize.y * scale.y);
 	  }
+
+	  Vector2f getCameraSize() {
+		  return Vector2f(rectSize.x * cameraScale.x, rectSize.y * cameraScale.y);
+	  }
+
 	  void setCameraPosition(Vector2f c) {
 		  this->cameraPosition = c;
 		  Vector2i actCamPos = Vector2i(c);

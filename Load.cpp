@@ -101,6 +101,7 @@
 #include "lightning lord.cpp"
 #include "lightning lord anticlock.cpp"
 #include "fly platform.cpp"
+#include "stationary fly platform.cpp"
 #include "flight bird.cpp"
 #include "flight exit.cpp"
 #include "giant head.cpp"
@@ -415,8 +416,273 @@ public:
 		return tokens;
 	}
 
-	void loadSaveFile(shared_ptr<player> p) {
-		ifstream inputFile("save file.txt");
+	string getSaveName(string saveFile) {
+		ifstream inputFile(saveFile);
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "name") {
+				return *valI;
+			}
+		}
+		return "";
+	}
+
+	bool getBubble(string saveFile) {
+		ifstream inputFile(saveFile);
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Bubble Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+			return false;
+	}
+
+	bool getHeat(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Heat Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool getMetal(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Metal Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool getQuick(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Quick Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+	
+	bool getFlash(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Flash Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool getCrash(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Crash Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool getAir(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Air Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool getWood(string saveFile) {
+		ifstream inputFile(saveFile );
+
+		string line;
+
+
+		while (getline(inputFile, line)) {
+			char sep = ',';
+			vector<string> values = splitString(line, sep);
+			list<string> val;
+			for (auto& i : values) {
+				val.push_back(i);
+			}
+			list<string>::iterator valI = val.begin();
+			string type = *valI;
+
+			valI = next(valI);
+
+			if (type == "Wood Man") {
+				if (*valI == "y") {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
+	void loadSaveFile(shared_ptr<player> p, string saveFile) {
+		ifstream inputFile(saveFile );
 
 		string line;
 
@@ -841,6 +1107,10 @@ public:
 
 		else if (type == "fly platform") {
 			*add = shared_ptr<FlyPlatform>(new FlyPlatform(t, worldPos));
+		}
+
+		else if (type == "stationary fly platform") {
+			*add = shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(t, worldPos));
 		}
 
 		else if (type == "flight exit") {

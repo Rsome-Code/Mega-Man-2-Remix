@@ -275,7 +275,10 @@ public:
 	int autoSpeed = 200;
 
 	int getAutoSpeed() {
-		return autoSpeed;
+		if (autoOn) {
+			return autoSpeed;
+		}
+		return 0;
 	}
 
 	bool flightPush = false;
@@ -283,11 +286,19 @@ public:
 		flightPush = b;
 	}
 
+	bool autoOn = true;
+
+	void setAutoOn(bool b) {
+		autoOn = b;
+	}
+
 	bool shootemEachFrame(float* deltaT, list<shared_ptr<ItemBullet>>* IBullets, shared_ptr<camera> cam) {
 		
 		shootem = true;
 
-		sprite->move(Angle::right, deltaT, autoSpeed);
+		if (autoOn) {
+			sprite->move(Angle::right, deltaT, autoSpeed);
+		}
 
 		if (stickFly(deltaT) == Vector2f(0,0)) {
 			dPadFly(deltaT);

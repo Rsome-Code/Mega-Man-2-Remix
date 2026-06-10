@@ -249,6 +249,7 @@
     <Media Include="Assets\Sound\yoku.wav" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3d circle.cpp" />
     <ClCompile Include="Air Bullet.cpp" />
     <ClCompile Include="Air Man.cpp" />
     <ClCompile Include="Air Shooter.cpp" />
@@ -293,6 +294,7 @@
     <ClCompile Include="Crash8.cpp" />
     <ClCompile Include="Crash9.cpp" />
     <ClCompile Include="Crazy Cannon.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="Flash Door.cpp" />
     <ClCompile Include="Flash Man.cpp" />
     <ClCompile Include="Flight Anko.cpp" />
@@ -305,12 +307,16 @@
     <ClCompile Include="Head Spike.cpp" />
     <ClCompile Include="Item2 Bullet.cpp" />
     <ClCompile Include="Item2.cpp" />
+    <ClCompile Include="Item3 Bullet.cpp" />
+    <ClCompile Include="Item3.cpp" />
     <ClCompile Include="Leaf Bullet.cpp" />
     <ClCompile Include="Left Edge.cpp" />
     <ClCompile Include="Lightning Lord Anticlock.cpp" />
     <ClCompile Include="Lightning Lord.cpp" />
     <ClCompile Include="Lightning.cpp" />
+    <ClCompile Include="File Menu.cpp" />
     <ClCompile Include="Neo Mettool.cpp" />
+    <ClCompile Include="New Save.cpp" />
     <ClCompile Include="Rail Platform Checkpoint.cpp" />
     <ClCompile Include="Rail Platform.cpp" />
     <ClCompile Include="Right Edge.cpp" />
@@ -440,6 +446,7 @@
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Splash Effect.cpp" />
     <ClCompile Include="Springer.cpp" />
+    <ClCompile Include="Stationary Fly Platform.cpp" />
     <ClCompile Include="Teleport Out.cpp" />
     <ClCompile Include="Telly Spawner.cpp" />
     <ClCompile Include="Telly.cpp" />
@@ -522,6 +529,7 @@
     <ClCompile Include="Master.cpp" />
     <ClCompile Include="Wood Man.cpp" />
     <ClCompile Include="XControl.cpp" />
+    <ClCompile Include="Z Test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,6 +23,8 @@
 #include "crash bomb.cpp"
 #include "air shooter.cpp"
 #include "item2.cpp"
+#include "item3.cpp"
+
 #pragma once
 
 class player {
@@ -87,6 +89,7 @@ class player {
 	shared_ptr<AirShooter> airShooter;
 	shared_ptr<Item1> item1;
 	shared_ptr<Item2> item2;
+	shared_ptr<Item3> item3;
 
 	shared_ptr<Weapon> active = megaBuster;
 
@@ -174,6 +177,7 @@ public:
 		crashBomb = shared_ptr<CrashBomb>(new CrashBomb(sprite, t, soundCol));
 		item1 = shared_ptr<Item1>(new Item1(sprite, t));
 		item2 = shared_ptr<Item2>(new Item2(sprite, t));
+		item3 = shared_ptr<Item3>(new Item3(sprite, t));
 		airShooter = shared_ptr<AirShooter>(new AirShooter(sprite, t, soundCol));
 
 		//Define ammo bars here
@@ -195,6 +199,10 @@ public:
 		damageSound->setBuffer(*damageB);
 
 		
+	}
+
+	void setAutoOn(bool b) {
+		controls->setAutoOn(b);
 	}
 
 	void decreaseFriction(float frictD) {
@@ -401,6 +409,10 @@ public:
 
 	shared_ptr<Item2> getItem2() {
 		return item2;
+	}
+
+	shared_ptr<Item3> getItem3() {
+		return item3;
 	}
 
 	shared_ptr<BubbleLead> getBubbleLead() {
