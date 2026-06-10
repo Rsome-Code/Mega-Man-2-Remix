@@ -256,9 +256,9 @@ class FlashMan : public Master {
 		return 4;
 	}
 
-	//Not sure if this is needed, or if it will cause the player to move during win animation
+	
 	void uniqueDeathLoop(float* deltaT, shared_ptr<player> p) {
-		//p->enableMoving(true);
+		p->enableMoving(true);
 
 	}
 };

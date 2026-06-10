@@ -371,6 +371,8 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 
 	while (run) {
 
+		run = instance->getWindow()->isOpen();
+
 		levelMenu = shared_ptr<LevelSelect>(new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb()));
 		if (!restart) {
 			if (levelMenu->loop(instance, targetFPS, bg)) {
@@ -587,8 +589,10 @@ int main() {
 			}
 		}
 		else {
-			continue;
+			run = instance->getWindow()->isOpen();
 			menuMusic->stop();
+			continue;
+			
 		}
 
 		menuMusic->stop();

@@ -941,8 +941,11 @@ public:
 
 	bool isTeleporting() {
 		if (!shootem) {
-			return tele != NULL;
+			if (movable) {
+				return tele != NULL;
+			}
 		}
+
 		return NULL;
 	}
 

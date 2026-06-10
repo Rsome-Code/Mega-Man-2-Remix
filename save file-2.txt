@@ -1,6 +1,6 @@
 name,test
 lives,9
-E - tanks,2
+E - tanks,0
 Heat Man,y
 Wood Man,y
 Bubble Man,y

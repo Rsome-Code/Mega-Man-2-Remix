@@ -275,7 +275,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 0;
+		section = 20;
 
 		p->enableControls(true);
 
