@@ -79,6 +79,7 @@
 #include "file menu.cpp"
 #include "new save.cpp"
 #include "stationary fly platform.cpp"
+#include "dragon.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -322,7 +323,7 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	//list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
 	//list <shared_ptr<GameObject>> crashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<NeoMettool>(new NeoMettool(enemyT, Vector2f(0,0))),  shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))),  shared_ptr<SpawnPoint>(new SpawnPoint(string("bird"))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(new Background((Colour::Colour(36, 24, 140)))), shared_ptr<GameObject>(new Background((Colour::Colour(32, 56, 236)))), shared_ptr<CrashMan>(new CrashMan(Vector2f(0,0))), shared_ptr<CheckLeft>(new CheckLeft(Vector2f(0,0))), shared_ptr<CheckRight>(new CheckRight(Vector2f(0,0))), shared_ptr<CheckUp>(new CheckUp(Vector2f(0,0))), shared_ptr<CheckDown>(new CheckDown(Vector2f(0,0))), shared_ptr<RailPlatform>(new RailPlatform(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)), shared_ptr<FlyGuySpawner>(new FlyGuySpawner(enemyT, Vector2f(0,0))), shared_ptr<TellySpawner>(new TellySpawner(enemyT, Vector2f(0,0))) };
 	//list <shared_ptr<GameObject>> airList = { shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<AirMan>(new AirMan(Vector2f(0,0))), shared_ptr<AirTarget2>(new AirTarget2(Vector2f(0,0))), shared_ptr<AirTarget1>(new AirTarget1(Vector2f(0,0))), shared_ptr<AirTarget>(new AirTarget(Vector2f(0,0))), shared_ptr<FlightAnko>(new FlightAnko(enemyT, Vector2f(0,0))), shared_ptr<GiantHead>(new GiantHead(enemyT, Vector2f(0,0))), shared_ptr<FlightBird>(new FlightBird(enemyT, Vector2f(0,0))), shared_ptr<LightningLordAnticlock>(new LightningLordAnticlock(enemyT, Vector2f(0,0))), shared_ptr<FlightExit>(new FlightExit(Vector2f(0,0))), shared_ptr<Background>(new Background(Colour::Colour(60, 188, 252))), shared_ptr <LightningLord>(new LightningLord(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)) };
-	list <shared_ptr<GameObject>> dragonList = {shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(enemyT, Vector2f(0,0))), shared_ptr<Background>(new Background(Colour(24, 60, 92))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<GameObject>(new SpawnPoint(string("bird"))) };
+	list <shared_ptr<GameObject>> dragonList = {shared_ptr<Dragon>(shared_ptr<Dragon>(new Dragon(Vector2f(0,0)))), shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(enemyT, Vector2f(0,0))), shared_ptr<Background>(new Background(Colour(24, 60, 92))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<GameObject>(new SpawnPoint(string("bird"))) };
 
 	for (shared_ptr<GameObject> o : dragonList) {
 		o->initial();
@@ -333,12 +334,12 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 
 	//Test animation setup
 	//////////////////////
-	list<IntRect> testAnim = list<IntRect>{ list<IntRect>{	IntRect(449, 287, 32, 8), IntRect(565, 241, 16, 16), IntRect(584, 243, 12, 12), IntRect(602, 244, 10, 10), IntRect(618, 247, 4, 4)} };
-	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, -6 * 4), Vector2f(2 * 4, -4 * 4), Vector2f(3 * 4, -3 * 4), Vector2f(6 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
+	list<IntRect> testAnim = list<IntRect>{ list<IntRect>{IntRect(198, 360, 28, 28), IntRect(164, 369, 32, 21)} };
+	list<Vector2f> testOffset = list<Vector2f>{ Vector2f(0 * 4, 0 * 4), Vector2f(2 * 4, 16 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(3 * 4, -3 * 4), Vector2f(6 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(3 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4),Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4), Vector2f(0 * 4, 0 * 4) };
 	bool facingRight = false;
 
 	shared_ptr<Texture> testT = shared_ptr<Texture>(new Texture());
-	testT->loadFromFile("Assets\\weapons.png");
+	testT->loadFromFile("Assets\\wily bosses.png");
 
 	AnimationTest* test = new AnimationTest(testAnim, testOffset, testT, facingRight);
 
@@ -362,36 +363,25 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	delete o;
 }
 
-bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> levelMenu, shared_ptr<Texture> bg, shared_ptr<player> col, float targetFPS, string bossName, shared_ptr<Texture> enemyT, shared_ptr<SoundCollection> soundCol, string saveFile, shared_ptr<Load> load) {
-	
-	bool restart = false;
-	bool hold = false;
+// Returns true when a Wily stage is selected
+bool stageTypeCheck(string bossName) {
 
-	bool run = true;
+	if (bossName == "dragon" || bossName == "guts tank" || bossName == "pikopiko-kun" || bossName == "wily machine 2" || bossName == "alien") {
+		return true;
+	}
+	return false;
+}
 
-	while (run) {
+void wilyAnim() {
 
-		run = instance->getWindow()->isOpen();
+}
 
-		levelMenu = shared_ptr<LevelSelect>(new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb()));
-		if (!restart) {
-			if (levelMenu->loop(instance, targetFPS, bg)) {
-				bossName = levelMenu->getSelection();
-			}
-			else {
-				return false;
-			}
+bool levelPlayLoop(shared_ptr<renderer> instance, float targetFPS, string bossName, shared_ptr<SoundCollection> soundCol, shared_ptr<Texture> enemyT,  shared_ptr<player> col, shared_ptr<LevelSelect> levelMenu, string saveFile, shared_ptr<Load> load) {
 
-			hold = levelMenu->checkA();
+	bool restart = true;
 
-			StageIntro* intro = new StageIntro(bossName, hold, bg);
-			//Comment this out to skip the intro scene
-			//intro->loop(instance, targetFPS);
-			delete intro;
-		}
-
+	while (restart) {
 		restart = false;
-
 
 		col->setGrounded(true);
 		col->HPReset();
@@ -458,7 +448,7 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 		}
 		else {
 			bool gLoop = true;
-			while (gLoop) {
+			while (gLoop && instance->getWindow()->isOpen()) {
 				unique_ptr<GameOver> gO = unique_ptr<GameOver>(new GameOver());
 				gO->loop(instance, targetFPS);
 				unique_ptr<GameOverMenu> gMenu = unique_ptr<GameOverMenu>(new GameOverMenu());
@@ -473,7 +463,7 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 						restart = true;
 					}
 					else if (option == GameOverMenu::Option::StageSelect) {
-						//???
+						restart = false;
 					}
 				}
 				gO.reset();
@@ -488,12 +478,86 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 
 		save(col, saveFile, load);
 	}
+
+	return true;
+}
+
+bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> levelMenu, shared_ptr<Texture> bg, shared_ptr<player> col, float targetFPS, string bossName, shared_ptr<Texture> enemyT, shared_ptr<SoundCollection> soundCol, string saveFile, shared_ptr<Load> load) {
+	
+	bool hold = false;
+
+	bool run = true;
+
+	while (run) {
+
+		run = instance->getWindow()->isOpen();
+
+		levelMenu = shared_ptr<LevelSelect>(new LevelSelect(bg, col->checkLead(), col->checkAtomicFire(), col->checkBlade(), col->checkShield(), col->checkTornado(), col->checkBoomerang(), col->checkStopper(), col->checkBomb()));
+		
+		if (levelMenu->loop(instance, targetFPS, bg)) {
+			bossName = levelMenu->getSelection();
+		}
+		else {
+			return false;
+		}
+
+		hold = levelMenu->checkA();
+
+		if (!stageTypeCheck(bossName)) {
+			StageIntro* intro = new StageIntro(bossName, hold, bg);
+			//Comment this out to skip the intro scene
+			intro->loop(instance, targetFPS);
+			delete intro;
+		}
+		else {
+			wilyAnim();
+		}
+		
+
+
+
+		levelPlayLoop(instance, targetFPS, bossName, soundCol, enemyT, col, levelMenu, saveFile, load);
+
+		
+	}
+}
+
+bool fileSelectLoop(shared_ptr<renderer> instance, shared_ptr<Load> load, string saveFile, float targetFPS, shared_ptr<player> col, shared_ptr<Music> menuMusic) {
+	menuMusic->play();
+
+	shared_ptr<FileMenu> fileMenu = shared_ptr<FileMenu>(new FileMenu(load));
+
+	if (fileMenu->loop(instance, targetFPS, col->getControls())) {
+		saveFile = fileMenu->getSaveFile();
+
+		struct stat sb;
+		if (stat(saveFile.data(), &sb) == 0) {
+			load->loadSaveFile(col, saveFile);
+		}
+		else {
+			if (!newSaveMenu(instance, targetFPS, col->getController(), saveFile, fileMenu->getSelected() + 1)) {
+				return false;
+				menuMusic->stop();
+			}
+
+			load->loadSaveFile(col, saveFile);
+		}
+	}
+	else {
+		//run = instance->getWindow()->isOpen();
+		menuMusic->stop();
+		return false;
+
+	}
+
+	menuMusic->stop();
+	return true;
 }
 
 int main() {
 
 
-	shared_ptr<SoundCollection> soundCol (new SoundCollection());
+	shared_ptr<SoundCollection> soundCol(new SoundCollection());
 	bool run = true;
 
 	//Set the framerate here
@@ -508,10 +572,10 @@ int main() {
 	shared_ptr <RenderWindow> window = shared_ptr <RenderWindow>(new RenderWindow(VideoMode(horiRes, verticalRes), "Executable", Style::Default));
 	shared_ptr<pController> p1 = shared_ptr<pController>(new pController(window));
 
-	shared_ptr<Texture> enemyT = shared_ptr<Texture> (new Texture());
+	shared_ptr<Texture> enemyT = shared_ptr<Texture>(new Texture());
 	enemyT->loadFromFile("Assets\\enemy.png");
 
-	shared_ptr<Texture> miscT = shared_ptr<Texture> (new Texture());
+	shared_ptr<Texture> miscT = shared_ptr<Texture>(new Texture());
 	miscT->loadFromFile("Assets\\misc\\mega buster.png");
 
 	shared_ptr<player> col = shared_ptr<player>(new player(p1, soundCol));
@@ -523,15 +587,15 @@ int main() {
 	//woodManStage* wood = new woodManStage(enemyT, miscT);
 
 
-	
+
 	shared_ptr<Font> font = shared_ptr<Font>(new Font());
 	font->loadFromFile("assets//font.otf");
 
 
 	shared_ptr<RenderWindow> w = move(window);
-	shared_ptr<renderer> instance = shared_ptr<renderer> (new renderer(w, false));
+	shared_ptr<renderer> instance = shared_ptr<renderer>(new renderer(w, false));
 
-	
+
 
 
 
@@ -541,21 +605,21 @@ int main() {
 
 
 
-	
+
 
 	shared_ptr<Texture> bg;
-	bg = shared_ptr<Texture> (new Texture());
+	bg = shared_ptr<Texture>(new Texture());
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 
-	
-	string bossName;
-	
 
-	bg = shared_ptr<Texture> (new Texture());
+	string bossName;
+
+
+	bg = shared_ptr<Texture>(new Texture());
 	bg->loadFromFile("Assets\\NES - Mega Man 2 - Stage Select.png");
 	bool hold;
 	shared_ptr<LevelSelect> levelMenu;
-	
+
 	bool restart = false;
 
 	shared_ptr<Music> menuMusic = shared_ptr<Music>(new Music());
@@ -566,61 +630,31 @@ int main() {
 	string saveFile;
 
 
-	while (run) {
+	while (run && instance->getWindow()->isOpen()) {
 
-		menuMusic->play();
 
-		shared_ptr<FileMenu> fileMenu = shared_ptr<FileMenu>(new FileMenu(load));
-
-		if (fileMenu->loop(instance, targetFPS, col->getControls())) {
-			saveFile = fileMenu->getSaveFile();
-
-			struct stat sb;
-			if (stat(saveFile.data(), &sb) == 0) {
-				load->loadSaveFile(col, saveFile);
-			}
-			else {
-				if (!newSaveMenu(instance, targetFPS, col->getController(), saveFile, fileMenu->getSelected()+1)) {
-					continue;
-					menuMusic->stop();
-				}
-				
-				load->loadSaveFile(col, saveFile);
-			}
-		}
-		else {
-			run = instance->getWindow()->isOpen();
-			menuMusic->stop();
+		if (!fileSelectLoop(instance, load, saveFile, targetFPS, col, menuMusic)) {
 			continue;
-			
 		}
 
-		menuMusic->stop();
 
 
-		levelSelectLoop(instance, levelMenu, bg, col, targetFPS, bossName, enemyT, soundCol, saveFile, load);
-			
-		
-
-		
-
-		
+		if (!levelSelectLoop(instance, levelMenu, bg, col, targetFPS, bossName, enemyT, soundCol, saveFile, load)) {
+			continue;
+		}
 
 
 
 		run = instance->getWindow()->isOpen();
 
 		//soundCol.reset();
-		
+
 	}
 
 	//mainMenu* menu = new mainMenu();
 	//menu->menu(instance, targetFPS, col);
-	
-	
-	
+
+
+
 	cout << "hi";
-
 }
-
-

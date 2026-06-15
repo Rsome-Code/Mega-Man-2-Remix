@@ -40,6 +40,10 @@ public:
 		
 	}
 
+	void setFrameRate(float f) {
+		fps = f;
+	}
+
 	bool reverse(float* delta) {
 		bool nextFrame = false;
 		if (*delta >= countDown) {

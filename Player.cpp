@@ -914,6 +914,10 @@ public:
 		atomicFire->setAmmo(28);
 		timeStopper->setAmmo(28);
 		item1->setAmmo(28);
+		item2->setAmmo(28);
+		item3->setAmmo(28);
+		leafShield->setAmmo(28);
+		airShooter->setAmmo(28);
 		quickBoomerang->setAmmo(28);
 		metalBlade->setAmmo(28);
 		bubbleLead->setAmmo(28);

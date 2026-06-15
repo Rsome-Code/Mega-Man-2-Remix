@@ -151,6 +151,10 @@ public: Sprite* getSprite() {
 		  thisOne.setColor(Colour(thisOne.getColor().r, thisOne.getColor().g, thisOne.getColor().g, tra).getColour());
 	  }
 
+	  int getTransparency() {
+		  return thisOne.getColor().a;
+	  }
+
 public: Vector2f getCameraPosition() {
 	return cameraPosition;
 }

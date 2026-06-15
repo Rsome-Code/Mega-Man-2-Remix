@@ -89,6 +89,7 @@ public:
 							instance->objectDisplay(e->getDamSprite(), cam);
 						}
 						instance->objectAccess(e, cam);
+						instance->objectDisplay(e->getExtraSprites(), cam);
 						if (e->getBar() != NULL) {
 							shared_ptr<AmmoBar> bar = *e->getBar();
 							instance->UIDisplay(bar->getSprites());

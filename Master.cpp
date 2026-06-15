@@ -65,6 +65,10 @@ public:
 		bossMusic->setLoopPoints({ sf::seconds(6.4), seconds(100) });
 
 		damSprite = shared_ptr<objectSprite>(new objectSprite("effect", sprite->getTexture(), IntRect(damageSpritePos, Vector2i(24, 24)), Vector2f(0,0), Vector2f(4, 4)));
+
+		grounded = false;
+
+		phys->enableGravity(true);
 	}
 
 	bool tauntLoop(float* deltaT, list<shared_ptr<tile>>* tiles, shared_ptr<player> p) {
@@ -136,7 +140,7 @@ public:
 	}
 
 
-	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, list<shared_ptr<GameObject>>* objectList, shared_ptr<SoundCollection> soundCol) {
+	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, list<shared_ptr<GameObject>>* objectList, shared_ptr<SoundCollection> soundCol, shared_ptr<camera> cam) {
 	
 		damPos = Vector2f(sprite->getPosition().x + (1 * 4), sprite->getPosition().y + (1 * 4));
 		if (introDone) {

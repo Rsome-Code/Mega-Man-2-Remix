@@ -1,11 +1,11 @@
-name,test
-lives,9
+name,sfaf
+lives,2
 E - tanks,0
-Heat Man,y
-Wood Man,y
-Bubble Man,y
-Metal Man,y
+Heat Man,n
+Wood Man,n
+Bubble Man,n
+Metal Man,n
 Quick Man,n
 Flash Man,n
-Crash Man,y
-Air Man,y
+Crash Man,n
+Air Man,n

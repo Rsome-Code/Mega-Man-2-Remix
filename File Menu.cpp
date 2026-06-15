@@ -548,19 +548,22 @@ public:
 		}
 
 		else if (state == selectingFile) {
-			
-			if (!copying) {
-				if (!constFiles[currentFile]->isEmpty()) {
-					state = selectingOption;
+
+			if (moveSpeed == 0) {
+
+				if (!copying) {
+					if (!constFiles[currentFile]->isEmpty()) {
+						state = selectingOption;
+					}
+					else {
+						run = false;
+						selected = true;
+					}
 				}
 				else {
-					run = false;
-					selected = true;
+					copySelectedFile();
+					copying = false;
 				}
-			}
-			else {
-				copySelectedFile();
-				copying = false;
 			}
 		}
 	}

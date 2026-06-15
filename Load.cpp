@@ -110,6 +110,7 @@
 #include "air target 1.cpp"
 #include "air target 2.cpp"
 #include "air man.cpp"
+#include "dragon.cpp"
 #pragma once
 
 using namespace std;
@@ -1099,6 +1100,10 @@ public:
 		else if (type == "crash man") {
 			*enem = shared_ptr<enemy>(new CrashMan(worldPos));
 
+		}
+
+		else if (type == "dragon") {
+			*enem = shared_ptr<Dragon>(new Dragon(worldPos));
 		}
 
 		else if (type == "lightning lord") {

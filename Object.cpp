@@ -35,7 +35,7 @@ public:
 
 	virtual void setCode() {};
 
-	string getCode() {
+	virtual string getCode() {
 		return code;
 	}
 

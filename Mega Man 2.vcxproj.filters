@@ -142,6 +142,9 @@
     <Filter Include="Source Files\Game Files\Menus\Load Menu">
       <UniqueIdentifier>{79b73b1f-e27b-4c12-992c-1ed40ff54666}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\Dragon">
+      <UniqueIdentifier>{25b247cb-9ffc-4ec3-9624-a2ee7f1afb9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -1126,5 +1129,19 @@
     <ClCompile Include="Stationary Fly Platform.cpp">
       <Filter>Source Files\Game Files\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Dragon.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Dragon</Filter>
+    </ClCompile>
+    <ClCompile Include="Wily Boss.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses</Filter>
+    </ClCompile>
+    <ClCompile Include="Dragon Fire.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\Dragon</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Bugs.txt">
+      <Filter>Source Files\Game Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

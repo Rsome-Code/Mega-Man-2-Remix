@@ -754,8 +754,13 @@ public:
 
 		if (levelEnd) {
 			list<shared_ptr<GameObject>> temps = objects;
-			temps.push_back(door1);
-			temps.push_back(door2);
+			if (door1 != NULL) {
+				temps.push_back(door1);
+			}
+			if (door2 != NULL) {
+				temps.push_back(door2);
+			}
+
 			teleExit->loop(instance, targetRate, p, tileList, z2List, z3List, z4List, temps, backgroundObjects, cam);
 		}
 
@@ -1209,6 +1214,9 @@ public:
 
 	void respawn() {
 
+		p->enableControls(true);
+		p->enableMoving(true);
+
 		bossDeath = NULL;
 
 		p->setPosition(Vector2f(cam->getPosition().x + ((1920 / 2) - 8 * 4), cam->getPosition().y));
@@ -1237,6 +1245,9 @@ public:
 	void levelEndCheck(shared_ptr<enemy> e, shared_ptr<Music> music) {
 		if (e->getCode() == stage->getName()) {
 
+			music->stop();
+			
+
 			p->enableControls(false);
 			levelEnd = true;
 			if (p->getHP() <= 0) {
@@ -1251,8 +1262,12 @@ public:
 	void levelEndSequence(shared_ptr<Music> music, shared_ptr<renderer> instance, float tRate, shared_ptr<enemy> enemy) {
 		music->stop();
 		list<shared_ptr<GameObject>> tempL = objects;
-		tempL.push_back(door1);
-		tempL.push_back(door2);
+		if (door1 != NULL) {
+			tempL.push_back(door1);
+		}
+		if (door2 != NULL) {
+			tempL.push_back(door2);
+		}
 		for (shared_ptr<Spawner> s : spawners) {
 			tempL.push_back(s);
 		}
@@ -1292,7 +1307,8 @@ public:
 
 								if (enemy->getHP() <= 0) {
 
-									if (enemy->getDeathAnims()[0] != NULL) {
+									//Test if this works
+									if (enemy->getCode() == stage->getName()) {
 
 										levelEndSequence(music, instance, tRate, enemy);
 									}
@@ -1326,7 +1342,7 @@ public:
 				
 			}
 
-			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets, &objects, soundCol) || enemyYCheck(enemy)) {
+			if (enemy->eachFrame(&deltaT, p, &tileList, &enemies, &eBullets, &objects, soundCol, cam) || enemyYCheck(enemy)) {
 				toDelete = enemy;
 			}
 

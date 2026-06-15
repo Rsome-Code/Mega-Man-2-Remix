@@ -29,7 +29,7 @@ public:
 
 		float hypot = Maths::getMissingTriangleLength(angle, radius, radius);
 		
-		float antiAngle = Maths::getAngleInTriagnle(hypot, radius, radius);
+		float antiAngle = Maths::getAngleInTriangle(hypot, radius, radius);
 
 		float newAngle = 90 - antiAngle;
 
@@ -50,7 +50,7 @@ public:
 
 		float hypot = Maths::getMissingTriangleLength(angle, radius, radius);
 
-		float antiAngle = Maths::getAngleInTriagnle(hypot, radius, radius);
+		float antiAngle = Maths::getAngleInTriangle(hypot, radius, radius);
 
 		float newAngle = 90 - antiAngle;
 
@@ -82,7 +82,7 @@ public:
 
 		float hypot = Maths::getMissingTriangleLength(angle, radius, radius);
 
-		float antiAngle = Maths::getAngleInTriagnle(hypot, radius, radius);
+		float antiAngle = Maths::getAngleInTriangle(hypot, radius, radius);
 
 		float newAngle = 90 - antiAngle;
 

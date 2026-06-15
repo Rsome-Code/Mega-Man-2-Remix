@@ -294,6 +294,8 @@
     <ClCompile Include="Crash8.cpp" />
     <ClCompile Include="Crash9.cpp" />
     <ClCompile Include="Crazy Cannon.cpp" />
+    <ClCompile Include="Dragon Fire.cpp" />
+    <ClCompile Include="Dragon.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="Flash Door.cpp" />
     <ClCompile Include="Flash Man.cpp" />
@@ -524,12 +526,16 @@
     <ClCompile Include="Water Tile.cpp" />
     <ClCompile Include="Weapon Option.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="Wily Boss.cpp" />
     <ClCompile Include="Wolf.cpp" />
     <ClCompile Include="wolf_fireball.cpp" />
     <ClCompile Include="Master.cpp" />
     <ClCompile Include="Wood Man.cpp" />
     <ClCompile Include="XControl.cpp" />
     <ClCompile Include="Z Test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Bugs.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

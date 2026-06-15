@@ -92,7 +92,7 @@ public:
 		return c;
 	}
 
-	static float getAngleInTriagnle(float a, float b, float oppositeLen) {
+	static float getAngleInTriangle(float a, float b, float oppositeLen) {
 
 		double ang;
 

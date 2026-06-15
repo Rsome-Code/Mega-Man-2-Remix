@@ -67,6 +67,9 @@ public:
 		//}
 	//}
 
+
+
+	//Why is this here???
 	void tileCollision(list<shared_ptr<tile>>* tileList, float* deltaT) {
 		//grounded = false;
 		bool groundCon;

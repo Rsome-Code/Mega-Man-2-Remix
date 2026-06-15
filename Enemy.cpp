@@ -175,7 +175,7 @@ public:
 		frozen = b;
 	}
 
-	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, list<shared_ptr<GameObject>>* objectList, shared_ptr<SoundCollection> soundCol) {
+	virtual bool eachFrame(float* deltaT, shared_ptr<player> p, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* enemyList, list<shared_ptr<EnemyBullet>>* bList, list<shared_ptr<GameObject>>* objectList, shared_ptr<SoundCollection> soundCol, shared_ptr<camera> cam) {
 		flashTime_left -= *deltaT;
 		if (hp > 0) {
 			if (damaged) {
@@ -194,6 +194,7 @@ public:
 				alive(p, deltaT, tileList, enemyList, bList);
 				alive(p, deltaT, tileList, enemyList, bList, soundCol);
 				alive(p, deltaT, tileList, enemyList, objectList, bList, soundCol);
+				alive(p, deltaT, tileList, enemyList, objectList, bList, soundCol, cam);
 			}
 		}
 		else {
@@ -235,6 +236,7 @@ public:
 
 	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {};
 	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<GameObject>>* obList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol) {};
+	virtual void alive(shared_ptr<player> p, float* deltaT, list<shared_ptr<tile>>* tileList, list<shared_ptr<enemy>>* objectList, list<shared_ptr<GameObject>>* obList, list<shared_ptr<EnemyBullet>>* bList, shared_ptr<SoundCollection> soundCol, shared_ptr<camera> cam) {};
 
 	void checkDirection(shared_ptr<objectSprite> player) {
 		if (player->getPosition().x > sprite->getPosition().x) {

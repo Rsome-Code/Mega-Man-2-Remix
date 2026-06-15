@@ -1,1 +1,2 @@
-stationary fly platform,14137,-4122,1
+dragon,14545,-4269,1
+stationary fly platform,14130,-3892,1
