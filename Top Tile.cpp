@@ -4,7 +4,7 @@
 
 class topTile: public tile {
 	
-	shared_ptr<objectHitbox> groundHitbox;
+	//shared_ptr<objectHitbox> groundHitbox;
 public:
 	topTile(Vector2f loc, shared_ptr<Texture> t, int tileNum) {
 		location = loc;
@@ -20,9 +20,9 @@ public:
 		type = "1";
 	}
 
-	shared_ptr<objectHitbox> getGround() {
-		return groundHitbox;
-	}
+	//shared_ptr<objectHitbox> getGround() {
+	//	return groundHitbox;
+	//}
 
 	void update() {
 		groundHitbox->updatePos();

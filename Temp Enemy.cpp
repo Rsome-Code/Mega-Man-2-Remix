@@ -12,7 +12,7 @@ public:
 
 	
 
-	bool isDead(list<shared_ptr<enemy>>* tempEList) {
+	virtual bool isDead(list<shared_ptr<enemy>>* tempEList) {
 		//tempEList->remove(this);
 		//delete this;
 		

@@ -44,7 +44,7 @@ public:
 
 		damage = 7;
 
-		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 24, 16), mov));
+		hit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 1, 24, 14), mov));
 		starting = false;
 	}
 

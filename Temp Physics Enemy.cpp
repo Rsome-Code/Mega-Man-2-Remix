@@ -34,7 +34,7 @@ public:
 		return isDead(enemies);
 	}
 
-	void tileCollision(list<shared_ptr<tile>>* tileList) {
+	virtual void tileCollision(list<shared_ptr<tile>>* tileList) {
 		for (shared_ptr<tile> t : *tileList) {
 			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
 				groundCheck(t);

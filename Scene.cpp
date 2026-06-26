@@ -284,6 +284,9 @@ public:
 		updateFlags();
 
 		shared_ptr<Music> music = stage->getMusic();
+		if (p->checkCant()) {
+			music->openFromFile("assets\\sound\\music\\ugh.mp3");
+		}
 		music->setVolume(30);
 
 
@@ -824,6 +827,9 @@ public:
 				else {
 					iBul->setPlayerOn(false);
 				}
+			}
+			else {
+				iBul->setPlayerOn(false);
 			}
 		}
 

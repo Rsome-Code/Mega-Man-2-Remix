@@ -1,27 +1,30 @@
 Blocky enemy not falling when hit
 Conveyor belts not displaying right during hit-stop
 
+Bubble Man:
 Waterfall not extending high enough in second section of Bubble Man's stage
 Invisible roof needed in bottom section of Bubble Man's stage
 Anko enemy not functioning after player death (may actually be caused by pausing the game) (Glitch does not seem to appear with flight variant)
 Rethink death animation
 
+Heat Man:
 Second section of Heat Man's stage needs a roof to be consistent with first section
-Frame drops in third section of heat man's stage (maybe put the tile distance check in its own thread??? Then use that thread to only include tiles within range into the game list)
-
+Frame drops in third section of heat man's stage 
 Reset player weapon to mega buster after leaving a stage
 
+Wood Man:
 Make bats vulnerable to metal blade
 Put invisible walls in wolf sections of Wood Man's stage
 Transitioning to section 7 has a visual glitch
 Background goes too far down in section before last outdoor bit
 
+Air Man:
 Delete all enemy projectiles when flight exit appears
 Add transparency to Air Man's doors
 Make Air Man vulnerable to Leaf shield
 Replenish Leaf Shield after leaving a stage
 
-Check animation for Metal blade during ladder climbing is right. He just uses the same anim for jump shooting
+Check animation for Metal blade during ladder climbing is right. He just uses the same animation for jump shooting
 
 Extend hitbox for leaf shield
 
@@ -44,7 +47,7 @@ Flash Man boss is getting stuck on collision
 
 Check if Crash Bomb can collide with enemies before explosion
 
-Pausing during Flash Man's time stop attack soft locks the game.
+Pausing during Flash Man's time stop attack soft locks the game. Fixed
 
 ETanks are not being saved
 

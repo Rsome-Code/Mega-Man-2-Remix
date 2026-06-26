@@ -72,6 +72,9 @@ class levelEditor {
 	bool mouse1Pressed = false;
 	bool mouse2Pressed = false;
 	bool mouse3Pressed = false;
+	bool cPressed = true;
+	bool copyOn = false;
+	bool vPressed = true;
 	bool xButton1Pressed = false;
 	bool xButton2Pressed = false;
 
@@ -115,6 +118,9 @@ class levelEditor {
 	bool zoomed = false;
 
 	shared_ptr<Font> font;
+
+	list<shared_ptr<tile>> toCopy;
+	list<shared_ptr<tile>>::iterator toCopyIt;
 
 public:
 
@@ -396,6 +402,143 @@ public:
 		}
 	}
 
+
+	void copy() {
+
+		//currentPos = Vector2i(currentPos.x , currentPos.x + (cam->getPosition().x / 2));
+		Vector2f highlightW = Vector2f((worldHighlight.getPosition().x + cam->getPosition().x / 2) / (16 * 2), (worldHighlight.getPosition().y + cam->getPosition().y / 2) / (16 * 2));
+
+		Vector2i start = Vector2i(highlightW.x, highlightW.y);
+
+		Vector2i size = Vector2i(worldHighlight.getSize().x / (16 * 2), worldHighlight.getSize().y / (16 * 2));
+
+
+		list<shared_ptr<tile>>::iterator tI = tileList.begin();
+
+		list<shared_ptr<tile>> tempList;
+
+		toCopy.clear();
+
+		if (worldHighlight.getSize() != Vector2f(0, 0)) {
+			
+			for (int i = 0; i < (size.x); i++) {
+				for (int j = 0; j < (size.y); j++) {
+					tI = tileList.begin();
+					bool check = false;
+
+					//Checks for tiles in the same location
+					if (tileList.size() > 0) {
+						for (shared_ptr<tile> t : tileList) {
+							check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
+							if (check) {
+								break;
+							}
+							tI = next(tI);
+						}
+
+						if (check) {
+							shared_ptr<tile> cT = shared_ptr<tile> (new tile(*tI));
+							cT->setLocation(Vector2f(i, j ));
+
+							toCopy.push_back(cT);
+						}
+					}
+					tI = tileList.begin();
+					selectedTile = NULL;
+				}
+			}
+			
+
+		}
+		copyOn = false;
+	}
+
+	Vector2f getPasteSize() {
+		int minX = NULL;
+		int maxX = NULL;
+		int minY = NULL;
+		int maxY = NULL;
+		for (shared_ptr<tile> t : toCopy) {
+			if (minX == NULL) {
+				minX = t->getLocation().x;
+				maxX = t->getLocation().x;
+				minY = t->getLocation().y;
+				maxY = t->getLocation().y;
+			}
+			else {
+				if (t->getLocation().x < minX) {
+					minX = t->getLocation().x;
+				}
+				if (t->getLocation().y < minY) {
+					minY = t->getLocation().y;
+				}
+				if (t->getLocation().x > maxX) {
+					maxX = t->getLocation().x;
+				}
+				if (t->getLocation().y > maxY) {
+					maxY = t->getLocation().y;
+				}
+			}
+		}
+
+		return Vector2f(maxX + 1, maxY + 1);
+	}
+
+	void paste() {
+		//currentPos = Vector2i(currentPos.x , currentPos.x + (cam->getPosition().x / 2));
+		worldHighlight.setSize(Vector2f(getPasteSize().x * 2 * 16, getPasteSize().y * 2 * 16));
+
+		Vector2f highlightW = Vector2f((worldHighlight.getPosition().x + cam->getPosition().x / 2) / (16 * 2), (worldHighlight.getPosition().y + cam->getPosition().y / 2) / (16 * 2));
+
+		Vector2i start = Vector2i(highlightW.x, highlightW.y);
+
+		Vector2i size = Vector2i(worldHighlight.getSize().x / (16 * 2), worldHighlight.getSize().y / (16 * 2));
+
+
+		list<shared_ptr<tile>>::iterator tI = tileList.begin();
+
+		//list<shared_ptr<tile>> tempList;
+
+		
+
+		if (worldHighlight.getSize() != Vector2f(0, 0)) {
+			
+			for (int i = 0; i < (size.x); i++) {
+				for (int j = 0; j < (size.y); j++) {
+					tI = tileList.begin();
+					bool check = false;
+
+					//Checks for tiles in the same location
+					if (tileList.size() > 0) {
+						for (shared_ptr<tile> t : tileList) {
+							check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
+							if (check) {
+								break;
+							}
+							tI = next(tI);
+						}
+
+						if (check) {
+							tileList.erase(tI);
+						}
+					}
+					tI = tileList.begin();
+					selectedTile = NULL;
+				}
+			}
+			
+
+
+			for (shared_ptr<tile> t : toCopy) {
+				shared_ptr<tile> newTile = shared_ptr<tile>(new tile(t));
+				newTile->setLocation(Vector2f(newTile->getLocation().x + start.x, newTile->getLocation().y + start.y));
+				newTile->updateHitboxPos();
+				tileList.push_back(newTile);
+			}
+
+		}
+	}
+
 	void keyBoardCheck() {
 		if (Keyboard::isKeyPressed(Keyboard::Scan::Right) && !rightPressed) {
 			section++;
@@ -415,6 +558,23 @@ public:
 		else if (!Keyboard::isKeyPressed(Keyboard::Scan::Left)) {
 			leftPressed = false;
 		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Scan::C) && !cPressed) {
+			copyOn = !copyOn;
+			cPressed = true;
+		}
+		else if (!Keyboard::isKeyPressed(Keyboard::Scan::C)) {
+			cPressed = false;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Scan::V) && !vPressed) {
+			paste();
+			vPressed = true;
+		}
+		else if (!Keyboard::isKeyPressed(Keyboard::Scan::V)) {
+			vPressed = false;
+		}
+
 
 		if (Keyboard::isKeyPressed(Keyboard::Scan::Num1) || Keyboard::isKeyPressed(Keyboard::Scan::Numpad1)) {
 			beatSet = 0;
@@ -590,40 +750,49 @@ public:
 		//if (levelName == "crash man") {
 		//	repeat = 2;
 		//}
+		if (!copyOn){
+			for (int r = 0; r < repeat; r++) {
+				for (int i = 0; i < (size.x); i++) {
+					for (int j = 0; j < (size.y); j++) {
+						tI = tileList->begin();
+						bool check = false;
 
-		for (int r = 0; r < repeat; r++) {
-			for (int i = 0; i < (size.x); i++) {
-				for (int j = 0; j < (size.y); j++) {
-					tI = tileList->begin();
-					bool check = false;
-
-					//Checks for tiles in the same location
-					if (tileList->size() > 0) {
-						for (shared_ptr<tile> t : *tileList) {
-							check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
-							if (check) {
-								break;
+						//Checks for tiles in the same location
+						if (tileList->size() > 0) {
+							for (shared_ptr<tile> t : *tileList) {
+								check = rectCheck(Vector2f((i + start.x), (j + start.y)), t->getLocation());
+								if (check) {
+									break;
+								}
+								tI = next(tI);
 							}
-							tI = next(tI);
+
+							if (check) {
+								tileList->erase(tI);
+							}
 						}
+						tI = tileList->begin();
 
-						if (check) {
-							tileList->erase(tI);
+						if (!del) {
+							shared_ptr<tile> temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
+
+							//temp->getSprite()->setZ(z);
+							tileList->push_back(temp);
+
+							tempList.push_back(temp);
 						}
+						selectedTile = NULL;
 					}
-					tI = tileList->begin();
-
-					if (!del) {
-						shared_ptr<tile> temp = tileCreation(Vector2f((i + start.x), (j + start.y)), selectedType, selectedTexture);
-
-						//temp->getSprite()->setZ(z);
-						tileList->push_back(temp);
-
-						tempList.push_back(temp);
-					}
-					selectedTile = NULL;
 				}
 			}
+	
+
+
+		}
+		else {
+			copy();
+		}
+
 
 			if (levelName == "flash man" && selectedType == 20) {
 				for (shared_ptr<tile> t : tempList) {
@@ -632,7 +801,7 @@ public:
 					*t = temp;
 				}
 			}
-		}
+		
 		
 	}
 
@@ -770,6 +939,8 @@ public:
 
 
 	void miniSave(list<shared_ptr<tile>> tList, shared_ptr<ofstream> myfile) {
+
+
 		for (shared_ptr<tile> t : tList) {
 
 

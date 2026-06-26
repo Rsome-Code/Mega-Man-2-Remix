@@ -1,3 +1,11 @@
-bird-spawn,1394,0,1
-bird-spawn,5846,0,1
-background-406609151,2186,231,1
+background-406609151,0,0,1
+scworm spawn,7168,1315,1
+scworm spawn,7619,1253,1
+scworm spawn,8191,1185,1
+scworm spawn,8579,1251,1
+scworm spawn,8837,1189,1
+scworm spawn,9896,1316,1
+Extra Life,10203,897,1
+bird-spawn,1394,-49,1
+bird-spawn,5846,-49,1
+scworm spawn,10393,929,1

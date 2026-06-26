@@ -22,11 +22,11 @@ class Dragon : public WilyBoss {
 
 	shared_ptr<objectSprite> darkness;
 
-	float shootTime = 1.4;
+	float shootTime = 1.8;
 	float shootTime_left = 0;
 
 	float columnTime = 2;
-	float columnTime_left = columnTime;
+	float columnTime_left = 0.4;
 
 	list<shared_ptr<objectSprite>> explos;
 	bool exploAnimFin = false;
@@ -153,7 +153,7 @@ class Dragon : public WilyBoss {
 	}
 
 	int quickDam() {
-		return 200;
+		return 3;
 	}
 
 	virtual bool death(float* deltaT, list<shared_ptr<enemy>>* tempEList) {
@@ -225,7 +225,8 @@ class Dragon : public WilyBoss {
 
 
 	int pattern = 0;
-	int startAngle = 230;
+	int startAngle = 240;
+	int angleDiff = 120;
 	int maxSprayFire = 10;
 
 	
@@ -237,7 +238,7 @@ class Dragon : public WilyBoss {
 		
 
 		for (int i = 0; i < maxSprayFire; i += 2) {
-			angle = startAngle - ((100 / maxSprayFire) * (i + pattern));
+			angle = startAngle - ((angleDiff / maxSprayFire) * (i + pattern));
 			shared_ptr<DragonFire> temp = shared_ptr<DragonFire>(new DragonFire(phys->getTexture(), getFirePos(), angle));
 			
 			bList->push_back(temp);
@@ -371,7 +372,12 @@ class Dragon : public WilyBoss {
 		for (shared_ptr<objectSprite> ex : explos) {
 			float dist = Maths::getDistance(prevPos, phys->getPosition());
 
-			ex->setPosition(Vector2f(ex->getPosition().x, ex->getPosition().y + dist));
+			if (moveDown) {
+				ex->setPosition(Vector2f(ex->getPosition().x, ex->getPosition().y + dist));
+			}
+			else {
+				ex->setPosition(Vector2f(ex->getPosition().x, ex->getPosition().y - dist));
+			}
 		}
 	}
 

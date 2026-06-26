@@ -3,7 +3,7 @@
 
 class DeathTile : public tile {
 protected:
-	shared_ptr<objectHitbox> deathBox;
+	//shared_ptr<objectHitbox> deathBox;
 
 
 
@@ -28,8 +28,6 @@ public:
 	}
 
 
-	shared_ptr<objectHitbox> getDeathBox() {
-		return deathBox;
-	}
+
 
 };

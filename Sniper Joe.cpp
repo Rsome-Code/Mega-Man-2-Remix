@@ -37,6 +37,7 @@ public:
 	void initial() {
 		ini();
 		rawSpawn = true;
+		initialPos = phys->getPosition();
 	}
 
 	void ini() {
@@ -57,7 +58,10 @@ public:
 		damage = 3;
 		setCode("sniper joe");
 		grounded = false;
+	}
 
+	void loadSound(shared_ptr<SoundCollection> soundCol) {
+		shootSound = soundCol->getShoot();
 	}
 
 	void setSound(shared_ptr<SoundCollection> soundCol) {
@@ -125,7 +129,7 @@ public:
 	}
 
 	bool isDead(list<shared_ptr<enemy>>* tempEList) {
-		if (!rawSpawn) {
+		/*if (!rawSpawn) {
 			return true;
 		}
 		else {
@@ -133,7 +137,8 @@ public:
 			display = false;
 			sprite->setPosition(Vector2f(-1100, -1000));
 			return false;
-		}
+		}*/
+		return true;
 		
 	}
 

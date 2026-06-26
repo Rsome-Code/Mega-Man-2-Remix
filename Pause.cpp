@@ -217,14 +217,14 @@ public:
 		}
 		if (p->checkStopper()) {
 			timeStopper->getBar()->update(p->getTimeStopper()->getAmmo());
-			item3->getBar()->update(p->getAirShooter()->getAmmo());
+			item3->getBar()->update(p->getItem3()->getAmmo());
 		}
 		if (p->checkBomb()) {
 			crashBomb->getBar()->update(p->getCrashBomb()->getAmmo());
 		}
 		if (p->checkAir()) {
 			airShooter->getBar()->update(p->getAirShooter()->getAmmo());
-			item2->getBar()->update(p->getAirShooter()->getAmmo());
+			item2->getBar()->update(p->getItem2()->getAmmo());
 		}
 		if (p->checkShield()) {
 			leafShield->getBar()->update(p->getLeafShield()->getAmmo());

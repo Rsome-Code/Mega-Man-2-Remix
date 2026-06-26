@@ -1138,6 +1138,9 @@
     <ClCompile Include="Dragon Fire.cpp">
       <Filter>Source Files\Game Files\Enemies\Bosses\Dragon</Filter>
     </ClCompile>
+    <ClCompile Include="Wily Intro.cpp">
+      <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Bugs.txt">

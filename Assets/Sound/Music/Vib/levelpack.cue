@@ -1,0 +1,40 @@
+FILE "Air Man.bin" BINARY
+	TRACK 01 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Bubble Man.bin" BINARY
+	TRACK 02 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Crash Man.bin" BINARY
+	TRACK 03 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "dragon.bin" BINARY
+	TRACK 04 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Flash Man.bin" BINARY
+	TRACK 05 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Heat Man.bin" BINARY
+	TRACK 06 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Metal Man.bin" BINARY
+	TRACK 07 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Quick Man.bin" BINARY
+	TRACK 08 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Ugh.bin" BINARY
+	TRACK 09 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00
+FILE "Wood Man.bin" BINARY
+	TRACK 10 AUDIO
+		TITLE "Untitled"
+		INDEX 01 00:00:00

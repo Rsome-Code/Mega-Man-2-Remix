@@ -3,7 +3,7 @@
 
 class ceilingTile : public tile {
 
-	shared_ptr<objectHitbox> ceilingHitbox;
+	//shared_ptr<objectHitbox> ceilingHitbox;
 public:
 	ceilingTile(Vector2f loc, shared_ptr<Texture> t, int tileNum) {
 		location = loc;
@@ -18,9 +18,9 @@ public:
 		type = "3";
 	}
 
-	shared_ptr<objectHitbox> getCeiling() {
-		return ceilingHitbox;
-	}
+	//shared_ptr<objectHitbox> getCeiling() {
+	//	return ceilingHitbox;
+	//}
 
 	void update() {
 		ceilingHitbox->updatePos();

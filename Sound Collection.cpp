@@ -46,6 +46,9 @@ class SoundCollection {
 	shared_ptr<SoundBuffer> leafB;
 	shared_ptr<Sound> leaf;
 
+	shared_ptr<SoundBuffer> healB;
+	shared_ptr<Sound> heal;
+
 public:
 
 	SoundCollection(shared_ptr<SoundCollection> sou) {
@@ -122,6 +125,13 @@ public:
 		leafB->loadFromFile("assets\\sound\\leaf_shield.wav");
 		leaf = shared_ptr<Sound>(new Sound());
 		leaf ->setBuffer(*leafB);
+
+		healB = shared_ptr<SoundBuffer>(new SoundBuffer());
+		healB->loadFromFile("assets\\sound\\refill.wav");
+		heal = shared_ptr<Sound>(new Sound());
+		heal->setBuffer(*healB);
+
+
 	}
 
 	shared_ptr<Sound> getCrash() {
@@ -171,4 +181,10 @@ public:
 	shared_ptr<Sound> getLeaf() {
 		return leaf;
 	}
+
+	shared_ptr<Sound> getHeal() {
+		return heal;
+	}
+
+
 };

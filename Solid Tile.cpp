@@ -3,10 +3,7 @@
 #pragma once
 class solidTile:public tile {
 protected:
-	shared_ptr<objectHitbox> groundHitbox;
-	shared_ptr<objectHitbox> leftHitbox;
-	shared_ptr<objectHitbox> rightHitbox;
-	shared_ptr<objectHitbox> ceilingHitbox;
+
 
 public:
 	solidTile() {}
@@ -27,18 +24,7 @@ public:
 	}
 
 
-	shared_ptr<objectHitbox> getGround() {
-		return groundHitbox;
-	}
-	shared_ptr<objectHitbox> getCeiling() {
-		return ceilingHitbox;
-	}
-	shared_ptr<objectHitbox> getLeft() {
-		return leftHitbox;
-	}
-	shared_ptr<objectHitbox> getRight() {
-		return rightHitbox;
-	}
+
 
 	void update() {
 		groundHitbox->updatePos();

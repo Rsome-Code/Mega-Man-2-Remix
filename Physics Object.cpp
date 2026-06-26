@@ -157,9 +157,9 @@ public:
 	}
 	void addForce(Vector2f i, float* deltaT) {
 		float increaseH = i.x * *deltaT;
-		horizontalAcc = increaseH;
+		horizontalAcc = horizontalAcc + increaseH;
 		float increaseV = i.y * *deltaT;
-		verticalAcc = increaseV;
+		verticalAcc = verticalAcc + increaseV;
 	}
 
 
@@ -186,6 +186,10 @@ public:
 
 	void setMovable(bool b) {
 		movable = b;
+	}
+
+	void setMaxSpeed(float s) {
+		maxSpeed = s;
 	}
 
 	float getHVelocity() {

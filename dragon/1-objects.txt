@@ -1,1 +1,3 @@
-background-406609151,9952,-495,1
+background-406609151,0,0,1
+ammo-big,10180,-50,1
+sniper joe,10264,-96,1

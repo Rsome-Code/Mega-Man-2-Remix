@@ -81,6 +81,21 @@ public:
 		}
 	}
 
+	void tileCollision(list<shared_ptr<tile>>* tileList) {
+		for (shared_ptr<tile> t : *tileList) {
+			if (t->getGround() != NULL && phys->getVVelocity() < 0) {
+				groundCheck(t);
+			}
+
+			if (t->getLeft() != NULL) {
+				checkLeft(t);
+			}
+			if (t->getRight() != NULL) {
+				checkRight(t);
+			}
+		}
+	}
+
 	void swap() {
 		if (moveAngle == 0) {
 			moveAngle = 180;

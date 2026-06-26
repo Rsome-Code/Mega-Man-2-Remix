@@ -527,6 +527,7 @@
     <ClCompile Include="Weapon Option.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Wily Boss.cpp" />
+    <ClCompile Include="Wily Intro.cpp" />
     <ClCompile Include="Wolf.cpp" />
     <ClCompile Include="wolf_fireball.cpp" />
     <ClCompile Include="Master.cpp" />

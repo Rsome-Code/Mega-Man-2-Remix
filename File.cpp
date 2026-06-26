@@ -175,7 +175,7 @@ public:
 			shared_ptr<objectSprite> temp = shared_ptr<objectSprite>(new objectSprite(templateS));
 			temp->setTexture(backdrop->getTexture());
 			temp->setRect(IntRect(255, 0, 45, 45));
-			temp->setPosition(Vector2f(78, 73));
+			temp->setPosition(Vector2f(78, 73 + 1*2));
 			temp->setScale(Vector2f(2, 2));
 			winIcons.push_back(temp);
 

@@ -976,6 +976,7 @@ public:
 			if (e->getCode() == "flash man") {
 
 			}
+
 		}
 
 		/*shared_ptr<SoundBuffer> colB = shared_ptr<SoundBuffer> (new SoundBuffer());

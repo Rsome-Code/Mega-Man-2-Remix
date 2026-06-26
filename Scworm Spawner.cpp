@@ -81,4 +81,8 @@ public:
 		temp->initial();
 		enemyList->push_back(temp);
 	}
+
+	int metalDam() {
+		return 5;
+	}
 };

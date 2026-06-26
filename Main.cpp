@@ -80,6 +80,7 @@
 #include "new save.cpp"
 #include "stationary fly platform.cpp"
 #include "dragon.cpp"
+#include "wily intro.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -141,12 +142,16 @@ shared_ptr<Weapon> updatePlayer(shared_ptr<player> p, string levelName) {
 }
 
 vector<bool> beforeTileList;
-void beforeLevelCheck(string name) {
+void beforeLevelCheck(string name, shared_ptr<player> col) {
 	if (name == "metal man") {
 		beforeTileList = { true, true, false, false, false };
 	}
 	else {
 		beforeTileList = {};
+	}
+
+	if (name != "air man") {
+		col->resetCant();
 	}
 }
 
@@ -283,7 +288,7 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	ztest.reset();
 
 
-	string bossName = "dragon";
+	string bossName = "pikopiko-kun";
 
 
 
@@ -323,7 +328,8 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	//list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
 	//list <shared_ptr<GameObject>> crashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<NeoMettool>(new NeoMettool(enemyT, Vector2f(0,0))),  shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))),  shared_ptr<SpawnPoint>(new SpawnPoint(string("bird"))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(new Background((Colour::Colour(36, 24, 140)))), shared_ptr<GameObject>(new Background((Colour::Colour(32, 56, 236)))), shared_ptr<CrashMan>(new CrashMan(Vector2f(0,0))), shared_ptr<CheckLeft>(new CheckLeft(Vector2f(0,0))), shared_ptr<CheckRight>(new CheckRight(Vector2f(0,0))), shared_ptr<CheckUp>(new CheckUp(Vector2f(0,0))), shared_ptr<CheckDown>(new CheckDown(Vector2f(0,0))), shared_ptr<RailPlatform>(new RailPlatform(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)), shared_ptr<FlyGuySpawner>(new FlyGuySpawner(enemyT, Vector2f(0,0))), shared_ptr<TellySpawner>(new TellySpawner(enemyT, Vector2f(0,0))) };
 	//list <shared_ptr<GameObject>> airList = { shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<AirMan>(new AirMan(Vector2f(0,0))), shared_ptr<AirTarget2>(new AirTarget2(Vector2f(0,0))), shared_ptr<AirTarget1>(new AirTarget1(Vector2f(0,0))), shared_ptr<AirTarget>(new AirTarget(Vector2f(0,0))), shared_ptr<FlightAnko>(new FlightAnko(enemyT, Vector2f(0,0))), shared_ptr<GiantHead>(new GiantHead(enemyT, Vector2f(0,0))), shared_ptr<FlightBird>(new FlightBird(enemyT, Vector2f(0,0))), shared_ptr<LightningLordAnticlock>(new LightningLordAnticlock(enemyT, Vector2f(0,0))), shared_ptr<FlightExit>(new FlightExit(Vector2f(0,0))), shared_ptr<Background>(new Background(Colour::Colour(60, 188, 252))), shared_ptr <LightningLord>(new LightningLord(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)) };
-	list <shared_ptr<GameObject>> dragonList = {shared_ptr<Dragon>(shared_ptr<Dragon>(new Dragon(Vector2f(0,0)))), shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(enemyT, Vector2f(0,0))), shared_ptr<Background>(new Background(Colour(24, 60, 92))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<GameObject>(new SpawnPoint(string("bird"))) };
+	list <shared_ptr<GameObject>> dragonList = {shared_ptr<Springer>(new Springer(enemyT, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperJoe>(new SniperJoe(enemyT, Vector2f(0,0))), shared_ptr<Dragon>(new Dragon(Vector2f(0,0))), shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(enemyT, Vector2f(0,0))), shared_ptr<Background>(new Background(Colour(24, 60, 92))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<GameObject>(new SpawnPoint(string("bird"))) };
+	//list <shared_ptr<GameObject>> pikuList = { shared_ptr<>(new
 
 	for (shared_ptr<GameObject> o : dragonList) {
 		o->initial();
@@ -349,7 +355,7 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 
 
 	//Un-comment this if you want to use the level editor
-	//l->loop(instance, targetFPS);
+	l->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
 	// There must be a flag in the section that comes before the start
@@ -372,13 +378,17 @@ bool stageTypeCheck(string bossName) {
 	return false;
 }
 
-void wilyAnim() {
+void wilyAnim(shared_ptr<renderer> instance, float targetFPS, shared_ptr<SoundCollection> soundCol, int i) {
+	shared_ptr<WilyIntro> intro = shared_ptr<WilyIntro>(new WilyIntro(i, soundCol));
 
+	intro->loop(instance, targetFPS);
 }
 
 bool levelPlayLoop(shared_ptr<renderer> instance, float targetFPS, string bossName, shared_ptr<SoundCollection> soundCol, shared_ptr<Texture> enemyT,  shared_ptr<player> col, shared_ptr<LevelSelect> levelMenu, string saveFile, shared_ptr<Load> load) {
 
 	bool restart = true;
+
+	bool win = false;
 
 	while (restart) {
 		restart = false;
@@ -400,7 +410,7 @@ bool levelPlayLoop(shared_ptr<renderer> instance, float targetFPS, string bossNa
 
 		unique_ptr<scene> area = unique_ptr<scene>(new scene(col, move(stage), enemyT));
 
-		beforeLevelCheck(bossName);
+		beforeLevelCheck(bossName, col);
 
 		if (area->loop(instance, targetFPS, soundCol, beforeTileList)) {
 
@@ -445,6 +455,7 @@ bool levelPlayLoop(shared_ptr<renderer> instance, float targetFPS, string bossNa
 				newI.reset();
 				newW.reset();
 			}
+			win = true;
 		}
 		else {
 			bool gLoop = true;
@@ -469,6 +480,12 @@ bool levelPlayLoop(shared_ptr<renderer> instance, float targetFPS, string bossNa
 				gO.reset();
 				gMenu.reset();
 			}
+			if (bossName == "heat man") {
+				col->setCant(0, true);
+			}
+			else if (bossName == "air man") {
+				col->setCant(1, true);
+			}
 		}
 
 
@@ -479,9 +496,15 @@ bool levelPlayLoop(shared_ptr<renderer> instance, float targetFPS, string bossNa
 		save(col, saveFile, load);
 	}
 
-	return true;
+	return win;
 }
 
+void ending(shared_ptr<renderer> instance, float targetFPS) {
+
+}
+
+
+//Only returns true when the player beats the game
 bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> levelMenu, shared_ptr<Texture> bg, shared_ptr<player> col, float targetFPS, string bossName, shared_ptr<Texture> enemyT, shared_ptr<SoundCollection> soundCol, string saveFile, shared_ptr<Load> load) {
 	
 	bool hold = false;
@@ -508,18 +531,36 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 			//Comment this out to skip the intro scene
 			intro->loop(instance, targetFPS);
 			delete intro;
+			levelPlayLoop(instance, targetFPS, bossName, soundCol, enemyT, col, levelMenu, saveFile, load);
 		}
 		else {
-			wilyAnim();
+			wilyAnim(instance, targetFPS, soundCol, 1);
+			if (levelPlayLoop(instance, targetFPS, bossName, soundCol, enemyT, col, levelMenu, saveFile, load)) {
+				wilyAnim(instance, targetFPS, soundCol, 2);
+				if (levelPlayLoop(instance, targetFPS, "pikopiko-kun", soundCol, enemyT, col, levelMenu, saveFile, load)) {
+					wilyAnim(instance, targetFPS, soundCol, 3);
+					if (levelPlayLoop(instance, targetFPS, "guts tank", soundCol, enemyT, col, levelMenu, saveFile, load)) {
+						wilyAnim(instance, targetFPS, soundCol, 4);
+						if (levelPlayLoop(instance, targetFPS, "boobeam", soundCol, enemyT, col, levelMenu, saveFile, load)) {
+							wilyAnim(instance, targetFPS, soundCol, 5);
+							if (levelPlayLoop(instance, targetFPS, "wily machine", soundCol, enemyT, col, levelMenu, saveFile, load)) {
+								wilyAnim(instance, targetFPS, soundCol, 6);
+								if (levelPlayLoop(instance, targetFPS, "alien", soundCol, enemyT, col, levelMenu, saveFile, load)) {
+									return true;
+								}
+							}
+						}
+
+					}
+				}
+				
+			}
 		}
 		
-
-
-
-		levelPlayLoop(instance, targetFPS, bossName, soundCol, enemyT, col, levelMenu, saveFile, load);
 
 		
 	}
+	return false;
 }
 
 bool fileSelectLoop(shared_ptr<renderer> instance, shared_ptr<Load> load, string saveFile, float targetFPS, shared_ptr<player> col, shared_ptr<Music> menuMusic) {
@@ -634,14 +675,18 @@ int main() {
 
 
 		if (!fileSelectLoop(instance, load, saveFile, targetFPS, col, menuMusic)) {
+			run = instance->getWindow()->isOpen();
 			continue;
 		}
 
 
 
 		if (!levelSelectLoop(instance, levelMenu, bg, col, targetFPS, bossName, enemyT, soundCol, saveFile, load)) {
+			run = instance->getWindow()->isOpen();
 			continue;
 		}
+
+		ending(instance, targetFPS);
 
 
 

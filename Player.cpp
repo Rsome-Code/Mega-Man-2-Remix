@@ -123,6 +123,8 @@ class player {
 
 	bool shootem = false;
 
+	bool iCant[2];
+
 public:
 
 	virtual ~player() {
@@ -130,6 +132,9 @@ public:
 	}
 
 	player(shared_ptr<pController> p1, shared_ptr<SoundCollection> soundCol) {
+
+		iCant[0] = false;
+		iCant[1] = false;
 		
 		texture = shared_ptr<Texture> (new Texture());
 		if (!texture->loadFromFile("Assets\\player\\NES - Mega Man 2 - Mega Man.png")) {
@@ -199,6 +204,28 @@ public:
 		damageSound->setBuffer(*damageB);
 
 		
+	}
+
+	bool checkCant() {
+		return iCant[0] && iCant[1];
+	}
+
+	void resetCant() {
+		iCant[0] = false;
+		iCant[1] = false;
+	}
+
+	void setCant(int i, bool b) {
+
+		if (i == 0) {
+			iCant[0] = b;
+		}
+		else {
+			if (iCant[0] == true) {
+				iCant[1] = b;
+			}
+		}
+
 	}
 
 	void setAutoOn(bool b) {

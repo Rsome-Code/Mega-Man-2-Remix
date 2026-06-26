@@ -346,6 +346,14 @@ public:
 			UIDisplay(sprite);
 		}
 	}
+	void UIDisplay(vector<shared_ptr<UISprite>> spriteList) {
+		//resolutionScale(spriteList);
+		for (shared_ptr<UISprite> sprite : spriteList) {
+
+
+			UIDisplay(sprite);
+		}
+	}
 
 	void UIDisplay(shared_ptr<UISprite> sprite) {
 		//resolutionScale(spriteList);

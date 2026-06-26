@@ -42,3 +42,5 @@ Ensure background and foreground objects are not anchored to the top left corner
 Consider local bounds for sprites
 
 Figure out standardised method for entering text
+
+For Tile hitboxes that aren't collision, make a standard trigger hitbox to run in the tile class
