@@ -88,6 +88,9 @@ public:
 		tileTexture->loadFromFile("Assets\\stage\\" + name + ".png");
 		setInitialPlayer(Vector2f((8 * 4) * 16, (13 * 4) * 16));
 		setInitialCamera(Vector2f(12 * 4 * 16, (2 * 4) * 16));
+
+
+		// Is this even used???
 		bossTexture = shared_ptr<Texture> (new Texture());
 		bossTexture->loadFromFile("Assets\\" + name + ".png");
 

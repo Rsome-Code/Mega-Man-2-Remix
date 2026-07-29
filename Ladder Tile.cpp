@@ -3,7 +3,7 @@
 class ladderTile :public tile {
 
 protected:
-	shared_ptr<objectHitbox> ladder;
+
 
 public:
 	ladderTile(){}
@@ -15,9 +15,7 @@ public:
 		type = "8";
 	}
 
-	shared_ptr<objectHitbox> getLadder() {
-		return ladder;
-	}
+
 
 	void deleteInt() {
 

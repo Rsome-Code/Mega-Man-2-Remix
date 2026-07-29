@@ -288,7 +288,7 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	ztest.reset();
 
 
-	string bossName = "pikopiko-kun";
+	string bossName = "heat man";
 
 
 
@@ -361,7 +361,7 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	// There must be a flag in the section that comes before the start
 	//
 	//
-	//o->loop(instance, targetFPS);
+	o->loop(instance, targetFPS);
 
 
 
@@ -595,6 +595,12 @@ bool fileSelectLoop(shared_ptr<renderer> instance, shared_ptr<Load> load, string
 	return true;
 }
 
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main() {
 
 
@@ -623,12 +629,6 @@ int main() {
 	shared_ptr<Load> load = shared_ptr<Load>(new Load());
 
 
-
-
-	//woodManStage* wood = new woodManStage(enemyT, miscT);
-
-
-
 	shared_ptr<Font> font = shared_ptr<Font>(new Font());
 	font->loadFromFile("assets//font.otf");
 
@@ -638,12 +638,7 @@ int main() {
 
 
 
-
-
-
-	developerStuff(instance, targetFPS, enemyT, font);
-
-
+	//developerStuff(instance, targetFPS, enemyT, font);
 
 
 
@@ -679,7 +674,7 @@ int main() {
 			continue;
 		}
 
-
+		
 
 		if (!levelSelectLoop(instance, levelMenu, bg, col, targetFPS, bossName, enemyT, soundCol, saveFile, load)) {
 			run = instance->getWindow()->isOpen();

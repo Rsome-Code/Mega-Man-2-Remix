@@ -3,7 +3,7 @@
 class topLadder:public ladderTile {
 
 
-	shared_ptr<objectHitbox> groundHitbox;
+	//shared_ptr<objectHitbox> groundHitbox;
 
 public:
 	topLadder(Vector2f loc, shared_ptr<Texture> t) {
@@ -19,9 +19,9 @@ public:
 		groundHitbox = shared_ptr<objectHitbox>(new objectHitbox(IntRect(Vector2i(0, 0), Vector2i(16, 1)), true, sprite));
 	}
 
-	shared_ptr<objectHitbox> getGround() {
-		return groundHitbox;
-	}
+	//shared_ptr<objectHitbox> getGround() {
+	//	return groundHitbox;
+	//}
 
 	virtual void deleteInt() {
 

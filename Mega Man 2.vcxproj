@@ -319,6 +319,7 @@
     <ClCompile Include="File Menu.cpp" />
     <ClCompile Include="Neo Mettool.cpp" />
     <ClCompile Include="New Save.cpp" />
+    <ClCompile Include="Piko Piko-kun.cpp" />
     <ClCompile Include="Rail Platform Checkpoint.cpp" />
     <ClCompile Include="Rail Platform.cpp" />
     <ClCompile Include="Right Edge.cpp" />

@@ -275,7 +275,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 20;
+		section = 0;
 
 		p->enableControls(true);
 
@@ -473,7 +473,6 @@ public:
 						
 
 						//p->setGrounded(ground);
-
 
 					}
 
@@ -1421,7 +1420,12 @@ public:
 			if (ang == RIGHT) {
 				if (p->getSprite()->getPosition().x + 48 >= flagPos.x) {
 
-					bool door = doorCheck(instance, targetRate);
+
+					bool door = false;
+
+					if (door1 != NULL) {
+						door = doorCheck(instance, targetRate);
+					}
 
 					startTransition(instance, targetRate, ang, flagPos, nextSection, soundCol);
 

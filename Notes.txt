@@ -5,6 +5,8 @@ Rework hitboxes on the engine level to be more intuitive
 	Make it clear whether a parameter is relative to object size
 	Make separate (child) object for hitboxes that scale with object they are assigned to
 
+Research and use more standardised collision logic
+
 Rework Player - anims - hitboxes - streamline physics to make parameter changing easier
 	Physics themselves feel perfect, though
 
@@ -44,3 +46,4 @@ Consider local bounds for sprites
 Figure out standardised method for entering text
 
 For Tile hitboxes that aren't collision, make a standard trigger hitbox to run in the tile class
+

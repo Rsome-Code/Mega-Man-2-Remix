@@ -74,6 +74,7 @@ class levelEditor {
 	bool mouse3Pressed = false;
 	bool cPressed = true;
 	bool copyOn = false;
+	shared_ptr<text> copyText;
 	bool vPressed = true;
 	bool xButton1Pressed = false;
 	bool xButton2Pressed = false;
@@ -184,7 +185,11 @@ public:
 		font = shared_ptr<Font>(new Font());
 		font->loadFromFile("assets\\font.otf");
 
-
+		copyText = shared_ptr<text>(new text());
+		copyText->setString("Copying!!");
+		copyText->setFont(font);
+		copyText->setSize(18);
+		copyText->setPosition(Vector2f(850, 900));
 
 	}
 
@@ -391,6 +396,9 @@ public:
 				
 
 				instance->UIDisplay(zSelect->getSprite());
+				if (copyOn) {
+					instance->textDisplay(copyText);
+				}
 			}
 
 

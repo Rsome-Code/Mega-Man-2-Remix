@@ -1,0 +1,4 @@
+std::optional can be used to check whether variable has been initialised without the use of a pointer
+
+x++ uses x and then increments
+++x increments x then uses it
