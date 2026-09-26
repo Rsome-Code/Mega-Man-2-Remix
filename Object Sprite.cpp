@@ -201,7 +201,7 @@ public: objectSprite(string type, shared_ptr<Texture> texture, Vector2i rect, Ve
 }
 public:
 	objectSprite() {
-
+	
 		this->zAxis = 1;
 
 	}
@@ -259,7 +259,7 @@ public:
 
 	void updateLighting() {
 		//pixelSetup();
-		setFullColour(Colour(0, 0, 0, defaultTransparency));
+		//setFullColour(Colour(0, 0, 0, defaultTransparency));
 	}
 
 	void lightingCheck(LightSource* light) {
@@ -307,16 +307,25 @@ public:
 		}
 	}*/
 
-	void setFullColour(Colour c) {
+	//void setFullColour(Colour c) {
 
-		for (shared_ptr<RectangleShape> r : pixels) {
-			r->setFillColor(c.getColour());
-		}
-	}
+		//for (shared_ptr<RectangleShape> r : pixels) {
+		//	r->setFillColor(c.getColour());
+	//	}
+	//}
 
 	void setColour(Colour c) {
 	
 		thisOne.setColor(c.getColour());
+	}
+
+	void setTransparency(int a) {
+		thisOne.setColor(Color(thisOne.getColor().r, thisOne.getColor().g, thisOne.getColor().b, a));
+	}
+
+	Colour getColour() {
+		return Colour(thisOne.getColor().r, thisOne.getColor().g, thisOne.getColor().b, thisOne.getColor().a);
+
 	}
 
 public: void setPosition(Vector2f position) {

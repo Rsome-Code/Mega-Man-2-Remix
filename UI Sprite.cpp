@@ -112,6 +112,14 @@ public: shared_ptr<Texture> getTexture() {
 		  this->scale = scale;
 		  thisOne.setScale(scale);
 	  }
+
+
+	  // UNTESTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	  void setSize(Vector2f size) {
+		  this->scale = Vector2f(size.x / rectSize.x, size.y / rectSize.y);
+	  }
+
+
 	  Vector2f getSize() {
 		  return Vector2f (rectSize.x * scale.x, rectSize.y * scale.y);
 	  }

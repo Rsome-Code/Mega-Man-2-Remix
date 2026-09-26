@@ -4,7 +4,6 @@
 
 class WaterTile : public tile {
 
-	shared_ptr<objectHitbox> waterHit;
 
 public:
 	WaterTile(Vector2f loc, shared_ptr<Texture> t, int tileNum) {
@@ -22,9 +21,7 @@ public:
 		waterHit = shared_ptr<objectHitbox>(new objectHitbox(IntRect(0, 0, 16, 16), sprite));
 	}
 
-	shared_ptr<objectHitbox> getWaterBox() {
-		return waterHit;
-	}
+
 
 	virtual void deleteInt() {
 

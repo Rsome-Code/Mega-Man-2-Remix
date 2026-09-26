@@ -1,9 +1,12 @@
 Rework engine to allow for a layer of abstraction to make porting easier
 
+For rendering sprites, store all sprites in a list and iterate. Split sprites into different lists based on their Z value and render them in the right order.
+
 Rework hitboxes on the engine level to be more intuitive
 	Better naming conventions
 	Make it clear whether a parameter is relative to object size
-	Make separate (child) object for hitboxes that scale with object they are assigned to
+	Make separate (inherited) object for hitboxes that scale with object they are assigned to
+	Rework collision physics
 
 Research and use more standardised collision logic
 

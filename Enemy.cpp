@@ -61,7 +61,7 @@ public:
 		sprite = mov;
 		//deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite));
 		
-		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite));
+		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(940, 79), Vector2i(4, 4))}, sprite));
 
 		offSetList();
 
@@ -82,7 +82,7 @@ public:
 		sprite = mov;
 		//deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(848, 69), Vector2i(24, 24))}, sprite));
 
-		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4))}, sprite));
+		deathAnim = shared_ptr<animation>(new animation(list<IntRect>{IntRect(Vector2i(848, 69), Vector2i(24, 24)), IntRect(Vector2i(873, 73), Vector2i(16, 16)), IntRect(Vector2i(892, 75), Vector2i(12, 12)), IntRect(Vector2i(910, 76), Vector2i(10, 10)), IntRect(Vector2i(926, 79), Vector2i(4, 4)), IntRect(Vector2i(940, 79), Vector2i(4, 4))}, sprite));
 
 		offSetList();
 
@@ -128,7 +128,7 @@ public:
 	}
 
 	void offSetList() {
-		list<Vector2f> temp = list<Vector2f>{ Vector2f(0, 0), Vector2f(4 * 4, 4 * 4), Vector2f(6 * 4, 6 * 4), Vector2f(7 * 4, 7 * 4), Vector2f(10 * 4, 10 * 4) };
+		list<Vector2f> temp = list<Vector2f>{ Vector2f(0, 0), Vector2f(4 * 4, 4 * 4), Vector2f(6 * 4, 6 * 4), Vector2f(7 * 4, 7 * 4), Vector2f(10 * 4, 10 * 4), Vector2f(10 * 4, 10 * 4) };
 		deathAnim->setOffsetList(temp);
 	}
 
@@ -282,6 +282,8 @@ public:
 
 	virtual void uniqueDeath() {};
 
+	virtual void uniqueDeathStart() {};
+
 	virtual void uniqueDeathLoop(float* deltaT) {};
 
 	virtual void uniqueDeathLoop(float* deltaT, shared_ptr<player> p) {};
@@ -337,7 +339,7 @@ public:
 		offScreen = b;
 	}
 	
-	bool getOffScreen() {
+	virtual bool getOffScreen() {
 		return offScreen;
 	}
 

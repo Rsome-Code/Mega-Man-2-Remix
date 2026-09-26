@@ -146,7 +146,7 @@ public:
 		//shared_ptr<Image> image = shared_ptr<Image> (&texture->copyToImage());
 		sprite = shared_ptr<physicsObject> (new physicsObject("player", texture, IntRect(2, 21, 22, 24), Vector2f(1000, 2000), Vector2f(4, 4), 1));
 
-		sprite->setFullColour(Colour::Red());
+		//sprite->setFullColour(Colour::Red());
 
 		pAnim = shared_ptr<playerAnimation> (new playerAnimation(sprite));
 		controls = shared_ptr<pControls>(new pControls(p1, sprite, pAnim));

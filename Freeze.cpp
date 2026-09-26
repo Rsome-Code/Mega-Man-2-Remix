@@ -86,10 +86,10 @@ public:
 				for (shared_ptr<enemy> e : eList) {
 					if (e->getDisplay()) {
 						if (e->getDamSprite() != NULL) {
-							instance->objectDisplay(e->getDamSprite(), cam);
+							instance->bObjectDisplay(e->getDamSprite(), cam);
 						}
-						instance->objectAccess(e, cam);
-						instance->objectDisplay(e->getExtraSprites(), cam);
+						instance->bObjectDisplay(e->getSprites(), cam);
+						instance->bObjectDisplay(e->getExtraSprites(), cam);
 						if (e->getBar() != NULL) {
 							shared_ptr<AmmoBar> bar = *e->getBar();
 							instance->UIDisplay(bar->getSprites());

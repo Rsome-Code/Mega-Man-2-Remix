@@ -81,6 +81,7 @@
 #include "stationary fly platform.cpp"
 #include "dragon.cpp"
 #include "wily intro.cpp"
+#include "piku head.cpp"
 #pragma once
 #pragma comment(lib,"winmm.lib")
 
@@ -288,7 +289,7 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	ztest.reset();
 
 
-	string bossName = "heat man";
+	string bossName = "pikopiko-kun";
 
 
 
@@ -319,6 +320,9 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	shared_ptr<Texture> beamT = shared_ptr<Texture>(new Texture());
 	beamT->loadFromFile("assets\\beam.png");
 
+	shared_ptr<Texture> wilyB = shared_ptr<Texture>(new Texture());
+	wilyB->loadFromFile("assets\\Wily Bosses.png");
+
 	//Object Placer setup
 	//list<shared_ptr<GameObject>> woodManObList = { shared_ptr<NeoMettool>(new NeoMettool(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(new Background((Colour::Colour(0, 232, 216)))), shared_ptr<GameObject>(new WoodMan(Vector2f(0,0))), shared_ptr<GameObject>(new SpawnPoint(string("chicken"))),shared_ptr<GameObject>(new SpawnPoint(string("bird"))), shared_ptr<GameObject>(new Wolf(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(new Gorilla(enemyT, Vector2f(0,0))), shared_ptr<GameObject>(new Rabbit(enemyT, Vector2f(0,0))), shared_ptr<Door>(shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<GameObject>(new ETank(misc, Vector2f(0,0))), shared_ptr<SmallAmmo>(new SmallAmmo(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<SmallHealth>(new SmallHealth(misc, Vector2f(0,0))) , shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))),  shared_ptr<bat>(new bat(enemyT, Vector2f(600, 600))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), (shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0))) };
 	//list <shared_ptr<GameObject>> heatManList = { shared_ptr<ExtraLife> (new ExtraLife(misc, Vector2f(0,0)), new HeatMan(Vector2f(0,0)), new SniperArmour(enemyT, Vector2f(0,0)), new BreakWall(enemyT, Vector2f(0,0)), new Springer(enemyT, Vector2f(0,0)), new TellySpawner(enemyT, Vector2f(0,0)), new FlyGuySpawner(enemyT, Vector2f(0,0)), new DisappearingTile(enemyT, Vector2f(0,0), 0), new DisappearingTile(enemyT, Vector2f(0,0), 1), new DisappearingTile(enemyT, Vector2f(0,0), 2), new DisappearingTile(enemyT, Vector2f(0,0), 3), shared_ptr<Door> (new Door(bossName, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), 0), shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), UP,0),  shared_ptr<EndFlag> (new EndFlag(enemyT, Vector2f(0,0), DOWN,0) };
@@ -328,13 +332,13 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 	//list <shared_ptr<GameObject>> flashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperArmour>(new SniperArmour(enemyT, Vector2f(0,0))), shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<FlashDoor>(new FlashDoor(bossName, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)),  shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr <BreakWall>(new BreakWall(enemyT, Vector2f(0,0)))};
 	//list <shared_ptr<GameObject>> crashList = { shared_ptr <FlashMan>(new FlashMan(Vector2f(0,0))), shared_ptr<Blocky>(new Blocky(enemyT, Vector2f(0,0))), shared_ptr<NeoMettool>(new NeoMettool(enemyT, Vector2f(0,0))),  shared_ptr<CannonRight>(new CannonRight(enemyT, Vector2f(0,0))), shared_ptr <CrazyCannon>(new CrazyCannon(enemyT, Vector2f(0,0))),  shared_ptr<SpawnPoint>(new SpawnPoint(string("bird"))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr <ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<GameObject>(new Background((Colour::Colour(36, 24, 140)))), shared_ptr<GameObject>(new Background((Colour::Colour(32, 56, 236)))), shared_ptr<CrashMan>(new CrashMan(Vector2f(0,0))), shared_ptr<CheckLeft>(new CheckLeft(Vector2f(0,0))), shared_ptr<CheckRight>(new CheckRight(Vector2f(0,0))), shared_ptr<CheckUp>(new CheckUp(Vector2f(0,0))), shared_ptr<CheckDown>(new CheckDown(Vector2f(0,0))), shared_ptr<RailPlatform>(new RailPlatform(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), 0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)), shared_ptr<FlyGuySpawner>(new FlyGuySpawner(enemyT, Vector2f(0,0))), shared_ptr<TellySpawner>(new TellySpawner(enemyT, Vector2f(0,0))) };
 	//list <shared_ptr<GameObject>> airList = { shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ETank>(new ETank(misc, Vector2f(0,0))), shared_ptr<BigHealth>(new BigHealth(misc, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<AirMan>(new AirMan(Vector2f(0,0))), shared_ptr<AirTarget2>(new AirTarget2(Vector2f(0,0))), shared_ptr<AirTarget1>(new AirTarget1(Vector2f(0,0))), shared_ptr<AirTarget>(new AirTarget(Vector2f(0,0))), shared_ptr<FlightAnko>(new FlightAnko(enemyT, Vector2f(0,0))), shared_ptr<GiantHead>(new GiantHead(enemyT, Vector2f(0,0))), shared_ptr<FlightBird>(new FlightBird(enemyT, Vector2f(0,0))), shared_ptr<LightningLordAnticlock>(new LightningLordAnticlock(enemyT, Vector2f(0,0))), shared_ptr<FlightExit>(new FlightExit(Vector2f(0,0))), shared_ptr<Background>(new Background(Colour::Colour(60, 188, 252))), shared_ptr <LightningLord>(new LightningLord(enemyT, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<Door>(new Door(bossName, Vector2f(0,0), 0)) };
-	list <shared_ptr<GameObject>> dragonList = {shared_ptr<Springer>(new Springer(enemyT, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperJoe>(new SniperJoe(enemyT, Vector2f(0,0))), shared_ptr<Dragon>(new Dragon(Vector2f(0,0))), shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(enemyT, Vector2f(0,0))), shared_ptr<Background>(new Background(Colour(24, 60, 92))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<GameObject>(new SpawnPoint(string("bird"))) };
-	//list <shared_ptr<GameObject>> pikuList = { shared_ptr<>(new
+	//list <shared_ptr<GameObject>> dragonList = {shared_ptr<Springer>(new Springer(enemyT, Vector2f(0,0))), shared_ptr<BigAmmo>(new BigAmmo(misc, Vector2f(0,0))), shared_ptr<ExtraLife>(new ExtraLife(misc, Vector2f(0,0))), shared_ptr<ScwormSpawn>(new ScwormSpawn(enemyT, Vector2f(0,0))), shared_ptr<SniperJoe>(new SniperJoe(enemyT, Vector2f(0,0))), shared_ptr<Dragon>(new Dragon(Vector2f(0,0))), shared_ptr<StationaryFlyPlatform>(new StationaryFlyPlatform(enemyT, Vector2f(0,0))), shared_ptr<Background>(new Background(Colour(24, 60, 92))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)), shared_ptr<GameObject>(new SpawnPoint(string("bird")))};
+	list <shared_ptr<GameObject>> pikuList = { shared_ptr<PikuHead>(new PikuHead(wilyB, Vector2f(0,0))), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), DOWN,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), RIGHT,0)), shared_ptr<EndFlag>(new EndFlag(enemyT, Vector2f(0,0), UP,0)) };
 
-	for (shared_ptr<GameObject> o : dragonList) {
+	for (shared_ptr<GameObject> o : pikuList) {
 		o->initial();
 	}
-	ObjectPlacer* o = new ObjectPlacer(wT, bossName, dragonList);
+	ObjectPlacer* o = new ObjectPlacer(wT, bossName, pikuList);
 
 
 
@@ -355,13 +359,13 @@ void developerStuff(shared_ptr<renderer> instance, float targetFPS, shared_ptr<T
 
 
 	//Un-comment this if you want to use the level editor
-	l->loop(instance, targetFPS);
+	//l->loop(instance, targetFPS);
 	//
 	// Un-comment this if you want to use the object placer
 	// There must be a flag in the section that comes before the start
 	//
 	//
-	o->loop(instance, targetFPS);
+	//o->loop(instance, targetFPS);
 
 
 
@@ -525,6 +529,7 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 		}
 
 		hold = levelMenu->checkA();
+		
 
 		if (!stageTypeCheck(bossName)) {
 			StageIntro* intro = new StageIntro(bossName, hold, bg);
@@ -534,8 +539,8 @@ bool levelSelectLoop(shared_ptr<renderer> instance, shared_ptr<LevelSelect> leve
 			levelPlayLoop(instance, targetFPS, bossName, soundCol, enemyT, col, levelMenu, saveFile, load);
 		}
 		else {
-			wilyAnim(instance, targetFPS, soundCol, 1);
-			if (levelPlayLoop(instance, targetFPS, bossName, soundCol, enemyT, col, levelMenu, saveFile, load)) {
+			//wilyAnim(instance, targetFPS, soundCol, 1);
+			if (levelPlayLoop(instance, targetFPS, "pikopiko-kun", soundCol, enemyT, col, levelMenu, saveFile, load)) {
 				wilyAnim(instance, targetFPS, soundCol, 2);
 				if (levelPlayLoop(instance, targetFPS, "pikopiko-kun", soundCol, enemyT, col, levelMenu, saveFile, load)) {
 					wilyAnim(instance, targetFPS, soundCol, 3);
@@ -638,7 +643,7 @@ int main() {
 
 
 
-	//developerStuff(instance, targetFPS, enemyT, font);
+	developerStuff(instance, targetFPS, enemyT, font);
 
 
 
@@ -696,5 +701,6 @@ int main() {
 
 
 
+	
 	cout << "hi";
 }

@@ -111,6 +111,8 @@
 #include "air target 2.cpp"
 #include "air man.cpp"
 #include "dragon.cpp"
+#include "piku head.cpp"
+#include "pikupiku-kun.cpp"
 #pragma once
 
 using namespace std;
@@ -1109,6 +1111,15 @@ public:
 
 		else if (type == "lightning lord") {
 			*enem = shared_ptr<LightningLord>(new LightningLord(t, worldPos));
+		}
+
+		else if (type == "pikupiku-kun") {
+			*enem = shared_ptr<PikuPikuKun>(new PikuPikuKun(worldPos));
+			
+		}
+
+		else if (type == "piku head") {
+			*enem = shared_ptr <PikuHead>(new PikuHead(worldPos));
 		}
 
 		else if (type == "fly platform") {

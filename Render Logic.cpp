@@ -288,12 +288,58 @@ public:
 		}
 	}
 
+	void variableBObjectDisplay(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
+		variableBObjectCalc(object, cam);
+
+	
+
+		Sprite* s = object->getSprite();
+
+		resolutionFix(object);
+		w->draw(*s);
+		resolutionCorrection(object);
+		
+	}
+	void variableBObjectDisplay(list<shared_ptr<objectSprite>> objects, shared_ptr<camera> cam) {
+		for (shared_ptr<objectSprite> object : objects) {
+			variableBObjectCalc(object, cam);
+
+
+
+			Sprite* s = object->getSprite();
+
+			resolutionFix(object);
+			w->draw(*s);
+			resolutionCorrection(object);
+		}
+
+	}
+
+	void variableBObjectCalc(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
+		float mult = object->getZ() - 1;
+		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult));
+		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y);
+		float zoom = cam->getZoom();
+		Vector2f cPosition = Vector2f(cam->getPosition().x - (((960 + object->getSize().x / 2) * mult) * (pow(zoom, -1))), cam->getPosition().y - (((540 + object->getSize().y / 2) * mult)) * pow(zoom, -1));
+		Vector2f sPosition = object->getPosition();
+		Vector2f newP = sPosition - cPosition;
+		Vector2f plusZ = Vector2f((newP.x * pow(object->getZ(), -1)), (newP.y * pow(object->getZ(), -1)));
+		//Vector2f plusZ = Vector2f((newP.x * pow(object->getZ(), -1)), newP.y);
+
+		Vector2f newPos = plusZ + object->getVisualOffset();
+
+		object->setCameraScale(Vector2f((object->getScale().x * zoom) * pow(object->getZ(), -1), (object->getScale().y * zoom) * pow(object->getZ(), -1)));
+
+		object->setCameraPosition(Vector2f((newPos.x * zoom), (newPos.y * zoom)));
+
+	}
+
 	void bObjectCalc(shared_ptr<objectSprite> object, shared_ptr<camera> cam) {
 		float mult = object->getZ() - 1;
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y - (540* mult));
 		//Vector2f cPosition = Vector2f(cam->getPosition().x - (960 * mult), cam->getPosition().y);
 		float zoom = cam->getZoom();
-		Vector2f cPosition = Vector2f(cam->getPosition().x - ((960 * mult) * (pow(zoom, -1))), cam->getPosition().y - ((540 * mult)) * pow(zoom, -1));
+		Vector2f cPosition = Vector2f(cam->getPosition().x - ((960  * mult) * (pow(zoom, -1))), cam->getPosition().y - ((540 * mult)) * pow(zoom, -1));
 		Vector2f sPosition = object->getPosition();
 		Vector2f newP = sPosition - cPosition;
 		Vector2f plusZ = Vector2f((newP.x * pow(object->getZ(), -1)), (newP.y * pow(object->getZ(), -1)));

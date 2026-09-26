@@ -1,11 +1,9 @@
-0,flag-down,7924,1667,0
 1,flag-down,6208,3105,0
 2,flag-down,7432,3429,0
 3,flag-down,6311,4543,0
--1,flag,636,852,0
-4,flag-down,12993,5934,0
-6,flag-down,12254,8498,0
-7,flag-down,12162,8577,0
-8,flag-down,12324,9668,0
-9,flag-down,12235,10650,0
+-1,flag,636,852,1
+6,flag-down,12254,8498,1
 5,flag-down,11073,6996,0
+0,flag-down,7924,1876,0
+4,flag-down,12860,5961,0
+7,flag-down,10940,9044,0

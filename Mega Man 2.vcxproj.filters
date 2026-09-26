@@ -145,6 +145,9 @@
     <Filter Include="Source Files\Game Files\Enemies\Bosses\Dragon">
       <UniqueIdentifier>{25b247cb-9ffc-4ec3-9624-a2ee7f1afb9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game Files\Enemies\Bosses\PikuPiku-kun">
+      <UniqueIdentifier>{9f9b8c79-ef92-4ac8-8a68-8e14c1f2ce90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\grids.png">
@@ -1140,6 +1143,12 @@
     </ClCompile>
     <ClCompile Include="Wily Intro.cpp">
       <Filter>Source Files\Game Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="PikuPiku-kun.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\PikuPiku-kun</Filter>
+    </ClCompile>
+    <ClCompile Include="Piku Head.cpp">
+      <Filter>Source Files\Game Files\Enemies\Bosses\PikuPiku-kun</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

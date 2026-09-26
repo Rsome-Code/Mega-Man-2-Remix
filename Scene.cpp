@@ -275,7 +275,7 @@ public:
 		bool unPaused = false;
 
 		//Change this to the section to be debugged.
-		section = 0;
+		section = 10;
 
 		p->enableControls(true);
 
@@ -579,7 +579,7 @@ public:
 
 						instance->objectAccess(t, cam);
 						if (t->getDisplay()) {
-							instance->objectDisplay(t->getExtraSprites(), cam);
+							instance->bObjectDisplay(t->getExtraSprites(), cam);
 						}
 						
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
@@ -625,13 +625,14 @@ public:
 			if (!obBeforeTile) {
 				for (shared_ptr<enemy> t : enemies) {
 					if (t->getDamSprite() != NULL) {
-						instance->objectDisplay(t->getDamSprite(), cam);
+						instance->variableBObjectDisplay(t->getDamSprite(), cam);
 					}
 					if (t->getSprite() != NULL) {
 
-						instance->objectAccess(t, cam);
+						
 						if (t->getDisplay()) {
-							instance->objectDisplay(t->getExtraSprites(), cam);
+							instance->variableBObjectDisplay(t->getSprite(), cam);
+							instance->variableBObjectDisplay(t->getExtraSprites(), cam);
 						}
 						//instance->objectHitboxSetup(t->getHitbox(), cam);
 						//instance->hitboxDisplay(t->getHitbox());
@@ -1311,6 +1312,8 @@ public:
 							else {
 
 								if (enemy->getHP() <= 0) {
+
+									enemy->uniqueDeathStart();
 
 									//Test if this works
 									if (enemy->getCode() == stage->getName()) {
@@ -2159,10 +2162,10 @@ public:
 
 			for (shared_ptr<enemy> t : enemies) {
 				if (t->getDamSprite() != NULL) {
-					instance->objectDisplay(t->getDamSprite(), cam);
+					instance->bObjectDisplay(t->getDamSprite(), cam);
 				}
 				if (t->getSprite() != NULL) {
-					instance->objectAccess(t, cam);
+					instance->bObjectDisplay(t->getSprite(), cam);
 				}
 			}
 			instance->objectDisplay(p->getSprite(), cam);

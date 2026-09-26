@@ -301,15 +301,16 @@ public:
 
 	bool aPressed = true;
 	bool checkA() {
-		if (control->checkA()) {
-			if (!aPressed) {
-				return true;
-			}
-		}
-		else {
-			aPressed = false;
-		}
-		return false;
+		//if (control->checkA()) {
+		//	if (!aPressed) {
+		//		return true;
+		//	}
+		//}
+		//else {
+		//	aPressed = false;
+		//}
+		//return false;
+		return control->checkA();
 	}
 
 	bool bPressed = true;
